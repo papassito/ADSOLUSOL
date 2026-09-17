@@ -1,18 +1,36 @@
 using ADSOLUSOL.Domain.Interfaces;
+using Dapper;
+using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Configuration;
+using System.Data;
 
 namespace ADSOLUSOL.Infrastructure.Repositories;
 
 public class AssignmentRepository : IAssignmentRepository
 {
-    public Task AssignCreativeToPlacementAsync(Guid creativeId, Guid placementId)
+    private readonly IConfiguration _configuration;
+
+    public AssignmentRepository(IConfiguration configuration)
     {
-        // Lógica de persistencia con Dapper/SQLite iría aquí
-        return Task.CompletedTask;
+        _configuration = configuration;
     }
 
-    public Task<IEnumerable<Guid>> GetCreativeIdsByPlacementAsync(Guid placementId)
+    private IDbConnection CreateConnection()
     {
-        // Lógica de persistencia con Dapper/SQLite iría aquí
-        return Task.FromResult(Enumerable.Empty<Guid>());
+        return new SqliteConnection(_configuration.GetConnectionString("DefaultConnection"));
+    }
+
+    public async Task AssignCreativeToCampaignAsync(string campaignId, long creativeId)
+    {
+        using var connection = CreateConnection();
+        var sql = "INSERT INTO CampaignCreatives (CampaignId, CreativeId) VALUES (@CampaignId, @CreativeId) ON CONFLICT(CampaignId, CreativeId) DO NOTHING;";
+        await connection.ExecuteAsync(sql, new { CampaignId = campaignId, CreativeId = creativeId });
+    }
+
+    public async Task AssignPlacementToCampaignAsync(string campaignId, long placementId)
+    {
+        using var connection = CreateConnection();
+        var sql = "INSERT INTO CampaignPlacements (CampaignId, PlacementId) VALUES (@CampaignId, @PlacementId) ON CONFLICT(CampaignId, PlacementId) DO NOTHING;";
+        await connection.ExecuteAsync(sql, new { CampaignId = campaignId, PlacementId = placementId });
     }
 }

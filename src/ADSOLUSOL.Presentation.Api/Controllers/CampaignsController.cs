@@ -88,7 +88,7 @@ namespace ADSOLUSOL.Presentation.Api.Controllers
             {
                 EventId = request.EventId,
                 CampaignId = campaignId,
-                CreativeId = request.CreativeId,
+                CreativeId = request.CreativeId.ToString(),
                 PlacementCode = request.PlacementCode,
                 TenantId = tenantId,
                 EventType = eventType.ToString().ToUpper(),
