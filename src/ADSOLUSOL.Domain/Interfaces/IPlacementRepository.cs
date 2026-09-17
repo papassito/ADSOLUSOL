@@ -1,8 +1,8 @@
-namespace ADSOLUSOL.Domain.Interfaces;
+﻿namespace ADSOLUSOL.Domain.Interfaces;
 
 public interface IPlacementRepository
 {
-    // Métodos de ejemplo para la gestión de placements
-    Task<Guid> CreatePlacementAsync(string name);
-    Task<string?> GetPlacementNameAsync(Guid placementId);
+    Task<Entities.Placement?> GetByCodeAsync(string code);
+    Task<IEnumerable<Entities.Campaign>> GetEligibleCampaignsAsync(long placementId);
+    Task<IEnumerable<Entities.Campaign>> GetEligibleCampaignsAsync(string placementCode);
 }

@@ -1,6 +1,7 @@
+using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Dtos;
 using ADSOLUSOL.Domain.Enums;
-using ADSOLUSOL.Domain.Repositories;
+using ADSOLUSOL.Domain.Interfaces;
 
 namespace ADSOLUSOL.Application.Services;
 
@@ -35,3 +36,4 @@ public class MetricsService
         );
     }
 }
+

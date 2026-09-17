@@ -1,4 +1,5 @@
-using ADSOLUSOL.Domain.Repositories;
+using ADSOLUSOL.Domain.Entities;
+using ADSOLUSOL.Domain.Interfaces;
 
 namespace ADSOLUSOL.Application.Services;
 
@@ -36,7 +37,8 @@ public class AdServingService
         // 3. Filter campaigns by date range (vigencia) and shuffle for fairness
         var now = DateTime.UtcNow;
         var validCampaigns = eligibleCampaigns
-            .Where(c => (c.StartDateUtc == null || c.StartDateUtc <= now) && (c.EndDateUtc == null || c.EndDateUtc >= now))
+            // FIX (CS8073): Reverted to a standard null check for nullable DateTime properties.
+            .Where(c => (!c.StartDateUtc.HasValue || c.StartDateUtc.Value <= now) && (!c.EndDateUtc.HasValue || c.EndDateUtc.Value >= now))
             .OrderBy(c => Guid.NewGuid()) // Simple randomization for fair selection
             .ToList();
 
