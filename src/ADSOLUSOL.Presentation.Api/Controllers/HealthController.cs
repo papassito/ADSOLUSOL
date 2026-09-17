@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
 
@@ -37,6 +38,16 @@ public class HealthController : ControllerBase
             client.Timeout = TimeSpan.FromSeconds(2);
             var response = await client.GetAsync("http://localhost:8080/health");
             isSicHealthy = response.IsSuccessStatusCode;
+            // FIX P1-06: Use the configured SIC base URL instead of a hardcoded value.
+            var sicBaseUrl = _configuration["SolusolAuthV1:SicBaseUrl"];
+            if (!string.IsNullOrEmpty(sicBaseUrl))
+            {
+                var healthCheckUrl = new Uri(new Uri(sicBaseUrl.TrimEnd('/') + '/'), "health");
+                var client = _httpClientFactory.CreateClient();
+                client.Timeout = TimeSpan.FromSeconds(2);
+                var response = await client.GetAsync(healthCheckUrl);
+                isSicHealthy = response.IsSuccessStatusCode;
+            }
         }
         catch { }
 

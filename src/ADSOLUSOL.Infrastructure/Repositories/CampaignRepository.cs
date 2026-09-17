@@ -1,4 +1,4 @@
-﻿using ADSOLUSOL.Domain.Entities;
+﻿﻿using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 using Dapper;
 using Microsoft.Data.Sqlite;
@@ -58,13 +58,13 @@ public class CampaignRepository : ICampaignRepository
         await connection.ExecuteAsync(sql, campaign);
     }
 
-    public async Task UpdateBudgetAsync(string campaignId, decimal cost, IDbTransaction transaction)
+    public async Task<int> UpdateBudgetAsync(string campaignId, decimal cost, IDbTransaction transaction)
     {
         if (transaction.Connection is null)
         {
             throw new InvalidOperationException("The transaction does not have an associated connection.");
         }
-        var sql = "UPDATE Campaigns SET BudgetSpent = BudgetSpent + @Cost WHERE Id = @CampaignId;";
-        await transaction.Connection.ExecuteAsync(sql, new { Cost = cost, CampaignId = campaignId }, transaction);
+        var sql = "UPDATE Campaigns SET BudgetSpent = BudgetSpent + @Cost WHERE Id = @CampaignId AND BudgetSpent + @Cost <= Budget;";
+        return await transaction.Connection.ExecuteAsync(sql, new { Cost = cost, CampaignId = campaignId }, transaction);
     }
 }

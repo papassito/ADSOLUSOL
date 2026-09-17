@@ -1,4 +1,4 @@
-﻿using ADSOLUSOL.Domain.Entities;
+﻿﻿using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 
 namespace ADSOLUSOL.Application.Services;
@@ -19,7 +19,7 @@ public class AdServingService
         var placement = await _placementRepository.GetByCodeAsync(placementCode);
         if (placement == null) return null;
 
-        var eligibleCampaigns = await _placementRepository.GetEligibleCampaignsAsync(placementCode);
+        var eligibleCampaigns = await _placementRepository.GetEligibleCampaignsAsync(tenantId, placementCode);
         var now = DateTime.UtcNow;
 
         var validCampaigns = eligibleCampaigns

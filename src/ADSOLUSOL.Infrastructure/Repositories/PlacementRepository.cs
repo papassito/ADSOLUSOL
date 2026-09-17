@@ -22,27 +22,27 @@ public class PlacementRepository : IPlacementRepository
     public async Task<Placement?> GetByCodeAsync(string code)
     {
         using var connection = CreateConnection();
-        var sql = "SELECT * FROM Placements WHERE Code = @Code;";
+        var sql = "SELECT * FROM Placements WHERE PlacementCode = @Code;";
         return await connection.QueryFirstOrDefaultAsync<Placement>(sql, new { Code = code });
     }
 
-    public async Task<IEnumerable<Campaign>> GetEligibleCampaignsAsync(string placementCode)
+    public async Task<IEnumerable<Campaign>> GetEligibleCampaignsAsync(string tenantId, string placementCode)
     {
         using var connection = CreateConnection();
         var sql = @"
             SELECT c.* FROM Campaigns c
             INNER JOIN CampaignPlacements cp ON c.Id = cp.CampaignId
             INNER JOIN Placements p ON cp.PlacementId = p.Id
-            WHERE p.Code = @PlacementCode AND c.Status = 'ACTIVE';";
-        return await connection.QueryAsync<Campaign>(sql, new { PlacementCode = placementCode });
+            WHERE p.PlacementCode = @PlacementCode AND c.Status = 'ACTIVE' AND c.TenantId = @TenantId;";
+        return await connection.QueryAsync<Campaign>(sql, new { TenantId = tenantId, PlacementCode = placementCode });
     }
 
     public async Task<long> CreateAsync(Placement placement)
     {
         using var connection = CreateConnection();
         var sql = @"
-            INSERT INTO Placements (Code, Name, Description, CreatedAt)
-            VALUES (@Code, @Name, @Description, @CreatedAt);
+            INSERT INTO Placements (PlacementCode, Name, IsEnabled, CreatedAtUtc, UpdatedAtUtc)
+            VALUES (@PlacementCode, @Name, @IsEnabled, @CreatedAtUtc, @UpdatedAtUtc);
             SELECT last_insert_rowid();";
         return await connection.ExecuteScalarAsync<long>(sql, placement);
     }

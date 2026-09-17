@@ -1,4 +1,4 @@
-﻿using ADSOLUSOL.Domain.Entities;
+﻿﻿using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 using ADSOLUSOL.Application.Services;
 using ADSOLUSOL.Domain.Enums;
@@ -10,7 +10,7 @@ namespace ADSOLUSOL.Presentation.Api.Controllers;
 [Route("api/[controller]")]
 public class CampaignsController : ControllerBase
 {
-    private string TenantId => HttpContext.Items["TenantId"] as string ?? "e2e-tenant";
+    private string TenantId => HttpContext.Items["TenantId"] as string ?? throw new InvalidOperationException("TenantId no fue encontrado. El middleware de firma puede no estar configurado.");
     private readonly CampaignService _campaignService;
     private readonly MetricsService _metricsService;
     private readonly EventProcessingService _eventProcessingService;
@@ -23,35 +23,25 @@ public class CampaignsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateCampaign([FromHeader(Name = "X-Tenant-Id")] string tenantId, [FromBody] CreateCampaignRequest request)
+    public async Task<IActionResult> CreateCampaign([FromBody] CreateCampaignRequest request)
     {
-        if (string.IsNullOrWhiteSpace(tenantId))
-        {
-            return BadRequest(new { Message = "El encabezado X-Tenant-Id es obligatorio." });
-        }
-
-        var campaign = await _campaignService.CreateAsync(tenantId, request.Name, request.Budget);
+        var campaign = await _campaignService.CreateAsync(TenantId, request.Name, request.Budget);
 
         return CreatedAtAction(nameof(GetCampaignById), new { id = campaign.Id }, campaign);
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetCampaignById([FromHeader(Name = "X-Tenant-Id")] string tenantId, string id)
+    public async Task<IActionResult> GetCampaignById(string id)
     {
-        var campaign = await _campaignService.GetAsync(tenantId, id);
+        var campaign = await _campaignService.GetAsync(TenantId, id);
         if (campaign == null) return NotFound();
         return Ok(campaign);
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllCampaigns([FromHeader(Name = "X-Tenant-Id")] string tenantId)
+    public async Task<IActionResult> GetAllCampaigns()
     {
-        if (string.IsNullOrWhiteSpace(tenantId))
-        {
-            return BadRequest(new { Message = "El encabezado X-Tenant-Id es obligatorio." });
-        }
-
-        var campaigns = await _campaignService.ListAsync(tenantId, CancellationToken.None);
+        var campaigns = await _campaignService.ListAsync(TenantId, CancellationToken.None);
         return Ok(campaigns);
     }
 

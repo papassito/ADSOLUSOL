@@ -1,58 +1,63 @@
-﻿using System.Threading.Tasks;
-using ADSOLUSOL.Domain.Interfaces;
+﻿using ADSOLUSOL.Domain.Interfaces;
 using Microsoft.AspNetCore.Http;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace ADSOLUSOL.Presentation.Api.Middleware;
-
-public class SignatureVerificationMiddleware
+namespace ADSOLUSOL.Presentation.Api.Middleware
 {
-    private readonly RequestDelegate _next;
-
-    public SignatureVerificationMiddleware(RequestDelegate next)
+    public class SignatureVerificationMiddleware
     {
-        _next = next;
-    }
+        private readonly RequestDelegate _next;
 
-    public async Task InvokeAsync(HttpContext context, ICoreSignatureVerifier verifier)
-    {
-        // Extraer los headers de autenticaciÃ³n de SOLUSOL
-        context.Request.Headers.TryGetValue("X-Solusol-Signature", out var signature);
-        context.Request.Headers.TryGetValue("X-Solusol-Node-Id", out var nodeId);
-        context.Request.Headers.TryGetValue("X-Solusol-Timestamp", out var timestampStr);
-        context.Request.Headers.TryGetValue("X-Solusol-Nonce", out var nonce);
-        context.Request.Headers.TryGetValue("TenantId", out var tenantId); // Capturar tambiÃ©n el TenantId
-
-        if (string.IsNullOrEmpty(signature) || string.IsNullOrEmpty(nodeId) || !long.TryParse(timestampStr, out var timestamp) || string.IsNullOrEmpty(nonce))
+        public SignatureVerificationMiddleware(RequestDelegate next)
         {
-            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            await context.Response.WriteAsync("Missing required SOLUSOL authentication headers.");
-            return;
+            _next = next;
         }
 
-        // Leer el cuerpo de la peticiÃ³n de forma segura
-        context.Request.EnableBuffering();
-        var body = await new System.IO.StreamReader(context.Request.Body).ReadToEndAsync();
-        var bodyBytes = System.Text.Encoding.UTF8.GetBytes(body);
-        context.Request.Body.Position = 0; // Rebobinar el stream para el siguiente middleware/controlador
-
-        var httpMethod = context.Request.Method;
-        var requestPath = context.Request.Path.ToString();
-        var queryString = context.Request.QueryString.ToString();
-
-        if (!verifier.Verify(signature!, nodeId!, timestamp, nonce!, bodyBytes, context.Request.Method, context.Request.Path.ToString(), context.Request.QueryString.ToString()))
+        public async Task InvokeAsync(HttpContext context, ICoreSignatureVerifier signatureVerifier)
         {
-            context.Response.StatusCode = StatusCodes.Status403Forbidden;
-            await context.Response.WriteAsync("Invalid signature.");
-            return;
-        }
+            // Rutas públicas que no requieren firma (ej. Swagger, health checks)
+            if (context.Request.Path.StartsWithSegments("/swagger") || context.Request.Path.StartsWithSegments("/api/health"))
+            {
+                await _next(context);
+                return;
+            }
 
-        // Si la verificaciÃ³n es exitosa, propagar el TenantId a travÃ©s del contexto de la peticiÃ³n
-        if (!string.IsNullOrEmpty(tenantId))
-        {
-            context.Items["TenantId"] = tenantId.ToString();
-        }
+            var signature = context.Request.Headers["X-Signature"].FirstOrDefault();
+            var nonce = context.Request.Headers["X-Nonce"].FirstOrDefault();
+            var timestamp = context.Request.Headers["X-Timestamp"].FirstOrDefault();
+            var nodeId = context.Request.Headers["X-Node-Id"].FirstOrDefault();
 
-        await _next(context);
+            if (string.IsNullOrEmpty(signature) || string.IsNullOrEmpty(nonce) || string.IsNullOrEmpty(timestamp) || string.IsNullOrEmpty(nodeId))
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                await context.Response.WriteAsync("Faltan cabeceras de firma requeridas.");
+                return;
+            }
+
+            context.Request.EnableBuffering();
+            string body;
+            using (var reader = new StreamReader(context.Request.Body, Encoding.UTF8, detectEncodingFromByteOrderMarks: false, leaveOpen: true))
+            {
+                body = await reader.ReadToEndAsync();
+                context.Request.Body.Position = 0;
+            }
+
+            // El verificador devuelve la validez y el TenantId asociado al NodeId
+            var (isValid, tenantId) = await signatureVerifier.VerifySignatureAndGetTenantAsync(nodeId, context.Request.Method, context.Request.Path, context.Request.QueryString.ToString(), timestamp, nonce, body, signature);
+
+            if (!isValid || string.IsNullOrEmpty(tenantId))
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                await context.Response.WriteAsync("Firma inválida.");
+                return;
+            }
+
+            context.Items["TenantId"] = tenantId;
+            await _next(context);
+        }
     }
 }
-
