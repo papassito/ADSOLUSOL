@@ -25,7 +25,7 @@ public class CampaignsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateCampaign([FromBody] CreateCampaignRequest request)
     {
-        var campaign = await _campaignService.CreateAsync(TenantId, request.Name, request.Budget);
+        var campaign = await _campaignService.CreateAsync(TenantId, request.Name, request.Budget, request.CostPerMille, request.CostPerClick, request.StartDateUtc, request.EndDateUtc);
 
         return CreatedAtAction(nameof(GetCampaignById), new { id = campaign.Id }, campaign);
     }

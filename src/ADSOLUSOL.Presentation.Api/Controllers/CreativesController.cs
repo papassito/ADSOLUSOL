@@ -1,4 +1,4 @@
-﻿﻿using ADSOLUSOL.Domain.Entities;
+﻿using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,8 +18,8 @@ public class CreativesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateCreative([FromBody] Creative creative)
     {
-        creative.CreatedAt = DateTime.UtcNow;
-        creative.UpdatedAt = DateTime.UtcNow;
+        creative.CreatedAtUtc = DateTime.UtcNow;
+        creative.UpdatedAtUtc = DateTime.UtcNow;
         var id = await _creativeRepository.CreateAsync(creative);
         var createdCreative = await _creativeRepository.GetByIdAsync(id);
         return CreatedAtAction(nameof(CreateCreative), new { id }, createdCreative);

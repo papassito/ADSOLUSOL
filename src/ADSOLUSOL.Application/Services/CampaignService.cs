@@ -1,4 +1,4 @@
-﻿using ADSOLUSOL.Domain.Entities;
+﻿﻿using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 
 namespace ADSOLUSOL.Application.Services;
@@ -27,7 +27,7 @@ public class CampaignService
         return null;
     }
 
-    public async Task<Campaign> CreateAsync(string tenantId, string name, decimal budget, CancellationToken token = default)
+    public async Task<Campaign> CreateAsync(string tenantId, string name, decimal budget, decimal cpm, decimal cpc, DateTime? startDate, DateTime? endDate, CancellationToken token = default)
     {
         var campaign = new Campaign
         {
@@ -36,7 +36,11 @@ public class CampaignService
             Name = name,
             Budget = budget,
             Status = "PAUSED",
-            CreatedAtUtc = DateTime.UtcNow
+            CreatedAtUtc = DateTime.UtcNow,
+            CostPerMille = cpm,
+            CostPerClick = cpc,
+            StartDateUtc = startDate ?? DateTime.UtcNow,
+            EndDateUtc = endDate ?? DateTime.UtcNow.AddDays(30)
         };
         await _campaignRepository.CreateAsync(campaign);
         return campaign;

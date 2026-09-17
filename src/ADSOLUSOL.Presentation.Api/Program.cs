@@ -52,6 +52,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// Add Exception Middleware at the top of the pipeline
+app.UseMiddleware<ExceptionMiddleware>();
+
 app.UseHttpsRedirection();
 
 // FIX: Conectar el middleware de verificación de firmas en el pipeline.

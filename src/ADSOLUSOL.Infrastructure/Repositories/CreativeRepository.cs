@@ -1,4 +1,4 @@
-﻿using ADSOLUSOL.Domain.Entities;
+﻿﻿using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 using Dapper;
 using Microsoft.Data.Sqlite;
@@ -41,8 +41,8 @@ public class CreativeRepository : ICreativeRepository
     {
         using var connection = CreateConnection();
         var sql = @"
-            INSERT INTO Creatives (Name, ContentUrl, TargetUrl, IsEnabled, CreatedAt, UpdatedAt)
-            VALUES (@Name, @ContentUrl, @TargetUrl, @IsEnabled, @CreatedAt, @UpdatedAt);
+            INSERT INTO Creatives (Name, ContentUrl, TargetUrl, IsEnabled, CreatedAtUtc, UpdatedAtUtc)
+            VALUES (@Name, @ContentUrl, @TargetUrl, @IsEnabled, @CreatedAtUtc, @UpdatedAtUtc);
             SELECT last_insert_rowid();";
         return await connection.ExecuteScalarAsync<long>(sql, creative);
     }
