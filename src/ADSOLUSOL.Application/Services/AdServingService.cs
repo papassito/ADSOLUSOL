@@ -1,4 +1,4 @@
-﻿﻿using ADSOLUSOL.Domain.Entities;
+﻿using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 
 namespace ADSOLUSOL.Application.Services;
@@ -24,7 +24,7 @@ public class AdServingService
 
         var validCampaigns = eligibleCampaigns
             // FIX P1-05: The DB query now filters by status and remaining budget. We only check the date range here.
-            .Where(c => c.StartDate <= now && c.EndDate >= now)
+            .Where(c => c.StartDateUtc <= now && c.EndDateUtc >= now)
             .OrderBy(_ => Guid.NewGuid())
             .ToList();
 
