@@ -1,18 +1,16 @@
-# .NET build outputs and IDE state
-**/bin/
-**/obj/
-.vs/
-*.user
-*.suo
-TestResults/
+# Ignore audit reports
+_audit/
+
+# .NET Core build artifacts
+bin/
+obj/
+
+# Common ignores
+node_modules/
+artifacts/
+testresults/
 coverage/
-*.log
-.env
-.env.*
-!.env.example
 
-**/App_Data/
-*.db
-*.db-shm
-*.db-wal
-
+# Rider/VS specific
+.idea/
+.vs/
