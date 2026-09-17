@@ -5,6 +5,9 @@ _audit/
 bin/
 obj/
 
+# SQLite database files
+App_Data/
+
 # Common ignores
 node_modules/
 artifacts/

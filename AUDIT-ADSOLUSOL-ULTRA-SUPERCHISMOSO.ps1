@@ -138,7 +138,8 @@ function Search-Regex {
 
     foreach ($f in $Files) {
         $lines = Read-LinesSafe $f.FullName
-        for ($i=0; $i -lt $lines.Count; $i++) {
+        $lines = @($lines)
+        $lines = @($lines); for ($i=0; $i -lt $lines.Count; $i++) {
             $line = [string]$lines[$i]
             if ($line -match $Pattern) {
                 $evidence = $line.Trim()
@@ -971,3 +972,4 @@ if (-not $NoPause) {
 if ($Stats.Critical -gt 0) { exit 2 }
 if ($Stats.High -gt 0) { exit 1 }
 exit 0
+
