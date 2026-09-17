@@ -1,4 +1,4 @@
-﻿﻿using ADSOLUSOL.Domain.Entities;
+﻿using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 using ADSOLUSOL.Application.Services;
 using ADSOLUSOL.Domain.Enums;
@@ -85,8 +85,7 @@ public class CampaignsController : ControllerBase
             PlacementCode = request.PlacementCode,
             TenantId = tenantId,
             EventType = eventType.ToString().ToUpper(),
-            OccurredAt = DateTime.UtcNow,
-            ReceivedAt = DateTime.UtcNow
+            TimestampUtc = DateTime.UtcNow
         };
 
         var status = await _eventProcessingService.ProcessEvent(adEvent);

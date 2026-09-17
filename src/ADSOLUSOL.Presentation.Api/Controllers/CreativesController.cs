@@ -1,11 +1,11 @@
-﻿using ADSOLUSOL.Domain.Entities;
+﻿﻿using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ADSOLUSOL.Presentation.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/creatives")]
 public class CreativesController : ControllerBase
 {
     private readonly ICreativeRepository _creativeRepository;
