@@ -113,7 +113,7 @@ function Read-LinesSafe {
         return $script:FileLinesCache[$Path]
     }
     try {
-        $lines = Get-Content -LiteralPath $Path -ErrorAction Stop
+        $lines = @(Get-Content -LiteralPath $Path -ErrorAction Stop)
         $script:FileLinesCache[$Path] = $lines
         return $lines
     }
