@@ -49,57 +49,54 @@ public class MarketingBrainClient : IMarketingBrainService
             throw new InvalidOperationException("Private key for this node ('SolusolAuthV1:PrivateKey') is not configured. Cannot emit telemetry.");
         }
 
-        var fullKeyBytes = Convert.FromHexString(privateKeyHex);
-        // The public key is the last 32 bytes of the 64-byte expanded private key.
-        var publicKeyBytes = fullKeyBytes.AsSpan(32).ToArray(); 
+        // 1. Preparar payload y elementos de autenticación
+        var timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
 
-        using var sha256 = SHA256.Create();
-        var nodeId = Convert.ToHexString(sha256.ComputeHash(publicKeyBytes)).ToLowerInvariant();
-
-        var timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.ffffffZ");
-        
         var nonceBytes = new byte[16];
         RandomNumberGenerator.Fill(nonceBytes);
         var nonce = Convert.ToHexString(nonceBytes).ToLowerInvariant();
 
-        var signals = new[] { new { source_id = nodeId, type = eventType, payload = eventPayload, timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds() } };
-
-        // The signature covers the exact JSON representation of the signals array.
+        var signals = new[] { new { source_id = _selfNodeId, type = eventType, payload = eventPayload, timestamp } };
         var signalsJson = JsonSerializer.Serialize(signals);
-        var canonicalStringToSign = $"{timestamp}|{nonce}|{nodeId}|{signalsJson}";
-        var dataToSign = Encoding.UTF8.GetBytes(canonicalStringToSign);
+        var signalsJsonBytes = Encoding.UTF8.GetBytes(signalsJson);
+
+        // 2. Construir el payload canónico para la firma según SOLUSOL_AUTH_V1
+        // Es una concatenación directa de bytes: VERSION | TIMESTAMP | NONCE | NODE_ID | BODY
+        var versionBytes = Encoding.UTF8.GetBytes("SOLUSOL_AUTH_V1");
+        var timestampBytes = BitConverter.GetBytes(timestamp);
+        var nonceUtf8Bytes = Encoding.UTF8.GetBytes(nonce);
+        var nodeIdBytes = Encoding.UTF8.GetBytes(_selfNodeId);
+
+        using var payloadStream = new MemoryStream();
+        payloadStream.Write(versionBytes, 0, versionBytes.Length);
+        payloadStream.Write(timestampBytes, 0, timestampBytes.Length);
+        payloadStream.Write(nonceUtf8Bytes, 0, nonceUtf8Bytes.Length);
+        payloadStream.Write(nodeIdBytes, 0, nodeIdBytes.Length);
+        payloadStream.Write(signalsJsonBytes, 0, signalsJsonBytes.Length);
+        var dataToSign = payloadStream.ToArray();
+
+        // 3. Firmar el payload canónico con la clave privada Ed25519
+        var fullKeyBytes = Convert.FromHexString(privateKeyHex);
         var algorithm = SignatureAlgorithm.Ed25519;
         using var key = Key.Import(algorithm, fullKeyBytes, KeyBlobFormat.RawPrivateKey);
         var signatureBytes = algorithm.Sign(key, dataToSign);
         var signatureBase64 = Convert.ToBase64String(signatureBytes);
 
-
-        var telemetryPayload = new
-        {
-            authentication = new {
-                node_id = nodeId,
-                timestamp,
-                nonce,
-                signature = signatureBase64,
-                context = new {}
-            },
-            version = "sic.telemetry.v1",
-            actor_id = nodeId,
-            tenant_id = TenantId,
-            capability = "telemetry:submit",
-            resource = "sic:collector",
-            signals = signals
-        };
-
-        var payloadJson = JsonSerializer.Serialize(telemetryPayload);
+        // 4. Crear y enviar la petición HTTP
+        // El cuerpo es el payload de negocio (el JSON de las señales).
+        // Los datos de autenticación se envían en las cabeceras.
         using var request = new HttpRequestMessage(HttpMethod.Post, "telemetry");
-        request.Content = new StringContent(payloadJson, Encoding.UTF8, "application/json");
+        request.Content = new StringContent(signalsJson, Encoding.UTF8, "application/json");
 
-        request.Headers.Add("X-Solusol-Node-Id", nodeId);
+        // Añadir todas las cabeceras requeridas por el protocolo SOLUSOL_AUTH_V1
+        request.Headers.Add("X-Solusol-Node-Id", _selfNodeId);
+        request.Headers.Add("X-Solusol-Timestamp", timestamp.ToString());
+        request.Headers.Add("X-Solusol-Nonce", nonce);
         request.Headers.Add("X-Solusol-Signature", signatureBase64);
+        request.Headers.Add("TenantId", TenantId);
 
-        var response = await _httpClient.SendAsync(request);
-        response.EnsureSuccessStatusCode(); // Throws HttpRequestException on non-2xx responses.
+        using var response = await _httpClient.SendAsync(request);
+        response.EnsureSuccessStatusCode();
     }
 
     /// <summary>

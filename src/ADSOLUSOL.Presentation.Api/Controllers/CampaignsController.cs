@@ -11,7 +11,7 @@ using ADSOLUSOL.Domain.Entities;
 namespace ADSOLUSOL.Presentation.Api.Controllers
 {
     [ApiController]
-    [Route("api/campaigns")]
+    [Route("api/marketing/adsolusol/campaigns")]
     public class CampaignsController : ControllerBase
     {
         private readonly CampaignService _campaignService; // Good
@@ -28,37 +28,40 @@ namespace ADSOLUSOL.Presentation.Api.Controllers
             _metricsService = metricsService;
             _eventProcessingService = eventProcessingService;
         }
+
+        private string TenantId => HttpContext.Items["TenantId"] as string ?? "solusol-internal";
+
         // Endpoints from the newer CampaignController, now integrated here.
         [HttpGet]
-        public async Task<IActionResult> Get(CancellationToken token) => Ok(await _campaignService.ListAsync("local", token));
+        public async Task<IActionResult> Get(CancellationToken token) => Ok(await _campaignService.ListAsync(TenantId, token));
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(string id, CancellationToken token)
         {
-            var campaign = await _campaignService.GetAsync("local", id, token);
+            var campaign = await _campaignService.GetAsync(TenantId, id, token);
             return campaign is null ? NotFound() : Ok(campaign);
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateCampaignRequest request, CancellationToken token)
         {
-            var campaign = await _campaignService.CreateAsync("local", request.Name, request.Budget, token);
-            return Created($"/api/campaigns/{campaign.Id}", campaign);
+            var campaign = await _campaignService.CreateAsync(TenantId, request.Name, request.Budget, token);
+            return Created($"/api/marketing/adsolusol/campaigns/{campaign.Id}", campaign);
         }
 
         [HttpGet("{id}/metrics")]
         public async Task<IActionResult> GetMetrics(string id)
         {
-            var metrics = await _metricsService.GetMetricsForCampaign(id);
+            var metrics = await _metricsService.GetMetricsForCampaign(TenantId, id);
             return metrics is null ? NotFound() : Ok(metrics);
         }
 
-        [HttpPost("{id}/status")]
-        public async Task<IActionResult> UpdateStatus(string id, [FromBody] UpdateStatusRequest request)
+        [HttpPost("{id}/toggle")]
+        public async Task<IActionResult> ToggleStatus(string id, [FromBody] UpdateStatusRequest request)
         {
             // Assuming CampaignService has a method to update status.
             // This replaces the old _processingEngine logic.
-            var updatedCampaign = await _campaignService.UpdateStatusAsync(id, request.Status);
+            var updatedCampaign = await _campaignService.UpdateStatusAsync(TenantId, id, request.Status);
             if (updatedCampaign is null)
             {
                 return NotFound(new { error = "Campaign not found." });
@@ -70,16 +73,16 @@ namespace ADSOLUSOL.Presentation.Api.Controllers
         [HttpPost("{id}/click")]
         public async Task<IActionResult> RegisterClick(string id, [FromBody] EventRequest request)
         {
-            return await RegisterEventAsync(id, request, EventType.Click);
+            return await RegisterEventAsync(TenantId, id, request, EventType.Click);
         }
 
         [HttpPost("{id}/impression")]
         public async Task<IActionResult> RegisterImpression(string id, [FromBody] EventRequest request)
         {
-            return await RegisterEventAsync(id, request, EventType.Impression);
+            return await RegisterEventAsync(TenantId, id, request, EventType.Impression);
         }
 
-        private async Task<IActionResult> RegisterEventAsync(string campaignId, EventRequest request, EventType eventType)
+        private async Task<IActionResult> RegisterEventAsync(string tenantId, string campaignId, EventRequest request, EventType eventType)
         {
             var adEvent = new AdEvent
             {
@@ -87,6 +90,7 @@ namespace ADSOLUSOL.Presentation.Api.Controllers
                 CampaignId = campaignId,
                 CreativeId = request.CreativeId,
                 PlacementCode = request.PlacementCode,
+                TenantId = tenantId,
                 EventType = eventType.ToString().ToUpper(),
                 OccurredAt = DateTime.UtcNow, // Should ideally come from client, but server time is a safe default
                 ReceivedAt = DateTime.UtcNow

@@ -16,6 +16,12 @@ builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
 builder.Services.AddScoped<ICreativeRepository, CreativeRepository>();
 builder.Services.AddScoped<IPlacementRepository, PlacementRepository>();
 
+// Registrar el cliente HTTP para el MarketingBrain (motor Go)
+builder.Services.AddHttpClient<IMarketingBrainService, MarketingBrainClient>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["SicService:BaseUrl"] ?? "http://127.0.0.1:8080/");
+});
+
 // ... aquí se registrarían otros servicios como CampaignService, etc.
 
 builder.Services.AddControllers();
