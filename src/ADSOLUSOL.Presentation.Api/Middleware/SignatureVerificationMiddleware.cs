@@ -35,7 +35,11 @@ public class SignatureVerificationMiddleware
         var bodyBytes = System.Text.Encoding.UTF8.GetBytes(body);
         context.Request.Body.Position = 0; // Rebobinar el stream para el siguiente middleware/controlador
 
-        if (!verifier.Verify(signature!, nodeId!, timestamp, nonce!, bodyBytes))
+        var httpMethod = context.Request.Method;
+        var requestPath = context.Request.Path.ToString();
+        var queryString = context.Request.QueryString.ToString();
+
+        if (!verifier.Verify(signature!, nodeId!, timestamp, nonce!, bodyBytes, context.Request.Method, context.Request.Path.ToString(), context.Request.QueryString.ToString()))
         {
             context.Response.StatusCode = StatusCodes.Status403Forbidden;
             await context.Response.WriteAsync("Invalid signature.");
@@ -51,3 +55,4 @@ public class SignatureVerificationMiddleware
         await _next(context);
     }
 }
+

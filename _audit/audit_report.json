@@ -1,13 +1,13 @@
 ﻿{
     "Product":  "ADSOLUSOL",
-    "Root":  "G:\\Mi unidad\\00_DESARROLLO_SOFTWARE\\SOLUSOL_NET\\ADSOLUSOL",
+    "Root":  "Y:\\Documentos\\GitHub\\ADSOLUSOL",
     "Gate":  "FAIL",
     "Stats":  {
                   "Critical":  1,
                   "High":  0,
                   "Medium":  0,
                   "Low":  0,
-                  "Info":  4
+                  "Info":  11
               },
     "Findings":  [
                      {
@@ -23,6 +23,55 @@
                          "Category":  "CONFIG",
                          "Message":  "Sintaxis JSON valida.",
                          "File":  "audit_report_adsolusol.json"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-JSON-OK",
+                         "Category":  "CONFIG",
+                         "Message":  "Sintaxis JSON valida.",
+                         "File":  "BackUP\\BACKUP_20260914_161733\\audit_report_adsolusol.json"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-JSON-OK",
+                         "Category":  "CONFIG",
+                         "Message":  "Sintaxis JSON valida.",
+                         "File":  "BackUP\\BACKUP_20260914_161733\\src\\ADSOLUSOL.Presentation.Api\\appsettings.json"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-JSON-OK",
+                         "Category":  "CONFIG",
+                         "Message":  "Sintaxis JSON valida.",
+                         "File":  "BackUP\\BACKUP_20260914_161733\\src\\ADSOLUSOL.Presentation.Cmd\\appsettings.json"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-JSON-OK",
+                         "Category":  "CONFIG",
+                         "Message":  "Sintaxis JSON valida.",
+                         "File":  "BackUP\\BACKUP_20260914_162010\\audit_report_adsolusol.json"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-JSON-OK",
+                         "Category":  "CONFIG",
+                         "Message":  "Sintaxis JSON valida.",
+                         "File":  "BackUP\\BACKUP_20260914_162010\\src\\ADSOLUSOL.Presentation.Api\\appsettings.json"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-JSON-OK",
+                         "Category":  "CONFIG",
+                         "Message":  "Sintaxis JSON valida.",
+                         "File":  "BackUP\\BACKUP_20260914_162010\\src\\ADSOLUSOL.Presentation.Cmd\\appsettings.json"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-JSON-OK",
+                         "Category":  "CONFIG",
+                         "Message":  "Sintaxis JSON valida.",
+                         "File":  "src\\ADSOLUSOL.Presentation.Api\\appsettings.Development.json"
                      },
                      {
                          "Severity":  "INFO",

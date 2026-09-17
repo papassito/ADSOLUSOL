@@ -13,7 +13,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
-builder.Services.AddHttpContextAccessor();
 
 // Memoria thread-safe para Nonces usados (Prevención de Replay Attack)
 builder.Services.AddSingleton<ConcurrentDictionary<string, DateTime>>();
@@ -27,21 +26,17 @@ builder.Services.AddScoped<ICampaignRepository, CampaignRepository>();
 builder.Services.AddScoped<ICreativeRepository, CreativeRepository>();
 builder.Services.AddScoped<IPlacementRepository, PlacementRepository>();
 builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
-builder.Services.AddScoped<IAdEventRepository, AdEventRepository>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddSingleton<ICoreSignatureVerifier, CoreSignatureVerifier>();
-builder.Services.AddScoped<IMarketingBrainService, MarketingBrainClient>();
 
 // Servicios de la Capa de Aplicación
 builder.Services.AddScoped<AdServingService>();
 
 var app = builder.Build();
 
-// Garantizar la inicialización del esquema SQLite al inicio
+// Asegurar la creación de tablas en SQLite al arrancar.
+// NOTA: En un entorno de producción real, se usarían migraciones.
 using (var scope = app.Services.CreateScope())
 {
-    var dataDir = Path.Combine(builder.Environment.ContentRootPath, "App_Data");
-    Directory.CreateDirectory(dataDir);
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.EnsureCreated();
 }

@@ -1,4 +1,4 @@
-﻿﻿param(
+param(
     [string]$Root = (Get-Location).Path,
     [switch]$RunBuild,
     [switch]$RunRegression,
@@ -500,9 +500,9 @@ foreach ($program in $programCandidates) {
     $content = (Read-LinesSafe $program.FullName) -join "`n"
 
     foreach ($serviceEntry in $usedServices.GetEnumerator() | Where-Object { $_.Value }) {
-        if ($content -notmatch ("Add(Scoped|Singleton|Transient).*" + [regex]::Escape($serviceEntry.Name))) {
+        if ($content -notmatch ("Add(Scoped|Singleton|Transient).*" + [regex]::Escape($serviceEntry.Key))) {
             Add-Finding -Severity "HIGH" -Code "ADS-DI-001" -Category "DI" `
-                -Message "Servicio usado pero no se encontró registro explícito en Program.cs: $($serviceEntry.Name)" `
+                -Message "Servicio usado pero no se encontró registro explícito en Program.cs: $($serviceEntry.Key)" `
                 -File (Get-RelativePathSafe $program.FullName)
         }
     }
