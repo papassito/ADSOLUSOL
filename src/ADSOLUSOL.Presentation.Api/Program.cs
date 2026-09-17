@@ -1,10 +1,10 @@
 ﻿using ADSOLUSOL.Application.Interfaces;
 using ADSOLUSOL.Application.Services;
 using ADSOLUSOL.Presentation.Api.Middleware;
+using ADSOLUSOL.Infrastructure.Persistence;
 using ADSOLUSOL.Domain.Interfaces;
-using ADSOLUSOL.Infrastructure.Data;
 using ADSOLUSOL.Infrastructure.Repositories;
-using ADSOLUSOL.Infrastructure.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +12,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// FIX: Re-add DbContext configuration.
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 
 // =================================================================
 //  CONFIGURACIÓN DE INYECCIÓN DE DEPENDENCIAS (DI)
@@ -26,11 +32,12 @@ builder.Services.AddScoped<IAdEventRepository, AdEventRepository>(); // FIX: Reg
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); // FIX: Registrada la Unidad de Trabajo faltante.
 
 // --- SERVICIOS DE APLICACIÓN (Capa de Lógica de Negocio)
+// FIX: Register concrete service classes as interfaces are not defined for them yet.
 builder.Services.AddScoped<AdServingService>();
-builder.Services.AddScoped<IBudgetService, BudgetService>(); // FIX: Registrado servicio de presupuesto.
-builder.Services.AddScoped<IEventProcessingService, EventProcessingService>(); // FIX: Registrado servicio de procesamiento de eventos.
-builder.Services.AddScoped<ICampaignService, CampaignService>(); // FIX: Registrado servicio de campañas.
-builder.Services.AddScoped<IMetricsService, MetricsService>(); // FIX: Registrado servicio de métricas.
+builder.Services.AddScoped<BudgetService>();
+builder.Services.AddScoped<EventProcessingService>();
+builder.Services.AddScoped<CampaignService>();
+builder.Services.AddScoped<MetricsService>();
 
 // --- SERVICIOS DE INFRAESTRUCTURA (Integraciones Externas, etc.)
 builder.Services.AddScoped<ICoreSignatureVerifier, CoreSignatureVerifier>();
@@ -49,6 +56,14 @@ app.UseHttpsRedirection();
 
 // FIX: Conectar el middleware de verificación de firmas en el pipeline.
 app.UseMiddleware<SignatureVerificationMiddleware>();
+
+// FIX: Ensure the database schema is created on startup.
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var dbContext = services.GetRequiredService<AppDbContext>();
+    dbContext.Database.EnsureCreated();
+}
 
 app.UseAuthorization();
 app.MapControllers();

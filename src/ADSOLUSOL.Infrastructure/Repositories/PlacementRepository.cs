@@ -41,8 +41,8 @@ public class PlacementRepository : IPlacementRepository
     {
         using var connection = CreateConnection();
         var sql = @"
-            INSERT INTO Placements (PlacementCode, Name, IsEnabled, CreatedAtUtc, UpdatedAtUtc)
-            VALUES (@PlacementCode, @Name, @IsEnabled, @CreatedAtUtc, @UpdatedAtUtc);
+            INSERT INTO Placements (PlacementCode, Name, IsEnabled, CreatedAt, UpdatedAt)
+            VALUES (@PlacementCode, @Name, @IsEnabled, @CreatedAt, @UpdatedAt);
             SELECT last_insert_rowid();";
         return await connection.ExecuteScalarAsync<long>(sql, placement);
     }
