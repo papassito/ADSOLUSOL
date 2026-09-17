@@ -92,7 +92,7 @@ function Is-ExcludedPath {
     $p = $FullName.Replace('\','/').ToLowerInvariant()
     return (
         $p -match '\.git' -or
-        $p -match '(^|/)(bin|obj|_audit|node_modules|coverage|testresults|artifacts)(/|$)' -or
+        $p -match '(^|/)(bin|obj|_audit|node_modules|coverage|testresults|artifacts|backup|vendor)(/|$)' -or
         $p -match '\.deps\.json$' -or
         $p -match 'project\.assets\.json$'
     )
