@@ -22,9 +22,9 @@ public class CampaignRepository : ICampaignRepository
     public async Task CreateAsync(Campaign campaign)
     {
         using var connection = CreateConnection();
-        var sql = @"
-            INSERT INTO Campaigns (Id, TenantId, Name, Status, Budget, BudgetSpent, CostPerMille, CostPerClick, StartDateUtc, EndDateUtc, CreatedAt)
-            VALUES (@Id, @TenantId, @Name, @Status, @Budget, @BudgetSpent, @CostPerMille, @CostPerClick, @StartDateUtc, @EndDateUtc, @CreatedAt);";
+        var sql = @"INSERT INTO Campaigns 
+            (Id, TenantId, Name, Status, Budget, BudgetSpent, CostPerMille, CostPerClick, StartDateUtc, EndDateUtc, CreatedAtUtc) VALUES 
+            (@Id, @TenantId, @Name, @Status, @Budget, @BudgetSpent, @CostPerMille, @CostPerClick, @StartDateUtc, @EndDateUtc, @CreatedAtUtc);";
         await connection.ExecuteAsync(sql, campaign);
     }
 
@@ -53,7 +53,7 @@ public class CampaignRepository : ICampaignRepository
         var sql = @"
             UPDATE Campaigns SET
                 Name = @Name, Status = @Status, Budget = @Budget, BudgetSpent = @BudgetSpent,
-                StartDateUtc = @StartDateUtc, EndDateUtc = @EndDateUtc
+                StartDateUtc = @StartDateUtc, EndDateUtc = @EndDateUtc, CreatedAtUtc = @CreatedAtUtc
             WHERE Id = @Id AND TenantId = @TenantId;";
         await connection.ExecuteAsync(sql, campaign);
     }

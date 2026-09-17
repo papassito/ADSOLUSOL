@@ -1,4 +1,4 @@
-﻿﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using ADSOLUSOL.Domain.Entities;
 
 namespace ADSOLUSOL.Infrastructure.Persistence;
@@ -7,31 +7,27 @@ public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-    public DbSet<Campaign> Campaigns { get; set; } = null!;
-    public DbSet<AdEvent> AdEvents { get; set; } = null!;
+    public DbSet<Campaign> Campaigns => Set<Campaign>();
+    public DbSet<Placement> Placements => Set<Placement>();
+    public DbSet<Creative> Creatives => Set<Creative>();
+    public DbSet<AdEvent> AdEvents => Set<AdEvent>();
+    public DbSet<CampaignPlacement> CampaignPlacements => Set<CampaignPlacement>();
+    public DbSet<CampaignCreative> CampaignCreatives => Set<CampaignCreative>();
 
-    public async Task<Campaign?> GetCampaignByIdAsync(Guid id)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Linea 64 corregida: Comparación explícita de string vs string (.ToString())
-        return await Campaigns.FirstOrDefaultAsync(c => c.Id == id.ToString());
-    }
+        base.OnModelCreating(modelBuilder);
 
-    public async Task<Campaign> CreateCampaignAsync(string tenantId, string name, decimal budget)
-    {
-        var campaign = new Campaign
-        {
-            // Linea 115 corregida: Conversión explícita de Guid a string
-            Id = Guid.NewGuid().ToString(),
-            TenantId = tenantId,
-            Name = name,
-            Budget = budget,
-            Status = "PAUSED",
-            CreatedAt = DateTime.UtcNow
-        };
+        modelBuilder.Entity<Campaign>().HasKey(c => c.Id);
+        modelBuilder.Entity<Placement>().HasKey(p => p.Id);
+        modelBuilder.Entity<Creative>().HasKey(c => c.Id);
+        modelBuilder.Entity<AdEvent>().HasKey(e => e.Id);
 
-        Campaigns.Add(campaign);
-        await SaveChangesAsync();
-        return campaign;
+        // Many-to-many: Campaign <-> Placement
+        modelBuilder.Entity<CampaignPlacement>().HasKey(cp => new { cp.CampaignId, cp.PlacementId });
+
+        // Many-to-many: Campaign <-> Creative
+        modelBuilder.Entity<CampaignCreative>().HasKey(cc => new { cc.CampaignId, cc.CreativeId });
     }
 
     public async Task<bool> IsAvailableAsync(CancellationToken cancellationToken = default)

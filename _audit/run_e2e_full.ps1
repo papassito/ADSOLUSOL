@@ -53,12 +53,9 @@ try {
 
     # 2. Compilación Previa
     Write-Step "COMPILANDO SOLUCIÓN (.NET BUILD)"
-    $dotnetExe = "C:\Users\Radio 2027\Documents\Codex\tools\dotnet\dotnet.exe"
-    if (-not (Test-Path $dotnetExe)) { $dotnetExe = (Get-Command "dotnet" -ErrorAction SilentlyContinue).Source }
     $dotnetExe = (Get-Command "dotnet" -ErrorAction SilentlyContinue).Source
     if (-not $dotnetExe) { throw "dotnet.exe not found in PATH" }
     
-    & $dotnetExe build ADSOLUSOL.sln /v:q /noconlog
     & $dotnetExe build (Join-Path $PSScriptRoot '..\ADSOLUSOL.sln') /v:q /noconlog
     if ($LASTEXITCODE -ne 0) { throw "La compilación de la solución falló." }
     Write-Pass "Compilación exitosa."
@@ -87,7 +84,6 @@ try {
     $script:HttpClient.BaseAddress = [Uri]::new($BaseUrl)
 
     # 5. Ejecución del Ciclo Publicitario E2E
-    $runId = [Guid]::NewGuid().ToString("N").Substring(0, 8)
     $runId = [Guid]::NewGuid().ToString("N").Substring(0, 12)
     $campaignName = "E2E Campaign $runId"
     $placementCode = "ZONE_$runId"

@@ -23,7 +23,8 @@ public class AdServingService
         var now = DateTime.UtcNow;
 
         var validCampaigns = eligibleCampaigns
-            .Where(c => c.StartDateUtc <= now && c.EndDateUtc >= now)
+            // Correct logic: campaign is active, within date range, and has budget
+            .Where(c => c.Status == "ACTIVE" && c.StartDateUtc <= now && c.EndDateUtc >= now && c.RemainingBudget > 0)
             .OrderBy(_ => Guid.NewGuid())
             .ToList();
 

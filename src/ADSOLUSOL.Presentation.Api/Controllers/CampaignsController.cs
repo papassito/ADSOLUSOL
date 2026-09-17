@@ -1,5 +1,6 @@
 ﻿using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
+using ADSOLUSOL.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ADSOLUSOL.Presentation.Api.Controllers;
@@ -8,11 +9,11 @@ namespace ADSOLUSOL.Presentation.Api.Controllers;
 [Route("api/[controller]")]
 public class CampaignsController : ControllerBase
 {
-    private readonly ICampaignRepository _campaignRepository;
+    private readonly CampaignService _campaignService;
 
-    public CampaignsController(ICampaignRepository campaignRepository)
+    public CampaignsController(CampaignService campaignService)
     {
-        _campaignRepository = campaignRepository;
+        _campaignService = campaignService;
     }
 
     [HttpPost]
@@ -23,30 +24,15 @@ public class CampaignsController : ControllerBase
             return BadRequest(new { Message = "El encabezado X-Tenant-Id es obligatorio." });
         }
 
-        var campaign = new Campaign
-        {
-            Id = Guid.NewGuid().ToString(),
-            TenantId = tenantId,
-            Name = request.Name,
-            Budget = request.Budget,
-            BudgetSpent = 0,
-            Status = "ACTIVE",
-            CostPerMille = request.CostPerMille,
-            CostPerClick = request.CostPerClick,
-            StartDateUtc = request.StartDateUtc ?? DateTime.UtcNow,
-            EndDateUtc = request.EndDateUtc ?? DateTime.UtcNow.AddDays(30),
-            CreatedAt = DateTime.UtcNow
-        };
-
-        await _campaignRepository.CreateAsync(campaign);
+        var campaign = await _campaignService.CreateAsync(tenantId, request.Name, request.Budget);
 
         return CreatedAtAction(nameof(GetCampaignById), new { id = campaign.Id }, campaign);
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetCampaignById(string id)
+    public async Task<IActionResult> GetCampaignById([FromHeader(Name = "X-Tenant-Id")] string tenantId, string id)
     {
-        var campaign = await _campaignRepository.GetByIdAsync(id);
+        var campaign = await _campaignService.GetAsync(tenantId, id);
         if (campaign == null) return NotFound();
         return Ok(campaign);
     }
@@ -59,7 +45,7 @@ public class CampaignsController : ControllerBase
             return BadRequest(new { Message = "El encabezado X-Tenant-Id es obligatorio." });
         }
 
-        var campaigns = await _campaignRepository.GetAllAsync(tenantId);
+        var campaigns = await _campaignService.ListAsync(tenantId);
         return Ok(campaigns);
     }
 }
