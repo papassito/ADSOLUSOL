@@ -1,5 +1,5 @@
-# ==============================================================================
-# ADSOLUSOL — SCRIPT DE VERIFICACIÓN COMPLETA E2E (END-TO-END)
+﻿# ==============================================================================
+# ADSOLUSOL â€” SCRIPT DE VERIFICACIÃ“N COMPLETA E2E (END-TO-END)
 # ==============================================================================
 [CmdletBinding()]
 param(
@@ -42,7 +42,7 @@ function Write-Section($msg) { Write-Host "`n===================================
 try {
     Write-Section "INICIANDO ENTORNO TEMPORAL E2E"
 
-    # 1. Configuración de Directorio y Base de Datos Temporal
+    # 1. ConfiguraciÃ³n de Directorio y Base de Datos Temporal
     $script:TempRoot = Join-Path ([System.IO.Path]::GetTempPath()) ("ADSOLUSOL-E2E-" + [Guid]::NewGuid().ToString("N"))
     New-Item -ItemType Directory -Path $script:TempRoot -Force | Out-Null
     $script:DatabasePath = Join-Path $script:TempRoot "adsolusol-e2e.db"
@@ -51,14 +51,14 @@ try {
     Write-Info "DB Pruebas : $script:DatabasePath"
     Write-Info "Modo NoAuth: $NoAuth"
 
-    # 2. Compilación Previa
-    Write-Step "COMPILANDO SOLUCIÓN (.NET BUILD)"
+    # 2. CompilaciÃ³n Previa
+    Write-Step "COMPILANDO SOLUCIÃ“N (.NET BUILD)"
     $dotnetExe = (Get-Command "dotnet" -ErrorAction SilentlyContinue).Source
     if (-not $dotnetExe) { throw "dotnet.exe not found in PATH" }
     
     & $dotnetExe build (Join-Path $PSScriptRoot '..\ADSOLUSOL.sln') /v:q /noconlog
-    if ($LASTEXITCODE -ne 0) { throw "La compilación de la solución falló." }
-    Write-Pass "Compilación exitosa."
+    if ($LASTEXITCODE -ne 0) { throw "La compilaciÃ³n de la soluciÃ³n fallÃ³." }
+    Write-Pass "CompilaciÃ³n exitosa."
 
     # 3. Lanzar API en Segundo Plano
     Write-Step "INICIANDO PROCESO SERVIDOR API"
@@ -75,7 +75,7 @@ try {
     Start-Sleep -Seconds 4
     if ($script:ApiProcess.HasExited) {
         $errText = Get-Content $stderrLog -Raw -ErrorAction SilentlyContinue
-        throw "La API falló al arrancar: $errText"
+        throw "La API fallÃ³ al arrancar: $errText"
     }
     Write-Pass "API escuchando activamente en $BaseUrl"
 
@@ -83,7 +83,7 @@ try {
     $script:HttpClient = [System.Net.Http.HttpClient]::new()
     $script:HttpClient.BaseAddress = [Uri]::new($BaseUrl)
 
-    # 5. Ejecución del Ciclo Publicitario E2E
+    # 5. EjecuciÃ³n del Ciclo Publicitario E2E
     $runId = [Guid]::NewGuid().ToString("N").Substring(0, 12)
     $campaignName = "E2E Campaign $runId"
     $placementCode = "ZONE_$runId"
@@ -96,7 +96,7 @@ try {
     $campBody = @{ name = $campaignName; budget = $initialBudget; status = "ACTIVE" } | ConvertTo-Json
     $res = Invoke-RestMethod -Uri "$BaseUrl/api/campaigns" -Method Post -Body $campBody -ContentType "application/json"
     $campaignId = $res.id
-    if (-not $campaignId) { throw "Create Campaign no devolvió ID." }
+    if (-not $campaignId) { throw "Create Campaign no devolviÃ³ ID." }
     $script:Results.CAMPAIGN = "PASS"
     Write-Pass "Campaign ID: $campaignId"
 
@@ -115,7 +115,7 @@ try {
     Write-Pass "Creativo y Asociaciones configuradas."
 
     # Step D: Impression
-    Write-Step "4. REGISTRAR IMPRESIÓN"
+    Write-Step "4. REGISTRAR IMPRESIÃ“N"
     $impEventId = [Guid]::NewGuid().ToString("N")
     $impBody = @{ event_id = $impEventId; placement_id = $placementCode } | ConvertTo-Json
     $null = Invoke-RestMethod -Uri "$BaseUrl/api/marketing/adsolusol/campaigns/$campaignId/impression?event_id=$impEventId&placement_id=$placementCode" -Method Post
@@ -138,11 +138,11 @@ try {
     }
 
     # Step G: Metrics & Budget
-    Write-Step "7. CONSULTAR MÉTRICAS Y PRESUPUESTO"
+    Write-Step "7. CONSULTAR MÃ‰TRICAS Y PRESUPUESTO"
     $script:Results.METRICS = "PASS"
     $script:Results.BUDGET = "PASS"
     $script:Results.SQLITE = "PASS"
-    Write-Pass "Métricas y débito contable verificados."
+    Write-Pass "MÃ©tricas y dÃ©bito contable verificados."
 
     # Marcado Final
     $script:Results.E2E = "PASS"
@@ -154,7 +154,7 @@ try {
     $script:ExitCode = 1
 } finally {
     # --------------------------------------------------------------------------
-    # LIMPIEZA Y RESTAURACIÓN DE RECURSOS
+    # LIMPIEZA Y RESTAURACIÃ“N DE RECURSOS
     # --------------------------------------------------------------------------
     if ($script:ApiProcess -and -not $script:ApiProcess.HasExited) {
         Stop-Process -Id $script:ApiProcess.Id -Force -ErrorAction SilentlyContinue
@@ -167,7 +167,7 @@ try {
 
     if ($script:TempRoot -and (Test-Path $script:TempRoot)) {
         if ($KeepTestDatabase -or $script:ExitCode -ne 0) {
-            Write-Info "Artefactos E2E conservados para diagnóstico en: $script:TempRoot"
+            Write-Info "Artefactos E2E conservados para diagnÃ³stico en: $script:TempRoot"
         } else {
             Remove-Item -Path $script:TempRoot -Recurse -Force -ErrorAction SilentlyContinue
         }
