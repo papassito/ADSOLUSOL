@@ -1,12 +1,15 @@
-namespace ADSOLUSOL.Domain.Entities;
+﻿namespace ADSOLUSOL.Domain.Entities;
 
 public class AdEvent
 {
+    public string Id { get; set; } = string.Empty;
     public string EventId { get; set; } = string.Empty;
-    public string EventType { get; set; } = string.Empty; // "IMPRESSION" or "CLICK"
     public string CampaignId { get; set; } = string.Empty;
-    public long CreativeId { get; set; }
+    public string PlacementId { get; set; } = string.Empty;
     public string PlacementCode { get; set; } = string.Empty;
-    public DateTime OccurredAt { get; set; }
-    public DateTime ReceivedAt { get; set; }
+    public string EventType { get; set; } = string.Empty;
+    public decimal Cost { get; set; }
+    public DateTime TimestampUtc { get; set; } = DateTime.UtcNow;
+    public string IPAddress { get; set; } = string.Empty;
+    public string UserAgent { get; set; } = string.Empty;
 }
