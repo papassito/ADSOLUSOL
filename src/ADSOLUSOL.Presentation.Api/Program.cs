@@ -13,7 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
-builder.Services.AddHttpContextAccessor(); // Needed for CoreSignatureVerifier
+builder.Services.AddHttpContextAccessor();
 
 // Memoria thread-safe para Nonces usados (Prevención de Replay Attack)
 builder.Services.AddSingleton<ConcurrentDictionary<string, DateTime>>();
@@ -34,20 +34,14 @@ builder.Services.AddScoped<IMarketingBrainService, MarketingBrainClient>();
 
 // Servicios de la Capa de Aplicación
 builder.Services.AddScoped<AdServingService>();
-builder.Services.AddScoped<CampaignService>();
-builder.Services.AddScoped<EventProcessingService>();
-builder.Services.AddScoped<MetricsService>();
-builder.Services.AddScoped<BudgetService>();
 
 var app = builder.Build();
 
-// Asegurar la creación de tablas en SQLite al arrancar.
-// NOTA: En un entorno de producción real, se usarían migraciones.
+// Garantizar la inicialización del esquema SQLite al inicio
 using (var scope = app.Services.CreateScope())
 {
     var dataDir = Path.Combine(builder.Environment.ContentRootPath, "App_Data");
     Directory.CreateDirectory(dataDir);
-
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.EnsureCreated();
 }

@@ -36,7 +36,7 @@ public class CampaignService
             Name = name,
             Budget = budget,
             Status = "PAUSED",
-            CreatedAt = DateTime.UtcNow
+            CreatedAtUtc = DateTime.UtcNow
         };
         await _campaignRepository.CreateAsync(campaign);
         return campaign;

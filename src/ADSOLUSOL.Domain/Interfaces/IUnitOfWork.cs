@@ -1,12 +1,6 @@
-﻿using System.Data;
+﻿namespace ADSOLUSOL.Domain.Interfaces;
 
-namespace ADSOLUSOL.Domain.Interfaces;
-
-public interface IUnitOfWork
+public interface IUnitOfWork : IDisposable
 {
-    IDbTransaction? Transaction { get; }
-    Task BeginTransactionAsync();
-    Task CommitAsync();
-    Task RollbackAsync();
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
