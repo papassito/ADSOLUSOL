@@ -484,7 +484,7 @@ foreach ($s in $servicesToVerify) { $usedServices[$s] = $false }
 
 # Optimización: Buscar todos los servicios usados en una sola pasada por los archivos.
 foreach ($f in $csFiles) {
-    $servicesStillToFind = @($usedServices.GetEnumerator() | Where-Object { -not $_.Value } | ForEach-Object { $_.Name })
+        $servicesStillToFind = @($usedServices.GetEnumerator() | Where-Object { -not $_.Value } | ForEach-Object { $_.Key })
     if ($servicesStillToFind.Count -eq 0) { break } # Todos los servicios fueron encontrados.
 
     $fileContent = (Read-LinesSafe $f.FullName) -join "`n"
@@ -972,4 +972,3 @@ if (-not $NoPause) {
 if ($Stats.Critical -gt 0) { exit 2 }
 if ($Stats.High -gt 0) { exit 1 }
 exit 0
-

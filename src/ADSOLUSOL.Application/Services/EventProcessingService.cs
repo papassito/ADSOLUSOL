@@ -1,4 +1,4 @@
-using ADSOLUSOL.Domain.Entities;
+﻿using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 using ADSOLUSOL.Domain.Enums;
 
@@ -49,7 +49,7 @@ public class EventProcessingService
             await _budgetService.DebitEventCost(adEvent.CampaignId, eventTypeEnum, _unitOfWork.Transaction!, campaign);
             await _unitOfWork.CommitAsync();
 
-            await _marketingBrainService.EmitTelemetryAsync($"ADS_{eventTypeEnum.ToString().ToUpper()}", new { campaign_id = adEvent.CampaignId, adEvent.EventId, adEvent.PlacementCode, processing_result = "ACCEPTED", timestamp = DateTime.UtcNow });
+            await _marketingBrainService.EmitTelemetryAsync(adEvent.CampaignId, $"ADS_{eventTypeEnum.ToString().ToUpper()}", adEvent.Cost);
 
             return EventProcessingStatus.Accepted;
         } catch 
@@ -59,4 +59,6 @@ public class EventProcessingService
         }
     }
 }
+
+
 
