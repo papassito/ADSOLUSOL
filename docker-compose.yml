@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  # 1. API ADSOLUSOL (.NET 8)
+  adsolusol-api:
+    build:
+      context: .
+      dockerfile: src/ADSOLUSOL.Presentation.Api/Dockerfile
+    container_name: adsolusol_api
+    ports:
+      - "5000:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Data Source=/app/data/adsolusol.db
+      - SicService__BaseUrl=http://solusol-sic:8080
+    volumes:
+      - sqlite_data:/app/data
+    depends_on:
+      - solusol-sic
+    restart: unless-stopped
+
+  # 2. Motor SIC (Go)
+  # Note: The context path assumes the 'SOLUSOL_SIC' project is a sibling directory to 'ADSOLUSOL'.
+  # Adjust the path if your directory structure is different.
+  solusol-sic:
+    build:
+      context: ../SOLUSOL_SIC 
+      dockerfile: Dockerfile
+    container_name: solusol_sic
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+volumes:
+  sqlite_data:
+    driver: local
