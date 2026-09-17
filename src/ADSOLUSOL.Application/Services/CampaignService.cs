@@ -1,4 +1,4 @@
-﻿﻿using ADSOLUSOL.Domain.Entities;
+﻿﻿﻿﻿using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 
 namespace ADSOLUSOL.Application.Services;
@@ -36,11 +36,11 @@ public class CampaignService
             Name = name,
             Budget = budget,
             Status = "PAUSED",
-            CreatedAtUtc = DateTime.UtcNow,
+            CreatedAt = DateTime.UtcNow,
             CostPerMille = cpm,
             CostPerClick = cpc,
-            StartDateUtc = startDate ?? DateTime.UtcNow,
-            EndDateUtc = endDate ?? DateTime.UtcNow.AddDays(30)
+            StartDate = startDate ?? DateTime.UtcNow,
+            EndDate = endDate ?? DateTime.UtcNow.AddDays(30)
         };
         await _campaignRepository.CreateAsync(campaign);
         return campaign;

@@ -20,7 +20,7 @@ public class AssignmentRepository : IAssignmentRepository
         if (!exists)
         {
             _context.CampaignPlacements.Add(new CampaignPlacement { CampaignId = campaignId, PlacementId = placementId });
-            // SaveChanges will be called by UnitOfWork
+            await _context.SaveChangesAsync();
         }
     }
 
@@ -30,7 +30,7 @@ public class AssignmentRepository : IAssignmentRepository
         if (!exists)
         {
             _context.CampaignCreatives.Add(new CampaignCreative { CampaignId = campaignId, CreativeId = creativeId });
-            // SaveChanges will be called by UnitOfWork
+            await _context.SaveChangesAsync();
         }
     }
 }

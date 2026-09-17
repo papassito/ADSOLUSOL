@@ -1,4 +1,4 @@
-﻿﻿using ADSOLUSOL.Domain.Entities;
+﻿﻿﻿﻿using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 using Dapper;
 using Microsoft.Data.Sqlite;
@@ -23,8 +23,8 @@ public class CampaignRepository : ICampaignRepository
     {
         using var connection = CreateConnection();
         var sql = @"INSERT INTO Campaigns 
-            (Id, TenantId, Name, Status, Budget, BudgetSpent, CostPerMille, CostPerClick, StartDateUtc, EndDateUtc, CreatedAtUtc) VALUES 
-            (@Id, @TenantId, @Name, @Status, @Budget, @BudgetSpent, @CostPerMille, @CostPerClick, @StartDateUtc, @EndDateUtc, @CreatedAtUtc);";
+            (Id, TenantId, Name, Status, Budget, BudgetSpent, CostPerMille, CostPerClick, StartDate, EndDate, CreatedAt) VALUES 
+            (@Id, @TenantId, @Name, @Status, @Budget, @BudgetSpent, @CostPerMille, @CostPerClick, @StartDate, @EndDate, @CreatedAt);";
         await connection.ExecuteAsync(sql, campaign);
     }
 
@@ -53,7 +53,7 @@ public class CampaignRepository : ICampaignRepository
         var sql = @"
             UPDATE Campaigns SET
                 Name = @Name, Status = @Status, Budget = @Budget, BudgetSpent = @BudgetSpent,
-                StartDateUtc = @StartDateUtc, EndDateUtc = @EndDateUtc, CreatedAtUtc = @CreatedAtUtc
+                StartDate = @StartDate, EndDate = @EndDate, CreatedAt = @CreatedAt
             WHERE Id = @Id AND TenantId = @TenantId;";
         await connection.ExecuteAsync(sql, campaign);
     }
