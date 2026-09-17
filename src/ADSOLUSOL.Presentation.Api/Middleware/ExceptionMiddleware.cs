@@ -1,10 +1,8 @@
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Net;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace ADSOLUSOL.Presentation.Api.Middleware;
 
@@ -29,13 +27,13 @@ public class ExceptionMiddleware
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An unhandled exception has occurred.");
+            _logger.LogError(ex, "Unhandled exception occurred.");
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-            var response = _env.IsDevelopment()
-                ? new { StatusCode = context.Response.StatusCode, Message = "Internal Server Error.", Details = ex.ToString() }
-                : new { StatusCode = context.Response.StatusCode, Message = "An internal server error has occurred." };
+            object response = _env.IsDevelopment()
+                ? new { StatusCode = context.Response.StatusCode, Message = ex.Message, Details = ex.ToString() }
+                : new { StatusCode = context.Response.StatusCode, Message = "An internal server error occurred.", Details = string.Empty };
 
             var json = JsonSerializer.Serialize(response);
             await context.Response.WriteAsync(json);

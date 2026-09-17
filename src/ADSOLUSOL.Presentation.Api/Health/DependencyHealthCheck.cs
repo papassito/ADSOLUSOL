@@ -1,28 +1,29 @@
-using ADSOLUSOL.Domain.Interfaces;
-using ADSOLUSOL.Infrastructure.ExternalServices.MarketingBrain;
-using ADSOLUSOL.Infrastructure.Persistence;
+﻿using ADSOLUSOL.Infrastructure.Persistence;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace ADSOLUSOL.Presentation.Api.Health;
 
-public sealed class PersistenceHealthCheck(AppDbContext storage) : IHealthCheck
+public class DependencyHealthCheck : IHealthCheck
 {
-    public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
-        => await storage.IsAvailableAsync(cancellationToken)
-            ? HealthCheckResult.Healthy()
-            : HealthCheckResult.Unhealthy("SQLite storage is not accessible.");
-}
+    private readonly AppDbContext _context;
 
-public sealed class MarketingBrainHealthCheck(IMarketingBrainService brainService) : IHealthCheck
-{
+    public DependencyHealthCheck(AppDbContext context)
+    {
+        _context = context;
+    }
+
     public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
     {
-        if (brainService is not MarketingBrainClient brain)
+        try
         {
-            return HealthCheckResult.Unhealthy("MarketingBrainService is not a resolvable MarketingBrainClient instance.");
+            var canConnect = await _context.Database.CanConnectAsync(cancellationToken);
+            return canConnect 
+                ? HealthCheckResult.Healthy("Database is accessible.") 
+                : HealthCheckResult.Unhealthy("Cannot connect to database.");
         }
-
-        return await brain.IsAvailableAsync(cancellationToken)
-            ? HealthCheckResult.Healthy() : HealthCheckResult.Unhealthy("SIC content integration is not configured or unavailable.");
+        catch (Exception ex)
+        {
+            return HealthCheckResult.Unhealthy("Database health check failed.", ex);
+        }
     }
 }

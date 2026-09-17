@@ -1,4 +1,4 @@
-﻿using ADSOLUSOL.Domain.Entities;
+using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 using ADSOLUSOL.Domain.Enums;
 
@@ -34,21 +34,35 @@ public class EventProcessingService
             return EventProcessingStatus.Rejected;
         }
 
+        if (!Enum.TryParse<EventType>(adEvent.EventType, true, out var eventTypeEnum))
+        {
+            // This case should be handled by upstream validation, but as a safeguard:
+            return EventProcessingStatus.Rejected;
+        }
+
+        // FIX P1-03: Calculate cost and assign it to the event object before processing.
+        adEvent.Cost = eventTypeEnum switch
+        {
+            EventType.Impression => campaign.CostPerMille / 1000,
+            EventType.Click => campaign.CostPerClick,
+            _ => 0
+        };
+
         await _unitOfWork.BeginTransactionAsync();
         try 
         {
             await _eventRepository.AddAsync(adEvent, _unitOfWork.Transaction);
 
-            if (!Enum.TryParse<EventType>(adEvent.EventType, true, out var eventTypeEnum))
+            var debitSuccessful = await _budgetService.DebitEventCost(adEvent.CampaignId, eventTypeEnum, _unitOfWork.Transaction!, campaign);
+            if (!debitSuccessful)
             {
-                // This case should be handled by upstream validation, but as a safeguard:
                 await _unitOfWork.RollbackAsync();
-                return EventProcessingStatus.Rejected;
+                return EventProcessingStatus.Rejected; // Budget exceeded or other debit failure
             }
-
-            await _budgetService.DebitEventCost(adEvent.CampaignId, eventTypeEnum, _unitOfWork.Transaction!, campaign);
+            
             await _unitOfWork.CommitAsync();
 
+            // The cost is now correctly reported to the telemetry service.
             await _marketingBrainService.EmitTelemetryAsync(adEvent.CampaignId, $"ADS_{eventTypeEnum.ToString().ToUpper()}", adEvent.Cost);
 
             return EventProcessingStatus.Accepted;
@@ -59,7 +73,3 @@ public class EventProcessingService
         }
     }
 }
-
-
-
-

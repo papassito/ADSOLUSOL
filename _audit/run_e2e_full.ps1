@@ -1,5 +1,5 @@
 # ==============================================================================
-# ADSOLUSOL â€” SCRIPT DE VERIFICACIÃ“N COMPLETA E2E (END-TO-END)
+# ADSOLUSOL — SCRIPT DE VERIFICACIÓN COMPLETA E2E (END-TO-END)
 # ==============================================================================
 [CmdletBinding()]
 param(
@@ -42,7 +42,7 @@ function Write-Section($msg) { Write-Host "`n===================================
 try {
     Write-Section "INICIANDO ENTORNO TEMPORAL E2E"
 
-    # 1. ConfiguraciÃ³n de Directorio y Base de Datos Temporal
+    # 1. Configuración de Directorio y Base de Datos Temporal
     $script:TempRoot = Join-Path ([System.IO.Path]::GetTempPath()) ("ADSOLUSOL-E2E-" + [Guid]::NewGuid().ToString("N"))
     New-Item -ItemType Directory -Path $script:TempRoot -Force | Out-Null
     $script:DatabasePath = Join-Path $script:TempRoot "adsolusol-e2e.db"
@@ -51,14 +51,14 @@ try {
     Write-Info "DB Pruebas : $script:DatabasePath"
     Write-Info "Modo NoAuth: $NoAuth"
 
-    # 2. CompilaciÃ³n Previa
-    Write-Step "COMPILANDO SOLUCIÃ“N (.NET BUILD)"
+    # 2. Compilación Previa
+    Write-Step "COMPILANDO SOLUCIÓN (.NET BUILD)"
     $dotnetExe = (Get-Command "dotnet" -ErrorAction SilentlyContinue).Source
     if (-not $dotnetExe) { throw "dotnet.exe not found in PATH" }
     
     & $dotnetExe build (Join-Path $PSScriptRoot '..\ADSOLUSOL.sln') /v:q /noconlog
-    if ($LASTEXITCODE -ne 0) { throw "La compilaciÃ³n de la soluciÃ³n fallÃ³." }
-    Write-Pass "CompilaciÃ³n exitosa."
+    if ($LASTEXITCODE -ne 0) { throw "La compilación de la solución falló." }
+    Write-Pass "Compilación exitosa."
 
     # 3. Lanzar API en Segundo Plano
     Write-Step "INICIANDO PROCESO SERVIDOR API"
@@ -75,7 +75,7 @@ try {
     Start-Sleep -Seconds 4
     if ($script:ApiProcess.HasExited) {
         $errText = Get-Content $stderrLog -Raw -ErrorAction SilentlyContinue
-        throw "La API fallÃ³ al arrancar: $errText"
+        throw "La API falló al arrancar: $errText"
     }
     Write-Pass "API escuchando activamente en $BaseUrl"
 
@@ -83,66 +83,102 @@ try {
     $script:HttpClient = [System.Net.Http.HttpClient]::new()
     $script:HttpClient.BaseAddress = [Uri]::new($BaseUrl)
 
-    # 5. EjecuciÃ³n del Ciclo Publicitario E2E
+    # 5. Ejecución del Ciclo Publicitario E2E
     $runId = [Guid]::NewGuid().ToString("N").Substring(0, 12)
     $campaignName = "E2E Campaign $runId"
     $placementCode = "ZONE_$runId"
     $creativeName = "E2E Banner $runId"
     $initialBudget = 100.00
-    $cpcRate = 1.50
+    $headers = @{ "X-Tenant-Id" = "e2e-tenant" }
 
     # Step A: Campaign
     Write-Step "1. CREAR CAMPAIGN"
-    $campBody = @{ name = $campaignName; budget = $initialBudget; status = "ACTIVE" } | ConvertTo-Json
-    $res = Invoke-RestMethod -Uri "$BaseUrl/api/campaigns" -Method Post -Body $campBody -ContentType "application/json"
+    $campBody = @{ name = $campaignName; budget = $initialBudget } | ConvertTo-Json
+    $res = Invoke-RestMethod -Uri "$BaseUrl/api/Campaigns" -Method Post -Body $campBody -ContentType "application/json; charset=utf-8" -Headers $headers
     $campaignId = $res.id
-    if (-not $campaignId) { throw "Create Campaign no devolviÃ³ ID." }
+    if (-not $campaignId) { throw "Create Campaign no devolvió ID." }
     $script:Results.CAMPAIGN = "PASS"
     Write-Pass "Campaign ID: $campaignId"
 
+    # Step A.2: Activate Campaign
+    Write-Step "1.1. ACTIVAR CAMPAIGN"
+    $statusBody = @{ status = "ACTIVE" } | ConvertTo-Json
+    Invoke-RestMethod -Uri "$BaseUrl/api/Campaigns/$campaignId/status" -Method Post -Body $statusBody -ContentType "application/json; charset=utf-8" -Headers $headers
+    Write-Pass "Campaign activada."
+
     # Step B: Placement
     Write-Step "2. CREAR PLACEMENT"
-    $placeBody = @{ code = $placementCode; name = "Zone $runId" } | ConvertTo-Json
-    $res = Invoke-RestMethod -Uri "$BaseUrl/api/campaigns/placements" -Method Post -Body $placeBody -ContentType "application/json" -ErrorAction SilentlyContinue
-    $placementId = if ($res.id) { $res.id } else { $placementCode }
+    $placeBody = @{ placementCode = $placementCode; name = "Zone $runId" } | ConvertTo-Json
+    $res = Invoke-RestMethod -Uri "$BaseUrl/api/placements" -Method Post -Body $placeBody -ContentType "application/json; charset=utf-8"
+    $placementId = $res.id
+    if (-not $placementId) { throw "Create Placement no devolvió ID." }
     $script:Results.PLACEMENT = "PASS"
     Write-Pass "Placement ID: $placementId"
 
     # Step C: Creative
-    Write-Step "3. CREAR CREATIVE"
+    Write-Step "3. CREAR CREATIVE Y ASOCIACIONES"
+    $creativeBody = @{ name = $creativeName; contentUrl = "http://e2e.test/img.png"; targetUrl = "http://e2e.test/target" } | ConvertTo-Json
+    $res = Invoke-RestMethod -Uri "$BaseUrl/api/creatives" -Method Post -Body $creativeBody -ContentType "application/json; charset=utf-8"
+    $creativeId = $res.id
+    if (-not $creativeId) { throw "Create Creative no devolvió ID." }
     $script:Results.CREATIVE = "PASS"
+
+    $assignCreativeBody = @{ campaignId = $campaignId; entityId = $creativeId } | ConvertTo-Json
+    Invoke-RestMethod -Uri "$BaseUrl/api/assignments/creative" -Method Post -Body $assignCreativeBody -ContentType "application/json; charset=utf-8"
+    
+    $assignPlacementBody = @{ campaignId = $campaignId; entityId = $placementId } | ConvertTo-Json
+    Invoke-RestMethod -Uri "$BaseUrl/api/assignments/placement" -Method Post -Body $assignPlacementBody -ContentType "application/json; charset=utf-8"
     $script:Results.ASSOCIATIONS = "PASS"
     Write-Pass "Creativo y Asociaciones configuradas."
 
-    # Step D: Impression
-    Write-Step "4. REGISTRAR IMPRESIÃ“N"
-    $impEventId = [Guid]::NewGuid().ToString("N")
-    $impBody = @{ event_id = $impEventId; placement_id = $placementCode } | ConvertTo-Json
-    $null = Invoke-RestMethod -Uri "$BaseUrl/api/marketing/adsolusol/campaigns/$campaignId/impression?event_id=$impEventId&placement_id=$placementCode" -Method Post
+    # Step D: Serve Ad
+    Write-Step "4. SERVIR ANUNCIO (AD SERVING)"
+    $adDecision = Invoke-RestMethod -Uri "$BaseUrl/api/marketing/adsolusol/serve?placementId=$placementCode" -Method Get -Headers $headers
+    if ($adDecision.id -ne $creativeId) { throw "Ad Serving devolvió un creativo incorrecto." }
+    $script:Results.SERVING = "PASS"
+    Write-Pass "Anuncio servido correctamente (Creative ID: $($adDecision.id))."
+
+    # Step E: Register Impression
+    Write-Step "5. REGISTRAR IMPRESIÓN"
+    $impEventId = "evt_imp_" + [Guid]::NewGuid().ToString("N")
+    $eventBody = @{ eventId = $impEventId; creativeId = $creativeId; placementCode = $placementCode } | ConvertTo-Json
+    Invoke-RestMethod -Uri "$BaseUrl/api/Campaigns/$campaignId/impression" -Method Post -Body $eventBody -ContentType "application/json; charset=utf-8" -Headers $headers
     $script:Results.IMPRESSION = "PASS"
     Write-Pass "Impression aceptada: $impEventId"
 
-    # Step E: Click
-    Write-Step "5. REGISTRAR CLICK"
-    $clickEventId = [Guid]::NewGuid().ToString("N")
-    $null = Invoke-RestMethod -Uri "$BaseUrl/api/marketing/adsolusol/campaigns/$campaignId/click?event_id=$clickEventId&placement_id=$placementCode" -Method Post
+    # Step F: Register Click
+    Write-Step "6. REGISTRAR CLICK"
+    $clickEventId = "evt_clk_" + [Guid]::NewGuid().ToString("N")
+    $eventBody = @{ eventId = $clickEventId; creativeId = $creativeId; placementCode = $placementCode } | ConvertTo-Json
+    Invoke-RestMethod -Uri "$BaseUrl/api/Campaigns/$campaignId/click" -Method Post -Body $eventBody -ContentType "application/json; charset=utf-8" -Headers $headers
     $script:Results.CLICK = "PASS"
     Write-Pass "Click aceptado: $clickEventId"
 
-    # Step F: Idempotency
-    Write-Step "6. VERIFICAR IDEMPOTENCIA"
-    $dupRes = Invoke-RestMethod -Uri "$BaseUrl/api/marketing/adsolusol/campaigns/$campaignId/click?event_id=$clickEventId&placement_id=$placementCode" -Method Post
-    if ($dupRes.status -eq "DUPLICATE") {
-        $script:Results.IDEMPOTENCY = "PASS"
-        Write-Pass "Duplicado rechazado correctamente (Idempotencia confirmada)."
+    # Step G: Idempotency
+    Write-Step "7. VERIFICAR IDEMPOTENCIA"
+    try {
+        Invoke-RestMethod -Uri "$BaseUrl/api/Campaigns/$campaignId/click" -Method Post -Body $eventBody -ContentType "application/json; charset=utf-8" -Headers $headers -ErrorAction Stop
+        throw "Idempotency test failed: duplicate event was accepted."
+    } catch {
+        if ($_.Exception.Response.StatusCode -eq 'Conflict') {
+            $script:Results.IDEMPOTENCY = "PASS"
+            Write-Pass "Duplicado rechazado correctamente (409 Conflict)."
+        } else {
+            throw "Idempotency test failed with unexpected status: $($_.Exception.Response.StatusCode)"
+        }
     }
 
-    # Step G: Metrics & Budget
-    Write-Step "7. CONSULTAR MÃ‰TRICAS Y PRESUPUESTO"
-    $script:Results.METRICS = "PASS"
-    $script:Results.BUDGET = "PASS"
-    $script:Results.SQLITE = "PASS"
-    Write-Pass "MÃ©tricas y dÃ©bito contable verificados."
+    # Step H: Metrics & Budget
+    Write-Step "8. CONSULTAR MÉTRICAS Y PRESUPUESTO"
+    $metrics = Invoke-RestMethod -Uri "$BaseUrl/api/Campaigns/$campaignId/metrics" -Method Get -Headers $headers
+    if ($metrics.impressions -eq 1 -and $metrics.clicks -eq 1 -and $metrics.budgetSpent -gt 0) {
+        $script:Results.METRICS = "PASS"
+        $script:Results.BUDGET = "PASS"
+        $script:Results.SQLITE = "PASS"
+        Write-Pass "Métricas y débito contable verificados."
+    } else {
+        throw "Metric verification failed. Got: $($metrics | Out-String)"
+    }
 
     # Marcado Final
     $script:Results.E2E = "PASS"
@@ -154,7 +190,7 @@ try {
     $script:ExitCode = 1
 } finally {
     # --------------------------------------------------------------------------
-    # LIMPIEZA Y RESTAURACIÃ“N DE RECURSOS
+    # LIMPIEZA Y RESTAURACIÓN DE RECURSOS
     # --------------------------------------------------------------------------
     if ($script:ApiProcess -and -not $script:ApiProcess.HasExited) {
         Stop-Process -Id $script:ApiProcess.Id -Force -ErrorAction SilentlyContinue
@@ -167,7 +203,7 @@ try {
 
     if ($script:TempRoot -and (Test-Path $script:TempRoot)) {
         if ($KeepTestDatabase -or $script:ExitCode -ne 0) {
-            Write-Info "Artefactos E2E conservados para diagnÃ³stico en: $script:TempRoot"
+            Write-Info "Artefactos E2E conservados para diagnóstico en: $script:TempRoot"
         } else {
             Remove-Item -Path $script:TempRoot -Recurse -Force -ErrorAction SilentlyContinue
         }
