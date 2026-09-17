@@ -1,8 +1,11 @@
 $ErrorActionPreference = "Continue"
+$Root =$PSScriptRoot
+if (-not $Root) {$Root = (Get-Location).Path }
 $Root = $PSScriptRoot
 if (-not $Root) { $Root = (Get-Location).Path }
 
 # --- State Tracking ---
+$auditFailed = $false$failureMessages = [System.Collections.Generic.List[string]]::new()
 $auditFailed = $false
 $failureMessages = [System.Collections.Generic.List[string]]::new()
 
@@ -12,6 +15,8 @@ Write-Host "====================================================================
 
 # --- 1. Locate .NET SDK ---
 $dotnetExe = (Get-Command "dotnet" -ErrorAction SilentlyContinue).Source
+if (-not $dotnetExe) {$failureMessages.Add("[CRITICAL] dotnet no encontrado en PATH.")
+    $auditFailed =$true
 if (-not $dotnetExe) {
     $failureMessages.Add("[CRITICAL] dotnet no encontrado en PATH.")
     $auditFailed = $true
@@ -20,12 +25,15 @@ if (-not $dotnetExe) {
 }
 
 # --- 2. Locate Solution ---
+$slnPath = Join-Path$Root "ADSOLUSOL.sln"
+if (-not (Test-Path $slnPath)) {$failureMessages.Add("[CRITICAL] No se encontró el archivo 'ADSOLUSOL.sln' en la raíz.")
+    $auditFailed =$true
 $slnPath = Join-Path $Root "ADSOLUSOL.sln"
 if (-not (Test-Path $slnPath)) {
     $failureMessages.Add("[CRITICAL] No se encontró el archivo 'ADSOLUSOL.sln' en la raíz.")
     $auditFailed = $true
 } else {
-     Write-Host "[✓] Solución bajo análisis: $slnPath`n" -ForegroundColor Green
+    Write-Host "[✓] Solución bajo análisis: $slnPath`n" -ForegroundColor Green
 }
 
 # --- 3. Build Phase ---
@@ -37,21 +45,22 @@ if (-not $auditFailed) {
         $auditFailed = $true
         $failureMessages.Add("[FAIL] Errores de compilación detectados.")
         
-        # Detailed C# error parsing
+        # Detailed C# error parsing (Forzado como Array)
         $errorRegex = '^(?<file>.*?\.cs)\((?<line>\d+),(?<col>\d+)\):\s+error\s+(?<code>CS\d+):\s+(?<msg>.*)$'
-        $csErrors = $buildOut | Where-Object { $_ -match $errorRegex } | ForEach-Object {
+        $csErrors = @($buildOut | Where-Object { $_ -match $errorRegex } | ForEach-Object {
             [PSCustomObject]@{
                 Archivo = $Matches['file']
                 Linea   = $Matches['line']
                 Codigo  = $Matches['code']
                 Mensaje = $Matches['msg'].Trim()
             }
-        }
+        })
 
         if ($csErrors.Count -gt 0) {
             $grouped = $csErrors | Group-Object Archivo
             foreach ($group in $grouped) {
                 $failureMessages.Add("`n📄 ARCHIVO: $($group.Name)")
+                foreach ($err in $group.Group) {$failureMessages.Add("   ├── Línea $($err.Linea): [$($err.Codigo)] $($err.Mensaje)")
                 foreach ($err in $group.Group) {
                     $failureMessages.Add("   ├── Línea $($err.Linea): [$($err.Codigo)] $($err.Mensaje)")
                 }
@@ -60,7 +69,7 @@ if (-not $auditFailed) {
             # Fallback for non-CS errors (e.g., MSBuild)
             $failureMessages.Add("`n[!] No se detectaron errores de C# específicos. El fallo puede ser de MSBuild o de configuración.")
             $failureMessages.Add("Salida cruda del compilador:")
-            $failureMessages.AddRange($buildOut)
+            $failureMessages.AddRange([string[]]($buildOut | ForEach-Object { $_.ToString() }))
         }
     } else {
         Write-Host "[PASS] Compilación exitosa (0 Errores)." -ForegroundColor Green
@@ -70,11 +79,13 @@ if (-not $auditFailed) {
 # --- 4. Test Phase ---
 if (-not $auditFailed) {
     Write-Host "`n>>> [FASE 2] Buscando y ejecutando proyectos de pruebas..." -ForegroundColor Yellow
-    $testProjects = Get-ChildItem -Path $Root -Filter "*Test*.csproj" -Recurse
+    $testProjects = @(Get-ChildItem -Path$Root -Filter "*Test*.csproj" -Recurse)
+    $testProjects = @(Get-ChildItem -Path $Root -Filter "*Test*.csproj" -Recurse)
 
-    if (-not $testProjects) {
+    if ($testProjects.Count -eq 0) {
         Write-Host "[INFO] No se localizaron proyectos de prueba. Omitiendo fase." -ForegroundColor Gray
     } else {
+        foreach ($testProj in$testProjects) {
         foreach ($testProj in $testProjects) {
             Write-Host "`n📌 Ejecutando Suite: $($testProj.Name)" -ForegroundColor Cyan
             $testOut = & $dotnetExe test "$($testProj.FullName)" --no-build --nologo -v:q 2>&1
@@ -82,10 +93,11 @@ if (-not $auditFailed) {
             if ($LASTEXITCODE -ne 0) {
                 $auditFailed = $true
                 $failureMessages.Add("[FAIL] Fallaron pruebas en la suite: $($testProj.Name)")
-                $failureMessages.AddRange($testOut | Where-Object { $_ -match "Failed|Error|Exception|Assert" })
+                $failedLines = [string[]]($testOut | Where-Object { $_ -match "Failed|Error|Exception|Assert" } | ForEach-Object { $_.ToString() })
+                $failureMessages.AddRange($failedLines)
             } else {
                 $passCount = ($testOut | Select-String -Pattern "Passed!").Count
-                Write-Host "  [✓] Pruebas ejecutadas correctamente (Pasaron: $passCount)." -ForegroundColor Green
+                Write-Host "   [✓] Pruebas ejecutadas correctamente (Pasaron: $passCount)." -ForegroundColor Green
             }
         }
     }
@@ -98,10 +110,12 @@ Write-Host "====================================================================
 
 if ($auditFailed) {
     Write-Host "[FAIL] La auditoría ha fallado. Resumen de problemas:" -ForegroundColor Red
-    foreach($msg in $failureMessages) {
+    foreach($msg in$failureMessages) {
+    foreach ($msg in $failureMessages) {
         Write-Host $msg -ForegroundColor Red
     }
     Write-Host "`nGATE RESULT: FAIL" -ForegroundColor Red
+    if ($env:CI) { exit 1 }
     if (-not $env:CI) { # Don't terminate interactive sessions, but set exit code for scripts
         $host.SetShouldExit(1)
     } else {
