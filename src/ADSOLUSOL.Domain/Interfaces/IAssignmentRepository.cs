@@ -1,8 +1,7 @@
-namespace ADSOLUSOL.Domain.Interfaces;
+﻿namespace ADSOLUSOL.Domain.Interfaces;
 
 public interface IAssignmentRepository
 {
-    // Métodos de ejemplo para la gestión de asignaciones
-    Task AssignCreativeToPlacementAsync(Guid creativeId, Guid placementId);
-    Task<IEnumerable<Guid>> GetCreativeIdsByPlacementAsync(Guid placementId);
+    Task AssignCreativeToCampaignAsync(string campaignId, long creativeId);
+    Task AssignPlacementToCampaignAsync(string campaignId, long placementId);
 }

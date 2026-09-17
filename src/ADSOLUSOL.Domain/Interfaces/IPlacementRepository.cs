@@ -1,8 +1,11 @@
-﻿namespace ADSOLUSOL.Domain.Interfaces;
+﻿using ADSOLUSOL.Domain.Entities;
+
+namespace ADSOLUSOL.Domain.Interfaces;
 
 public interface IPlacementRepository
 {
-    Task<Entities.Placement?> GetByCodeAsync(string code);
-    Task<IEnumerable<Entities.Campaign>> GetEligibleCampaignsAsync(long placementId);
-    Task<IEnumerable<Entities.Campaign>> GetEligibleCampaignsAsync(string placementCode);
+    Task<Placement?> GetByCodeAsync(string code);
+    Task<IEnumerable<Campaign>> GetEligibleCampaignsAsync(string placementCode);
+    Task<long> CreateAsync(Placement placement);
+    Task<IEnumerable<Placement>> GetAllAsync();
 }

@@ -2,7 +2,10 @@ using ADSOLUSOL.Domain.Interfaces;
 using ADSOLUSOL.Infrastructure.Repositories;
 using ADSOLUSOL.Application.Services;
 using ADSOLUSOL.Infrastructure.Security;
+using ADSOLUSOL.Infrastructure.Persistence;
+using ADSOLUSOL.Infrastructure.ExternalServices.MarketingBrain;
 using ADSOLUSOL.Presentation.Api.Middleware;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +31,10 @@ builder.Services.AddScoped<CampaignService>();
 builder.Services.AddScoped<AdServingService>();
 builder.Services.AddScoped<MetricsService>();
 builder.Services.AddScoped<EventProcessingService>();
+
+// Registrar el DbContext para que esté disponible para los repositorios
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

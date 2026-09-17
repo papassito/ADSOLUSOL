@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using ADSOLUSOL.Application.Services;
-using ADSOLUSOL.Application.Enums;
+using ADSOLUSOL.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 using ADSOLUSOL.Domain.Entities;
 
@@ -52,7 +52,7 @@ namespace ADSOLUSOL.Presentation.Api.Controllers
         [HttpGet("{id}/metrics")]
         public async Task<IActionResult> GetMetrics(string id)
         {
-            var metrics = await _metricsService.GetMetricsForCampaign(TenantId, id);
+            var metrics = await _metricsService.GetMetricsForCampaign(id);
             return metrics is null ? NotFound() : Ok(metrics);
         }
 

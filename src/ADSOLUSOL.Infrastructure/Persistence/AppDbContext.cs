@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿﻿using Microsoft.EntityFrameworkCore;
 using ADSOLUSOL.Domain.Entities;
 
 namespace ADSOLUSOL.Infrastructure.Persistence;
@@ -32,5 +32,10 @@ public class AppDbContext : DbContext
         Campaigns.Add(campaign);
         await SaveChangesAsync();
         return campaign;
+    }
+
+    public async Task<bool> IsAvailableAsync(CancellationToken cancellationToken = default)
+    {
+        return await Database.CanConnectAsync(cancellationToken);
     }
 }

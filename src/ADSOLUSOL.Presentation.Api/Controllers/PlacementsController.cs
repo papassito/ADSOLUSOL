@@ -1,5 +1,5 @@
-using ADSOLUSOL.Domain.Entities;
-using ADSOLUSOL.Domain.Repositories;
+﻿using ADSOLUSOL.Domain.Entities;
+using ADSOLUSOL.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ADSOLUSOL.Presentation.Api.Controllers;
