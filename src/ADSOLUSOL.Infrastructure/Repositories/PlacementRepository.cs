@@ -33,7 +33,7 @@ public class PlacementRepository : IPlacementRepository
             SELECT c.* FROM Campaigns c
             INNER JOIN CampaignPlacements cp ON c.Id = cp.CampaignId
             INNER JOIN Placements p ON cp.PlacementId = p.Id
-            WHERE p.PlacementCode = @PlacementCode AND c.Status = 'ACTIVE' AND c.TenantId = @TenantId;";
+            WHERE p.PlacementCode = @PlacementCode AND c.Status = 'ACTIVE' AND c.TenantId = @TenantId AND c.Budget > c.BudgetSpent;";
         return await connection.QueryAsync<Campaign>(sql, new { TenantId = tenantId, PlacementCode = placementCode });
     }
 

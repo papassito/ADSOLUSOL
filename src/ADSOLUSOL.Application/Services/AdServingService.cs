@@ -1,4 +1,4 @@
-﻿﻿using ADSOLUSOL.Domain.Entities;
+﻿using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 
 namespace ADSOLUSOL.Application.Services;
@@ -23,8 +23,8 @@ public class AdServingService
         var now = DateTime.UtcNow;
 
         var validCampaigns = eligibleCampaigns
-            // Correct logic: campaign is active, within date range, and has budget
-            .Where(c => c.Status == "ACTIVE" && c.StartDateUtc <= now && c.EndDateUtc >= now && c.RemainingBudget > 0)
+            // FIX P1-05: The DB query now filters by status and remaining budget. We only check the date range here.
+            .Where(c => c.StartDateUtc <= now && c.EndDateUtc >= now)
             .OrderBy(_ => Guid.NewGuid())
             .ToList();
 

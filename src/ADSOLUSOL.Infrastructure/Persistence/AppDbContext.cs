@@ -1,37 +1,31 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ADSOLUSOL.Domain.Entities;
+﻿using ADSOLUSOL.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
-namespace ADSOLUSOL.Infrastructure.Persistence;
-
-public class AppDbContext : DbContext
+namespace ADSOLUSOL.Infrastructure.Persistence
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-
-    public DbSet<Campaign> Campaigns => Set<Campaign>();
-    public DbSet<Placement> Placements => Set<Placement>();
-    public DbSet<Creative> Creatives => Set<Creative>();
-    public DbSet<AdEvent> AdEvents => Set<AdEvent>();
-    public DbSet<CampaignPlacement> CampaignPlacements => Set<CampaignPlacement>();
-    public DbSet<CampaignCreative> CampaignCreatives => Set<CampaignCreative>();
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    public class AppDbContext : DbContext
     {
-        base.OnModelCreating(modelBuilder);
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        modelBuilder.Entity<Campaign>().HasKey(c => c.Id);
-        modelBuilder.Entity<Placement>().HasKey(p => p.Id);
-        modelBuilder.Entity<Creative>().HasKey(c => c.Id);
-        modelBuilder.Entity<AdEvent>().HasKey(e => e.Id);
+        // DbSets used by repositories
+        public DbSet<AdEvent> AdEvents { get; set; }
+        public DbSet<CampaignPlacement> CampaignPlacements { get; set; }
+        public DbSet<CampaignCreative> CampaignCreatives { get; set; }
+        // Other entities like Campaign, Placement, Creative are handled by Dapper repositories,
+        // but their tables must exist in the schema. EF can be used to define the schema
+        // without managing all data operations for them.
 
-        // Many-to-many: Campaign <-> Placement
-        modelBuilder.Entity<CampaignPlacement>().HasKey(cp => new { cp.CampaignId, cp.PlacementId });
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
 
-        // Many-to-many: Campaign <-> Creative
-        modelBuilder.Entity<CampaignCreative>().HasKey(cc => new { cc.CampaignId, cc.CreativeId });
-    }
-
-    public async Task<bool> IsAvailableAsync(CancellationToken cancellationToken = default)
-    {
-        return await Database.CanConnectAsync(cancellationToken);
+            // FIX P1-04: Add a unique constraint to EventId to guarantee idempotency at the database level.
+            modelBuilder.Entity<AdEvent>()
+                .HasIndex(e => e.EventId)
+                .IsUnique();
+            
+            modelBuilder.Entity<CampaignPlacement>().HasKey(cp => new { cp.CampaignId, cp.PlacementId });
+            modelBuilder.Entity<CampaignCreative>().HasKey(cc => new { cc.CampaignId, cc.CreativeId });
+        }
     }
 }
