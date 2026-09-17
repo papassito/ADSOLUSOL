@@ -31,7 +31,7 @@ $dbFound = $false
 foreach ($db in $dbPaths) {
     if (Test-Path $db) {
         $dbSize = (Get-Item $db).Length / 1KB
-        Write-Host " [OK] Base de datos SQLite encontrada: $db ({0:N2} KB)" -f $dbSize -ForegroundColor Green
+        Write-Host (" [OK] Base de datos SQLite encontrada: {0} ({1:N2} KB)" -f $db, $dbSize) -ForegroundColor Green
         $dbFound = $true
     }
 }
@@ -42,9 +42,9 @@ if (-not $dbFound) {
 
 # 3. Verificación de Compilación de la Solución
 Write-Host "`n>>> [3/4] Verificando Integridad del Código (Build Check)..." -ForegroundColor Yellow
-$slnPath = Join-Path$Root "ADSOLUSOL.sln"
+$slnPath = Join-Path $Root "ADSOLUSOL.sln"
 
-if (Test-Path $slnPath) {$buildOut = & $dotnetExe build$slnPath --nologo --verbosity quiet 2>&1
+if (Test-Path $slnPath) {$buildOut = & $dotnetExe build $slnPath --nologo --verbosity quiet 2>&1
     if ($LASTEXITCODE -eq 0) {
         Write-Host " [OK] La solución compila limpiamente (0 Errores)." -ForegroundColor Green
     } else {

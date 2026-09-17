@@ -4,11 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace ADSOLUSOL.Presentation.Api.Controllers;
 
 [ApiController]
-[Route("api/marketing/adsolusol/serve")]
+[Route("api/[controller]")]
 public class ServeController : ControllerBase
 {
     private readonly AdServingService _adServingService;
-    private string TenantId => HttpContext.Items["TenantId"] as string ?? "solusol-internal";
+    private string TenantId => HttpContext.Items["TenantId"] as string 
+        ?? throw new InvalidOperationException("TenantId no fue encontrado en el contexto de la solicitud.");
 
     public ServeController(AdServingService adServingService)
     {
@@ -16,17 +17,14 @@ public class ServeController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> ServeAd([FromQuery] string placementId)
+    public async Task<IActionResult> ServeAd([FromQuery] string placementCode)
     {
-        if (string.IsNullOrWhiteSpace(placementId))
+        var result = await _adServingService.SelectAdForPlacement(TenantId, placementCode);
+        if (result == null)
         {
-            return BadRequest(new { error = "placementId is required." });
+            return NotFound(new { message = "No eligible ads available for this placement." });
         }
 
-        var decision = await _adServingService.SelectAdForPlacement(TenantId, placementId);
-
-        return decision == null 
-            ? NoContent() // Standard HTTP 204 for "NO_AD_AVAILABLE"
-            : Ok(decision);
+        return Ok(result);
     }
 }
