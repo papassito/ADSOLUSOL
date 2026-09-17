@@ -68,8 +68,8 @@ El proyecto utiliza el SDK de .NET 8.
 # Construir la solución
 dotnet build ADSOLUSOL.sln
 
-# Ejecutar las pruebas unitarias y de regresión
-dotnet test ADSOLUSOL.sln
+# Ejecutar las pruebas de regresión (es un ejecutable)
+dotnet run --project tests/ADSOLUSOL.RegressionTests/ADSOLUSOL.RegressionTests.csproj
 ```
 
 Las regresiones son un ejecutable de comprobación; no usan dotnet test.

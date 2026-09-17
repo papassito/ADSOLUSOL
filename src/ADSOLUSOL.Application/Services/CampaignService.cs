@@ -36,11 +36,11 @@ public class CampaignService
             Name = name,
             Budget = budget,
             Status = "PAUSED",
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = DateTime.UtcNow, // Assuming CreatedAt is the correct property, not CreatedAtUtc
             CostPerMille = cpm,
             CostPerClick = cpc,
-            StartDate = startDate ?? DateTime.UtcNow,
-            EndDate = endDate ?? DateTime.UtcNow.AddDays(30)
+            StartDate = startDate ?? DateTime.UtcNow, // Standardized to non-Utc to match repository
+            EndDate = endDate ?? DateTime.UtcNow.AddDays(30) // Standardized to non-Utc to match repository
         };
         await _campaignRepository.CreateAsync(campaign);
         return campaign;

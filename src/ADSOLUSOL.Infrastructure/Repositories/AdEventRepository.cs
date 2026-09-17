@@ -16,23 +16,19 @@ public class AdEventRepository : IAdEventRepository
         _context = context;
     }
 
-    public async Task CreateAsync(AdEvent adEvent)
-    {
-        await _context.AdEvents.AddAsync(adEvent);
-    }
-
     public async Task AddAsync(AdEvent adEvent, IDbTransaction? transaction = null)
     {
         if (transaction != null)
         {
             var conn = transaction.Connection ?? _context.Database.GetDbConnection();
-            var sql = @"INSERT INTO AdEvents (Id, EventId, CampaignId, CreativeId, PlacementCode, TenantId, EventType, Cost, TimestampUtc)
-                        VALUES (@Id, @EventId, @CampaignId, @CreativeId, @PlacementCode, @TenantId, @EventType, @Cost, @TimestampUtc);";
+            var sql = @"INSERT INTO AdEvents (Id, EventId, CampaignId, CreativeId, PlacementCode, TenantId, EventType, Cost, Timestamp)
+                        VALUES (@Id, @EventId, @CampaignId, @CreativeId, @PlacementCode, @TenantId, @EventType, @Cost, @Timestamp);";
             await conn.ExecuteAsync(sql, adEvent, transaction);
         }
         else
         {
             await _context.AdEvents.AddAsync(adEvent);
+            await _context.SaveChangesAsync();
         }
     }
 
