@@ -12,7 +12,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=Data Source=/app/data/adsolusol.db
-      - SicService__BaseUrl=http://solusol-sic:8080
+      - SolusolAuthV1__SicBaseUrl=http://solusol-sic:8080
     volumes:
       - sqlite_data:/app/data
     depends_on:

@@ -1,4 +1,4 @@
-﻿# Start-Dev.ps1 - Orquestador de desarrollo sin bloqueos
+﻿﻿# Start-Dev.ps1 - Orquestador de desarrollo sin bloqueos
 $ErrorActionPreference = "Continue"
 
 Write-Host "==================================================" -ForegroundColor Cyan
@@ -12,5 +12,5 @@ Start-Sleep -Seconds 1
 
 # 2. Iniciar la API con dotnet watch (compilación automática sin bloquéos)
 Write-Host "[2/2] Iniciando API en modo Hot-Reload (dotnet watch)..." -ForegroundColor Green
-Set-Location "Y:\Documentos\GitHub\ADSOLUSOL\src\ADSOLUSOL.Presentation.Api"
+Set-Location "$PSScriptRoot\src\ADSOLUSOL.Presentation.Api"
 dotnet watch run -c Release
