@@ -1,0 +1,181 @@
+﻿{
+    "Timestamp":  "2026-09-15T22:47:32.5032996-07:00",
+    "Root":  "G:\\Mi unidad\\00_DESARROLLO_SOFTWARE\\SOLUSOL_NET\\ADSOLUSOL",
+    "Stats":  {
+                  "Critical":  0,
+                  "HIGH":  1,
+                  "Medium":  0,
+                  "Low":  0,
+                  "INFO":  20
+              },
+    "Findings":  [
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-ENV-OK",
+                         "Category":  "ENVIRONMENT",
+                         "Message":  "SDK de .NET activo: 10.0.300",
+                         "File":  "",
+                         "Time":  "2026-09-15T22:47:26.5896836-07:00"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-STRUCT-OK",
+                         "Category":  "STRUCTURE",
+                         "Message":  "Proyecto localizado: src\\ADSOLUSOL.Domain\\ADSOLUSOL.Domain.csproj",
+                         "File":  "src\\ADSOLUSOL.Domain\\ADSOLUSOL.Domain.csproj",
+                         "Time":  "2026-09-15T22:47:26.6286733-07:00"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-STRUCT-OK",
+                         "Category":  "STRUCTURE",
+                         "Message":  "Proyecto localizado: src\\ADSOLUSOL.Application\\ADSOLUSOL.Application.csproj",
+                         "File":  "src\\ADSOLUSOL.Application\\ADSOLUSOL.Application.csproj",
+                         "Time":  "2026-09-15T22:47:26.6326789-07:00"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-STRUCT-OK",
+                         "Category":  "STRUCTURE",
+                         "Message":  "Proyecto localizado: src\\ADSOLUSOL.Infrastructure\\ADSOLUSOL.Infrastructure.csproj",
+                         "File":  "src\\ADSOLUSOL.Infrastructure\\ADSOLUSOL.Infrastructure.csproj",
+                         "Time":  "2026-09-15T22:47:26.6356762-07:00"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-STRUCT-OK",
+                         "Category":  "STRUCTURE",
+                         "Message":  "Proyecto localizado: src\\ADSOLUSOL.Motor\\ADSOLUSOL.Motor.csproj",
+                         "File":  "src\\ADSOLUSOL.Motor\\ADSOLUSOL.Motor.csproj",
+                         "Time":  "2026-09-15T22:47:26.6396790-07:00"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-STRUCT-OK",
+                         "Category":  "STRUCTURE",
+                         "Message":  "Proyecto localizado: src\\ADSOLUSOL.Orchestrator\\ADSOLUSOL.Orchestrator.csproj",
+                         "File":  "src\\ADSOLUSOL.Orchestrator\\ADSOLUSOL.Orchestrator.csproj",
+                         "Time":  "2026-09-15T22:47:26.6426907-07:00"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-STRUCT-OK",
+                         "Category":  "STRUCTURE",
+                         "Message":  "Proyecto localizado: src\\ADSOLUSOL.Presentation.Api\\ADSOLUSOL.Presentation.Api.csproj",
+                         "File":  "src\\ADSOLUSOL.Presentation.Api\\ADSOLUSOL.Presentation.Api.csproj",
+                         "Time":  "2026-09-15T22:47:26.6466777-07:00"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-STRUCT-OK",
+                         "Category":  "STRUCTURE",
+                         "Message":  "Proyecto localizado: src\\ADSOLUSOL.Presentation.Cmd\\ADSOLUSOL.Presentation.Cmd.csproj",
+                         "File":  "src\\ADSOLUSOL.Presentation.Cmd\\ADSOLUSOL.Presentation.Cmd.csproj",
+                         "Time":  "2026-09-15T22:47:26.6496813-07:00"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-STRUCT-OK",
+                         "Category":  "STRUCTURE",
+                         "Message":  "Proyecto localizado: tests\\ADSOLUSOL.RegressionTests\\ADSOLUSOL.RegressionTests.csproj",
+                         "File":  "tests\\ADSOLUSOL.RegressionTests\\ADSOLUSOL.RegressionTests.csproj",
+                         "Time":  "2026-09-15T22:47:26.6536775-07:00"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-DOC-OK",
+                         "Category":  "DOCUMENTATION",
+                         "Message":  "Documento canónico presente: README.md",
+                         "File":  "README.md",
+                         "Time":  "2026-09-15T22:47:26.6556778-07:00"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-DOC-OK",
+                         "Category":  "DOCUMENTATION",
+                         "Message":  "Documento canónico presente: docs\\LIBRARY.md",
+                         "File":  "docs\\LIBRARY.md",
+                         "Time":  "2026-09-15T22:47:26.6586802-07:00"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-DOC-OK",
+                         "Category":  "DOCUMENTATION",
+                         "Message":  "Documento canónico presente: docs\\REQUIREMENTS.md",
+                         "File":  "docs\\REQUIREMENTS.md",
+                         "Time":  "2026-09-15T22:47:26.6626800-07:00"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-DOC-OK",
+                         "Category":  "DOCUMENTATION",
+                         "Message":  "Documento canónico presente: docs\\STRUCTURE.md",
+                         "File":  "docs\\STRUCTURE.md",
+                         "Time":  "2026-09-15T22:47:26.6646782-07:00"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-DOC-OK",
+                         "Category":  "DOCUMENTATION",
+                         "Message":  "Documento canónico presente: docs\\MANIFEST.md",
+                         "File":  "docs\\MANIFEST.md",
+                         "Time":  "2026-09-15T22:47:26.6676782-07:00"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-DOC-OK",
+                         "Category":  "DOCUMENTATION",
+                         "Message":  "Documento canónico presente: docs\\architecture\\ADSOLUSOL.md",
+                         "File":  "docs\\architecture\\ADSOLUSOL.md",
+                         "Time":  "2026-09-15T22:47:26.6706758-07:00"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-DOC-OK",
+                         "Category":  "DOCUMENTATION",
+                         "Message":  "Documento canónico presente: docs\\architecture\\MOTOR.md",
+                         "File":  "docs\\architecture\\MOTOR.md",
+                         "Time":  "2026-09-15T22:47:26.6726789-07:00"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-DOC-OK",
+                         "Category":  "DOCUMENTATION",
+                         "Message":  "Documento canónico presente: docs\\architecture\\ONION.md",
+                         "File":  "docs\\architecture\\ONION.md",
+                         "Time":  "2026-09-15T22:47:26.6766770-07:00"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-DOC-OK",
+                         "Category":  "DOCUMENTATION",
+                         "Message":  "Documento canónico presente: docs\\contracts\\CONTRACTS.md",
+                         "File":  "docs\\contracts\\CONTRACTS.md",
+                         "Time":  "2026-09-15T22:47:26.6796765-07:00"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-DOC-OK",
+                         "Category":  "DOCUMENTATION",
+                         "Message":  "Documento canónico presente: docs\\contracts\\MARKETING-API.md",
+                         "File":  "docs\\contracts\\MARKETING-API.md",
+                         "Time":  "2026-09-15T22:47:26.6816789-07:00"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-DOC-OK",
+                         "Category":  "DOCUMENTATION",
+                         "Message":  "Documento canónico presente: docs\\security\\INTEGRITY.md",
+                         "File":  "docs\\security\\INTEGRITY.md",
+                         "Time":  "2026-09-15T22:47:26.6846766-07:00"
+                     },
+                     {
+                         "Severity":  "HIGH",
+                         "Code":  "ADS-BUILD-LOCKED",
+                         "Category":  "BUILD",
+                         "Message":  "Fallo de MSBuild/Bloqueo de archivos (ej. apphost.exe o procesos bloqueados).",
+                         "File":  "",
+                         "Time":  "2026-09-15T22:47:32.4653005-07:00"
+                     }
+                 ]
+}

@@ -1,0 +1,49 @@
+﻿{
+    "Product":  "ADSOLUSOL",
+    "Root":  "G:\\Mi unidad\\00_DESARROLLO_SOFTWARE\\SOLUSOL_NET\\ADSOLUSOL",
+    "Gate":  "FAIL",
+    "Stats":  {
+                  "Critical":  1,
+                  "High":  0,
+                  "Medium":  0,
+                  "Low":  0,
+                  "Info":  4
+              },
+    "Findings":  [
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-SLN-OK",
+                         "Category":  "SCOPE",
+                         "Message":  "ADSOLUSOL.sln localizado.",
+                         "File":  "ADSOLUSOL.sln"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-JSON-OK",
+                         "Category":  "CONFIG",
+                         "Message":  "Sintaxis JSON valida.",
+                         "File":  "audit_report_adsolusol.json"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-JSON-OK",
+                         "Category":  "CONFIG",
+                         "Message":  "Sintaxis JSON valida.",
+                         "File":  "src\\ADSOLUSOL.Presentation.Api\\appsettings.json"
+                     },
+                     {
+                         "Severity":  "INFO",
+                         "Code":  "ADS-JSON-OK",
+                         "Category":  "CONFIG",
+                         "Message":  "Sintaxis JSON valida.",
+                         "File":  "src\\ADSOLUSOL.Presentation.Cmd\\appsettings.json"
+                     },
+                     {
+                         "Severity":  "CRITICAL",
+                         "Code":  "ADS-BUILD-FAIL",
+                         "Category":  "BUILD",
+                         "Message":  "BUILD FAILURE: La solucion arrojo errores al compilar.",
+                         "File":  ""
+                     }
+                 ]
+}

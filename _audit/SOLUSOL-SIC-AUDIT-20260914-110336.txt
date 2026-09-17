@@ -1,0 +1,3629 @@
+﻿==============================================================================
+SOLUSOL SIC - AUDITORIA ULTRACHISMOSA
+==============================================================================
+
+Version: 4.0.0
+Root: G:\Mi unidad\00_DESARROLLO_SOFTWARE\SOLUSOL_NET\ADSOLUSOL
+Score: 0 / 100
+Health: CRITICAL
+
+CRITICAL : 0
+HIGH     : 95
+MEDIUM   : 2
+LOW      : 4
+INFO     : 807
+
+[MEDIUM] [SIC-STRUCT-001] Archivo esperado no encontrado: go.mod
+
+[LOW] [SIC-DOC-001] Documento SIC no localizado: NODE_CONTRACT.md
+
+[LOW] [SIC-DOC-001] Documento SIC no localizado: AUTHENTICATION_CONTRACT.md
+
+[LOW] [SIC-DOC-001] Documento SIC no localizado: ARCHITECTURE.md
+
+[LOW] [SIC-DOC-001] Documento SIC no localizado: SECURITY.md
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:63
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:68
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:73
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:78
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:83
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:88
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:93
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:98
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:103
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:108
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:113
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:118
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:123
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:128
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:133
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:138
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:143
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:148
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:153
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:64
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:69
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:74
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:79
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:84
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:89
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:94
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:99
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:104
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:109
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:114
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:119
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:124
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:129
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:134
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:139
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:144
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:149
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:154
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:64
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:69
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:74
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:79
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:84
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:89
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:94
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:99
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:104
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:109
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:114
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:119
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:124
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:129
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:134
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:139
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:144
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:149
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:154
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:64
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:69
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:74
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:79
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:84
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:89
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:94
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:99
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:104
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:109
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:114
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:119
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:124
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:129
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:134
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:139
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:144
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:149
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:154
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:62
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:67
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:72
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:77
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:82
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:87
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:92
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:97
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:102
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:107
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:112
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:117
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:122
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:127
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:132
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:137
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:142
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:147
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[HIGH] [SIC-NET-001] Binding 0.0.0.0 detectado. Verificar exposición.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:152
+  Evidencia: "fileVersion": "0.0.0.0"
+
+[INFO] [SIC-NET-8080] Referencia al puerto 8080 detectada.
+  Archivo: src\ADSOLUSOL.Presentation.Api\appsettings.json:10
+  Evidencia: "SicBaseUrl": "http://127.0.0.1:8080",
+
+[MEDIUM] [SIC-HTTP-001] Uso explícito de HTTP sin TLS.
+  Archivo: src\ADSOLUSOL.Presentation.Api\appsettings.json:10
+  Evidencia: "SicBaseUrl": "http://127.0.0.1:8080",
+
+[INFO] [SIC-SSRF-PRIVATE] Referencia a dirección local/privada.
+  Archivo: src\ADSOLUSOL.Presentation.Api\appsettings.json:10
+  Evidencia: "SicBaseUrl": "http://127.0.0.1:8080",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Timestamp
+  Archivo: audit_report_adsolusol.json:2
+  Evidencia: "Timestamp":  "2026-09-12T05:28:16.5007556-07:00",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Timestamp
+  Archivo: audit_report_adsolusol.json:21
+  Evidencia: "Timestamp":  "2026-09-12T05:28:15.2267006-07:00"
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Timestamp
+  Archivo: audit_report_adsolusol.json:30
+  Evidencia: "Timestamp":  "2026-09-12T05:28:15.2317051-07:00"
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Timestamp
+  Archivo: audit_report_adsolusol.json:39
+  Evidencia: "Timestamp":  "2026-09-12T05:28:15.2327062-07:00"
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Timestamp
+  Archivo: audit_report_adsolusol.json:48
+  Evidencia: "Timestamp":  "2026-09-12T05:28:16.4937489-07:00"
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Application\bin\Debug\net8.0\ADSOLUSOL.Application.deps.json:4
+  Evidencia: "signature": ""
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Domain\bin\Debug\net8.0\ADSOLUSOL.Domain.deps.json:4
+  Evidencia: "signature": ""
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:4
+  Evidencia: "signature": ""
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:214
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:228
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:247
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:265
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:277
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:320
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:334
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Motor\bin\Debug\net8.0\ADSOLUSOL.Motor.deps.json:4
+  Evidencia: "signature": ""
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Orchestrator\bin\Debug\net8.0\ADSOLUSOL.Orchestrator.deps.json:4
+  Evidencia: "signature": ""
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:4
+  Evidencia: "signature": ""
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:254
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:268
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:287
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:305
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:317
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:360
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:374
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:4
+  Evidencia: "signature": ""
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:254
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:268
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:287
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:305
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:317
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:360
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:374
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:4
+  Evidencia: "signature": ""
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:4
+  Evidencia: "signature": ""
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:272
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:286
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:305
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:323
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:335
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:378
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Signature
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:392
+  Evidencia: ".signature.p7s",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Context
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:345
+  Evidencia: "useSharedDesignerContext.txt",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Context
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:385
+  Evidencia: "useSharedDesignerContext.txt",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Context
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:385
+  Evidencia: "useSharedDesignerContext.txt",
+
+[INFO] [SIC-AUTH-PRESENCE] Elemento del contrato de autenticación localizado: Context
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:403
+  Evidencia: "useSharedDesignerContext.txt",
+
+[INFO] [SIC-IDENTITY-KEY] Material criptográfico o identidad de nodo referenciado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\appsettings.json:12
+  Evidencia: "PublicKey": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:12
+  Evidencia: "Microsoft.Data.Sqlite": "8.0.31"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:18
+  Evidencia: "Microsoft.Data.Sqlite/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:20
+  Evidencia: "Microsoft.Data.Sqlite.Core": "8.0.31",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:21
+  Evidencia: "SQLitePCLRaw.bundle_e_sqlite3": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:24
+  Evidencia: "Microsoft.Data.Sqlite.Core/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:26
+  Evidencia: "SQLitePCLRaw.core": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:29
+  Evidencia: "lib/net8.0/Microsoft.Data.Sqlite.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:35
+  Evidencia: "SQLitePCLRaw.bundle_e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:37
+  Evidencia: "SQLitePCLRaw.lib.e_sqlite3": "2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:38
+  Evidencia: "SQLitePCLRaw.provider.e_sqlite3": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:41
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.batteries_v2.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:47
+  Evidencia: "SQLitePCLRaw.core/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:52
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.core.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:58
+  Evidencia: "SQLitePCLRaw.lib.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:60
+  Evidencia: "runtimes/browser-wasm/nativeassets/net8.0/e_sqlite3.a": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:65
+  Evidencia: "runtimes/linux-arm/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:70
+  Evidencia: "runtimes/linux-arm64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:75
+  Evidencia: "runtimes/linux-armel/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:80
+  Evidencia: "runtimes/linux-mips64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:85
+  Evidencia: "runtimes/linux-musl-arm/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:90
+  Evidencia: "runtimes/linux-musl-arm64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:95
+  Evidencia: "runtimes/linux-musl-riscv64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:100
+  Evidencia: "runtimes/linux-musl-s390x/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:105
+  Evidencia: "runtimes/linux-musl-x64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:110
+  Evidencia: "runtimes/linux-ppc64le/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:115
+  Evidencia: "runtimes/linux-riscv64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:120
+  Evidencia: "runtimes/linux-s390x/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:125
+  Evidencia: "runtimes/linux-x64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:130
+  Evidencia: "runtimes/linux-x86/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:135
+  Evidencia: "runtimes/maccatalyst-arm64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:140
+  Evidencia: "runtimes/maccatalyst-x64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:145
+  Evidencia: "runtimes/osx-arm64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:150
+  Evidencia: "runtimes/osx-x64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:155
+  Evidencia: "runtimes/win-arm64/native/e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:160
+  Evidencia: "runtimes/win-x64/native/e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:165
+  Evidencia: "runtimes/win-x86/native/e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:172
+  Evidencia: "SQLitePCLRaw.provider.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:174
+  Evidencia: "SQLitePCLRaw.core": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:177
+  Evidencia: "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:211
+  Evidencia: "Microsoft.Data.Sqlite/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:215
+  Evidencia: "path": "microsoft.data.sqlite/8.0.31",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:216
+  Evidencia: "hashPath": "microsoft.data.sqlite.8.0.31.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:218
+  Evidencia: "Microsoft.Data.Sqlite.Core/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:222
+  Evidencia: "path": "microsoft.data.sqlite.core/8.0.31",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:223
+  Evidencia: "hashPath": "microsoft.data.sqlite.core.8.0.31.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:225
+  Evidencia: "SQLitePCLRaw.bundle_e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:229
+  Evidencia: "path": "sqlitepclraw.bundle_e_sqlite3/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:230
+  Evidencia: "hashPath": "sqlitepclraw.bundle_e_sqlite3.2.1.12.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:232
+  Evidencia: "SQLitePCLRaw.core/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:236
+  Evidencia: "path": "sqlitepclraw.core/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:237
+  Evidencia: "hashPath": "sqlitepclraw.core.2.1.12.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:239
+  Evidencia: "SQLitePCLRaw.lib.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:243
+  Evidencia: "path": "sqlitepclraw.lib.e_sqlite3/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:244
+  Evidencia: "hashPath": "sqlitepclraw.lib.e_sqlite3.2.1.12.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:246
+  Evidencia: "SQLitePCLRaw.provider.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:250
+  Evidencia: "path": "sqlitepclraw.provider.e_sqlite3/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\bin\Debug\net8.0\ADSOLUSOL.Infrastructure.deps.json:251
+  Evidencia: "hashPath": "sqlitepclraw.provider.e_sqlite3.2.1.12.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\ADSOLUSOL.Infrastructure.csproj.nuget.dgspec.json:170
+  Evidencia: "Microsoft.Data.Sqlite": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:5
+  Evidencia: "Microsoft.Data.Sqlite/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:8
+  Evidencia: "Microsoft.Data.Sqlite.Core": "8.0.31",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:9
+  Evidencia: "SQLitePCLRaw.bundle_e_sqlite3": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:18
+  Evidencia: "Microsoft.Data.Sqlite.Core/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:21
+  Evidencia: "SQLitePCLRaw.core": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:24
+  Evidencia: "lib/net8.0/Microsoft.Data.Sqlite.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:29
+  Evidencia: "lib/net8.0/Microsoft.Data.Sqlite.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:34
+  Evidencia: "SQLitePCLRaw.bundle_e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:37
+  Evidencia: "SQLitePCLRaw.lib.e_sqlite3": "2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:38
+  Evidencia: "SQLitePCLRaw.provider.e_sqlite3": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:41
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.batteries_v2.dll": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:44
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.batteries_v2.dll": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:47
+  Evidencia: "SQLitePCLRaw.core/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:53
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.core.dll": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:56
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.core.dll": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:59
+  Evidencia: "SQLitePCLRaw.lib.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:68
+  Evidencia: "buildTransitive/net8.0/SQLitePCLRaw.lib.e_sqlite3.targets": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:71
+  Evidencia: "runtimes/browser-wasm/nativeassets/net8.0/e_sqlite3.a": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:75
+  Evidencia: "runtimes/linux-arm/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:79
+  Evidencia: "runtimes/linux-arm64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:83
+  Evidencia: "runtimes/linux-armel/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:87
+  Evidencia: "runtimes/linux-mips64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:91
+  Evidencia: "runtimes/linux-musl-arm/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:95
+  Evidencia: "runtimes/linux-musl-arm64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:99
+  Evidencia: "runtimes/linux-musl-riscv64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:103
+  Evidencia: "runtimes/linux-musl-s390x/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:107
+  Evidencia: "runtimes/linux-musl-x64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:111
+  Evidencia: "runtimes/linux-ppc64le/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:115
+  Evidencia: "runtimes/linux-riscv64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:119
+  Evidencia: "runtimes/linux-s390x/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:123
+  Evidencia: "runtimes/linux-x64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:127
+  Evidencia: "runtimes/linux-x86/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:131
+  Evidencia: "runtimes/maccatalyst-arm64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:135
+  Evidencia: "runtimes/maccatalyst-x64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:139
+  Evidencia: "runtimes/osx-arm64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:143
+  Evidencia: "runtimes/osx-x64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:147
+  Evidencia: "runtimes/win-arm64/native/e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:151
+  Evidencia: "runtimes/win-x64/native/e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:155
+  Evidencia: "runtimes/win-x86/native/e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:161
+  Evidencia: "SQLitePCLRaw.provider.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:164
+  Evidencia: "SQLitePCLRaw.core": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:167
+  Evidencia: "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:170
+  Evidencia: "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:208
+  Evidencia: "Microsoft.Data.Sqlite/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:211
+  Evidencia: "path": "microsoft.data.sqlite/8.0.31",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:218
+  Evidencia: "microsoft.data.sqlite.8.0.31.nupkg.sha512",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:219
+  Evidencia: "microsoft.data.sqlite.nuspec"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:222
+  Evidencia: "Microsoft.Data.Sqlite.Core/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:225
+  Evidencia: "path": "microsoft.data.sqlite.core/8.0.31",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:231
+  Evidencia: "lib/net6.0/Microsoft.Data.Sqlite.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:232
+  Evidencia: "lib/net6.0/Microsoft.Data.Sqlite.xml",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:233
+  Evidencia: "lib/net8.0/Microsoft.Data.Sqlite.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:234
+  Evidencia: "lib/net8.0/Microsoft.Data.Sqlite.xml",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:235
+  Evidencia: "lib/netstandard2.0/Microsoft.Data.Sqlite.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:236
+  Evidencia: "lib/netstandard2.0/Microsoft.Data.Sqlite.xml",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:237
+  Evidencia: "microsoft.data.sqlite.core.8.0.31.nupkg.sha512",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:238
+  Evidencia: "microsoft.data.sqlite.core.nuspec"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:241
+  Evidencia: "SQLitePCLRaw.bundle_e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:244
+  Evidencia: "path": "sqlitepclraw.bundle_e_sqlite3/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:248
+  Evidencia: "lib/net461/SQLitePCLRaw.batteries_v2.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:249
+  Evidencia: "lib/net6.0-android31.0/SQLitePCLRaw.batteries_v2.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:250
+  Evidencia: "lib/net6.0-android31.0/SQLitePCLRaw.batteries_v2.xml",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:251
+  Evidencia: "lib/net6.0-ios14.0/SQLitePCLRaw.batteries_v2.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:252
+  Evidencia: "lib/net6.0-ios14.2/SQLitePCLRaw.batteries_v2.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:253
+  Evidencia: "lib/net6.0-tvos10.0/SQLitePCLRaw.batteries_v2.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:254
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.batteries_v2.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:255
+  Evidencia: "sqlitepclraw.bundle_e_sqlite3.2.1.12.nupkg.sha512",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:256
+  Evidencia: "sqlitepclraw.bundle_e_sqlite3.nuspec"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:259
+  Evidencia: "SQLitePCLRaw.core/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:262
+  Evidencia: "path": "sqlitepclraw.core/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:266
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.core.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:267
+  Evidencia: "sqlitepclraw.core.2.1.12.nupkg.sha512",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:268
+  Evidencia: "sqlitepclraw.core.nuspec"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:271
+  Evidencia: "SQLitePCLRaw.lib.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:274
+  Evidencia: "path": "sqlitepclraw.lib.e_sqlite3/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:278
+  Evidencia: "buildTransitive/net461/SQLitePCLRaw.lib.e_sqlite3.targets",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:279
+  Evidencia: "buildTransitive/net6.0/SQLitePCLRaw.lib.e_sqlite3.targets",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:280
+  Evidencia: "buildTransitive/net7.0/SQLitePCLRaw.lib.e_sqlite3.targets",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:281
+  Evidencia: "buildTransitive/net8.0/SQLitePCLRaw.lib.e_sqlite3.targets",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:282
+  Evidencia: "buildTransitive/net9.0/SQLitePCLRaw.lib.e_sqlite3.targets",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:285
+  Evidencia: "runtimes/browser-wasm/nativeassets/net6.0/e_sqlite3.a",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:286
+  Evidencia: "runtimes/browser-wasm/nativeassets/net7.0/e_sqlite3.a",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:287
+  Evidencia: "runtimes/browser-wasm/nativeassets/net8.0/e_sqlite3.a",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:288
+  Evidencia: "runtimes/browser-wasm/nativeassets/net9.0/e_sqlite3.a",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:289
+  Evidencia: "runtimes/linux-arm/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:290
+  Evidencia: "runtimes/linux-arm64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:291
+  Evidencia: "runtimes/linux-armel/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:292
+  Evidencia: "runtimes/linux-mips64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:293
+  Evidencia: "runtimes/linux-musl-arm/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:294
+  Evidencia: "runtimes/linux-musl-arm64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:295
+  Evidencia: "runtimes/linux-musl-riscv64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:296
+  Evidencia: "runtimes/linux-musl-s390x/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:297
+  Evidencia: "runtimes/linux-musl-x64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:298
+  Evidencia: "runtimes/linux-ppc64le/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:299
+  Evidencia: "runtimes/linux-riscv64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:300
+  Evidencia: "runtimes/linux-s390x/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:301
+  Evidencia: "runtimes/linux-x64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:302
+  Evidencia: "runtimes/linux-x86/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:303
+  Evidencia: "runtimes/maccatalyst-arm64/native/libe_sqlite3.dylib",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:304
+  Evidencia: "runtimes/maccatalyst-x64/native/libe_sqlite3.dylib",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:305
+  Evidencia: "runtimes/osx-arm64/native/libe_sqlite3.dylib",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:306
+  Evidencia: "runtimes/osx-x64/native/libe_sqlite3.dylib",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:307
+  Evidencia: "runtimes/win-arm64/native/e_sqlite3.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:308
+  Evidencia: "runtimes/win-x64/native/e_sqlite3.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:309
+  Evidencia: "runtimes/win-x86/native/e_sqlite3.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:310
+  Evidencia: "sqlitepclraw.lib.e_sqlite3.2.1.12.nupkg.sha512",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:311
+  Evidencia: "sqlitepclraw.lib.e_sqlite3.nuspec"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:314
+  Evidencia: "SQLitePCLRaw.provider.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:317
+  Evidencia: "path": "sqlitepclraw.provider.e_sqlite3/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:321
+  Evidencia: "lib/net6.0-windows7.0/SQLitePCLRaw.provider.e_sqlite3.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:322
+  Evidencia: "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:323
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.provider.e_sqlite3.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:324
+  Evidencia: "sqlitepclraw.provider.e_sqlite3.2.1.12.nupkg.sha512",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:325
+  Evidencia: "sqlitepclraw.provider.e_sqlite3.nuspec"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:363
+  Evidencia: "Microsoft.Data.Sqlite >= 8.0.31"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Infrastructure\obj\project.assets.json:412
+  Evidencia: "Microsoft.Data.Sqlite": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:19
+  Evidencia: "Microsoft.Data.Sqlite/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:21
+  Evidencia: "Microsoft.Data.Sqlite.Core": "8.0.31",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:22
+  Evidencia: "SQLitePCLRaw.bundle_e_sqlite3": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:25
+  Evidencia: "Microsoft.Data.Sqlite.Core/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:27
+  Evidencia: "SQLitePCLRaw.core": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:30
+  Evidencia: "lib/net8.0/Microsoft.Data.Sqlite.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:36
+  Evidencia: "SQLitePCLRaw.bundle_e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:38
+  Evidencia: "SQLitePCLRaw.lib.e_sqlite3": "2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:39
+  Evidencia: "SQLitePCLRaw.provider.e_sqlite3": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:42
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.batteries_v2.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:48
+  Evidencia: "SQLitePCLRaw.core/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:53
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.core.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:59
+  Evidencia: "SQLitePCLRaw.lib.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:61
+  Evidencia: "runtimes/browser-wasm/nativeassets/net8.0/e_sqlite3.a": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:66
+  Evidencia: "runtimes/linux-arm/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:71
+  Evidencia: "runtimes/linux-arm64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:76
+  Evidencia: "runtimes/linux-armel/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:81
+  Evidencia: "runtimes/linux-mips64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:86
+  Evidencia: "runtimes/linux-musl-arm/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:91
+  Evidencia: "runtimes/linux-musl-arm64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:96
+  Evidencia: "runtimes/linux-musl-riscv64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:101
+  Evidencia: "runtimes/linux-musl-s390x/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:106
+  Evidencia: "runtimes/linux-musl-x64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:111
+  Evidencia: "runtimes/linux-ppc64le/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:116
+  Evidencia: "runtimes/linux-riscv64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:121
+  Evidencia: "runtimes/linux-s390x/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:126
+  Evidencia: "runtimes/linux-x64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:131
+  Evidencia: "runtimes/linux-x86/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:136
+  Evidencia: "runtimes/maccatalyst-arm64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:141
+  Evidencia: "runtimes/maccatalyst-x64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:146
+  Evidencia: "runtimes/osx-arm64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:151
+  Evidencia: "runtimes/osx-x64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:156
+  Evidencia: "runtimes/win-arm64/native/e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:161
+  Evidencia: "runtimes/win-x64/native/e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:166
+  Evidencia: "runtimes/win-x86/native/e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:173
+  Evidencia: "SQLitePCLRaw.provider.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:175
+  Evidencia: "SQLitePCLRaw.core": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:178
+  Evidencia: "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:207
+  Evidencia: "Microsoft.Data.Sqlite": "8.0.31"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:246
+  Evidencia: "Microsoft.Data.Sqlite/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:250
+  Evidencia: "path": "microsoft.data.sqlite/8.0.31",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:251
+  Evidencia: "hashPath": "microsoft.data.sqlite.8.0.31.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:253
+  Evidencia: "Microsoft.Data.Sqlite.Core/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:257
+  Evidencia: "path": "microsoft.data.sqlite.core/8.0.31",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:258
+  Evidencia: "hashPath": "microsoft.data.sqlite.core.8.0.31.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:260
+  Evidencia: "SQLitePCLRaw.bundle_e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:264
+  Evidencia: "path": "sqlitepclraw.bundle_e_sqlite3/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:265
+  Evidencia: "hashPath": "sqlitepclraw.bundle_e_sqlite3.2.1.12.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:267
+  Evidencia: "SQLitePCLRaw.core/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:271
+  Evidencia: "path": "sqlitepclraw.core/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:272
+  Evidencia: "hashPath": "sqlitepclraw.core.2.1.12.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:274
+  Evidencia: "SQLitePCLRaw.lib.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:278
+  Evidencia: "path": "sqlitepclraw.lib.e_sqlite3/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:279
+  Evidencia: "hashPath": "sqlitepclraw.lib.e_sqlite3.2.1.12.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:281
+  Evidencia: "SQLitePCLRaw.provider.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:285
+  Evidencia: "path": "sqlitepclraw.provider.e_sqlite3/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:286
+  Evidencia: "hashPath": "sqlitepclraw.provider.e_sqlite3.2.1.12.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\ADSOLUSOL.Presentation.Api.csproj.nuget.dgspec.json:170
+  Evidencia: "Microsoft.Data.Sqlite": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:5
+  Evidencia: "Microsoft.Data.Sqlite/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:8
+  Evidencia: "Microsoft.Data.Sqlite.Core": "8.0.31",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:9
+  Evidencia: "SQLitePCLRaw.bundle_e_sqlite3": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:18
+  Evidencia: "Microsoft.Data.Sqlite.Core/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:21
+  Evidencia: "SQLitePCLRaw.core": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:24
+  Evidencia: "lib/net8.0/Microsoft.Data.Sqlite.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:29
+  Evidencia: "lib/net8.0/Microsoft.Data.Sqlite.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:34
+  Evidencia: "SQLitePCLRaw.bundle_e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:37
+  Evidencia: "SQLitePCLRaw.lib.e_sqlite3": "2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:38
+  Evidencia: "SQLitePCLRaw.provider.e_sqlite3": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:41
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.batteries_v2.dll": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:44
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.batteries_v2.dll": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:47
+  Evidencia: "SQLitePCLRaw.core/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:53
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.core.dll": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:56
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.core.dll": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:59
+  Evidencia: "SQLitePCLRaw.lib.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:68
+  Evidencia: "buildTransitive/net8.0/SQLitePCLRaw.lib.e_sqlite3.targets": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:71
+  Evidencia: "runtimes/browser-wasm/nativeassets/net8.0/e_sqlite3.a": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:75
+  Evidencia: "runtimes/linux-arm/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:79
+  Evidencia: "runtimes/linux-arm64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:83
+  Evidencia: "runtimes/linux-armel/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:87
+  Evidencia: "runtimes/linux-mips64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:91
+  Evidencia: "runtimes/linux-musl-arm/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:95
+  Evidencia: "runtimes/linux-musl-arm64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:99
+  Evidencia: "runtimes/linux-musl-riscv64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:103
+  Evidencia: "runtimes/linux-musl-s390x/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:107
+  Evidencia: "runtimes/linux-musl-x64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:111
+  Evidencia: "runtimes/linux-ppc64le/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:115
+  Evidencia: "runtimes/linux-riscv64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:119
+  Evidencia: "runtimes/linux-s390x/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:123
+  Evidencia: "runtimes/linux-x64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:127
+  Evidencia: "runtimes/linux-x86/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:131
+  Evidencia: "runtimes/maccatalyst-arm64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:135
+  Evidencia: "runtimes/maccatalyst-x64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:139
+  Evidencia: "runtimes/osx-arm64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:143
+  Evidencia: "runtimes/osx-x64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:147
+  Evidencia: "runtimes/win-arm64/native/e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:151
+  Evidencia: "runtimes/win-x64/native/e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:155
+  Evidencia: "runtimes/win-x86/native/e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:161
+  Evidencia: "SQLitePCLRaw.provider.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:164
+  Evidencia: "SQLitePCLRaw.core": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:167
+  Evidencia: "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:170
+  Evidencia: "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:210
+  Evidencia: "Microsoft.Data.Sqlite": "8.0.31"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:248
+  Evidencia: "Microsoft.Data.Sqlite/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:251
+  Evidencia: "path": "microsoft.data.sqlite/8.0.31",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:258
+  Evidencia: "microsoft.data.sqlite.8.0.31.nupkg.sha512",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:259
+  Evidencia: "microsoft.data.sqlite.nuspec"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:262
+  Evidencia: "Microsoft.Data.Sqlite.Core/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:265
+  Evidencia: "path": "microsoft.data.sqlite.core/8.0.31",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:271
+  Evidencia: "lib/net6.0/Microsoft.Data.Sqlite.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:272
+  Evidencia: "lib/net6.0/Microsoft.Data.Sqlite.xml",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:273
+  Evidencia: "lib/net8.0/Microsoft.Data.Sqlite.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:274
+  Evidencia: "lib/net8.0/Microsoft.Data.Sqlite.xml",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:275
+  Evidencia: "lib/netstandard2.0/Microsoft.Data.Sqlite.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:276
+  Evidencia: "lib/netstandard2.0/Microsoft.Data.Sqlite.xml",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:277
+  Evidencia: "microsoft.data.sqlite.core.8.0.31.nupkg.sha512",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:278
+  Evidencia: "microsoft.data.sqlite.core.nuspec"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:281
+  Evidencia: "SQLitePCLRaw.bundle_e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:284
+  Evidencia: "path": "sqlitepclraw.bundle_e_sqlite3/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:288
+  Evidencia: "lib/net461/SQLitePCLRaw.batteries_v2.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:289
+  Evidencia: "lib/net6.0-android31.0/SQLitePCLRaw.batteries_v2.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:290
+  Evidencia: "lib/net6.0-android31.0/SQLitePCLRaw.batteries_v2.xml",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:291
+  Evidencia: "lib/net6.0-ios14.0/SQLitePCLRaw.batteries_v2.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:292
+  Evidencia: "lib/net6.0-ios14.2/SQLitePCLRaw.batteries_v2.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:293
+  Evidencia: "lib/net6.0-tvos10.0/SQLitePCLRaw.batteries_v2.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:294
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.batteries_v2.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:295
+  Evidencia: "sqlitepclraw.bundle_e_sqlite3.2.1.12.nupkg.sha512",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:296
+  Evidencia: "sqlitepclraw.bundle_e_sqlite3.nuspec"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:299
+  Evidencia: "SQLitePCLRaw.core/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:302
+  Evidencia: "path": "sqlitepclraw.core/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:306
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.core.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:307
+  Evidencia: "sqlitepclraw.core.2.1.12.nupkg.sha512",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:308
+  Evidencia: "sqlitepclraw.core.nuspec"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:311
+  Evidencia: "SQLitePCLRaw.lib.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:314
+  Evidencia: "path": "sqlitepclraw.lib.e_sqlite3/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:318
+  Evidencia: "buildTransitive/net461/SQLitePCLRaw.lib.e_sqlite3.targets",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:319
+  Evidencia: "buildTransitive/net6.0/SQLitePCLRaw.lib.e_sqlite3.targets",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:320
+  Evidencia: "buildTransitive/net7.0/SQLitePCLRaw.lib.e_sqlite3.targets",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:321
+  Evidencia: "buildTransitive/net8.0/SQLitePCLRaw.lib.e_sqlite3.targets",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:322
+  Evidencia: "buildTransitive/net9.0/SQLitePCLRaw.lib.e_sqlite3.targets",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:325
+  Evidencia: "runtimes/browser-wasm/nativeassets/net6.0/e_sqlite3.a",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:326
+  Evidencia: "runtimes/browser-wasm/nativeassets/net7.0/e_sqlite3.a",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:327
+  Evidencia: "runtimes/browser-wasm/nativeassets/net8.0/e_sqlite3.a",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:328
+  Evidencia: "runtimes/browser-wasm/nativeassets/net9.0/e_sqlite3.a",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:329
+  Evidencia: "runtimes/linux-arm/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:330
+  Evidencia: "runtimes/linux-arm64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:331
+  Evidencia: "runtimes/linux-armel/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:332
+  Evidencia: "runtimes/linux-mips64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:333
+  Evidencia: "runtimes/linux-musl-arm/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:334
+  Evidencia: "runtimes/linux-musl-arm64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:335
+  Evidencia: "runtimes/linux-musl-riscv64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:336
+  Evidencia: "runtimes/linux-musl-s390x/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:337
+  Evidencia: "runtimes/linux-musl-x64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:338
+  Evidencia: "runtimes/linux-ppc64le/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:339
+  Evidencia: "runtimes/linux-riscv64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:340
+  Evidencia: "runtimes/linux-s390x/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:341
+  Evidencia: "runtimes/linux-x64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:342
+  Evidencia: "runtimes/linux-x86/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:343
+  Evidencia: "runtimes/maccatalyst-arm64/native/libe_sqlite3.dylib",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:344
+  Evidencia: "runtimes/maccatalyst-x64/native/libe_sqlite3.dylib",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:345
+  Evidencia: "runtimes/osx-arm64/native/libe_sqlite3.dylib",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:346
+  Evidencia: "runtimes/osx-x64/native/libe_sqlite3.dylib",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:347
+  Evidencia: "runtimes/win-arm64/native/e_sqlite3.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:348
+  Evidencia: "runtimes/win-x64/native/e_sqlite3.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:349
+  Evidencia: "runtimes/win-x86/native/e_sqlite3.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:350
+  Evidencia: "sqlitepclraw.lib.e_sqlite3.2.1.12.nupkg.sha512",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:351
+  Evidencia: "sqlitepclraw.lib.e_sqlite3.nuspec"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:354
+  Evidencia: "SQLitePCLRaw.provider.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:357
+  Evidencia: "path": "sqlitepclraw.provider.e_sqlite3/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:361
+  Evidencia: "lib/net6.0-windows7.0/SQLitePCLRaw.provider.e_sqlite3.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:362
+  Evidencia: "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:363
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.provider.e_sqlite3.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:364
+  Evidencia: "sqlitepclraw.provider.e_sqlite3.2.1.12.nupkg.sha512",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Api\obj\project.assets.json:365
+  Evidencia: "sqlitepclraw.provider.e_sqlite3.nuspec"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:19
+  Evidencia: "Microsoft.Data.Sqlite/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:21
+  Evidencia: "Microsoft.Data.Sqlite.Core": "8.0.31",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:22
+  Evidencia: "SQLitePCLRaw.bundle_e_sqlite3": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:25
+  Evidencia: "Microsoft.Data.Sqlite.Core/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:27
+  Evidencia: "SQLitePCLRaw.core": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:30
+  Evidencia: "lib/net8.0/Microsoft.Data.Sqlite.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:36
+  Evidencia: "SQLitePCLRaw.bundle_e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:38
+  Evidencia: "SQLitePCLRaw.lib.e_sqlite3": "2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:39
+  Evidencia: "SQLitePCLRaw.provider.e_sqlite3": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:42
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.batteries_v2.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:48
+  Evidencia: "SQLitePCLRaw.core/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:53
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.core.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:59
+  Evidencia: "SQLitePCLRaw.lib.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:61
+  Evidencia: "runtimes/browser-wasm/nativeassets/net8.0/e_sqlite3.a": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:66
+  Evidencia: "runtimes/linux-arm/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:71
+  Evidencia: "runtimes/linux-arm64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:76
+  Evidencia: "runtimes/linux-armel/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:81
+  Evidencia: "runtimes/linux-mips64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:86
+  Evidencia: "runtimes/linux-musl-arm/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:91
+  Evidencia: "runtimes/linux-musl-arm64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:96
+  Evidencia: "runtimes/linux-musl-riscv64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:101
+  Evidencia: "runtimes/linux-musl-s390x/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:106
+  Evidencia: "runtimes/linux-musl-x64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:111
+  Evidencia: "runtimes/linux-ppc64le/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:116
+  Evidencia: "runtimes/linux-riscv64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:121
+  Evidencia: "runtimes/linux-s390x/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:126
+  Evidencia: "runtimes/linux-x64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:131
+  Evidencia: "runtimes/linux-x86/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:136
+  Evidencia: "runtimes/maccatalyst-arm64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:141
+  Evidencia: "runtimes/maccatalyst-x64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:146
+  Evidencia: "runtimes/osx-arm64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:151
+  Evidencia: "runtimes/osx-x64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:156
+  Evidencia: "runtimes/win-arm64/native/e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:161
+  Evidencia: "runtimes/win-x64/native/e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:166
+  Evidencia: "runtimes/win-x86/native/e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:173
+  Evidencia: "SQLitePCLRaw.provider.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:175
+  Evidencia: "SQLitePCLRaw.core": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:178
+  Evidencia: "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:207
+  Evidencia: "Microsoft.Data.Sqlite": "8.0.31"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:246
+  Evidencia: "Microsoft.Data.Sqlite/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:250
+  Evidencia: "path": "microsoft.data.sqlite/8.0.31",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:251
+  Evidencia: "hashPath": "microsoft.data.sqlite.8.0.31.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:253
+  Evidencia: "Microsoft.Data.Sqlite.Core/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:257
+  Evidencia: "path": "microsoft.data.sqlite.core/8.0.31",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:258
+  Evidencia: "hashPath": "microsoft.data.sqlite.core.8.0.31.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:260
+  Evidencia: "SQLitePCLRaw.bundle_e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:264
+  Evidencia: "path": "sqlitepclraw.bundle_e_sqlite3/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:265
+  Evidencia: "hashPath": "sqlitepclraw.bundle_e_sqlite3.2.1.12.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:267
+  Evidencia: "SQLitePCLRaw.core/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:271
+  Evidencia: "path": "sqlitepclraw.core/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:272
+  Evidencia: "hashPath": "sqlitepclraw.core.2.1.12.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:274
+  Evidencia: "SQLitePCLRaw.lib.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:278
+  Evidencia: "path": "sqlitepclraw.lib.e_sqlite3/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:279
+  Evidencia: "hashPath": "sqlitepclraw.lib.e_sqlite3.2.1.12.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:281
+  Evidencia: "SQLitePCLRaw.provider.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:285
+  Evidencia: "path": "sqlitepclraw.provider.e_sqlite3/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\bin\Debug\net8.0\ADSOLUSOL.Presentation.Cmd.deps.json:286
+  Evidencia: "hashPath": "sqlitepclraw.provider.e_sqlite3.2.1.12.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\ADSOLUSOL.Presentation.Cmd.csproj.nuget.dgspec.json:170
+  Evidencia: "Microsoft.Data.Sqlite": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:5
+  Evidencia: "Microsoft.Data.Sqlite/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:8
+  Evidencia: "Microsoft.Data.Sqlite.Core": "8.0.31",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:9
+  Evidencia: "SQLitePCLRaw.bundle_e_sqlite3": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:18
+  Evidencia: "Microsoft.Data.Sqlite.Core/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:21
+  Evidencia: "SQLitePCLRaw.core": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:24
+  Evidencia: "lib/net8.0/Microsoft.Data.Sqlite.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:29
+  Evidencia: "lib/net8.0/Microsoft.Data.Sqlite.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:34
+  Evidencia: "SQLitePCLRaw.bundle_e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:37
+  Evidencia: "SQLitePCLRaw.lib.e_sqlite3": "2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:38
+  Evidencia: "SQLitePCLRaw.provider.e_sqlite3": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:41
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.batteries_v2.dll": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:44
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.batteries_v2.dll": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:47
+  Evidencia: "SQLitePCLRaw.core/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:53
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.core.dll": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:56
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.core.dll": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:59
+  Evidencia: "SQLitePCLRaw.lib.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:68
+  Evidencia: "buildTransitive/net8.0/SQLitePCLRaw.lib.e_sqlite3.targets": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:71
+  Evidencia: "runtimes/browser-wasm/nativeassets/net8.0/e_sqlite3.a": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:75
+  Evidencia: "runtimes/linux-arm/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:79
+  Evidencia: "runtimes/linux-arm64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:83
+  Evidencia: "runtimes/linux-armel/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:87
+  Evidencia: "runtimes/linux-mips64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:91
+  Evidencia: "runtimes/linux-musl-arm/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:95
+  Evidencia: "runtimes/linux-musl-arm64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:99
+  Evidencia: "runtimes/linux-musl-riscv64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:103
+  Evidencia: "runtimes/linux-musl-s390x/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:107
+  Evidencia: "runtimes/linux-musl-x64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:111
+  Evidencia: "runtimes/linux-ppc64le/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:115
+  Evidencia: "runtimes/linux-riscv64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:119
+  Evidencia: "runtimes/linux-s390x/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:123
+  Evidencia: "runtimes/linux-x64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:127
+  Evidencia: "runtimes/linux-x86/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:131
+  Evidencia: "runtimes/maccatalyst-arm64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:135
+  Evidencia: "runtimes/maccatalyst-x64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:139
+  Evidencia: "runtimes/osx-arm64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:143
+  Evidencia: "runtimes/osx-x64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:147
+  Evidencia: "runtimes/win-arm64/native/e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:151
+  Evidencia: "runtimes/win-x64/native/e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:155
+  Evidencia: "runtimes/win-x86/native/e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:161
+  Evidencia: "SQLitePCLRaw.provider.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:164
+  Evidencia: "SQLitePCLRaw.core": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:167
+  Evidencia: "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:170
+  Evidencia: "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:210
+  Evidencia: "Microsoft.Data.Sqlite": "8.0.31"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:248
+  Evidencia: "Microsoft.Data.Sqlite/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:251
+  Evidencia: "path": "microsoft.data.sqlite/8.0.31",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:258
+  Evidencia: "microsoft.data.sqlite.8.0.31.nupkg.sha512",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:259
+  Evidencia: "microsoft.data.sqlite.nuspec"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:262
+  Evidencia: "Microsoft.Data.Sqlite.Core/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:265
+  Evidencia: "path": "microsoft.data.sqlite.core/8.0.31",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:271
+  Evidencia: "lib/net6.0/Microsoft.Data.Sqlite.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:272
+  Evidencia: "lib/net6.0/Microsoft.Data.Sqlite.xml",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:273
+  Evidencia: "lib/net8.0/Microsoft.Data.Sqlite.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:274
+  Evidencia: "lib/net8.0/Microsoft.Data.Sqlite.xml",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:275
+  Evidencia: "lib/netstandard2.0/Microsoft.Data.Sqlite.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:276
+  Evidencia: "lib/netstandard2.0/Microsoft.Data.Sqlite.xml",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:277
+  Evidencia: "microsoft.data.sqlite.core.8.0.31.nupkg.sha512",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:278
+  Evidencia: "microsoft.data.sqlite.core.nuspec"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:281
+  Evidencia: "SQLitePCLRaw.bundle_e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:284
+  Evidencia: "path": "sqlitepclraw.bundle_e_sqlite3/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:288
+  Evidencia: "lib/net461/SQLitePCLRaw.batteries_v2.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:289
+  Evidencia: "lib/net6.0-android31.0/SQLitePCLRaw.batteries_v2.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:290
+  Evidencia: "lib/net6.0-android31.0/SQLitePCLRaw.batteries_v2.xml",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:291
+  Evidencia: "lib/net6.0-ios14.0/SQLitePCLRaw.batteries_v2.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:292
+  Evidencia: "lib/net6.0-ios14.2/SQLitePCLRaw.batteries_v2.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:293
+  Evidencia: "lib/net6.0-tvos10.0/SQLitePCLRaw.batteries_v2.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:294
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.batteries_v2.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:295
+  Evidencia: "sqlitepclraw.bundle_e_sqlite3.2.1.12.nupkg.sha512",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:296
+  Evidencia: "sqlitepclraw.bundle_e_sqlite3.nuspec"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:299
+  Evidencia: "SQLitePCLRaw.core/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:302
+  Evidencia: "path": "sqlitepclraw.core/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:306
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.core.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:307
+  Evidencia: "sqlitepclraw.core.2.1.12.nupkg.sha512",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:308
+  Evidencia: "sqlitepclraw.core.nuspec"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:311
+  Evidencia: "SQLitePCLRaw.lib.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:314
+  Evidencia: "path": "sqlitepclraw.lib.e_sqlite3/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:318
+  Evidencia: "buildTransitive/net461/SQLitePCLRaw.lib.e_sqlite3.targets",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:319
+  Evidencia: "buildTransitive/net6.0/SQLitePCLRaw.lib.e_sqlite3.targets",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:320
+  Evidencia: "buildTransitive/net7.0/SQLitePCLRaw.lib.e_sqlite3.targets",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:321
+  Evidencia: "buildTransitive/net8.0/SQLitePCLRaw.lib.e_sqlite3.targets",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:322
+  Evidencia: "buildTransitive/net9.0/SQLitePCLRaw.lib.e_sqlite3.targets",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:325
+  Evidencia: "runtimes/browser-wasm/nativeassets/net6.0/e_sqlite3.a",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:326
+  Evidencia: "runtimes/browser-wasm/nativeassets/net7.0/e_sqlite3.a",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:327
+  Evidencia: "runtimes/browser-wasm/nativeassets/net8.0/e_sqlite3.a",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:328
+  Evidencia: "runtimes/browser-wasm/nativeassets/net9.0/e_sqlite3.a",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:329
+  Evidencia: "runtimes/linux-arm/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:330
+  Evidencia: "runtimes/linux-arm64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:331
+  Evidencia: "runtimes/linux-armel/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:332
+  Evidencia: "runtimes/linux-mips64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:333
+  Evidencia: "runtimes/linux-musl-arm/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:334
+  Evidencia: "runtimes/linux-musl-arm64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:335
+  Evidencia: "runtimes/linux-musl-riscv64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:336
+  Evidencia: "runtimes/linux-musl-s390x/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:337
+  Evidencia: "runtimes/linux-musl-x64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:338
+  Evidencia: "runtimes/linux-ppc64le/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:339
+  Evidencia: "runtimes/linux-riscv64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:340
+  Evidencia: "runtimes/linux-s390x/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:341
+  Evidencia: "runtimes/linux-x64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:342
+  Evidencia: "runtimes/linux-x86/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:343
+  Evidencia: "runtimes/maccatalyst-arm64/native/libe_sqlite3.dylib",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:344
+  Evidencia: "runtimes/maccatalyst-x64/native/libe_sqlite3.dylib",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:345
+  Evidencia: "runtimes/osx-arm64/native/libe_sqlite3.dylib",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:346
+  Evidencia: "runtimes/osx-x64/native/libe_sqlite3.dylib",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:347
+  Evidencia: "runtimes/win-arm64/native/e_sqlite3.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:348
+  Evidencia: "runtimes/win-x64/native/e_sqlite3.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:349
+  Evidencia: "runtimes/win-x86/native/e_sqlite3.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:350
+  Evidencia: "sqlitepclraw.lib.e_sqlite3.2.1.12.nupkg.sha512",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:351
+  Evidencia: "sqlitepclraw.lib.e_sqlite3.nuspec"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:354
+  Evidencia: "SQLitePCLRaw.provider.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:357
+  Evidencia: "path": "sqlitepclraw.provider.e_sqlite3/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:361
+  Evidencia: "lib/net6.0-windows7.0/SQLitePCLRaw.provider.e_sqlite3.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:362
+  Evidencia: "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:363
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.provider.e_sqlite3.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:364
+  Evidencia: "sqlitepclraw.provider.e_sqlite3.2.1.12.nupkg.sha512",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: src\ADSOLUSOL.Presentation.Cmd\obj\project.assets.json:365
+  Evidencia: "sqlitepclraw.provider.e_sqlite3.nuspec"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:19
+  Evidencia: "Microsoft.Data.Sqlite/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:21
+  Evidencia: "Microsoft.Data.Sqlite.Core": "8.0.31",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:22
+  Evidencia: "SQLitePCLRaw.bundle_e_sqlite3": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:25
+  Evidencia: "Microsoft.Data.Sqlite.Core/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:27
+  Evidencia: "SQLitePCLRaw.core": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:30
+  Evidencia: "lib/net8.0/Microsoft.Data.Sqlite.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:36
+  Evidencia: "SQLitePCLRaw.bundle_e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:38
+  Evidencia: "SQLitePCLRaw.lib.e_sqlite3": "2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:39
+  Evidencia: "SQLitePCLRaw.provider.e_sqlite3": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:42
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.batteries_v2.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:48
+  Evidencia: "SQLitePCLRaw.core/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:53
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.core.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:59
+  Evidencia: "SQLitePCLRaw.lib.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:61
+  Evidencia: "runtimes/browser-wasm/nativeassets/net8.0/e_sqlite3.a": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:66
+  Evidencia: "runtimes/linux-arm/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:71
+  Evidencia: "runtimes/linux-arm64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:76
+  Evidencia: "runtimes/linux-armel/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:81
+  Evidencia: "runtimes/linux-mips64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:86
+  Evidencia: "runtimes/linux-musl-arm/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:91
+  Evidencia: "runtimes/linux-musl-arm64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:96
+  Evidencia: "runtimes/linux-musl-riscv64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:101
+  Evidencia: "runtimes/linux-musl-s390x/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:106
+  Evidencia: "runtimes/linux-musl-x64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:111
+  Evidencia: "runtimes/linux-ppc64le/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:116
+  Evidencia: "runtimes/linux-riscv64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:121
+  Evidencia: "runtimes/linux-s390x/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:126
+  Evidencia: "runtimes/linux-x64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:131
+  Evidencia: "runtimes/linux-x86/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:136
+  Evidencia: "runtimes/maccatalyst-arm64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:141
+  Evidencia: "runtimes/maccatalyst-x64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:146
+  Evidencia: "runtimes/osx-arm64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:151
+  Evidencia: "runtimes/osx-x64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:156
+  Evidencia: "runtimes/win-arm64/native/e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:161
+  Evidencia: "runtimes/win-x64/native/e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:166
+  Evidencia: "runtimes/win-x86/native/e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:173
+  Evidencia: "SQLitePCLRaw.provider.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:175
+  Evidencia: "SQLitePCLRaw.core": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:178
+  Evidencia: "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:207
+  Evidencia: "Microsoft.Data.Sqlite": "8.0.31"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:246
+  Evidencia: "Microsoft.Data.Sqlite/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:250
+  Evidencia: "path": "microsoft.data.sqlite/8.0.31",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:251
+  Evidencia: "hashPath": "microsoft.data.sqlite.8.0.31.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:253
+  Evidencia: "Microsoft.Data.Sqlite.Core/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:257
+  Evidencia: "path": "microsoft.data.sqlite.core/8.0.31",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:258
+  Evidencia: "hashPath": "microsoft.data.sqlite.core.8.0.31.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:260
+  Evidencia: "SQLitePCLRaw.bundle_e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:264
+  Evidencia: "path": "sqlitepclraw.bundle_e_sqlite3/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:265
+  Evidencia: "hashPath": "sqlitepclraw.bundle_e_sqlite3.2.1.12.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:267
+  Evidencia: "SQLitePCLRaw.core/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:271
+  Evidencia: "path": "sqlitepclraw.core/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:272
+  Evidencia: "hashPath": "sqlitepclraw.core.2.1.12.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:274
+  Evidencia: "SQLitePCLRaw.lib.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:278
+  Evidencia: "path": "sqlitepclraw.lib.e_sqlite3/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:279
+  Evidencia: "hashPath": "sqlitepclraw.lib.e_sqlite3.2.1.12.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:281
+  Evidencia: "SQLitePCLRaw.provider.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:285
+  Evidencia: "path": "sqlitepclraw.provider.e_sqlite3/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.Presentation.Api.deps.json:286
+  Evidencia: "hashPath": "sqlitepclraw.provider.e_sqlite3.2.1.12.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:17
+  Evidencia: "Microsoft.Data.Sqlite/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:19
+  Evidencia: "Microsoft.Data.Sqlite.Core": "8.0.31",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:20
+  Evidencia: "SQLitePCLRaw.bundle_e_sqlite3": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:23
+  Evidencia: "Microsoft.Data.Sqlite.Core/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:25
+  Evidencia: "SQLitePCLRaw.core": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:28
+  Evidencia: "lib/net8.0/Microsoft.Data.Sqlite.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:34
+  Evidencia: "SQLitePCLRaw.bundle_e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:36
+  Evidencia: "SQLitePCLRaw.lib.e_sqlite3": "2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:37
+  Evidencia: "SQLitePCLRaw.provider.e_sqlite3": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:40
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.batteries_v2.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:46
+  Evidencia: "SQLitePCLRaw.core/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:51
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.core.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:57
+  Evidencia: "SQLitePCLRaw.lib.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:59
+  Evidencia: "runtimes/browser-wasm/nativeassets/net8.0/e_sqlite3.a": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:64
+  Evidencia: "runtimes/linux-arm/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:69
+  Evidencia: "runtimes/linux-arm64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:74
+  Evidencia: "runtimes/linux-armel/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:79
+  Evidencia: "runtimes/linux-mips64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:84
+  Evidencia: "runtimes/linux-musl-arm/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:89
+  Evidencia: "runtimes/linux-musl-arm64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:94
+  Evidencia: "runtimes/linux-musl-riscv64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:99
+  Evidencia: "runtimes/linux-musl-s390x/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:104
+  Evidencia: "runtimes/linux-musl-x64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:109
+  Evidencia: "runtimes/linux-ppc64le/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:114
+  Evidencia: "runtimes/linux-riscv64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:119
+  Evidencia: "runtimes/linux-s390x/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:124
+  Evidencia: "runtimes/linux-x64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:129
+  Evidencia: "runtimes/linux-x86/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:134
+  Evidencia: "runtimes/maccatalyst-arm64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:139
+  Evidencia: "runtimes/maccatalyst-x64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:144
+  Evidencia: "runtimes/osx-arm64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:149
+  Evidencia: "runtimes/osx-x64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:154
+  Evidencia: "runtimes/win-arm64/native/e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:159
+  Evidencia: "runtimes/win-x64/native/e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:164
+  Evidencia: "runtimes/win-x86/native/e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:171
+  Evidencia: "SQLitePCLRaw.provider.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:173
+  Evidencia: "SQLitePCLRaw.core": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:176
+  Evidencia: "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:205
+  Evidencia: "Microsoft.Data.Sqlite": "8.0.31"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:257
+  Evidencia: "Microsoft.Data.Sqlite/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:261
+  Evidencia: "path": "microsoft.data.sqlite/8.0.31",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:262
+  Evidencia: "hashPath": "microsoft.data.sqlite.8.0.31.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:264
+  Evidencia: "Microsoft.Data.Sqlite.Core/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:268
+  Evidencia: "path": "microsoft.data.sqlite.core/8.0.31",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:269
+  Evidencia: "hashPath": "microsoft.data.sqlite.core.8.0.31.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:271
+  Evidencia: "SQLitePCLRaw.bundle_e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:275
+  Evidencia: "path": "sqlitepclraw.bundle_e_sqlite3/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:276
+  Evidencia: "hashPath": "sqlitepclraw.bundle_e_sqlite3.2.1.12.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:278
+  Evidencia: "SQLitePCLRaw.core/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:282
+  Evidencia: "path": "sqlitepclraw.core/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:283
+  Evidencia: "hashPath": "sqlitepclraw.core.2.1.12.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:285
+  Evidencia: "SQLitePCLRaw.lib.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:289
+  Evidencia: "path": "sqlitepclraw.lib.e_sqlite3/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:290
+  Evidencia: "hashPath": "sqlitepclraw.lib.e_sqlite3.2.1.12.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:292
+  Evidencia: "SQLitePCLRaw.provider.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:296
+  Evidencia: "path": "sqlitepclraw.provider.e_sqlite3/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\bin\Debug\net8.0\ADSOLUSOL.RegressionTests.deps.json:297
+  Evidencia: "hashPath": "sqlitepclraw.provider.e_sqlite3.2.1.12.nupkg.sha512"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\ADSOLUSOL.RegressionTests.csproj.nuget.dgspec.json:170
+  Evidencia: "Microsoft.Data.Sqlite": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:5
+  Evidencia: "Microsoft.Data.Sqlite/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:8
+  Evidencia: "Microsoft.Data.Sqlite.Core": "8.0.31",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:9
+  Evidencia: "SQLitePCLRaw.bundle_e_sqlite3": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:18
+  Evidencia: "Microsoft.Data.Sqlite.Core/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:21
+  Evidencia: "SQLitePCLRaw.core": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:24
+  Evidencia: "lib/net8.0/Microsoft.Data.Sqlite.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:29
+  Evidencia: "lib/net8.0/Microsoft.Data.Sqlite.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:34
+  Evidencia: "SQLitePCLRaw.bundle_e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:37
+  Evidencia: "SQLitePCLRaw.lib.e_sqlite3": "2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:38
+  Evidencia: "SQLitePCLRaw.provider.e_sqlite3": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:41
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.batteries_v2.dll": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:44
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.batteries_v2.dll": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:47
+  Evidencia: "SQLitePCLRaw.core/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:53
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.core.dll": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:56
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.core.dll": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:59
+  Evidencia: "SQLitePCLRaw.lib.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:68
+  Evidencia: "buildTransitive/net8.0/SQLitePCLRaw.lib.e_sqlite3.targets": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:71
+  Evidencia: "runtimes/browser-wasm/nativeassets/net8.0/e_sqlite3.a": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:75
+  Evidencia: "runtimes/linux-arm/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:79
+  Evidencia: "runtimes/linux-arm64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:83
+  Evidencia: "runtimes/linux-armel/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:87
+  Evidencia: "runtimes/linux-mips64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:91
+  Evidencia: "runtimes/linux-musl-arm/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:95
+  Evidencia: "runtimes/linux-musl-arm64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:99
+  Evidencia: "runtimes/linux-musl-riscv64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:103
+  Evidencia: "runtimes/linux-musl-s390x/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:107
+  Evidencia: "runtimes/linux-musl-x64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:111
+  Evidencia: "runtimes/linux-ppc64le/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:115
+  Evidencia: "runtimes/linux-riscv64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:119
+  Evidencia: "runtimes/linux-s390x/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:123
+  Evidencia: "runtimes/linux-x64/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:127
+  Evidencia: "runtimes/linux-x86/native/libe_sqlite3.so": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:131
+  Evidencia: "runtimes/maccatalyst-arm64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:135
+  Evidencia: "runtimes/maccatalyst-x64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:139
+  Evidencia: "runtimes/osx-arm64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:143
+  Evidencia: "runtimes/osx-x64/native/libe_sqlite3.dylib": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:147
+  Evidencia: "runtimes/win-arm64/native/e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:151
+  Evidencia: "runtimes/win-x64/native/e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:155
+  Evidencia: "runtimes/win-x86/native/e_sqlite3.dll": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:161
+  Evidencia: "SQLitePCLRaw.provider.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:164
+  Evidencia: "SQLitePCLRaw.core": "2.1.12"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:167
+  Evidencia: "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:170
+  Evidencia: "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll": {}
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:210
+  Evidencia: "Microsoft.Data.Sqlite": "8.0.31"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:266
+  Evidencia: "Microsoft.Data.Sqlite/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:269
+  Evidencia: "path": "microsoft.data.sqlite/8.0.31",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:276
+  Evidencia: "microsoft.data.sqlite.8.0.31.nupkg.sha512",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:277
+  Evidencia: "microsoft.data.sqlite.nuspec"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:280
+  Evidencia: "Microsoft.Data.Sqlite.Core/8.0.31": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:283
+  Evidencia: "path": "microsoft.data.sqlite.core/8.0.31",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:289
+  Evidencia: "lib/net6.0/Microsoft.Data.Sqlite.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:290
+  Evidencia: "lib/net6.0/Microsoft.Data.Sqlite.xml",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:291
+  Evidencia: "lib/net8.0/Microsoft.Data.Sqlite.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:292
+  Evidencia: "lib/net8.0/Microsoft.Data.Sqlite.xml",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:293
+  Evidencia: "lib/netstandard2.0/Microsoft.Data.Sqlite.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:294
+  Evidencia: "lib/netstandard2.0/Microsoft.Data.Sqlite.xml",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:295
+  Evidencia: "microsoft.data.sqlite.core.8.0.31.nupkg.sha512",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:296
+  Evidencia: "microsoft.data.sqlite.core.nuspec"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:299
+  Evidencia: "SQLitePCLRaw.bundle_e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:302
+  Evidencia: "path": "sqlitepclraw.bundle_e_sqlite3/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:306
+  Evidencia: "lib/net461/SQLitePCLRaw.batteries_v2.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:307
+  Evidencia: "lib/net6.0-android31.0/SQLitePCLRaw.batteries_v2.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:308
+  Evidencia: "lib/net6.0-android31.0/SQLitePCLRaw.batteries_v2.xml",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:309
+  Evidencia: "lib/net6.0-ios14.0/SQLitePCLRaw.batteries_v2.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:310
+  Evidencia: "lib/net6.0-ios14.2/SQLitePCLRaw.batteries_v2.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:311
+  Evidencia: "lib/net6.0-tvos10.0/SQLitePCLRaw.batteries_v2.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:312
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.batteries_v2.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:313
+  Evidencia: "sqlitepclraw.bundle_e_sqlite3.2.1.12.nupkg.sha512",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:314
+  Evidencia: "sqlitepclraw.bundle_e_sqlite3.nuspec"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:317
+  Evidencia: "SQLitePCLRaw.core/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:320
+  Evidencia: "path": "sqlitepclraw.core/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:324
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.core.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:325
+  Evidencia: "sqlitepclraw.core.2.1.12.nupkg.sha512",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:326
+  Evidencia: "sqlitepclraw.core.nuspec"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:329
+  Evidencia: "SQLitePCLRaw.lib.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:332
+  Evidencia: "path": "sqlitepclraw.lib.e_sqlite3/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:336
+  Evidencia: "buildTransitive/net461/SQLitePCLRaw.lib.e_sqlite3.targets",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:337
+  Evidencia: "buildTransitive/net6.0/SQLitePCLRaw.lib.e_sqlite3.targets",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:338
+  Evidencia: "buildTransitive/net7.0/SQLitePCLRaw.lib.e_sqlite3.targets",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:339
+  Evidencia: "buildTransitive/net8.0/SQLitePCLRaw.lib.e_sqlite3.targets",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:340
+  Evidencia: "buildTransitive/net9.0/SQLitePCLRaw.lib.e_sqlite3.targets",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:343
+  Evidencia: "runtimes/browser-wasm/nativeassets/net6.0/e_sqlite3.a",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:344
+  Evidencia: "runtimes/browser-wasm/nativeassets/net7.0/e_sqlite3.a",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:345
+  Evidencia: "runtimes/browser-wasm/nativeassets/net8.0/e_sqlite3.a",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:346
+  Evidencia: "runtimes/browser-wasm/nativeassets/net9.0/e_sqlite3.a",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:347
+  Evidencia: "runtimes/linux-arm/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:348
+  Evidencia: "runtimes/linux-arm64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:349
+  Evidencia: "runtimes/linux-armel/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:350
+  Evidencia: "runtimes/linux-mips64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:351
+  Evidencia: "runtimes/linux-musl-arm/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:352
+  Evidencia: "runtimes/linux-musl-arm64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:353
+  Evidencia: "runtimes/linux-musl-riscv64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:354
+  Evidencia: "runtimes/linux-musl-s390x/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:355
+  Evidencia: "runtimes/linux-musl-x64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:356
+  Evidencia: "runtimes/linux-ppc64le/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:357
+  Evidencia: "runtimes/linux-riscv64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:358
+  Evidencia: "runtimes/linux-s390x/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:359
+  Evidencia: "runtimes/linux-x64/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:360
+  Evidencia: "runtimes/linux-x86/native/libe_sqlite3.so",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:361
+  Evidencia: "runtimes/maccatalyst-arm64/native/libe_sqlite3.dylib",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:362
+  Evidencia: "runtimes/maccatalyst-x64/native/libe_sqlite3.dylib",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:363
+  Evidencia: "runtimes/osx-arm64/native/libe_sqlite3.dylib",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:364
+  Evidencia: "runtimes/osx-x64/native/libe_sqlite3.dylib",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:365
+  Evidencia: "runtimes/win-arm64/native/e_sqlite3.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:366
+  Evidencia: "runtimes/win-x64/native/e_sqlite3.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:367
+  Evidencia: "runtimes/win-x86/native/e_sqlite3.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:368
+  Evidencia: "sqlitepclraw.lib.e_sqlite3.2.1.12.nupkg.sha512",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:369
+  Evidencia: "sqlitepclraw.lib.e_sqlite3.nuspec"
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:372
+  Evidencia: "SQLitePCLRaw.provider.e_sqlite3/2.1.12": {
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:375
+  Evidencia: "path": "sqlitepclraw.provider.e_sqlite3/2.1.12",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:379
+  Evidencia: "lib/net6.0-windows7.0/SQLitePCLRaw.provider.e_sqlite3.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:380
+  Evidencia: "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:381
+  Evidencia: "lib/netstandard2.0/SQLitePCLRaw.provider.e_sqlite3.dll",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:382
+  Evidencia: "sqlitepclraw.provider.e_sqlite3.2.1.12.nupkg.sha512",
+
+[INFO] [SIC-DB-SQLITE] SQLite localizado.
+  Archivo: tests\ADSOLUSOL.RegressionTests\obj\project.assets.json:383
+  Evidencia: "sqlitepclraw.provider.e_sqlite3.nuspec"
+
+[INFO] [SIC-GIT-DIRTY] Cambio pendiente en Git.
+  Evidencia:  M src/ADSOLUSOL.Infrastructure/ExternalServices/MarketingBrain/MarketingBrainClient.cs
+
+[INFO] [SIC-GIT-DIRTY] Cambio pendiente en Git.
+  Evidencia:  M src/ADSOLUSOL.Presentation.Api/Health/DependencyHealthCheck.cs
+
+[INFO] [SIC-GIT-DIRTY] Cambio pendiente en Git.
+  Evidencia:  M src/ADSOLUSOL.Presentation.Api/appsettings.json
+
+[INFO] [SIC-GIT-DIRTY] Cambio pendiente en Git.
+  Evidencia:  M src/ADSOLUSOL.Presentation.Cmd/Program.cs
+
+[INFO] [SIC-GIT-DIRTY] Cambio pendiente en Git.
+  Evidencia:  M tests/ADSOLUSOL.RegressionTests/Program.cs
+
+[INFO] [SIC-GIT-DIRTY] Cambio pendiente en Git.
+  Evidencia: ?? AUDIT-ADSOLUSOL-ULTRA-SUPERCHISMOSO.ps1
+
+[INFO] [SIC-GIT-DIRTY] Cambio pendiente en Git.
+  Evidencia: ?? _audit/
+
+[INFO] [SIC-GIT-DIRTY] Cambio pendiente en Git.
+  Evidencia: ?? audit_adsolusol_milimetrico.ps1
+
