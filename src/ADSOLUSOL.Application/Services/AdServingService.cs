@@ -1,9 +1,7 @@
-using ADSOLUSOL.Domain.Entities;
+﻿using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 
 namespace ADSOLUSOL.Application.Services;
-
-public record AdDecision(string CampaignId, long CreativeId, string ContentUrl, string TargetUrl);
 
 public class AdServingService
 {
@@ -16,47 +14,28 @@ public class AdServingService
         _creativeRepository = creativeRepository;
     }
 
-    public async Task<AdDecision?> SelectAdForPlacement(string placementCode)
+    public async Task<Creative?> SelectAdForPlacement(string tenantId, string placementCode)
     {
-        // 1. Find the placement
         var placement = await _placementRepository.GetByCodeAsync(placementCode);
-        if (placement == null)
-        {
-            return null; // No such placement or it's disabled
-        }
+        if (placement == null) return null;
 
-        // 2. Find eligible campaigns for this placement
-        // The repository query already filters by ACTIVE status and budget > 0
-        var eligibleCampaigns = (await _placementRepository.GetEligibleCampaignsAsync(placement.Id));
-
-        if (!eligibleCampaigns.Any())
-        {
-            return null; // No active campaigns with budget for this placement
-        }
-
-        // 3. Filter campaigns by date range (vigencia) and shuffle for fairness
+        var eligibleCampaigns = await _placementRepository.GetEligibleCampaignsAsync(placementCode);
         var now = DateTime.UtcNow;
+
         var validCampaigns = eligibleCampaigns
-            // FIX (CS8073): Reverted to a standard null check for nullable DateTime properties.
-            .Where(c => (!c.StartDateUtc.HasValue || c.StartDateUtc.Value <= now) && (!c.EndDateUtc.HasValue || c.EndDateUtc.Value >= now))
-            .OrderBy(c => Guid.NewGuid()) // Simple randomization for fair selection
+            .Where(c => c.StartDateUtc <= now && c.EndDateUtc >= now)
+            .OrderBy(_ => Guid.NewGuid())
             .ToList();
 
-        if (!validCampaigns.Any())
-        {
-            return null; // No campaigns currently active by date
-        }
-
-        // 4. Select a campaign (simple rotation for now) and find a creative
         foreach (var campaign in validCampaigns)
         {
             var creative = await _creativeRepository.GetEligibleCreativeForCampaignAsync(campaign.Id);
             if (creative != null)
             {
-                return new AdDecision(campaign.Id, creative.Id, creative.ContentUrl, creative.TargetUrl);
+                return creative;
             }
         }
 
-        return null; // No eligible creatives found for any valid campaign
+        return null;
     }
 }
