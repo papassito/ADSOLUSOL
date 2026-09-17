@@ -18,8 +18,8 @@ public class PlacementsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreatePlacement([FromBody] Placement placement)
     {
-        placement.CreatedAtUtc = DateTime.UtcNow;
-        placement.UpdatedAtUtc = DateTime.UtcNow;
+        placement.CreatedAt = DateTime.UtcNow;
+        placement.UpdatedAt = DateTime.UtcNow;
         var id = await _placementRepository.CreateAsync(placement);
         return CreatedAtAction("CreatePlacement", new { placementCode = placement.PlacementCode }, new { id });
     }

@@ -18,8 +18,8 @@ public class CreativesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateCreative([FromBody] Creative creative)
     {
-        creative.CreatedAtUtc = DateTime.UtcNow;
-        creative.UpdatedAtUtc = DateTime.UtcNow;
+        creative.CreatedAt = DateTime.UtcNow;
+        creative.UpdatedAt = DateTime.UtcNow;
         var id = await _creativeRepository.CreateAsync(creative);
         var createdCreative = await _creativeRepository.GetByIdAsync(id);
         return CreatedAtAction(nameof(CreateCreative), new { id }, createdCreative);
