@@ -32,7 +32,7 @@ public class MarketingBrainClient : IMarketingBrainService
         _configuration = configuration;
         _logger = logger;
         // Read this node's identity from configuration
-        _selfNodeId = _configuration["SolusolAuthV1:SelfNodeId"] ?? "ADS_NODE_01";
+        _selfNodeId = _configuration["SolusolAuthV1:NodeId"] ?? "ADS_NODE_01";
     }
 
     /// <summary>

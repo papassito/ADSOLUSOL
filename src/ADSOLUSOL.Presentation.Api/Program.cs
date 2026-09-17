@@ -1,5 +1,6 @@
 using ADSOLUSOL.Domain.Interfaces;
 using ADSOLUSOL.Infrastructure.Repositories;
+using ADSOLUSOL.Application.Services;
 using ADSOLUSOL.Infrastructure.Security;
 using ADSOLUSOL.Presentation.Api.Middleware;
 
@@ -22,7 +23,11 @@ builder.Services.AddHttpClient<IMarketingBrainService, MarketingBrainClient>(cli
     client.BaseAddress = new Uri(builder.Configuration["SicService:BaseUrl"] ?? "http://127.0.0.1:8080/");
 });
 
-// ... aquí se registrarían otros servicios como CampaignService, etc.
+// Registrar los servicios de la capa de aplicación
+builder.Services.AddScoped<CampaignService>();
+builder.Services.AddScoped<AdServingService>();
+builder.Services.AddScoped<MetricsService>();
+builder.Services.AddScoped<EventProcessingService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
