@@ -8,6 +8,8 @@ public class AppDbContext : DbContext
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
     public DbSet<Campaign> Campaigns { get; set; }
+    public DbSet<Placement> Placements { get; set; }
+    public DbSet<Creative> Creatives { get; set; }
     public DbSet<AdEvent> AdEvents { get; set; }
     public DbSet<CampaignPlacement> CampaignPlacements { get; set; }
     public DbSet<CampaignCreative> CampaignCreatives { get; set; }
