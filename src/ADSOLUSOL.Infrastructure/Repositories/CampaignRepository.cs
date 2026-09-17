@@ -62,7 +62,6 @@ public class CampaignRepository : ICampaignRepository
     {
         if (transaction.Connection is null)
         {
-            // This should not happen if the transaction is active.
             throw new InvalidOperationException("The transaction does not have an associated connection.");
         }
         var sql = "UPDATE Campaigns SET BudgetSpent = BudgetSpent + @Cost WHERE Id = @CampaignId;";

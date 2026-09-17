@@ -1,129 +1,75 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-using ADSOLUSOL.Application.Services;
-using ADSOLUSOL.Domain.Enums;
+﻿using ADSOLUSOL.Domain.Entities;
+using ADSOLUSOL.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using ADSOLUSOL.Domain.Entities;
 
-namespace ADSOLUSOL.Presentation.Api.Controllers
+namespace ADSOLUSOL.Presentation.Api.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class CampaignsController : ControllerBase
 {
-    [ApiController]
-    [Route("api/marketing/adsolusol/campaigns")]
-    public class CampaignsController : ControllerBase
+    private readonly ICampaignRepository _campaignRepository;
+
+    public CampaignsController(ICampaignRepository campaignRepository)
     {
-        private readonly CampaignService _campaignService; // Good
-        private readonly MetricsService _metricsService; // Good
-        private readonly EventProcessingService _eventProcessingService; // Good
+        _campaignRepository = campaignRepository;
+    }
 
-        public CampaignsController(
-            CampaignService campaignService,
-            MetricsService metricsService,
-            EventProcessingService eventProcessingService
-            )
+    [HttpPost]
+    public async Task<IActionResult> CreateCampaign([FromHeader(Name = "X-Tenant-Id")] string tenantId, [FromBody] CreateCampaignRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(tenantId))
         {
-            _campaignService = campaignService;
-            _metricsService = metricsService;
-            _eventProcessingService = eventProcessingService;
+            return BadRequest(new { Message = "El encabezado X-Tenant-Id es obligatorio." });
         }
 
-        private string TenantId => HttpContext.Items["TenantId"] as string ?? "solusol-internal";
-
-        // Endpoints from the newer CampaignController, now integrated here.
-        [HttpGet]
-        public async Task<IActionResult> Get(CancellationToken token) => Ok(await _campaignService.ListAsync(TenantId, token));
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(string id, CancellationToken token)
+        var campaign = new Campaign
         {
-            var campaign = await _campaignService.GetAsync(TenantId, id, token);
-            return campaign is null ? NotFound() : Ok(campaign);
+            Id = Guid.NewGuid().ToString(),
+            TenantId = tenantId,
+            Name = request.Name,
+            Budget = request.Budget,
+            BudgetSpent = 0,
+            Status = "ACTIVE",
+            CostPerMille = request.CostPerMille,
+            CostPerClick = request.CostPerClick,
+            StartDateUtc = request.StartDateUtc ?? DateTime.UtcNow,
+            EndDateUtc = request.EndDateUtc ?? DateTime.UtcNow.AddDays(30),
+            CreatedAt = DateTime.UtcNow
+        };
+
+        await _campaignRepository.CreateAsync(campaign);
+
+        return CreatedAtAction(nameof(GetCampaignById), new { id = campaign.Id }, campaign);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetCampaignById(string id)
+    {
+        var campaign = await _campaignRepository.GetByIdAsync(id);
+        if (campaign == null) return NotFound();
+        return Ok(campaign);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllCampaigns([FromHeader(Name = "X-Tenant-Id")] string tenantId)
+    {
+        if (string.IsNullOrWhiteSpace(tenantId))
+        {
+            return BadRequest(new { Message = "El encabezado X-Tenant-Id es obligatorio." });
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateCampaignRequest request, CancellationToken token)
-        {
-            var campaign = await _campaignService.CreateAsync(TenantId, request.Name, request.Budget, token);
-            return Created($"/api/marketing/adsolusol/campaigns/{campaign.Id}", campaign);
-        }
-
-        [HttpGet("{id}/metrics")]
-        public async Task<IActionResult> GetMetrics(string id)
-        {
-            var metrics = await _metricsService.GetMetricsForCampaign(id);
-            return metrics is null ? NotFound() : Ok(metrics);
-        }
-
-        [HttpPost("{id}/toggle")]
-        public async Task<IActionResult> ToggleStatus(string id, [FromBody] UpdateStatusRequest request)
-        {
-            // Assuming CampaignService has a method to update status.
-            // This replaces the old _processingEngine logic.
-            var updatedCampaign = await _campaignService.UpdateStatusAsync(TenantId, id, request.Status);
-            if (updatedCampaign is null)
-            {
-                return NotFound(new { error = "Campaign not found." });
-            }
-
-            return Ok(new { status = "SUCCESS", campaignId = id, newStatus = updatedCampaign.Status });
-        }
-
-        [HttpPost("{id}/click")]
-        public async Task<IActionResult> RegisterClick(string id, [FromBody] EventRequest request)
-        {
-            return await RegisterEventAsync(TenantId, id, request, EventType.Click);
-        }
-
-        [HttpPost("{id}/impression")]
-        public async Task<IActionResult> RegisterImpression(string id, [FromBody] EventRequest request)
-        {
-            return await RegisterEventAsync(TenantId, id, request, EventType.Impression);
-        }
-
-        private async Task<IActionResult> RegisterEventAsync(string tenantId, string campaignId, EventRequest request, EventType eventType)
-        {
-            var adEvent = new AdEvent
-            {
-                EventId = request.EventId,
-                CampaignId = campaignId,
-                CreativeId = request.CreativeId.ToString(),
-                PlacementCode = request.PlacementCode,
-                TenantId = tenantId,
-                EventType = eventType.ToString().ToUpper(),
-                OccurredAt = DateTime.UtcNow, // Should ideally come from client, but server time is a safe default
-                ReceivedAt = DateTime.UtcNow
-            };
-
-            try
-            {
-                var result = await _eventProcessingService.ProcessEvent(adEvent);
-
-                return result switch
-                {
-                    EventProcessingStatus.Duplicate => Ok(new { status = "DUPLICATE", message = "Event already processed. Idempotency enforced." }),
-                    EventProcessingStatus.Rejected => BadRequest(new { error = "Campaign is inactive, has no budget, or event is invalid." }),
-                    EventProcessingStatus.Accepted => Accepted(new { status = "ACCEPTED" }),
-                    _ => StatusCode(500, new { error = "An unknown error occurred during event processing." })
-                };
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { error = ex.Message });
-            }
-        }
+        var campaigns = await _campaignRepository.GetAllAsync(tenantId);
+        return Ok(campaigns);
     }
 }
 
-public sealed class CreateCampaignRequest
+public class CreateCampaignRequest
 {
-    [Required, StringLength(200, MinimumLength = 1)]
-    public string Name { get; set; } = "";
-    [Range(typeof(decimal), "0.00000001", "79228162514264337593543950335")]
+    public string Name { get; set; } = string.Empty;
     public decimal Budget { get; set; }
+    public decimal CostPerMille { get; set; }
+    public decimal CostPerClick { get; set; }
+    public DateTime? StartDateUtc { get; set; }
+    public DateTime? EndDateUtc { get; set; }
 }
-
-public record UpdateStatusRequest([Required] string Status);
-
-public record EventRequest([Required] string EventId, [Required] long CreativeId, [Required] string PlacementCode);
