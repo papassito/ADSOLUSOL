@@ -1,4 +1,4 @@
-﻿using ADSOLUSOL.Application.Services;
+﻿﻿using ADSOLUSOL.Application.Services;
 using ADSOLUSOL.Domain.Interfaces;
 using ADSOLUSOL.Infrastructure.ExternalServices.MarketingBrain;
 using ADSOLUSOL.Infrastructure.Persistence;
@@ -44,7 +44,7 @@ using (var scope = app.Services.CreateScope())
     db.Database.EnsureCreated();
 }
 
-if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
+if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
