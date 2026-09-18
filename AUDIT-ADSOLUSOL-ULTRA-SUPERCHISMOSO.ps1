@@ -77,14 +77,12 @@ if (-not $auditFailed) {
         foreach ($testProj in $testProjects) {
             Write-Host "`nEjecutando Suite: $($testProj.Name)" -ForegroundColor Cyan
             
-            $isExecutable = (Get-Content $testProj.FullName) -join "`n" | Select-String -Pattern "<OutputType>Exe</OutputType>" -Quiet
             # Forma más eficiente y robusta de detectar si un proyecto es un ejecutable.
             $isExecutable = Select-String -Path $testProj.FullName -Pattern "<OutputType>Exe</OutputType>" -Quiet
             if ($isExecutable) {
                 Write-Host "   [INFO] Proyecto ejecutable detectado. Usando 'dotnet run'." -ForegroundColor Gray
                 $testOut = & $dotnetExe run --project "$($testProj.FullName)" --no-build 2>&1
             } else {
-                $testOut = & $dotnetExe test "$($testProj.FullName)" --no-build --nologo -v:q 2>&1
                 # Usar -v:normal para capturar más detalles en caso de error, como en SOPA-COMPLETA.
                 $testOut = & $dotnetExe test "$($testProj.FullName)" --no-build --nologo -v:normal 2>&1
             }
