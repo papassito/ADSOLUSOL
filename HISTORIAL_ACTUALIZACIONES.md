@@ -27,8 +27,6 @@
     *   El método `UpdateBudgetAsync` ahora garantiza que el débito de un costo no se aplique si resulta en un gasto mayor al presupuesto asignado.
 
 *   **Cálculo de Costo en Eventos (`EventProcessingService`)** (Previamente documentado):
-
-*   **Cálculo de Costo en Eventos (`EventProcessingService`)**:
     *   Se corrigió un error donde el costo de un evento no se calculaba antes de ser procesado.
     *   Ahora, el costo se calcula y se asigna al objeto `AdEvent` inmediatamente después de validar el tipo de evento.
     *   Esto asegura que todos los sistemas subsecuentes, como el servicio de telemetría (`IMarketingBrainService`), reciban y registren el costo correcto. (Ref: `FIX P1-03`)

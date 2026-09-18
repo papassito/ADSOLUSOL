@@ -81,7 +81,7 @@ Configurar una clave privada de desarrollo antes de arrancar:
 ```powershell
 $env:Api__Key = [guid]::NewGuid().ToString('N') + [guid]::NewGuid().ToString('N')
 $env:Api__TenantId = 'local'
-.\scripts\dotnet.ps1 run --project src/ADSOLUSOL.Presentation.Api
+.\Start-Dev.ps1
 ```
 
 Enviar esa clave en la cabecera X-Api-Key de las solicitudes. No guardarla en el código.
