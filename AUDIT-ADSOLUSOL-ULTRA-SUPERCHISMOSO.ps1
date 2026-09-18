@@ -1,6 +1,12 @@
+[CmdletBinding()]
+param(
+    [string]$Root = $PSScriptRoot
+)
+
+Set-StrictMode -Version Latest
 $ErrorActionPreference = "Continue"
-$Root = $PSScriptRoot
-if (-not $Root) { $Root = (Get-Location).Path }
+
+if ([string]::IsNullOrWhiteSpace($Root)) { $Root = (Get-Location).Path }
 
 $auditFailed = $false
 $failureMessages = [System.Collections.Generic.List[string]]::new()

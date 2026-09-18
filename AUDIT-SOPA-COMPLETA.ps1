@@ -22,7 +22,6 @@ Write-Host "[INFO] Inspeccionando raíz: $Root`n" -ForegroundColor Gray
 $dotnetExe = $null
 
 $candidatePaths = @(
-    "C:\Users\Radio 2027\Documents\Codex\tools\dotnet\dotnet.exe",
     "C:\Program Files\dotnet\dotnet.exe",
     "C:\Program Files (x86)\dotnet\dotnet.exe"
 )
@@ -96,8 +95,15 @@ if (-not $testProjects) {
     foreach ($testProj in $testProjects) {
         Write-Host "`n📌 Ejecutando Suite: $($testProj.Name)" -ForegroundColor Cyan
         $testLog = Join-Path $Root "_audit_test_raw.log"
-        
-        & $dotnetExe test "$($testProj.FullName)" --no-build -v:normal > $testLog 2>&1
+
+        # Detectar si el proyecto de prueba es un ejecutable (como las pruebas de regresión)
+        $isExecutable = (Get-Content $testProj.FullName -Raw) -match '<OutputType>Exe</OutputType>'
+        if ($isExecutable) {
+            Write-Host "  [INFO] Proyecto ejecutable detectado. Usando 'dotnet run' para la prueba." -ForegroundColor Gray
+            & $dotnetExe run --project "$($testProj.FullName)" --no-build > $testLog 2>&1
+        } else {
+            & $dotnetExe test "$($testProj.FullName)" --no-build -v:normal > $testLog 2>&1
+        }
         $rawTestOutput = Get-Content $testLog -Encoding UTF8 -ErrorAction SilentlyContinue
         Remove-Item $testLog -Force -ErrorAction SilentlyContinue
 
@@ -105,11 +111,12 @@ if (-not $testProjects) {
 
         if ($failedTests) {
             Write-Host "  🔴 DETALLES DE PRUEBAS FALLIDAS:" -ForegroundColor Red
+            # Filtrar y colorear líneas relevantes para una mejor legibilidad
             $rawTestOutput | ForEach-Object {
-                if ($_ -match "Failed|Error|Exception|Assert") {
-                    Write-Host "     $_" -ForegroundColor Red
-                } elseif ($_ -match "Passed") {
+                if ($_ -match "^\s*Passed!\s*-\s*") {
                     Write-Host "     $_" -ForegroundColor Green
+                } elseif ($_ -match "^\s*Failed!\s*-\s*|Exception|error|Stack Trace") {
+                    Write-Host "     $_" -ForegroundColor Red
                 }
             }
         } else {
