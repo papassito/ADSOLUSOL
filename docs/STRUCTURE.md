@@ -47,8 +47,7 @@ El respaldo previo se conserva fuera del proyecto.
 
 ## Comprobaciones de regresión
 
-El proyecto tests/ADSOLUSOL.RegressionTests es un ejecutable sin dependencias de pruebas externas. Se ejecuta con: dotnet run --project tests/ADSOLUSOL.RegressionTests. Requiere el SDK de .NET 8. Las 34 comprobaciones y la prueba HTTP pasaron en este equipo.
+El proyecto `tests/ADSOLUSOL.RegressionTests` es un ejecutable sin dependencias de pruebas externas. Se ejecuta con: `dotnet run --project tests/ADSOLUSOL.RegressionTests`. Requiere el SDK de .NET 8. La suite actual contiene **17 pruebas de negocio definidas** que validan el flujo end-to-end del motor.
 
 
-La base SQLite se guarda en App_Data/ (ignorada por Git). Los scripts dotnet.ps1 y smoke_test.ps1 permiten compilar y probar con el SDK local; las pruebas HTTP usan una base temporal aislada y comprueban la persistencia tras reiniciar la API.
-
+La base de datos SQLite se crea en `src/ADSOLUSOL.Presentation.Api/App_Data/adsolusol.db` por defecto. Los scripts de auditoría y desarrollo en la raíz del proyecto facilitan la compilación y ejecución.

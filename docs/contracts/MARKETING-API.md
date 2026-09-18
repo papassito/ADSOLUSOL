@@ -1,51 +1,20 @@
 # AD SOLUSOL — Marketing API
 
-## Base
+**Estado del Documento:** Actualizado contra el runtime del commit `9f95b05`. La información anterior era obsoleta.
 
-```text
-/api
-```
+## Arquitectura de API
 
-## SEO
-
-```text
-GET /api/marketing/seo
-```
-
-Responsabilidad: reporte técnico de SEO para dominio objetivo.
-
-## ADS
-
-```text
-GET  /api/marketing/adsolusol
-POST /api/marketing/adsolusol/campaigns
-POST /api/marketing/adsolusol/campaigns/:id/toggle
-POST /api/marketing/adsolusol/campaigns/:id/click
-POST /api/marketing/adsolusol/campaigns/:id/impression
-```
-
-## Eventos asociados observados
-
-```text
-CAMPAIGN_LAUNCHED
-CAMPAIGN_STATUS_CHANGED
-AD_CLICK_VERIFIED
-```
-
-## Estado de seguridad observado
-
-La especificación fuente reporta:
-
-- autenticación de rutas Express: planificada/no implementada;
-- aislamiento tenant: no verificado;
-- crawler SEO: riesgo SSRF pendiente.
-
-Por tanto, esos endpoints no deben describirse como endurecidos hasta existir evidencia.
+La API actual está construida con ASP.NET Core 8 y utiliza el patrón de `Controllers`. Las rutas base de los recursos principales son:
+- `/api/Campaigns`
+- `/api/Placements`
+- `/api/Creatives`
+- `/api/Assignments`
+- `/api/Serve`
 
 ## Health
 
 ```text
-GET /api/health
+GET /health
 ```
 
 La API C# comprueba SQLite y la integración SIC en /api/health. SQLite tiene almacenamiento real; SIC sigue no disponible. /api/health/storage informa solo el almacenamiento. Las respuestas HTTP se verificaron mediante una prueba con reinicio del proceso.
