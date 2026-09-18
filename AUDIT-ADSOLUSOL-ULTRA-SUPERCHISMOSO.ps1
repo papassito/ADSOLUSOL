@@ -78,16 +78,25 @@ if (-not $auditFailed) {
             Write-Host "`nEjecutando Suite: $($testProj.Name)" -ForegroundColor Cyan
             
             $isExecutable = (Get-Content $testProj.FullName) -join "`n" | Select-String -Pattern "<OutputType>Exe</OutputType>" -Quiet
+            # Forma más eficiente y robusta de detectar si un proyecto es un ejecutable.
+            $isExecutable = Select-String -Path $testProj.FullName -Pattern "<OutputType>Exe</OutputType>" -Quiet
             if ($isExecutable) {
                 Write-Host "   [INFO] Proyecto ejecutable detectado. Usando 'dotnet run'." -ForegroundColor Gray
                 $testOut = & $dotnetExe run --project "$($testProj.FullName)" --no-build 2>&1
             } else {
                 $testOut = & $dotnetExe test "$($testProj.FullName)" --no-build --nologo -v:q 2>&1
+                # Usar -v:normal para capturar más detalles en caso de error, como en SOPA-COMPLETA.
+                $testOut = & $dotnetExe test "$($testProj.FullName)" --no-build --nologo -v:normal 2>&1
             }
 
             if ($LASTEXITCODE -ne 0) {
                 $auditFailed = $true
                 $failureMessages.Add("[FAIL] Fallaron pruebas en: $($testProj.Name)")
+                # Capturar y registrar los detalles del error, no solo el hecho de que falló.
+                $testErrors = $testOut | Where-Object { $_ -match "Failed|Error|Exception|Stack Trace" }
+                foreach ($errLine in $testErrors) {
+                    $failureMessages.Add("      -> $($errLine.ToString().Trim())")
+                }
             } else {
                 Write-Host "   [OK] Pruebas pasaron." -ForegroundColor Green
             }
