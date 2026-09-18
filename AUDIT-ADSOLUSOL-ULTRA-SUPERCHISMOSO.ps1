@@ -89,11 +89,15 @@ if (-not $auditFailed) {
 
             if ($LASTEXITCODE -ne 0) {
                 $auditFailed = $true
-                $failureMessages.Add("[FAIL] Fallaron pruebas en: $($testProj.Name)")
-                # Capturar y registrar los detalles del error, no solo el hecho de que falló.
-                $testErrors = $testOut | Where-Object { $_ -match "Failed|Error|Exception|Stack Trace" }
-                foreach ($errLine in $testErrors) {
-                    $failureMessages.Add("      -> $($errLine.ToString().Trim())")
+                $failureMessages.Add("`n[FAIL] Fallaron pruebas en: $($testProj.Name)")
+                
+                # Intentar extraer detalles específicos del error.
+                $testErrors = $testOut | Where-Object { $_ -match "Failed!|Error Message:|Stack Trace:|Exception:" }
+                
+                if ($testErrors.Count -gt 0) {
+                    foreach ($errLine in $testErrors) {
+                        $failureMessages.Add("      -> $($errLine.ToString().Trim())")
+                    }
                 }
             } else {
                 Write-Host "   [OK] Pruebas pasaron." -ForegroundColor Green
