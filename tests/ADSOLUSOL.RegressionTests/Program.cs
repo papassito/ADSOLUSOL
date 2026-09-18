@@ -1,4 +1,4 @@
-﻿﻿using ADSOLUSOL.Application.Services;
+﻿using ADSOLUSOL.Application.Services;
 using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Enums;
 using ADSOLUSOL.Domain.Interfaces;
@@ -157,9 +157,10 @@ try
         Assert(metrics.BudgetSpent == (1.5m / 1000) + 0.25m, $"[15] Budget spent is correct (Expected: 0.2515, Actual: {metrics.BudgetSpent}).");
     });
     
+    Campaign? tinyCampaign = null;
     await LogTest("[16] Overspend rejected", async () =>
     {
-        var tinyCampaign = await campaignService.CreateAsync("tenant-C", "Tiny Budget", 0.1m, 1.0m, 0.15m, null, null);
+        tinyCampaign = await campaignService.CreateAsync("tenant-C", "Tiny Budget", 0.1m, 1.0m, 0.15m, null, null);
         await campaignService.UpdateStatusAsync("tenant-C", tinyCampaign.Id, "ACTIVE");
         var overspendEvent = new AdEvent { EventId = "evt_over_1", CampaignId = tinyCampaign.Id, EventType = "Click", TenantId = "tenant-C" };
         var status = await eventProcessingService.ProcessEvent(overspendEvent);
@@ -168,7 +169,8 @@ try
 
     await LogTest("[17] Rejected event does not debit budget", async () =>
     {
-        var metrics = await metricsService.GetMetricsForCampaign("tenant-C", "Tiny Budget");
+        Assert(tinyCampaign != null, "Tiny campaign object exists for verification.");
+        var metrics = await metricsService.GetMetricsForCampaign(tinyCampaign!.Id);
         Assert(metrics?.BudgetSpent == 0, "Budget was not spent on rejected event.");
     });
 
