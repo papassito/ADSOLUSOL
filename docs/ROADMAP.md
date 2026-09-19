@@ -88,7 +88,7 @@
 
 - Evaluar una ruta canónica futura para Marketing/ADS únicamente después de estabilizar y versionar la API actual `/api/*`.
 - Consolidar creación de campañas.
-- Consolidar toggle.
+- Consolidar las transiciones de estado de campaña.
 - Consolidar click.
 - Consolidar impression.
 - Incorporar autenticación y autorización.
