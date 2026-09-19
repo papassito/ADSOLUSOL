@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿﻿using Microsoft.AspNetCore.Mvc;
 
 namespace ADSOLUSOL.Presentation.Api.Controllers;
 
@@ -6,6 +6,7 @@ namespace ADSOLUSOL.Presentation.Api.Controllers;
 [Route("api/marketing/adsolusol")]
 public class MarketingController : ControllerBase
 {
-    // Endpoints to be implemented here
-    // This valid class structure resolves the CS1022 build error.
+    // Endpoints to be implemented here.
+    // The original file had a syntax error (CS1022) due to a misplaced brace,
+    // which has now been corrected to allow the solution to build.
 }
