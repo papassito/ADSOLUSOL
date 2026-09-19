@@ -1,5 +1,11 @@
 # Historial de Actividades
 
+**STATUS: HISTORICAL LOG / SUPERSEDED FOR CURRENT-STATE CLAIMS**
+
+Este archivo conserva afirmaciones, auditorías y sellos de etapas anteriores. Las etiquetas `OPERATIVE VERIFIED`, resultados de pruebas, rutas API, hallazgos de SIC y cualquier otro estado aquí registrado **no certifican el runtime actual**. Para el estado vigente usar `README.md`, `docs/contracts/MARKETING-API.md`, `docs/STRUCTURE.md` y evidencia de ejecución reciente.
+
+---
+
 ## 2026-09-17: Construcción del Motor Publicitario End-to-End
 
 **Estado:** `FUNCTIONAL VERTICAL BUILT`

@@ -1,69 +1,43 @@
 # AD SOLUSOL — Components
 
-**PRODUCT:** AD SOLUSOL (ADS)  
-**DOMAIN:** Advertising & Growth  
-**PLATFORM:** SOLUSOL Intelligence Center (SIC)  
-**COMMERCIAL HEAD:** KLIK Soft PRO  
-**SOFTWARE DIRECTION:** solusol.net  
-**SUPPORT:** CM Soluciones  
+**Estado:** PRE-SELLO / clasificación contra implementación actual
 
+## Componentes implementados o parciales
 
-## Núcleo ADS
+| Componente | Estado observado | Evidencia funcional en código |
+|---|---|---|
+| Campaign Manager | IMPLEMENTED / PARTIAL | `CampaignService`, `CampaignRepository`, `CampaignsController` |
+| Placement Registry | IMPLEMENTED / PARTIAL | `PlacementRepository`, `PlacementsController` |
+| Creative Manager | IMPLEMENTED / PARTIAL | `CreativeRepository`, `CreativesController` |
+| Assignment Layer | IMPLEMENTED / PARTIAL | `AssignmentRepository`, `AssignmentsController` |
+| Delivery Engine | IMPLEMENTED / PARTIAL | `AdServingService`, `ServeController` |
+| Event Processing | IMPLEMENTED / PARTIAL | `EventProcessingService`, `AdEventRepository` |
+| Metrics Engine | IMPLEMENTED / PARTIAL | `MetricsService` |
+| Budget Engine | IMPLEMENTED | `BudgetService`, actualización condicional de presupuesto |
+| SQLite Persistence | IMPLEMENTED / DEV-CONFIGURED | `AppDbContext`, repositorios, `EnsureCreated()` |
+| Ed25519 Verifier | IMPLEMENTED COMPONENT | `CoreSignatureVerifier` |
+| Signature Middleware | IMPLEMENTED_BUT_NOT_WIRED | `SignatureVerificationMiddleware`; no está en `Program.cs` |
+| React/Vite UI | IMPLEMENTED SOURCE / NOT PACKAGED | `ADSOLUSOL.Presentation.Web` |
+| Health Check | IMPLEMENTED | `GET /api/health` |
 
-### 1. Campaign Manager
-Crea, programa, activa, pausa y finaliza campañas.
+## Componentes incompletos o no verificados
 
-### 2. Placement Registry
-Administra zonas publicitarias y restricciones de colocación.
+| Componente | Estado observado |
+|---|---|
+| Tenant Resolver / Authorization | NOT_IMPLEMENTED en el pipeline actual |
+| Marketing Brain integration | NOT_IMPLEMENTED / UNVERIFIED; cliente actual devuelve disponibilidad sintética y telemetría no-op |
+| SIC integration | PARTIAL; Health consulta SIC, no existe integración completa de negocio |
+| ORCHESTA adapter | PLANNED / no verificado en runtime actual |
+| AI / AI AD | PLANNED / diseño documental |
+| SEO adapter | PLANNED / fuera del núcleo ADS |
+| Production UI hosting | NOT_IMPLEMENTED todavía |
+| Production DB path/schema upgrades | NOT_IMPLEMENTED todavía |
+| Installer | NOT_IMPLEMENTED todavía |
 
-### 3. Creative Manager
-Asocia banners/creativos con campañas y placements.
+## Invariantes
 
-### 4. Delivery Engine
-Selecciona una campaña elegible y entrega el creativo autorizado.
-
-### 5. Impression Collector
-Recibe impresiones candidatas y registra únicamente las aceptadas.
-
-### 6. Click Collector
-Recibe clics candidatos y registra únicamente los aceptados.
-
-### 7. Validate Engine
-Aplica validaciones de campaña, evento, destino, duplicidad y disponibilidad.
-
-### 8. Metrics Engine
-Calcula impresiones, clics, CTR y agregados.
-
-### 9. Budget Engine
-Aplica débitos CPM/CPC y controla límites de presupuesto.
-
-### 10. Integrity Layer
-Preserva idempotencia, precisión, veracidad y trazabilidad de eventos.
-
-## Inteligencia de Marketing
-
-### 11. Marketing Brain
-Consume señales comerciales y propone decisiones de optimización.
-
-### 12. AI
-Capa de capacidades inteligentes sujetas a contratos y evidencia.
-
-### 13. AI AD
-Especialización AI para publicidad: asistencia en copy, creatividad, segmentación y análisis, sin alterar métricas fuente.
-
-## Integraciones
-
-### 14. Marketing API
-Superficie REST/IPC del dominio Marketing.
-
-### 15. ORCHESTA Adapter
-Publica y consume eventos gobernados hacia/desde ORCHESTA.
-
-### 16. SIC Adapter
-Expone estado y métricas a SIC.
-
-### 17. SEO Adapter
-Recibe señales SEO/SUPER SEO solo cuando una función de Marketing Brain las necesita; ADS no absorbe SEO.
-
-### 18. Edge/Proxy Adapter
-Aísla Cloudflare u otro reverse proxy del dominio publicitario.
+- Authentication != Authorization.
+- Capability != Permission.
+- Recommendation != Execution.
+- `DISCONNECTED` no equivale a disponibilidad positiva ni a cero actividad.
+- El frontend no es autoridad de gasto.

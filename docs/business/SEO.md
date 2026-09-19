@@ -1,5 +1,7 @@
 # AD SOLUSOL — SEO / SUPER SEO Boundary
 
+**Estado:** BOUNDARY / CONTEXT. SEO no forma parte del runtime ADS actual documentado aquí.
+
 ## Separación
 
 SEO y SUPER SEO pertenecen al dominio de señales orgánicas, no al núcleo ADS.

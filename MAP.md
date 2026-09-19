@@ -1,5 +1,7 @@
 # AD SOLUSOL — Map
 
+**Estado:** TARGET ARCHITECTURE / runtime partial
+
 ```text
                          SOLUSOL INTELLIGENCE CENTER
                                    │
@@ -35,11 +37,10 @@ CAMPAIGN ──► PLACEMENT ──► DELIVERY                      │
                        └──────┬──────┘                   │
                               ▼                          │
                            INTEGRITY ────────────────────┘
-                              │
-                              ▼
-                         MARKETING API
 ```
 
-## Regla
+## Lectura correcta
 
-SEO/SUPER SEO corre en paralelo al motor publicitario. Marketing Brain puede correlacionar señales. Ninguna correlación puede reescribir eventos publicitarios originales.
+El flujo interno Campaign→Placement→Delivery→Events→Metrics/Budget está parcialmente implementado. Marketing Brain, ORCHESTA, AI/AI AD y varias integraciones del diagrama son capacidades objetivo y no deben inferirse como runtime actual por aparecer aquí.
+
+SEO/SUPER SEO permanece separado del núcleo publicitario.

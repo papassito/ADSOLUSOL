@@ -1,60 +1,47 @@
 # AD SOLUSOL — Biblioteca Documental Canónica
 
-**PRODUCT:** AD SOLUSOL (ADS)  
-**DOMAIN:** Advertising & Growth  
-**PLATFORM:** SOLUSOL Intelligence Center (SIC)  
-**COMMERCIAL HEAD:** KLIK Soft PRO  
-**SOFTWARE DIRECTION:** solusol.net  
-**SUPPORT:** CM Soluciones  
-
-
-## Propósito
-
-Este archivo es el índice maestro de la documentación de **AD SOLUSOL**. La biblioteca documenta exclusivamente el dominio publicitario y sus integraciones directas. No contiene arquitectura fiscal, contable ni tributaria.
+**Estado:** PRE-SELLO  
+**Producto:** AD SOLUSOL (ADS)
 
 ## Regla de autoridad
 
-1. [ADSOLUSOL.md](architecture/ADSOLUSOL.md) define identidad, propósito y frontera del producto.
-2. [REQUIREMENTS.md](REQUIREMENTS.md) define obligaciones verificables.
-3. [COMPONENTS.md](architecture/COMPONENTS.md) define responsabilidades internas.
-4. [CONTRACTS.md](contracts/CONTRACTS.md) define contratos de datos y comportamiento.
-5. [INTEGRITY.md](security/INTEGRITY.md) define invariantes de veracidad, idempotencia y preservación.
-6. [MOTOR.md](architecture/MOTOR.md) define el núcleo publicitario.
-7. Los documentos especializados detallan cada dominio sin redefinir los anteriores.
+1. [`architecture/ADSOLUSOL.md`](architecture/ADSOLUSOL.md): identidad, alcance y estado de implementación.
+2. [`REQUIREMENTS.md`](REQUIREMENTS.md): baseline normativo.
+3. [`architecture/COMPONENTS.md`](architecture/COMPONENTS.md): componentes y estado observado.
+4. [`contracts/CONTRACTS.md`](contracts/CONTRACTS.md): contratos de datos.
+5. [`contracts/MARKETING-API.md`](contracts/MARKETING-API.md): API HTTP actual.
+6. [`security/INTEGRITY.md`](security/INTEGRITY.md): invariantes y brechas de integridad.
+7. [`STRUCTURE.md`](STRUCTURE.md): estructura real del repositorio.
+8. [`evidence/EVIDENCE.md`](evidence/EVIDENCE.md): evidencia histórica, no estado actual.
+9. [`ROADMAP.md`](ROADMAP.md): objetivo futuro, no implementación actual.
 
 ## Catálogo
 
-| Documento | Propósito |
+| Documento | Clasificación |
 |---|---|
-| [REQUIREMENTS.md](REQUIREMENTS.md) | Requisitos verificables de ADS. |
-| [COMPONENTS.md](architecture/COMPONENTS.md) | Componentes y responsabilidades. |
-| [MAP.md](architecture/MAP.md) | Mapa arquitectónico. |
-| [SITEMAP.md](architecture/SITEMAP.md) | Mapa funcional de navegación/producto. |
-| [CONTRACTS.md](contracts/CONTRACTS.md) | Contratos canónicos. |
-| [INTEGRITY.md](security/INTEGRITY.md) | Integridad, Zero-Synthetic, idempotencia y precisión. |
-| [MOTOR.md](architecture/MOTOR.md) | Motor publicitario central. |
-| [SEO.md](business/SEO.md) | Frontera SEO/SUPER SEO respecto a ADS. |
-| [MARKETING.md](business/MARKETING.md) | Dominio Marketing dentro de SIC. |
-| [ORCHESTA.md](architecture/ORCHESTA.md) | Integración de eventos con ORCHESTA/SIC. |
-| [MARKETING-BRAIN.md](integration/MARKETING-BRAIN.md) | Motor de decisión comercial y optimización. |
-| [CAMPAIGN.md](business/CAMPAIGN.md) | Modelo y ciclo de vida de campañas. |
-| [VALIDATE.md](operations/VALIDATE.md) | Validación de campañas, eventos y tráfico. |
-| [ONION.md](architecture/ONION.md) | Arquitectura por capas y dependencias. |
-| [MARKETING-API.md](contracts/MARKETING-API.md) | Contrato de API de Marketing/ADS. |
-| [AI.md](architecture/AI.md) | Gobierno de capacidades AI en Marketing. |
-| [AI-AD.md](architecture/AI-AD.md) | Capacidades AI específicas de publicidad. |
-| [ADSOLUSOL.md](architecture/ADSOLUSOL.md) | Definición maestra del producto. |
+| `architecture/ADSOLUSOL.md` | AUTHORITATIVE PRODUCT SCOPE |
+| `REQUIREMENTS.md` | NORMATIVE BASELINE |
+| `architecture/COMPONENTS.md` | CURRENT/PARTIAL COMPONENT STATE |
+| `architecture/MAP.md` | TARGET ARCHITECTURE |
+| `architecture/ONION.md` | ARCHITECTURE BASELINE |
+| `architecture/MOTOR.md` | CURRENT/PARTIAL MOTOR |
+| `architecture/ORCHESTA.md` | TARGET / PLANNED |
+| `contracts/CONTRACTS.md` | CURRENT DATA CONTRACTS + BASELINE |
+| `contracts/MARKETING-API.md` | CURRENT HTTP API |
+| `business/CAMPAIGN.md` | CURRENT DOMAIN SHAPE |
+| `business/MARKETING.md` | DOMAIN DESIGN |
+| `business/SEO.md` | BOUNDARY / DESIGN |
+| `integration/MARKETING-BRAIN.md` | TARGET; runtime integration not implemented |
+| `operations/VALIDATE.md` | CURRENT/PARTIAL VALIDATION |
+| `security/INTEGRITY.md` | NORMATIVE + CURRENT GAPS |
+| `evidence/EVIDENCE.md` | HISTORICAL EVIDENCE |
+| `ROADMAP.md` | ROADMAP / TARGET |
+| `STRUCTURE.md` | CURRENT REPOSITORY STRUCTURE |
 
-## Nombres corregidos
+## Regla Zero-Synthetic documental
 
-Los nombres escritos informalmente como `REQUERIMENTS`, `CONTRATCS` y `CAMPAIGNE` se normalizan documentalmente como [REQUIREMENTS.md](REQUIREMENTS.md), [CONTRACTS.md](contracts/CONTRACTS.md) y [CAMPAIGN.md](business/CAMPAIGN.md).
+Una clase, interfaz, archivo, roadmap o contrato no prueba que una capacidad esté operativa. Las palabras `IMPLEMENTED`, `VERIFIED` o equivalentes requieren evidencia del código y, cuando corresponde, ejecución reciente.
 
+## Duplicados
 
-## Organización del repositorio
-
-- [Estructura y reglas](STRUCTURE.md)
-- [Plan de trabajo](ROADMAP.md)
-- [Decisiones](decisions/DECISIONS.md)
-- [Evidencia](evidence/EVIDENCE.md)
-- [Fase 1](phases/PHASE-1.md), [fase 2](phases/PHASE-2.md), [fase 3](phases/PHASE-3.md)
-
+Las copias mantenidas por compatibilidad deben permanecer idénticas a su documento canónico o convertirse en referencias explícitas. Un duplicado divergente no puede formar parte de un sellado.

@@ -1,11 +1,11 @@
 # Historial de Actualizaciones - Proyecto ADSOLUSOL
 
-## Versión [FECHA_ACTUAL] - Restauración de Calidad y Fiabilidad
+## 2026-09-18 — Restauración de Calidad y Fiabilidad
 
 ### 🚀 Mejoras y Optimizaciones
 
 *   **Restauración Completa de Pruebas de Regresión**:
-    *   La suite de pruebas de regresión (`ADSOLUSOL.RegressionTests`) ha sido completamente restaurada desde un estado ficticio a una suite de validación de extremo a extremo con **17 pruebas reales**.
+    *   La suite de pruebas de regresión (`ADSOLUSOL.RegressionTests`) ha sido completamente restaurada desde un estado ficticio a una suite de validación de extremo a extremo con **17 comprobaciones numeradas de negocio**.
     *   Las pruebas ahora utilizan un host de aplicación real con inyección de dependencias y una base de datos en memoria para validar el flujo completo del sistema: creación de campañas, aislamiento de tenants, persistencia, servicio de anuncios, procesamiento de eventos, métricas y protección de presupuesto.
     *   El ejecutable de pruebas ahora devuelve un código de salida distinto de cero en caso de fallo, lo que garantiza que el script de auditoría (`AUDIT-ADSOLUSOL-ULTRA-SUPERCHISMOSO.ps1`) detecte los errores de forma fiable.
 

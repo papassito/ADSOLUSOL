@@ -1,5 +1,7 @@
 # AD SOLUSOL — Marketing Domain
 
+**Estado:** DOMAIN DESIGN / no implica integración runtime completa
+
 ## Propósito
 
 `MARKETING` es la capa de coordinación comercial dentro de SIC. Agrupa señales que ayudan a tomar decisiones de crecimiento sin fusionar los motores fuente.

@@ -1,77 +1,114 @@
 # AD SOLUSOL — Advertising & Growth Engine
 
-**STATUS:** AUTHORITATIVE SPECIFICATION / ACTIVE BASELINE  
+**STATUS:** AUTHORITATIVE PRODUCT SCOPE / IMPLEMENTATION PARTIAL  
 **PRODUCT:** AD SOLUSOL (ADS)  
 **DOMAIN:** Advertising & Growth  
-**PLATFORM:** SOLUSOL Intelligence Center (SIC)  
 **COMMERCIAL HEAD:** KLIK Soft PRO  
 **SOFTWARE DIRECTION:** solusol.net  
-**SUPPORT:** CM Soluciones  
-
+**SUPPORT:** CM Soluciones
 
 ## 1. Definición
 
-**AD SOLUSOL (ADS)** es el motor nativo y soberano de pauta publicitaria, monetización y análisis del rendimiento de anuncios dentro del ecosistema **solusol.net / SIC**.
+AD SOLUSOL es el motor de pauta publicitaria, monetización y análisis del rendimiento publicitario del ecosistema solusol.net.
 
-Su responsabilidad es administrar campañas, placements, creativos, impresiones, clics, CTR, CPM, CPC y consumo presupuestario mediante telemetría first-party y reglas de veracidad estrictas.
+Su responsabilidad abarca campañas, placements, creativos, serving, impresiones, clics, métricas de publicidad y control de presupuesto.
 
 ## 2. Dentro de ADS
 
-- administración de campañas;
-- inventario de placements;
-- entrega controlada de creativos;
-- registro de impresiones;
-- registro de clics;
-- validación de eventos;
-- cálculo de CTR;
-- débito CPM/CPC;
-- control de presupuesto;
-- telemetría publicitaria;
-- publicación de señales hacia Marketing/Growth;
-- integración con SIC y ORCHESTA.
+- campañas;
+- placements;
+- creativos;
+- asociaciones campaña/placement y campaña/creativo;
+- selección de anuncios elegibles;
+- registro idempotente de eventos;
+- impresiones y clics;
+- métricas;
+- CPM/CPC;
+- presupuesto;
+- telemetría publicitaria cuando exista una integración real.
 
 ## 3. Fuera de ADS
 
-- SEO orgánico;
-- SUPER SEO;
-- cálculo global de Growth Score;
-- WAF/DDoS como dominio primario;
-- administración soberana de identidad de Nodes;
-- fiscalidad, contabilidad o cumplimiento tributario.
+- SEO/SUPER SEO como motor primario;
+- identidad/autorización soberana de CORE;
+- coordinación transversal propia de ORCHESTA;
+- disponibilidad/monitorización global propia de SIC;
+- fiscalidad, contabilidad y cumplimiento tributario.
 
-## 4. Frontera con GROWTH
+## 4. Flujo de negocio objetivo
 
 ```text
-SEO / SUPER SEO ──► Señales orgánicas ┐
-VIGILANCIA ───────► Seguridad         │
-PERFORMANCE ──────► Rendimiento       ├──► GROWTH
-AD SOLUSOL ───────► CTR/CPM/CPC       │
-ANALYTICS ────────► Conversión        ┘
+CAMPAIGN
+   ↓
+PLACEMENT
+   ↓
+CREATIVE
+   ↓
+SERVING
+   ↓
+IMPRESSION / CLICK
+   ↓
+METRICS
+   ↓
+BUDGET
 ```
-
-ADS aporta señales publicitarias. GROWTH consolida el análisis comercial global.
 
 ## 5. Zero-Synthetic Advertising Data
 
 ```text
-DISCONNECTED != 0
+DISCONNECTED != AVAILABLE
 NO_DATA != ZERO PERFORMANCE
 UNVERIFIED != VERIFIED
 UNKNOWN != ZERO SPEND
 ```
 
-Si una fuente no está disponible, ADS conserva el estado real. No fabrica actividad para completar dashboards.
-
-## 6. API base
+## 6. API implementada observada
 
 ```text
-GET  /api/marketing/adsolusol
-POST /api/marketing/adsolusol/campaigns
-POST /api/marketing/adsolusol/campaigns/:id/toggle
-POST /api/marketing/adsolusol/campaigns/:id/click
-POST /api/marketing/adsolusol/campaigns/:id/impression
+GET    /api/Campaigns
+GET    /api/Campaigns/{id}
+POST   /api/Campaigns
+POST   /api/Campaigns/{id}/status
+GET    /api/Campaigns/{id}/metrics
+POST   /api/Campaigns/{id}/click
+POST   /api/Campaigns/{id}/impression
+POST   /api/Placements
+POST   /api/Creatives
+POST   /api/assignments/placement
+POST   /api/assignments/creative
+GET    /api/Serve?placementCode={code}
+GET    /api/health
 ```
 
-## 7. Estado observado del código heredado
+`/api/marketing/adsolusol` existe únicamente como ruta base de un controller sin acciones; no se considera endpoint operativo.
 
-La evidencia suministrada describe campañas mantenidas en memoria, publicación de eventos ya existente y persistencia SQLite/multi-tenant/filtro antifraude todavía planificados. Esta biblioteca no transforma capacidades planificadas en capacidades implementadas.
+## 7. Estado de implementación
+
+### Implementado
+
+- persistencia SQLite para campañas, placements, creativos, asociaciones y eventos;
+- creación/listado/consulta/estado de campañas;
+- creación de placements y creativos;
+- asociaciones;
+- serving por placement y tenant;
+- eventos click/impression con idempotencia por `EventId`;
+- débito condicional de presupuesto;
+- métricas básicas;
+- health de SQLite y SIC;
+- componentes Ed25519 de verificación.
+
+### Parcial o pendiente
+
+- wiring del middleware de firmas en `Program.cs`;
+- resolución autorizada de `TenantId`;
+- aislamiento tenant completo en métricas/asignaciones/recursos no tenant-scoped;
+- filtro explícito `IsEnabled` en serving de placement/creative;
+- integración real de Marketing Brain/SIC;
+- configuración Production de SQLite;
+- migraciones/versionado de esquema;
+- integración UI production con ASP.NET publish;
+- instalador.
+
+## 8. Regla de autoridad documental
+
+Los documentos de requisitos y arquitectura pueden describir el objetivo autorizado. Las afirmaciones de estado actual deben derivarse del código y de evidencia de ejecución reciente; un diseño no se convierte en implementación por estar documentado.

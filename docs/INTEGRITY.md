@@ -1,58 +1,53 @@
 # AD SOLUSOL — Integrity
 
-## 1. Zero-Synthetic Advertising Data
+**Estado:** NORMATIVE BASELINE + current gaps
 
-Prohibido:
+## Zero-Synthetic Advertising Data
 
-- inventar impresiones;
-- inventar clics;
-- inventar conversiones;
-- fabricar gasto;
-- sustituir desconexión por cero;
-- presentar métricas simuladas como observadas.
-
-## 2. Idempotencia
-
-Un mismo evento lógico debe producir como máximo:
+Prohibido inventar impresiones, clics, conversiones, gasto, disponibilidad o conectividad.
 
 ```text
-1 registro aceptado
-1 incremento de contador
-1 débito presupuestario aplicable
+DISCONNECTED != AVAILABLE
+DISCONNECTED != 0 ACTIVITY
+NO_DATA != ZERO PERFORMANCE
+UNVERIFIED != VERIFIED
 ```
 
-Los reintentos no pueden producir doble gasto.
+## Idempotencia
 
-## 3. Precisión financiera
+Un evento lógico aceptado debe producir como máximo un registro y el débito aplicable. `AdEvent.EventId` tiene índice único y el servicio comprueba existencia antes de procesar.
+
+La resistencia frente a carreras concurrentes debe confirmarse mediante prueba específica; la comprobación previa y el índice único no autorizan a declarar el caso cerrado sin evidencia.
+
+## Presupuesto
 
 ```text
-CPM delta = cpm_rate / 1000
-CPC delta = cpc_rate
+Impression cost = CostPerMille / 1000
+Click cost      = CostPerClick
 ```
 
-Los valores monetarios autoritativos no deben depender de coma flotante binaria sin estrategia de exactitud.
+`UpdateBudgetAsync` condiciona el update a que el gasto resultante no supere el presupuesto.
 
-## 4. Integridad de métricas
+## CTR
+
+Baseline:
 
 ```text
-verified_clicks
-verified_impressions
-        ↓
-       CTR
+CTR solo es significativo con impresiones verificables.
 ```
 
-Si el denominador no existe o no es verificable, el resultado no se fuerza a cero.
+**Brecha actual:** `MetricsService` devuelve `0.0` cuando `impressions == 0`. Eso no satisface todavía la semántica estricta `NO_DATA != ZERO PERFORMANCE` si la UI interpreta ese 0 como rendimiento observado.
 
-## 5. Integridad de procedencia
-
-Cuando aplique identidad de Node:
+## Procedencia y autorización
 
 ```text
 Valid Signature != Authorization
+Authentication != Authorization
+NodeId != TenantId
 ```
 
-CORE gobierna identidad y autorización; SIC/ADS consume verificación conforme a contrato.
+`CoreSignatureVerifier` implementa firma, ventana temporal y nonce. El pipeline actual no conecta el middleware ni resuelve tenant.
 
-## 6. Conflictos heredados detectados
+## Marketing Brain / SIC
 
-La documentación SEO suministrada declara valores FID/CLS fijos simulados en el backend heredado. Esos valores no deben promocionarse a métricas reales de producción bajo Zero-Synthetic.
+Un método que devuelve `true` sin consultar una dependencia externa no constituye evidencia de disponibilidad. `MarketingBrainClient` actual debe considerarse `UNVERIFIED / NOT_IMPLEMENTED` como integración real.

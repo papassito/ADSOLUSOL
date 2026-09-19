@@ -1,37 +1,30 @@
 # AD SOLUSOL — Marketing Brain
 
-## Propósito
+**Estado de diseño:** TARGET CAPABILITY  
+**Estado runtime actual:** NOT_IMPLEMENTED / UNVERIFIED
 
-Marketing Brain es la capa de correlación y recomendación del dominio Marketing.
+## Propósito autorizado
 
-Consume señales verificadas de múltiples motores:
+Marketing Brain es una capa de correlación y recomendación que puede consumir señales verificadas de ADS y, cuando existan contratos autorizados, de SEO/SUPER SEO, Analytics, Performance y Vigilancia.
+
+Puede producir recomendaciones sobre presupuesto, rendimiento, placements y campañas. No es fuente autoritativa de clics, impresiones, conversiones ni gasto.
+
+## Estado del código actual
+
+`MarketingBrainClient` implementa `IMarketingBrainService`, pero actualmente:
 
 ```text
-ADS
-SEO / SUPER SEO
-ANALYTICS
-PERFORMANCE
-VIGILANCIA
+PingAsync()        => true
+IsAvailableAsync() => true
+EmitTelemetryAsync => no-op
 ```
 
-## Produce
+No existe I/O que demuestre conexión con SIC o con un Marketing Brain real. Estos retornos no deben presentarse como disponibilidad verificada.
 
-- recomendaciones de distribución de presupuesto;
-- detección de campañas con bajo/alto rendimiento;
-- comparación paid vs organic;
-- alertas de costo/rendimiento;
-- recomendaciones de placement;
-- recomendaciones de pausa, revisión o expansión;
-- señales para GROWTH.
+## Invariante
 
-## No produce por autoridad propia
+```text
+Recommendation != Authorized Mutation
+```
 
-- clics;
-- impresiones;
-- conversiones;
-- gasto real;
-- datos SEO inexistentes.
-
-## Ejecución
-
-Una recomendación no es una mutación automática. Cualquier automatización futura requiere política explícita, permisos y evidencia de la acción.
+Toda automatización futura requiere autorización, política y evidencia independientes.

@@ -1,39 +1,20 @@
 # AD SOLUSOL — ORCHESTA Integration
 
-## Rol
+**Estado:** TARGET / PLANNED INTEGRATION
 
-ORCHESTA coordina eventos y acciones entre módulos del ecosistema. No es autoridad de cálculo de CTR, CPM, CPC ni presupuesto ADS.
+ORCHESTA coordina flujos y eventos entre módulos del ecosistema. No es autoridad de CTR, CPM, CPC ni presupuesto de ADSOLUSOL.
 
-## Eventos mínimos observados
+## Estado runtime observado
 
-```text
-CAMPAIGN_LAUNCHED
-CAMPAIGN_STATUS_CHANGED
-AD_CLICK_VERIFIED
-```
+Existe el proyecto `ADSOLUSOL.Orchestrator`, pero sus clases actuales son estructuras mínimas y no constituyen evidencia de una integración ORCHESTA operacional completa.
 
-## Flujo
+No se debe afirmar publicación/consumo real de eventos ORCHESTA hasta disponer de implementación y prueba.
 
-```text
-AD SOLUSOL
-   ↓
-Domain Event
-   ↓
-ORCHESTA
-   ├──► SIC
-   ├──► Marketing Brain
-   └──► Otros consumidores autorizados
-```
+## Contrato objetivo
 
-## Seguridad
+Cuando se implemente:
 
-Si un evento está ligado a identidad de Node:
-
-1. la procedencia criptográfica se verifica conforme al contrato de CORE;
-2. una firma válida no concede autorización;
-3. anti-replay se evalúa antes de aceptar efectos mutables;
-4. ORCHESTA no inventa eventos para compensar desconexiones.
-
-## Desacoplamiento
-
-La caída de ORCHESTA no autoriza a ADS a simular entrega, clics, impresiones ni gasto.
+1. ADS emitirá eventos versionados y verificables;
+2. ORCHESTA coordinará, no recalculará métricas ADS;
+3. autenticación y autorización permanecerán separadas;
+4. una caída de ORCHESTA no autorizará datos sintéticos.

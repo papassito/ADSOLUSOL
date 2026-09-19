@@ -1,5 +1,7 @@
 # AD SOLUSOL — AI AD
 
+**Estado:** TARGET CAPABILITY / no implica runtime AI AD implementado
+
 ## Definición
 
 AI AD es la especialización de AI para el dominio publicitario de AD SOLUSOL.

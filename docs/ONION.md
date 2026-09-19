@@ -1,43 +1,44 @@
 # AD SOLUSOL — Onion Architecture
 
-## Capas
+**Estado:** ARCHITECTURE BASELINE / implementación parcial
+
+## Capas observadas
 
 ```text
-┌─────────────────────────────────────────────┐
-│ Infrastructure                             │
-│ HTTP / DB / Event Bus / Edge / Wails       │
-│  ┌───────────────────────────────────────┐  │
-│  │ Adapters                             │  │
-│  │ API / Persistence / ORCHESTA / SIC   │  │
-│  │  ┌─────────────────────────────────┐  │  │
-│  │  │ Application                    │  │  │
-│  │  │ Campaign / Validate / Delivery │  │  │
-│  │  │  ┌───────────────────────────┐  │  │  │
-│  │  │  │ Domain Core               │  │  │  │
-│  │  │  │ Campaign/Event/Budget     │  │  │  │
-│  │  │  └───────────────────────────┘  │  │  │
-│  │  └─────────────────────────────────┘  │  │
-│  └───────────────────────────────────────┘  │
-└─────────────────────────────────────────────┘
+Presentation
+├── ADSOLUSOL.Presentation.Api      ASP.NET Core
+├── ADSOLUSOL.Presentation.Web      React / TypeScript / Vite
+└── ADSOLUSOL.Presentation.Cmd
+        ↓
+Application
+├── CampaignService
+├── AdServingService
+├── EventProcessingService
+├── MetricsService
+└── BudgetService
+        ↓
+Domain
+├── Entities
+├── DTOs / Enums
+└── Interfaces
+        ↑
+Infrastructure
+├── SQLite / EF Core / Dapper
+├── Repositories
+├── CoreSignatureVerifier
+└── MarketingBrainClient
 ```
 
 ## Regla de dependencia
 
-Las dependencias apuntan hacia el dominio.
+El dominio no debe depender de detalles de HTTP, SQLite, Vite, proxy, SIC u otros adaptadores concretos.
 
-El dominio no conoce:
+## Estado actual
 
-- Express;
-- PHP;
-- MariaDB;
-- SQLite;
-- React;
-- Wails;
-- Cloudflare;
-- ORCHESTA concreto.
+La solución está separada en proyectos `Domain`, `Application`, `Infrastructure`, `Motor`, `Orchestrator`, `Presentation.Api`, `Presentation.Cmd` y una UI Vite/React.
 
-Los adaptadores traducen esos entornos al contrato del dominio.
+`Motor` y `Orchestrator` contienen todavía estructuras mínimas/stubs en varias áreas y no deben presentarse como motores completamente operativos únicamente por existir como proyectos.
 
-## Beneficio
+## Tecnologías heredadas
 
-Permite migrar la implementación heredada sin cambiar la semántica de campaña, evento, métrica o presupuesto.
+Referencias históricas a Express, PHP, MariaDB o Wails no describen el stack actual de ADSOLUSOL. El stack observado hoy es .NET 8 + React/Vite + SQLite.

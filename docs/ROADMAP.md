@@ -1,5 +1,7 @@
 # AD SOLUSOL — Roadmap
 
+**Estado:** ROADMAP / TARGET. Este documento no describe por sí solo capacidades implementadas.
+
 **PRODUCT:** AD SOLUSOL (ADS)  
 **DOMAIN:** Advertising & Growth  
 **PLATFORM:** SOLUSOL Intelligence Center (SIC)  
@@ -84,7 +86,7 @@
 
 ## Fase 9 — Marketing API
 
-- Consolidar `GET /api/marketing/adsolusol`.
+- Evaluar una ruta canónica futura para Marketing/ADS únicamente después de estabilizar y versionar la API actual `/api/*`.
 - Consolidar creación de campañas.
 - Consolidar toggle.
 - Consolidar click.

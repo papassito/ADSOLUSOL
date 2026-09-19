@@ -1,5 +1,7 @@
 # AD SOLUSOL — AI Governance
 
+**Estado:** TARGET GOVERNANCE / no implica motor AI implementado
+
 ## Propósito
 
 AI es una capacidad auxiliar del dominio Marketing. No sustituye las fuentes autoritativas de campañas, métricas ni presupuesto.

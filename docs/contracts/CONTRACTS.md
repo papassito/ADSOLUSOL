@@ -1,94 +1,114 @@
 # AD SOLUSOL — Contracts
 
-## Contract: AdCampaign
+**Estado:** BASELINE + CURRENT DATA SHAPES / PRE-SELLO
 
-Campos canónicos observados:
+## Campaign
+
+Entidad actual:
 
 ```text
-id
-name
-advertiser
-status
-placementZone
-startDate
-endDate
-budgetTotalUsd
-budgetSpentUsd
-impressionsCount
-clicksCount
-ctrPct
-targetUrl
-bannerAssetUrl?
-pricingModel
-cpmRateUsd?
-cpcRateUsd?
-tenant_id   [objetivo contractual; no implementado en el legado observado]
+Id              string (GUID textual)
+TenantId        string
+Name            string
+Status          string
+Budget          decimal
+BudgetSpent     decimal
+RemainingBudget derivado, no persistido
+CostPerMille    decimal
+CostPerClick    decimal
+StartDateUtc    DateTime
+EndDateUtc      DateTime
+CreatedAtUtc    DateTime
 ```
 
-Estados:
+Estados utilizados por la aplicación/documentación:
 
 ```text
+SCHEDULED
 ACTIVE
 PAUSED
-SCHEDULED
 COMPLETED
 ```
 
-Pricing:
+La implementación actual de `CampaignService` crea campañas inicialmente como `PAUSED`.
+
+## Placement
 
 ```text
-CPM
-CPC
+Id            long
+PlacementCode string
+Name          string
+IsEnabled     bool
+CreatedAt     DateTime
+UpdatedAt     DateTime
 ```
 
-## Contract: AdEvent
+## Creative
 
 ```text
-event_id
-event_type
-campaign_id
-placement
-occurred_at
-received_at
-verification_status
-source_context
-tenant_id
+Id         long
+Name       string
+ContentUrl string
+TargetUrl  string
+IsEnabled  bool
+CreatedAt  DateTime
+UpdatedAt  DateTime
 ```
 
-`event_type`:
+## AdEvent
 
 ```text
-IMPRESSION
-CLICK
+Id            string
+EventId       string
+CampaignId    string
+CreativeId    string
+PlacementId   string
+PlacementCode string
+TenantId      string
+EventType     string
+Cost          decimal
+TimestampUtc  DateTime
+OccurredAt    DateTime
+ReceivedAt    DateTime
+IPAddress     string
+UserAgent     string
 ```
 
-## Contract: Availability
+`EventId` tiene unicidad en el modelo de base de datos.
+
+## CampaignMetrics
 
 ```text
-AVAILABLE
-DISCONNECTED
-NO_DATA
-UNAVAILABLE
-UNVERIFIED
-UNDETERMINED
+CampaignId   string
+Impressions  int
+Clicks       int
+Ctr          double
+Budget       decimal
+BudgetSpent  decimal
 ```
 
-## Contract: Domain Events
-
-Eventos observados o definidos por la documentación fuente:
+## AssignmentRequest
 
 ```text
-CAMPAIGN_LAUNCHED
-CAMPAIGN_STATUS_CHANGED
-AD_CLICK_VERIFIED
+CampaignId string
+EntityId   long
 ```
 
-Los futuros eventos adicionales deben versionarse y documentarse antes de ser tratados como contrato estable.
+Se utiliza tanto para asociación de placement como de creative.
 
-## Contract: Money
+## Dinero
 
-La representación de interfaz puede usar `number`, pero persistencia/cálculo autoritativo debe preservar precisión decimal.
+Presupuesto, gasto, CPM, CPC y costo del evento usan `decimal` en el dominio actual.
 
-## Contract: Node Identity Consumption
+## Identidad de Node
 
-Cuando una señal provenga de un Node gobernado por CORE, ADS/SIC consume una identidad verificable. Una firma válida prueba procedencia criptográfica, no autorización.
+Una firma Ed25519 válida demuestra procedencia criptográfica bajo el verificador implementado. No demuestra autorización ni tenant. La resolución y autorización deben ser separadas:
+
+```text
+Authentication != Authorization
+NodeId != TenantId
+```
+
+## Contratos futuros
+
+Eventos de ORCHESTA, disponibilidad, IA y otras integraciones permanecen como contratos de diseño hasta que exista implementación y evidencia verificable. No se consideran runtime actual por aparecer en documentación.

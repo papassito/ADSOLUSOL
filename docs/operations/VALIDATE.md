@@ -1,47 +1,48 @@
 # AD SOLUSOL — Validate
 
-## Propósito
+**Estado:** IMPLEMENTED / PARTIAL
 
-Validate decide si una campaña, impresión o clic cumple el contrato necesario para producir efectos.
+## Validaciones observadas actualmente
 
-## Validación de campaña
+### Campaign
 
-- identidad;
-- anunciante;
-- fechas;
-- status;
-- placement;
-- pricing model;
-- tarifa requerida;
-- presupuesto;
-- target URL;
-- creativo;
-- tenant cuando aplique.
+- creación con `TenantId` recibido por el servicio;
+- `GetAsync` y `UpdateStatusAsync` comparan `TenantId`;
+- estado inicial de creación: `PAUSED`;
+- fechas por defecto si no se proporcionan.
 
-## Validación de evento
+La implementación actual no demuestra todavía una máquina de estados estricta que impida cualquier transición arbitraria enviada al endpoint `/status`.
 
-```text
-Event received
-   ↓
-Schema
-   ↓
-Campaign exists
-   ↓
-Campaign eligible
-   ↓
-Placement matches
-   ↓
-Duplicate / Replay check
-   ↓
-Traffic verification
-   ↓
-ACCEPTED / REJECTED / DUPLICATE / UNVERIFIED
-```
+### Serving
 
-## Regla financiera
+- placement existente;
+- campaña `ACTIVE`;
+- tenant coincidente en consulta de campañas elegibles;
+- presupuesto restante;
+- rango de fechas;
+- existencia de creative asociado.
 
-Solo `ACCEPTED` puede producir incremento facturable y débito.
+### Events
 
-## Estado heredado
+`EventProcessingService` valida actualmente:
 
-La documentación suministrada indica que el filtro de fraude de clics y las firmas de agente están planificados/no implementados. No se declaran como capacidades existentes.
+- `EventId` no procesado previamente;
+- campaña existente;
+- campaña `ACTIVE`;
+- presupuesto restante;
+- tipo de evento parseable (`Click` / `Impression`);
+- débito presupuestario exitoso dentro de transacción.
+
+## Validaciones todavía no cerradas
+
+No hay evidencia en el flujo actual de validación integral de:
+
+- correspondencia campaign↔creative↔placement al registrar cada evento;
+- `Placement.IsEnabled` durante serving;
+- `Creative.IsEnabled` durante serving;
+- autorización tenant completa en todos los endpoints;
+- rate limiting;
+- validación de `TargetUrl`/`ContentUrl` contra políticas de seguridad;
+- antifraude de tráfico.
+
+No se deben documentar esas capacidades como implementadas hasta disponer de código y pruebas.

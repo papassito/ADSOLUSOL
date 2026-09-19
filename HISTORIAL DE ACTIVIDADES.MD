@@ -1,5 +1,11 @@
 # Historial de Actividades del Proyecto ADSOLUSOL
 
+**STATUS: HISTORICAL LOG / SUPERSEDED FOR CURRENT-STATE CLAIMS**
+
+Este archivo conserva afirmaciones, auditorías y sellos de etapas anteriores. Las etiquetas `OPERATIVE VERIFIED`, resultados de pruebas, rutas API, hallazgos de SIC y cualquier otro estado aquí registrado **no certifican el runtime actual**. Para el estado vigente usar `README.md`, `docs/contracts/MARKETING-API.md`, `docs/STRUCTURE.md` y evidencia de ejecución reciente.
+
+---
+
 Este documento registra los hallazgos, acciones de corrección y decisiones clave tomadas durante el ciclo de auditoría y desarrollo del proyecto.
 
 ---

@@ -1,5 +1,7 @@
 # AD SOLUSOL — Functional Sitemap
 
+**Estado:** PRODUCT NAVIGATION TARGET / no equivale a UI implementada actual
+
 Este documento describe la navegación funcional de ADS/SIC. No es `sitemap.xml` del sitio público.
 
 ```text

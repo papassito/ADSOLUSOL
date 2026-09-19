@@ -1,48 +1,51 @@
 # AD SOLUSOL — Motor Publicitario
 
-## Responsabilidad
+**Estado:** IMPLEMENTED / PARTIAL
 
-El motor ADS gobierna la ejecución publicitaria desde elegibilidad hasta contabilización.
+## Flujo actual
 
 ```text
 Campaign
    ↓
+Placement association
+   ↓
 Eligibility
    ↓
-Placement
+Creative association
    ↓
-Delivery
+Serve
    ↓
-Event
+Impression / Click
    ↓
-Validate
-   ├──► Metrics
-   └──► Budget
+EventProcessing
+   ├──► AdEvent persistence
+   ├──► Budget debit
+   └──► Metrics by persisted events
 ```
 
-## Elegibilidad
+## Elegibilidad implementada
 
-Una campaña es candidata cuando:
+`AdServingService` obtiene campañas asociadas al placement y el repositorio filtra actualmente por:
 
-- su estado permite entrega;
-- se encuentra dentro de vigencia;
-- el placement es compatible;
-- el creativo es válido;
-- el presupuesto permite continuar;
-- el tenant/contexto aplicable coincide.
+- `Status = ACTIVE`;
+- `TenantId`;
+- presupuesto restante.
 
-## Autoridad
+El servicio comprueba además rango de fechas.
 
-El servidor es autoridad para:
+## Brechas actuales
 
-- aceptar/rechazar eventos;
-- incrementar contadores;
-- calcular CTR;
-- debitar CPM/CPC;
-- cerrar una campaña por límites operativos.
-
-El navegador no es autoridad financiera.
+- `Placement.IsEnabled` no participa explícitamente en la consulta de elegibilidad actual;
+- `Creative.IsEnabled` no participa explícitamente en `GetEligibleCreativeForCampaignAsync`;
+- la selección de campaña se randomiza con `Guid.NewGuid()`;
+- tenant authorization todavía no está resuelto en el pipeline HTTP.
 
 ## Persistencia
 
-El código heredado descrito mantiene campañas en memoria. La persistencia durable es una capacidad posterior y debe conservar las mismas invariantes.
+La implementación actual usa SQLite. No mantiene campañas únicamente en memoria.
+
+EF Core administra el modelo/esquema inicial con `EnsureCreated()`, mientras varios repositorios usan Dapper para operaciones de datos. La estrategia de migraciones/versionado para upgrades de producción sigue pendiente.
+
+## Autoridad
+
+El backend es autoridad para aceptación de evento y débito presupuestario. El navegador no es autoridad financiera.

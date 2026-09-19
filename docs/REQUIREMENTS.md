@@ -1,5 +1,7 @@
 # AD SOLUSOL — Requirements
 
+**Estado:** NORMATIVE BASELINE / no implica implementación actual
+
 **PRODUCT:** AD SOLUSOL (ADS)  
 **DOMAIN:** Advertising & Growth  
 **PLATFORM:** SOLUSOL Intelligence Center (SIC)  
@@ -61,7 +63,7 @@
 
 - **REQ-TEN-001:** toda campaña debe poder vincularse a `tenant_id`.
 - **REQ-TEN-002:** la persistencia y consulta deben respetar aislamiento por tenant.
-- **REQ-TEN-003:** la implementación global compartida observada se considera estado heredado no conforme con el objetivo multi-tenant.
+- **REQ-TEN-003:** ninguna operación tenant-scoped debe aceptar, consultar, mutar o agregar datos de otro tenant.
 
 ## 8. Integración
 

@@ -1,0 +1,9 @@
+README.md	65	X-Api-Key	No existe un mecanismo activo `X-Api-Key` en el pipeline actual.
+docs/MARKETING-API.md	92	X-Api-Key	No existe protección `X-Api-Key` activa en el pipeline actual.
+docs/MARKETING-API.md	134	/api/Serve/ad	/api/Serve/ad
+docs/MARKETING-API.md	131	/toggle	/api/marketing/adsolusol/campaigns/{id}/toggle
+docs/MARKETING-API.md	132	/content	/api/marketing/adsolusol/campaigns/{id}/content
+docs/contracts/MARKETING-API.md	92	X-Api-Key	No existe protección `X-Api-Key` activa en el pipeline actual.
+docs/contracts/MARKETING-API.md	134	/api/Serve/ad	/api/Serve/ad
+docs/contracts/MARKETING-API.md	131	/toggle	/api/marketing/adsolusol/campaigns/{id}/toggle
+docs/contracts/MARKETING-API.md	132	/content	/api/marketing/adsolusol/campaigns/{id}/content
