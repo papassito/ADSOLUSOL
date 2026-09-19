@@ -17,9 +17,9 @@ Durante la primera fase de revisión, las auditorías automáticas y manuales id
 *   **`[CRITICAL] ADS-BUILD-001`:** El proyecto no compilaba (`dotnet build` fallaba).
 *   **`[CRITICAL]` Seguridad:** Una clave privada criptográfica fue encontrada expuesta en el historial de commits.
 *   **`[CRITICAL] ADS-API-002`:** Los endpoints principales (`/toggle`, `/click`, `/impression`) no estaban implementados y devolvían códigos de error `503 Service Unavailable` o eran stubs.
-*   **`[WARNING] SIC-NET-001`:** Se detectaron 95 alertas por bindings de red inseguros (`0.0.0.0`) en configuraciones, exponiendo la aplicación a interfaces públicas innecesariamente.
-*   **`[WARNING] WARNING_MISSING_CRITICAL`:** Los respaldos de seguridad del proyecto se reportaron como incompletos.
-*   **`[WARNING] SIC-DOC-001`:** Faltaban documentos clave de arquitectura y contratos en la raíz del módulo (`NODE_CONTRACT.md`, `AUTHENTICATION_CONTRACT.md`, etc.).
+*   **`[DESCARTADO PARA ADSOLUSOL] SIC-NET-001`:** Este hallazgo pertenecía a una auditoría de SOLUSOL SIC y fue incorporado erróneamente al historial de ADSOLUSOL. No forma parte del baseline ni del estado técnico vigente de este proyecto.
+*   **`[WARNING] WARNING_MISSING_CRITICAL`:** Los respaldos de seguridad del proyecto se reportaron como incompletos en esa etapa histórica.
+*   **`[DESCARTADO PARA ADSOLUSOL] SIC-DOC-001`:** La referencia a `NODE_CONTRACT.md`, `AUTHENTICATION_CONTRACT.md` y otros contratos de SIC fue una contaminación documental. Esos documentos no constituyen requisitos faltantes de ADSOLUSOL.
 
 ---
 
@@ -39,19 +39,26 @@ Tras la resolución de los bloqueos, una revisión más profunda del código rev
 
 *   **Hallazgo:** Se identificó una definición duplicada del enumerador `EventType`, una en la capa de `Application` y otra en la de `Domain`. Esto violaba el principio de "fuente única de verdad" de la Arquitectura Cebolla, donde los conceptos de negocio fundamentales deben residir en el Dominio.
 *   **Acción de Corrección:**
-    1.  Se consolidó el `enum EventType` moviéndolo a `ADSOLUSOL.Domain.Enums`.
-    2.  Se actualizaron los servicios que lo consumían (ej. `EventProcessingService`) para que todos apunten a la definición única en el Dominio.
-    3.  Esta acción previene futuros bugs de consistencia y fortalece la cohesión del núcleo del negocio.
+    1. Se consolidó el `enum EventType` moviéndolo a `ADSOLUSOL.Domain.Enums`.
+    2. Se actualizaron los servicios que lo consumían (ej. `EventProcessingService`) para que todos apunten a la definición única en el Dominio.
+    3. Esta acción previene futuros bugs de consistencia y fortalece la cohesión del núcleo del negocio.
 
 ---
 
-### 4. Estado Actual y Tareas Pendientes (Post-17 Sep)
+### 4. Corrección posterior de alcance
 
-Con el sistema en un estado funcional y estable, las siguientes tareas y riesgos han sido priorizados para la próxima iteración:
+Una revisión posterior determinó que los hallazgos `SIC-NET-001` y `SIC-DOC-001` procedían de SOLUSOL SIC y habían sido incorporados erróneamente al historial de ADSOLUSOL. Se conservan arriba únicamente como registro histórico de esa contaminación y quedan formalmente descartados como requisitos o pendientes de este producto.
 
-*   **`[ALTA]` Revisar Bindings de Red (`SIC-NET-001`):**
-    *   **Acción:** Modificar las configuraciones de la aplicación para acotar la escucha a `localhost` (`127.0.0.1`) o interfaces de red privadas específicas, eliminando la exposición a `0.0.0.0`.
-*   **`[MEDIA]` Regenerar Respaldos de Seguridad (`WARNING_MISSING_CRITICAL`):**
-    *   **Acción:** Ejecutar el proceso de respaldo para generar un archivo completo y verificado del estado actual del proyecto.
-*   **`[BAJA]` Completar Documentación Faltante (`SIC-DOC-001`):**
-    *   **Acción:** Crear y completar los documentos de arquitectura y contratos pendientes.
+Los pendientes técnicos vigentes de ADSOLUSOL deben obtenerse del `README.md` y de la documentación actual pre-sello. Entre ellos se encuentran:
+
+* integración de la UI de producción con ASP.NET / `wwwroot`;
+* configuración definitiva de SQLite para Production y datos instalados;
+* estrategia segura de actualización/versionado de esquema;
+* conexión del middleware de autenticación;
+* resolución y autorización de `TenantId`;
+* aislamiento tenant integral;
+* integración real o estado explícito `DISCONNECTED` de Marketing Brain/SIC;
+* `dotnet publish` reproducible;
+* instalador y verificación posterior a instalación.
+
+Este historial no sustituye la fuente de estado vigente.

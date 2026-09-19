@@ -18,10 +18,14 @@ Validación local de la base inicial:
 - Las pruebas usan datos identificados como pruebas, en bases temporales aisladas.
 
 Comandos utilizados históricamente en esa etapa:
+
+```powershell
 .\scripts\dotnet.ps1 build ADSOLUSOL.sln
 .\scripts\dotnet.ps1 run --project tests/ADSOLUSOL.RegressionTests
 .\scripts\smoke_test.ps1
 .\scripts\check_structure.ps1
+```
+
 Estas rutas pertenecen al layout histórico documentado en esa validación y no implican que dichos scripts existan en la estructura actual del repositorio.
 
 Pendiente: contrato y conexión al SIC, autenticación integrada, modelo publicitario

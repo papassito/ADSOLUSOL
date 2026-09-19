@@ -14,7 +14,7 @@ Se ha completado la construcción de la vertical funcional principal del motor A
 
 ### Hitos Clave de Construcción:
 - **Motor de Ad Serving (`AdServingService`):** Se implementó el núcleo que decide en tiempo real qué anuncio servir para un `placement` determinado, validando el estado de la campaña, su presupuesto y las asociaciones.
-- **Gestión de Placements y Creativos:** Se añadieron los controladores y repositorios para la gestión completa (CRUD) de `Placements` (espacios publicitarios) y `Creatives` (anuncios).
+- **Gestión de Placements y Creativos:** Se añadieron controladores y repositorios para crear y persistir `Placements` (espacios publicitarios) y `Creatives` (anuncios), además de utilizarlos en asociaciones y serving. El runtime actual no expone CRUD HTTP completo para estos recursos.
 - **Asociaciones de Entidades:** Se implementó la lógica para asociar campañas con placements y creativos, persistiendo estas relaciones en la base de datos.
 - **Motor de Presupuesto (`BudgetService`):** Se construyó el mecanismo de débito automático que consume el presupuesto de una campaña (`CPM` por impresión, `CPC` por clic) de forma transaccional junto con el registro del evento.
 - **Motor de Métricas (`MetricsService`):** Se implementó el cálculo de métricas en tiempo real (`Impressions`, `Clicks`, `CTR`, `BudgetSpent`) a partir de los eventos persistidos, adhiriéndose al principio "Zero-Synthetic Data".

@@ -1,0 +1,17 @@
+AD SOLUSOL — DOCUMENTATION FREEZE NOTICE
+
+STATUS: SEALED / FROZEN DOCUMENTATION BASELINE
+DATE: 2026-09-18
+BASE REMOTE HEAD: 88505d24a168176c4aa661fa80727d5d45bb71f7
+MARKDOWN FILES: 55
+
+RULE:
+Any later modification to the documentation invalidates this seal and requires:
+1. review,
+2. correction,
+3. regenerated SHA-256 manifest,
+4. new seal.
+
+IMPORTANT:
+This package provides cryptographic/documentary freezing through SHA-256 integrity.
+It does not enforce GitHub branch protection because this session did not have repository write/protection permission.
