@@ -14,23 +14,8 @@ public class BudgetService
         _campaignRepository = campaignRepository;
     }
 
-    public async Task<bool> DebitEventCost(string campaignId, EventType eventType, IDbTransaction transaction, Domain.Entities.Campaign? campaign = null)
+    public async Task<bool> DebitEventCost(string campaignId, decimal cost, IDbTransaction transaction)
     {
-        // Allow passing the campaign object to avoid an extra DB query within the transaction.
-        campaign ??= await _campaignRepository.GetByIdAsync(campaignId);
-        if (campaign is null)
-        {
-            // Campaign not found, cannot debit. Consider this a failure.
-            return false;
-        }
-
-        decimal cost = eventType switch
-        {
-            EventType.Impression => campaign.CostPerMille / 1000,
-            EventType.Click => campaign.CostPerClick,
-            _ => 0
-        };
-
         if (cost > 0)
         {
             // UpdateBudgetAsync now returns the number of affected rows.

@@ -69,7 +69,7 @@ public class EventProcessingService
             return EventProcessingStatus.Rejected;
         }
 
-        // FIX P1-03: Calculate cost and assign it to the event object before processing.
+        // Calculate cost once and assign it to the event object. This is the single source of truth.
         adEvent.Cost = eventTypeEnum switch
         {
             EventType.Impression => campaign.CostPerMille / 1000,
@@ -82,7 +82,7 @@ public class EventProcessingService
         {
             await _eventRepository.AddAsync(adEvent, _unitOfWork.Transaction);
 
-            var debitSuccessful = await _budgetService.DebitEventCost(adEvent.CampaignId, eventTypeEnum, _unitOfWork.Transaction!, campaign);
+            var debitSuccessful = await _budgetService.DebitEventCost(adEvent.CampaignId, adEvent.Cost, _unitOfWork.Transaction!);
             if (!debitSuccessful)
             {
                 await _unitOfWork.RollbackAsync();
