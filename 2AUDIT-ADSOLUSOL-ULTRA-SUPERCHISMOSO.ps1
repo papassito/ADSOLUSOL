@@ -10,6 +10,10 @@ param(
     [switch]$CI_MODE # Si se especifica, usa exit code y no espera al usuario
 )
 
+# Forzar codificación UTF-8 para mostrar correctamente los caracteres especiales y emojis.
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$OutputEncoding = [System.Text.Encoding]::UTF8
+
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Continue"
 

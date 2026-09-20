@@ -8,14 +8,18 @@ public class EventProcessingService
 {
     private readonly IAdEventRepository _eventRepository;
     private readonly ICampaignRepository _campaignRepository;
+    private readonly IPlacementRepository _placementRepository;
+    private readonly ICreativeRepository _creativeRepository;
     private readonly BudgetService _budgetService;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMarketingBrainService _marketingBrainService;
 
-    public EventProcessingService(IAdEventRepository eventRepository, ICampaignRepository campaignRepository, BudgetService budgetService, IUnitOfWork unitOfWork, IMarketingBrainService marketingBrainService)
+    public EventProcessingService(IAdEventRepository eventRepository, ICampaignRepository campaignRepository, IPlacementRepository placementRepository, ICreativeRepository creativeRepository, BudgetService budgetService, IUnitOfWork unitOfWork, IMarketingBrainService marketingBrainService)
     {
         _eventRepository = eventRepository;
         _campaignRepository = campaignRepository;
+        _placementRepository = placementRepository;
+        _creativeRepository = creativeRepository;
         _budgetService = budgetService;
         _unitOfWork = unitOfWork;
         _marketingBrainService = marketingBrainService;
@@ -28,8 +32,33 @@ public class EventProcessingService
             return EventProcessingStatus.Duplicate;
         }
 
+        var placement = await _placementRepository.GetByCodeAsync(adEvent.PlacementCode);
+        if (placement is null || !placement.IsEnabled)
+        {
+            return EventProcessingStatus.Rejected;
+        }
+        // Assign the real PlacementId
+        adEvent.PlacementId = placement.Id.ToString();
+
+        var creative = await _creativeRepository.GetByIdAsync(long.Parse(adEvent.CreativeId));
+        if (creative is null || !creative.IsEnabled)
+        {
+            return EventProcessingStatus.Rejected;
+        }
+
         var campaign = await _campaignRepository.GetByIdAsync(adEvent.CampaignId);
-        if (campaign is null || campaign.Status != "ACTIVE" || (campaign.Budget - campaign.BudgetSpent) <= 0)
+        if (campaign is null ||
+            campaign.TenantId != adEvent.TenantId || // Tenant isolation validation
+            campaign.Status != "ACTIVE" ||
+            (campaign.Budget - campaign.BudgetSpent) <= 0)
+        {
+            return EventProcessingStatus.Rejected;
+        }
+
+        // Validate associations
+        var isPlacementAssociated = await _campaignRepository.IsPlacementAssociatedAsync(campaign.Id, placement.Id);
+        var isCreativeAssociated = await _campaignRepository.IsCreativeAssociatedAsync(campaign.Id, creative.Id);
+        if (!isPlacementAssociated || !isCreativeAssociated)
         {
             return EventProcessingStatus.Rejected;
         }

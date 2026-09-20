@@ -1,4 +1,4 @@
-﻿﻿﻿﻿using ADSOLUSOL.Domain.Entities;
+﻿﻿﻿﻿﻿﻿using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 using Dapper;
 using Microsoft.Data.Sqlite;
@@ -66,5 +66,21 @@ public class CampaignRepository : ICampaignRepository
         }
         var sql = "UPDATE Campaigns SET BudgetSpent = BudgetSpent + @Cost WHERE Id = @CampaignId AND BudgetSpent + @Cost <= Budget;";
         return await transaction.Connection.ExecuteAsync(sql, new { Cost = cost, CampaignId = campaignId }, transaction);
+    }
+
+    public async Task<bool> IsPlacementAssociatedAsync(string campaignId, long placementId)
+    {
+        using var connection = CreateConnection();
+        var sql = "SELECT 1 FROM CampaignPlacements WHERE CampaignId = @CampaignId AND PlacementId = @PlacementId;";
+        var result = await connection.QueryFirstOrDefaultAsync<int?>(sql, new { CampaignId = campaignId, PlacementId = placementId });
+        return result.HasValue;
+    }
+
+    public async Task<bool> IsCreativeAssociatedAsync(string campaignId, long creativeId)
+    {
+        using var connection = CreateConnection();
+        var sql = "SELECT 1 FROM CampaignCreatives WHERE CampaignId = @CampaignId AND CreativeId = @CreativeId;";
+        var result = await connection.QueryFirstOrDefaultAsync<int?>(sql, new { CampaignId = campaignId, CreativeId = creativeId });
+        return result.HasValue;
     }
 }

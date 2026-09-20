@@ -1,4 +1,4 @@
-﻿using ADSOLUSOL.Domain.Entities;
+﻿﻿using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 using ADSOLUSOL.Application.Services;
 using ADSOLUSOL.Domain.Enums;
@@ -81,7 +81,7 @@ public class CampaignsController : ControllerBase
         {
             EventId = request.EventId,
             CampaignId = campaignId,
-            CreativeId = request.CreativeId.ToString(),
+            CreativeId = request.CreativeId,
             PlacementCode = request.PlacementCode,
             TenantId = tenantId,
             EventType = eventType.ToString().ToUpper(),
@@ -111,4 +111,4 @@ public class CreateCampaignRequest
 
 public record UpdateStatusRequest(string Status);
 
-public record EventRequest(string EventId, long CreativeId, string PlacementCode);
+public record EventRequest(string EventId, string CreativeId, string PlacementCode);

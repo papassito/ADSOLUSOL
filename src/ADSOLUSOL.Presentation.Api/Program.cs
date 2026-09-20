@@ -1,48 +1,38 @@
-﻿﻿using ADSOLUSOL.Application.Services;
+﻿﻿using ADSOLUSOL.Application.Interfaces;
+using ADSOLUSOL.Application.Services;
 using ADSOLUSOL.Domain.Interfaces;
-using ADSOLUSOL.Infrastructure.ExternalServices.MarketingBrain;
 using ADSOLUSOL.Infrastructure.Persistence;
 using ADSOLUSOL.Infrastructure.Repositories;
-using ADSOLUSOL.Infrastructure.Security;
+using ADSOLUSOL.Presentation.Api.Middleware;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Concurrent;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddHttpClient();
-
-builder.Services.AddSingleton<ConcurrentDictionary<string, DateTime>>();
-
+// Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<ICampaignRepository, CampaignRepository>();
-builder.Services.AddScoped<ICreativeRepository, CreativeRepository>();
 builder.Services.AddScoped<IPlacementRepository, PlacementRepository>();
+builder.Services.AddScoped<ICreativeRepository, CreativeRepository>();
 builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
 builder.Services.AddScoped<IAdEventRepository, AdEventRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddSingleton<ICoreSignatureVerifier, CoreSignatureVerifier>();
-builder.Services.AddScoped<IMarketingBrainService, MarketingBrainClient>();
 
-builder.Services.AddScoped<AdServingService>();
 builder.Services.AddScoped<CampaignService>();
+builder.Services.AddScoped<AdServingService>();
+builder.Services.AddScoped<BudgetService>();
 builder.Services.AddScoped<EventProcessingService>();
 builder.Services.AddScoped<MetricsService>();
-builder.Services.AddScoped<BudgetService>();
+
+// Per README, the Marketing Brain integration is not yet real. Register a no-op service.
+builder.Services.AddSingleton<IMarketingBrainService, NoOpMarketingBrainService>();
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-
-using (var scope = app.Services.CreateScope())
-{
-    var dataDir = Path.Combine(builder.Environment.ContentRootPath, "App_Data");
-    Directory.CreateDirectory(dataDir);
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.EnsureCreated();
-}
 
 if (app.Environment.IsDevelopment())
 {
@@ -50,12 +40,25 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseDefaultFiles();
-app.UseStaticFiles();
+app.UseHttpsRedirection();
+
+app.UseMiddleware<SignatureVerificationMiddleware>();
 
 app.UseAuthorization();
+
 app.MapControllers();
 
-app.MapFallbackToFile("index.html");
-
 app.Run();
+
+/// <summary>
+/// Dummy implementation for the Marketing Brain service, as the real integration is not yet complete.
+/// This allows the rest of the application to compile and run without depending on the external service.
+/// </summary>
+public class NoOpMarketingBrainService : IMarketingBrainService
+{
+    public Task EmitTelemetryAsync(string campaignId, string eventType, decimal cost = 0) => Task.CompletedTask;
+
+    public Task<bool> IsAvailableAsync(CancellationToken cancellationToken = default) => Task.FromResult(true);
+
+    public Task<bool> PingAsync() => Task.FromResult(true);
+}

@@ -1,8 +1,8 @@
-﻿namespace ADSOLUSOL.Domain.Entities;
+﻿﻿namespace ADSOLUSOL.Domain.Entities;
 
 public class AdEvent
 {
-    public string Id { get; set; } = string.Empty;
+    public string Id { get; set; } = Guid.NewGuid().ToString("N");
     public string EventId { get; set; } = string.Empty;
     public string CampaignId { get; set; } = string.Empty;
     public string CreativeId { get; set; } = string.Empty;

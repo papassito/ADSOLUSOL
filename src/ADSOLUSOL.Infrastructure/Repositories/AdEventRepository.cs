@@ -21,8 +21,8 @@ public class AdEventRepository : IAdEventRepository
         if (transaction != null)
         {
             var conn = transaction.Connection ?? _context.Database.GetDbConnection();
-            var sql = @"INSERT INTO AdEvents (Id, EventId, CampaignId, CreativeId, PlacementCode, TenantId, EventType, Cost, TimestampUtc)
-                        VALUES (@Id, @EventId, @CampaignId, @CreativeId, @PlacementCode, @TenantId, @EventType, @Cost, @TimestampUtc);";
+            var sql = @"INSERT INTO AdEvents (Id, EventId, CampaignId, CreativeId, PlacementId, PlacementCode, TenantId, EventType, Cost, TimestampUtc, OccurredAt, ReceivedAt, IPAddress, UserAgent)
+                        VALUES (@Id, @EventId, @CampaignId, @CreativeId, @PlacementId, @PlacementCode, @TenantId, @EventType, @Cost, @TimestampUtc, @OccurredAt, @ReceivedAt, @IPAddress, @UserAgent);";
             await conn.ExecuteAsync(sql, adEvent, transaction);
         }
         else
