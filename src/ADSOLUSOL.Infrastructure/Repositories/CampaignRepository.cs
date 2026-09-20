@@ -1,61 +1,46 @@
 ﻿﻿﻿﻿﻿﻿using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
+using ADSOLUSOL.Infrastructure.Persistence;
 using Dapper;
-using Microsoft.Data.Sqlite;
-using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace ADSOLUSOL.Infrastructure.Repositories;
 
 public class CampaignRepository : ICampaignRepository
 {
-    private readonly IConfiguration _configuration;
+    private readonly AppDbContext _context;
 
-    public CampaignRepository(IConfiguration configuration)
+    public CampaignRepository(AppDbContext context)
     {
-        _configuration = configuration;
+        _context = context;
     }
 
-    private IDbConnection CreateConnection() =>
-        new SqliteConnection(_configuration.GetConnectionString("DefaultConnection"));
-
-    public async Task CreateAsync(Campaign campaign)
+    public Task CreateAsync(Campaign campaign)
     {
-        using var connection = CreateConnection();
-        var sql = @"INSERT INTO Campaigns 
-            (Id, TenantId, Name, Status, Budget, BudgetSpent, CostPerMille, CostPerClick, StartDateUtc, EndDateUtc, CreatedAtUtc) VALUES
-            (@Id, @TenantId, @Name, @Status, @Budget, @BudgetSpent, @CostPerMille, @CostPerClick, @StartDateUtc, @EndDateUtc, @CreatedAtUtc);";
-        await connection.ExecuteAsync(sql, campaign);
+        // The UnitOfWork is responsible for calling SaveChangesAsync.
+        _context.Campaigns.Add(campaign);
+        return Task.CompletedTask;
     }
 
     public async Task<IEnumerable<Campaign>> GetAllAsync(string tenantId, CancellationToken token = default)
     {
-        using var connection = CreateConnection();
-        var sql = "SELECT * FROM Campaigns WHERE TenantId = @TenantId;";
-        return await connection.QueryAsync<Campaign>(new CommandDefinition(sql, new { TenantId = tenantId }, cancellationToken: token));
-    }
-
-    public async Task<Campaign?> GetByIdAsync(Guid id)
-    {
-        return await GetByIdAsync(id.ToString());
+        return await _context.Campaigns
+            .Where(c => c.TenantId == tenantId)
+            .AsNoTracking()
+            .ToListAsync(token);
     }
 
     public async Task<Campaign?> GetByIdAsync(string id)
     {
-        using var connection = CreateConnection();
-        var sql = "SELECT * FROM Campaigns WHERE Id = @Id;";
-        return await connection.QueryFirstOrDefaultAsync<Campaign>(sql, new { Id = id });
+        return await _context.Campaigns.FirstOrDefaultAsync(c => c.Id == id);
     }
 
-    public async Task UpdateAsync(Campaign campaign)
+    public Task UpdateAsync(Campaign campaign)
     {
-        using var connection = CreateConnection();
-        var sql = @"
-            UPDATE Campaigns SET
-                Name = @Name, Status = @Status, Budget = @Budget, BudgetSpent = @BudgetSpent,
-                StartDateUtc = @StartDateUtc, EndDateUtc = @EndDateUtc
-            WHERE Id = @Id AND TenantId = @TenantId;";
-        await connection.ExecuteAsync(sql, campaign);
+        // The UnitOfWork is responsible for calling SaveChangesAsync.
+        _context.Campaigns.Update(campaign);
+        return Task.CompletedTask;
     }
 
     public async Task<int> UpdateBudgetAsync(string campaignId, decimal cost, IDbTransaction transaction)
@@ -70,17 +55,13 @@ public class CampaignRepository : ICampaignRepository
 
     public async Task<bool> IsPlacementAssociatedAsync(string campaignId, long placementId)
     {
-        using var connection = CreateConnection();
-        var sql = "SELECT 1 FROM CampaignPlacements WHERE CampaignId = @CampaignId AND PlacementId = @PlacementId;";
-        var result = await connection.QueryFirstOrDefaultAsync<int?>(sql, new { CampaignId = campaignId, PlacementId = placementId });
-        return result.HasValue;
+        return await _context.CampaignPlacements
+            .AnyAsync(cp => cp.CampaignId == campaignId && cp.PlacementId == placementId);
     }
 
     public async Task<bool> IsCreativeAssociatedAsync(string campaignId, long creativeId)
     {
-        using var connection = CreateConnection();
-        var sql = "SELECT 1 FROM CampaignCreatives WHERE CampaignId = @CampaignId AND CreativeId = @CreativeId;";
-        var result = await connection.QueryFirstOrDefaultAsync<int?>(sql, new { CampaignId = campaignId, CreativeId = creativeId });
-        return result.HasValue;
+        return await _context.CampaignCreatives
+            .AnyAsync(cc => cc.CampaignId == campaignId && cc.CreativeId == creativeId);
     }
 }

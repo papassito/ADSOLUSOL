@@ -1,13 +1,21 @@
-﻿[CmdletBinding()]
+﻿﻿[CmdletBinding()]
 param()
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
-# --- Configuración ---
-$baseUrl = "http://localhost:5000/api/marketing/adsolusol"
-$apiKey = $env:Api__Key # Asume que la variable de entorno está configurada
-$tenantId = $env:Api__TenantId # Asume que la variable de entorno está configurada
+# --- Configuration ---
+$baseApiUrl = "http://localhost:5000/api"
+$healthUrl = "http://localhost:5000/api/health"
+
+# Test identity corresponding to the mock NodeRegistry
+$nodeId = "NODE_ADS_01"
+$privateKeyHex = "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2"
+
+# Load NSec for signing
+try { Add-Type -Path "C:\Users\$env:UserName\.nuget\packages\nsec.cryptography\24.1.0\lib\net6.0\NSec.Cryptography.dll" }
+catch { Write-Error "NSec.Cryptography.dll not found. Please ensure it's available or adjust the path."; exit 1 }
+
 
 # --- Funciones de Ayuda ---
 function Test-Endpoint {
@@ -35,59 +43,80 @@ function Test-Endpoint {
     }
 }
 
-# --- Verificación Inicial ---
-if ([string]::IsNullOrWhiteSpace($apiKey)) {
-    Write-Error "La variable de entorno 'Api__Key' no está configurada. Ejecuta: `$env:Api__Key = 'tu-clave'`"
-    exit 1
+function Get-AuthHeaders {
+    param(
+        [string]$method,
+        [string]$path,
+        [string]$query = "",
+        [string]$body = ""
+    )
+    $timestamp = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
+    $nonce = [Guid]::NewGuid().ToString("N")
+
+    $bodyBytes = [System.Text.Encoding]::UTF8.GetBytes($body)
+    $sha256 = [System.Security.Cryptography.SHA256]::Create()
+    $bodyHash = if ($bodyBytes.Length -eq 0) { "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" } else { [System.BitConverter]::ToString($sha256.ComputeHash($bodyBytes)).Replace("-", "").ToLower() }
+
+    $canonicalString = "$timestamp|$nonce|$method|$path|$query|$bodyHash"
+    $dataToSign = [System.Text.Encoding]::UTF8.GetBytes($canonicalString)
+    $privateKeyBytes = [System.Convert]::FromHexString($privateKeyHex)
+
+    $algorithm = [NSec.Cryptography.SignatureAlgorithm]::Ed25519
+    $key = [NSec.Cryptography.Key]::Import($algorithm, $privateKeyBytes, [NSec.Cryptography.KeyBlobFormat]::RawPrivateKey)
+    $signatureBytes = $algorithm.Sign($key, $dataToSign)
+    $signatureBase64 = [System.Convert]::ToBase64String($signatureBytes)
+
+    return @{
+        "X-Solusol-Node-Id"   = $nodeId
+        "X-Solusol-Timestamp" = $timestamp
+        "X-Solusol-Nonce"     = $nonce
+        "X-Solusol-Signature" = $signatureBase64
+    }
 }
+
 Write-Host "===========================================================" -f Cyan
 Write-Host " SMOKE TEST - VERIFICACIÓN DE ENDPOINTS EN EJECUCIÓN" -f Cyan
 Write-Host "===========================================================" -f Cyan
-Write-Host "Usando Tenant: $tenantId" -f Gray
-Write-Host "Usando Base URL: $baseUrl`n" -f Gray
+Write-Host "Usando Node ID: $nodeId" -f Gray
+Write-Host "Usando Base URL: $baseApiUrl`n" -f Gray
 
 
 # --- Secuencia de Pruebas ---
 
 # 1. Probar /health
 Test-Endpoint -Name "/health" -Action {
-    Invoke-RestMethod -Uri "http://localhost:5000/health" -Method Get
+    Invoke-RestMethod -Uri $healthUrl -Method Get
 }
 
-# 2. Probar autenticación (X-Api-Key) - Inválida
-Test-Endpoint -Name "Autenticación (X-Api-Key) - Inválida" -Action {
+# 2. Probar autenticación - Inválida
+Test-Endpoint -Name "Autenticación (Firma Inválida)" -Action {
     try {
-        Invoke-RestMethod -Uri "$baseUrl/campaigns" -Method Get -Headers @{"X-Api-Key" = "incorrecta"} -ErrorAction Stop
+        $headers = Get-AuthHeaders -method "GET" -path "/api/Campaigns"
+        $headers["X-Solusol-Signature"] = "invalidsignature"
+        Invoke-RestMethod -Uri "$baseApiUrl/Campaigns" -Method Get -Headers $headers -ErrorAction Stop
     } catch [System.Net.WebException] {
-        if ($_.Exception.Response.StatusCode -eq 'Unauthorized') {
-            # Esto es un éxito, se esperaba el error 401
+        if ($_.Exception.Response.StatusCode -eq 'Forbidden') {
+            # Esto es un éxito, se esperaba el error 403
             return "OK"
         }
         throw # Re-lanza la excepción si no es 401
     }
 }
 
-# 3. Crear una nueva campaña
+# 3. Crear una nueva campaña (POST /api/Campaigns)
 $campaignName = "Campaña de Humo $((Get-Date).Ticks)"
+$createBody = @{ name = $campaignName; budget = 100.0; costPerMille = 1.5; costPerClick = 0.25 } | ConvertTo-Json
+$createHeaders = Get-AuthHeaders -method "POST" -path "/api/Campaigns" -body $createBody
 $newCampaign = Test-Endpoint -Name "Crear Campaña (POST /campaigns)" -Action {
-    $body = @{ name = $campaignName; budget = 100.0 } | ConvertTo-Json
-    Invoke-RestMethod -Uri "$baseUrl/campaigns" -Method Post -Body $body -ContentType "application/json" -Headers @{"X-Api-Key" = $apiKey}
+    Invoke-RestMethod -Uri "$baseApiUrl/Campaigns" -Method Post -Body $createBody -ContentType "application/json" -Headers $createHeaders
 }
 $campaignId = $newCampaign.id
 
-# 4. Activar/Desactivar la campaña (toggle)
-Test-Endpoint -Name "Activar/Desactivar Campaña (POST /toggle)" -Action {
-    Invoke-RestMethod -Uri "$baseUrl/campaigns/$campaignId/toggle" -Method Post -Headers @{"X-Api-Key" = $apiKey} -Body $null
-}
-
-# 5. Registrar una impresión
-Test-Endpoint -Name "Registrar Impresión (POST /impression)" -Action {
-    Invoke-RestMethod -Uri "$baseUrl/campaigns/$campaignId/impression" -Method Post -Headers @{"X-Api-Key" = $apiKey} -Body $null
-}
-
-# 6. Registrar un clic
-Test-Endpoint -Name "Registrar Clic (POST /click)" -Action {
-    Invoke-RestMethod -Uri "$baseUrl/campaigns/$campaignId/click" -Method Post -Headers @{"X-Api-Key" = $apiKey} -Body $null
+# 4. Activar la campaña
+$statusBody = @{ status = "ACTIVE" } | ConvertTo-Json
+$statusHeaders = Get-AuthHeaders -method "POST" -path "/api/Campaigns/$campaignId/status" -body $statusBody
+Test-Endpoint -Name "Activar Campaña (POST /status)" -Action {
+    Invoke-RestMethod -Uri "$baseApiUrl/Campaigns/$campaignId/status" -Method Post -Headers $statusHeaders -Body $statusBody -ContentType "application/json"
 }
 
 Write-Host "`n===========================================================" -f Cyan

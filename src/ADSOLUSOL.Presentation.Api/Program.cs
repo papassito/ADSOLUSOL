@@ -1,6 +1,7 @@
 ﻿﻿using ADSOLUSOL.Application.Interfaces;
 using ADSOLUSOL.Application.Services;
 using ADSOLUSOL.Domain.Interfaces;
+using ADSOLUSOL.Infrastructure.Authentication;
 using ADSOLUSOL.Infrastructure.Persistence;
 using ADSOLUSOL.Infrastructure.Repositories;
 using ADSOLUSOL.Presentation.Api.Middleware;
@@ -17,6 +18,8 @@ builder.Services.AddScoped<IPlacementRepository, PlacementRepository>();
 builder.Services.AddScoped<ICreativeRepository, CreativeRepository>();
 builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
 builder.Services.AddScoped<IAdEventRepository, AdEventRepository>();
+builder.Services.AddSingleton<ICoreSignatureVerifier, ADSOLUSOL.Infrastructure.Cryptography.CoreSignatureVerifier>();
+builder.Services.AddSingleton<INodeRegistry, NodeRegistry>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddScoped<CampaignService>();
@@ -42,11 +45,17 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Serve static files from wwwroot (for the React frontend)
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.UseMiddleware<SignatureVerificationMiddleware>();
 
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapFallbackToFile("index.html");
 
 app.Run();
 

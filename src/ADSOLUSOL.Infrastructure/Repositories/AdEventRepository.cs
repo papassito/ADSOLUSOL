@@ -18,18 +18,9 @@ public class AdEventRepository : IAdEventRepository
 
     public async Task AddAsync(AdEvent adEvent, IDbTransaction? transaction = null)
     {
-        if (transaction != null)
-        {
-            var conn = transaction.Connection ?? _context.Database.GetDbConnection();
-            var sql = @"INSERT INTO AdEvents (Id, EventId, CampaignId, CreativeId, PlacementId, PlacementCode, TenantId, EventType, Cost, TimestampUtc, OccurredAt, ReceivedAt, IPAddress, UserAgent)
-                        VALUES (@Id, @EventId, @CampaignId, @CreativeId, @PlacementId, @PlacementCode, @TenantId, @EventType, @Cost, @TimestampUtc, @OccurredAt, @ReceivedAt, @IPAddress, @UserAgent);";
-            await conn.ExecuteAsync(sql, adEvent, transaction);
-        }
-        else
-        {
-            await _context.AdEvents.AddAsync(adEvent);
-            await _context.SaveChangesAsync();
-        }
+        // Always use the DbContext to ensure the change tracker is aware of the new entity.
+        // EF Core will automatically enlist this operation in the ambient transaction if one exists.
+        await _context.AdEvents.AddAsync(adEvent);
     }
 
     public async Task<bool> ExistsAsync(string eventId)

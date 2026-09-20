@@ -28,6 +28,7 @@ public class UnitOfWork : IUnitOfWork
     {
         if (_efTransaction != null)
         {
+            await _context.SaveChangesAsync();
             await _efTransaction.CommitAsync();
             await _efTransaction.DisposeAsync();
             _efTransaction = null;

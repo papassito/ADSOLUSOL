@@ -1,7 +1,7 @@
-﻿using ADSOLUSOL.Domain.Interfaces;
-using Microsoft.AspNetCore.Http;
-using System.IO;
+﻿﻿using System.Security.Cryptography;
 using System.Text;
+using ADSOLUSOL.Domain.Interfaces;
+using NSec.Cryptography;
 
 namespace ADSOLUSOL.Presentation.Api.Middleware;
 
@@ -14,39 +14,78 @@ public class SignatureVerificationMiddleware
         _next = next;
     }
 
-    public async Task InvokeAsync(HttpContext context, ICoreSignatureVerifier verifier)
+    public async Task InvokeAsync(HttpContext context, INodeRegistry nodeRegistry)
     {
-        var request = context.Request;
-
-        if (!request.Headers.TryGetValue("X-Solusol-Signature", out var signature) ||
-            !request.Headers.TryGetValue("X-Solusol-Node-Id", out var nodeId) ||
-            !request.Headers.TryGetValue("X-Solusol-Timestamp", out var timestampStr) ||
-            !request.Headers.TryGetValue("X-Solusol-Nonce", out var nonce) ||
-            !long.TryParse(timestampStr, out var timestamp))
+        if (!context.Request.Headers.TryGetValue("X-Solusol-Node-Id", out var nodeId) ||
+            !context.Request.Headers.TryGetValue("X-Solusol-Timestamp", out var timestampStr) ||
+            !context.Request.Headers.TryGetValue("X-Solusol-Nonce", out var nonce) ||
+            !context.Request.Headers.TryGetValue("X-Solusol-Signature", out var signature))
         {
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            await context.Response.WriteAsync("Missing or invalid authentication headers.");
+            await context.Response.WriteAsync("Missing required authentication headers.");
             return;
         }
 
-        request.EnableBuffering();
-        using var reader = new StreamReader(request.Body, Encoding.UTF8, leaveOpen: true);
-        var body = await reader.ReadToEndAsync();
-        request.Body.Position = 0;
+        if (!long.TryParse(timestampStr, out var timestamp) || IsTimestampInvalid(timestamp))
+        {
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            await context.Response.WriteAsync("Invalid or expired timestamp.");
+            return;
+        }
 
-        var bodyBytes = Encoding.UTF8.GetBytes(body);
-        var isValid = verifier.Verify(
-            signature!, nodeId!, timestamp, nonce!, bodyBytes,
-            request.Method, request.Path.ToString(), request.QueryString.ToString()
-        );
+        var (tenantId, publicKeyHex) = nodeRegistry.GetNodeInfo(nodeId.ToString());
+        if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(publicKeyHex))
+        {
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            await context.Response.WriteAsync("Node ID not recognized or not authorized.");
+            return;
+        }
 
-        if (!isValid)
+        context.Request.EnableBuffering();
+        var body = await new StreamReader(context.Request.Body).ReadToEndAsync();
+        context.Request.Body.Position = 0;
+
+        string bodyHash = string.IsNullOrEmpty(body) ? "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" : Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(body))).ToLower();
+
+        string canonicalString = $"{timestamp}|{nonce}|{context.Request.Method.ToUpper()}|{context.Request.Path.Value}|{context.Request.QueryString.Value}|{bodyHash}";
+
+        if (!VerifySignature(publicKeyHex, canonicalString, signature.ToString()))
         {
             context.Response.StatusCode = StatusCodes.Status403Forbidden;
             await context.Response.WriteAsync("Invalid signature.");
             return;
         }
 
+        // Authentication and Authorization successful. Set TenantId for downstream controllers.
+        context.Items["TenantId"] = tenantId;
+
         await _next(context);
+    }
+
+    private bool IsTimestampInvalid(long timestamp)
+    {
+        var requestTime = DateTimeOffset.FromUnixTimeSeconds(timestamp);
+        var now = DateTimeOffset.UtcNow;
+        // Reject requests older than 5 minutes or more than 1 minute in the future.
+        return requestTime < now.AddMinutes(-5) || requestTime > now.AddMinutes(1);
+    }
+
+    private bool VerifySignature(string publicKeyHex, string message, string signatureBase64)
+    {
+        try
+        {
+            byte[] publicKeyBytes = Convert.FromHexString(publicKeyHex);
+            byte[] dataToVerify = Encoding.UTF8.GetBytes(message);
+            byte[] signatureBytes = Convert.FromBase64String(signatureBase64);
+
+            var algorithm = SignatureAlgorithm.Ed25519;
+            var pubKey = PublicKey.Import(algorithm, publicKeyBytes, KeyBlobFormat.RawPublicKey);
+            
+            return algorithm.Verify(pubKey, dataToVerify, signatureBytes);
+        }
+        catch
+        {
+            return false;
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿﻿﻿﻿using ADSOLUSOL.Domain.Entities;
+﻿﻿﻿﻿﻿﻿using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 
 namespace ADSOLUSOL.Application.Services;
@@ -19,9 +19,9 @@ public class CampaignService
 
     public async Task<Campaign?> GetAsync(string tenantId, string id, CancellationToken token = default)
     {
-        if (Guid.TryParse(id, out var campaignGuid))
+        if (Guid.TryParse(id, out _)) // Validate that the ID is a valid GUID string
         {
-            var campaign = await _campaignRepository.GetByIdAsync(campaignGuid);
+            var campaign = await _campaignRepository.GetByIdAsync(id);
             return (campaign?.TenantId == tenantId) ? campaign : null;
         }
         return null;
@@ -29,18 +29,23 @@ public class CampaignService
 
     public async Task<Campaign> CreateAsync(string tenantId, string name, decimal budget, decimal cpm, decimal cpc, DateTime? startDate, DateTime? endDate, CancellationToken token = default)
     {
+        var effectiveStartDate = startDate ?? DateTime.UtcNow;
+        
+        // A campaign starting in the future should be scheduled, otherwise it's paused by default.
+        var initialStatus = (effectiveStartDate > DateTime.UtcNow) ? "SCHEDULED" : "PAUSED";
+
         var campaign = new Campaign
         {
             Id = Guid.NewGuid().ToString(),
             TenantId = tenantId,
             Name = name,
             Budget = budget,
-            Status = "PAUSED",
+            Status = initialStatus,
             CreatedAtUtc = DateTime.UtcNow,
             CostPerMille = cpm,
             CostPerClick = cpc,
-            StartDateUtc = startDate ?? DateTime.UtcNow,
-            EndDateUtc = endDate ?? DateTime.UtcNow.AddDays(30)
+            StartDateUtc = effectiveStartDate,
+            EndDateUtc = endDate ?? effectiveStartDate.AddDays(30)
         };
         await _campaignRepository.CreateAsync(campaign);
         return campaign;
@@ -48,12 +53,7 @@ public class CampaignService
 
     public async Task<Campaign?> UpdateStatusAsync(string tenantId, string id, string status)
     {
-        if (!Guid.TryParse(id, out var campaignGuid))
-        {
-            return null;
-        }
-
-        var campaign = await _campaignRepository.GetByIdAsync(campaignGuid);
+        var campaign = await _campaignRepository.GetByIdAsync(id);
         if (campaign == null || campaign.TenantId != tenantId)
         {
             return null;
