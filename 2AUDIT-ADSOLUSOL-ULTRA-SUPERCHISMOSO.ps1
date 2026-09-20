@@ -95,6 +95,7 @@ Write-Host "[INFO] Se encontraron $($csharpFiles.Count) archivos C# con un total
 Write-Host ">>> [FASE 3] Ejecutando 'dotnet build' para análisis de compilación..." -ForegroundColor Yellow
 $buildLogFile = Join-Path $Root "_audit_build_raw.log"
 & $dotnetExe build "$($slnPath.FullName)" -v:normal /noconlog > $buildLogFile 2>&1
+$buildExitCode = $LASTEXITCODE
 $buildLog = Get-Content $buildLogFile -Encoding UTF8 -ErrorAction SilentlyContinue
 Remove-Item $buildLogFile -Force -ErrorAction SilentlyContinue
 
@@ -112,10 +113,14 @@ foreach ($line in $buildLog) {
 
 if ($findings.BuildErrors.Count -eq 0) {
     Write-Host "[✓] ¡ÉXITO! La solución compila sin errores de C#." -ForegroundColor Green
+if ($buildExitCode -eq 0) {
+    Write-Host "[✓] ¡ÉXITO! La solución compila sin errores (Exit Code: 0)." -ForegroundColor Green
     $findings.BuildStatus = "OK"
 } else {
     Write-Host "[!] FALLO. Se detectaron errores de compilación." -ForegroundColor Red
+    Write-Host "[!] FALLO. 'dotnet build' falló (Exit Code: $buildExitCode)." -ForegroundColor Red
     $findings.BuildStatus = "FAIL"
+    $findings.AllFindingsList.Add("[CRITICAL] [BUILD] La compilación falló con exit code $buildExitCode.")
 }
 Write-Host ""
 
@@ -175,32 +180,47 @@ if ($findings.BuildStatus -ne "OK") {
         foreach ($testProj in $testProjects) {
             Write-Host "`n  📌 Ejecutando Suite: $($testProj.Name)" -ForegroundColor Cyan
             $testLogFile = Join-Path $Root "_audit_test_raw.log"
+            $testExitCode = -1
             
             $isExecutable = (Get-Content $testProj.FullName -Raw) -match '<OutputType>Exe</OutputType>'
             if ($isExecutable) {
                 Write-Host "    [INFO] Proyecto ejecutable detectado. Usando 'dotnet run'." -ForegroundColor Gray
                 & $dotnetExe run --project "$($testProj.FullName)" --no-build > $testLogFile 2>&1
+                $testExitCode = $LASTEXITCODE
             } else {
                 & $dotnetExe test "$($testProj.FullName)" --no-build -v:normal > $testLogFile 2>&1
+                $testExitCode = $LASTEXITCODE
             }
             $rawTestOutput = Get-Content $testLogFile -Encoding UTF8 -ErrorAction SilentlyContinue
             Remove-Item $testLogFile -Force -ErrorAction SilentlyContinue
 
             # Usamos un regex más específico para detectar el resumen de fallo
             if ($rawTestOutput -match "Failed!.*, Total:.*, Passed:.*, Failed:.*") {
+            Write-Host "    [INFO] Exit Code: $testExitCode" -ForegroundColor Gray
+
+            # El código de salida es la única fuente de verdad para el PASS/FAIL.
+            if ($testExitCode -ne 0) {
                 $allTestsPassed = $false
                 $findings.AllFindingsList.Add("[FAIL] [PRUEBAS] La suite '$($testProj.Name)' falló.")
                 $findings.TestFailures.Add("Suite fallida: $($testProj.Name)")
+                Write-Host "    [FAIL] Result: La suite falló." -ForegroundColor Red
+                $findings.AllFindingsList.Add("[FAIL] [PRUEBAS] La suite '$($testProj.Name)' falló con exit code $testExitCode.")
+                $findings.TestFailures.Add("Suite fallida: $($testProj.Name) (Exit Code: $testExitCode)")
+                
+                # La salida de texto se usa como evidencia adicional.
                 $rawTestOutput | ForEach-Object {
                     if ($_ -match "^\s*Failed!\s*-\s*|Exception|error|Stack Trace") {
+                    if ($_ -match "Failed|Exception|error|Stack Trace|TEST FAILED") {
                         $findings.TestFailures.Add("    $_")
                         Write-Host "    $_" -ForegroundColor Red
                     } elseif ($_ -match "^\s*Passed!\s*-\s*") {
                         Write-Host "    $_" -ForegroundColor Green
+                        Write-Host "      -> $_" -ForegroundColor Red
                     }
                 }
             } else {
                 Write-Host "    [✓] Suite completada sin fallos detectados." -ForegroundColor Green
+                Write-Host "    [PASS] Result: Suite completada exitosamente." -ForegroundColor Green
             }
         }
         $findings.TestStatus = if ($allTestsPassed) { "PASS" } else { "FAIL" }
