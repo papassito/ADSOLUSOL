@@ -1,4 +1,5 @@
 ﻿using ADSOLUSOL.Application.Services;
+﻿using ADSOLUSOL.Application.Services;
 using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Enums;
 using ADSOLUSOL.Domain.Interfaces;
@@ -73,20 +74,24 @@ try
     var metricsService = services.GetRequiredService<MetricsService>();
 
     var campaignA = await LogTest("[02] Campaign creation", async () =>
+    var campaignA = await LogTestValue("[02] Campaign creation", async () =>
     {
         var c = await campaignService.CreateAsync("tenant-A", "Campaign A", 100, 1.5m, 0.25m, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow.AddDays(30));
         Assert(c != null && c.TenantId == "tenant-A", "Campaign for tenant-A created.");
         return c;
     });
     
+
     await LogTest("[03] Campaign tenant isolation", async () =>
     {
         await campaignService.CreateAsync("tenant-B", "Campaign B", 200, 2.0m, 0.30m, null, null);
         var campaignsForA = await campaignService.ListAsync("tenant-A");
         Assert(campaignsForA.Count() == 1 && campaignsForA.First().Id == campaignA.Id, "Tenant-A can only see its own campaigns.");
+        Assert(campaignsForA.Count() == 1 && campaignsForA.First()!.Id == campaignA.Id, "Tenant-A can only see its own campaigns.");
     });
 
     var placementId = await LogTest("[04] Placement create", async () =>
+    var placementId = await LogTestValue("[04] Placement create", async () =>
     {
         var pId = await placementRepo.CreateAsync(new Placement { PlacementCode = "P1", Name = "Homepage Banner", IsEnabled = true });
         Assert(pId > 0, "Placement persisted.");
@@ -94,17 +99,20 @@ try
     });
 
     var creativeId = await LogTest("[05] Creative create", async () =>
+    var creativeId = await LogTestValue("[05] Creative create", async () =>
     {
         var cId = await creativeRepo.CreateAsync(new Creative { Name = "Ad 1", ContentUrl = "http://...", IsEnabled = true });
         Assert(cId > 0, "Creative persisted.");
         return cId;
     });
     
+
     await LogTest("[06] Campaign <-> Placement persistence", async () =>
     {
         await assignmentRepo.AssignPlacementToCampaignAsync(campaignA.Id, placementId);
         var campaignsForPlacement = await placementRepo.GetEligibleCampaignsAsync("tenant-A", "P1");
         Assert(campaignsForPlacement.Any(c => c.Id == campaignA.Id), "Campaign correctly associated with placement.");
+        Assert(!campaignsForPlacement.Any(c => c.Id == campaignA.Id), "Campaign correctly associated, but not eligible while PAUSED.");
     });
 
     await LogTest("[07] Campaign <-> Creative persistence", async () =>
@@ -112,6 +120,7 @@ try
         await assignmentRepo.AssignCreativeToCampaignAsync(campaignA.Id, creativeId);
         var creativeForCampaign = await creativeRepo.GetEligibleCreativeForCampaignAsync(campaignA.Id);
         Assert(creativeForCampaign?.Id == creativeId, "Campaign correctly associated with creative.");
+        Assert(creativeForCampaign?.Id == creativeId, "Creative correctly associated with campaign.");
     });
 
     await LogTest("[08] PAUSED campaign does not serve", async () =>
@@ -153,18 +162,22 @@ try
         var metrics = await metricsService.GetMetricsForCampaign(campaignA.Id);
         Assert(metrics != null, "Metrics object is not null.");
         Assert(metrics.Impressions == 1, $"[13] Impression count is correct (Expected: 1, Actual: {metrics.Impressions}).");
+        Assert(metrics!.Impressions == 1, $"[13] Impression count is correct (Expected: 1, Actual: {metrics.Impressions}).");
         Assert(metrics.Clicks == 1, $"[14] Click count is correct (Expected: 1, Actual: {metrics.Clicks}).");
         Assert(metrics.BudgetSpent == (1.5m / 1000) + 0.25m, $"[15] Budget spent is correct (Expected: 0.2515, Actual: {metrics.BudgetSpent}).");
     });
     
+
     Campaign? tinyCampaign = null;
     await LogTest("[16] Overspend rejected", async () =>
+    tinyCampaign = await LogTestValue("[16] Overspend rejected", async () =>
     {
         tinyCampaign = await campaignService.CreateAsync("tenant-C", "Tiny Budget", 0.1m, 1.0m, 0.15m, null, null);
         await campaignService.UpdateStatusAsync("tenant-C", tinyCampaign.Id, "ACTIVE");
         var overspendEvent = new AdEvent { EventId = "evt_over_1", CampaignId = tinyCampaign.Id, EventType = "Click", TenantId = "tenant-C" };
         var status = await eventProcessingService.ProcessEvent(overspendEvent);
         Assert(status == EventProcessingStatus.Rejected, "Event rejected as it would exceed budget.");
+        return tinyCampaign;
     });
 
     await LogTest("[17] Rejected event does not debit budget", async () =>
@@ -194,6 +207,7 @@ finally
 }
 
 async Task<T> LogTest<T>(string testName, Func<Task<T>> testAction)
+async Task<T> LogTestValue<T>(string testName, Func<Task<T>> testAction)
 {
     Console.WriteLine($"\n[TEST] {testName}...");
     return await testAction();
