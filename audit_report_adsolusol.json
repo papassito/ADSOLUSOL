@@ -8,24 +8,29 @@
                   "Errors":  [
 
                              ],
-                  "Status":  "FAIL"
+                  "Status":  "OK"
               },
     "Project":  "ADSOLUSOL",
-    "Timestamp":  "2026-09-19T18:48:20.1323773-07:00",
+    "Timestamp":  "2026-09-19T20:03:49.3886620-07:00",
     "SummaryFindings":  [
-                            "[CRITICAL] [BUILD] La compilación falló con exit code 1.",
-                            "[MEDIUM] [ARQUITECTURA] El middleware \u0027SignatureVerificationMiddleware\u0027 no está conectado en \u0027Program.cs\u0027."
+                            "[MEDIUM] [ARQUITECTURA] El middleware \u0027SignatureVerificationMiddleware\u0027 no está conectado en \u0027Program.cs\u0027.",
+                            "[FAIL] [PRUEBAS] La suite \u0027ADSOLUSOL.RegressionTests.csproj\u0027 falló con exit code 1."
                         ],
     "Metrics":  {
                     "ArchivosCSharp":  59,
-                    "LineasDeCodigo":  1448
+                    "LineasDeCodigo":  1446
                 },
     "Status":  "FAIL",
     "Tests":  {
                   "Failures":  [
-
+                                   "Suite fallida: ADSOLUSOL.RegressionTests.csproj (Exit Code: 1)",
+                                   "    --- TEST FAILED ---",
+                                   "    Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 19: \u0027NOT NULL constraint failed: AdEvents.PlacementId\u0027.",
+                                   "       at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)",
+                                   "    --- End of stack trace from previous location ---",
+                                   "    --- End of stack trace from previous location ---"
                                ],
-                  "Status":  "SKIPPED"
+                  "Status":  "FAIL"
               },
     "CodeQuality":  {
                         "Unimplemented":  [
