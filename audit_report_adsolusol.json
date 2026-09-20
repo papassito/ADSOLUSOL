@@ -8,23 +8,24 @@
                   "Errors":  [
 
                              ],
-                  "Status":  "OK"
+                  "Status":  "FAIL"
               },
     "Project":  "ADSOLUSOL",
-    "Timestamp":  "2026-09-19T17:24:33.6786912-07:00",
+    "Timestamp":  "2026-09-19T18:48:20.1323773-07:00",
     "SummaryFindings":  [
+                            "[CRITICAL] [BUILD] La compilación falló con exit code 1.",
                             "[MEDIUM] [ARQUITECTURA] El middleware \u0027SignatureVerificationMiddleware\u0027 no está conectado en \u0027Program.cs\u0027."
                         ],
     "Metrics":  {
                     "ArchivosCSharp":  59,
                     "LineasDeCodigo":  1448
                 },
-    "Status":  "PASS",
+    "Status":  "FAIL",
     "Tests":  {
                   "Failures":  [
 
                                ],
-                  "Status":  "PASS"
+                  "Status":  "SKIPPED"
               },
     "CodeQuality":  {
                         "Unimplemented":  [

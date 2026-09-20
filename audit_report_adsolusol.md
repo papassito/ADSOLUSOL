@@ -1,7 +1,7 @@
 ﻿# 📋 Reporte de Auditoría: ADSOLUSOL
 
-*   **Fecha:** 09/19/2026 17:24:33
-*   **Resultado General:** **PASS**
+*   **Fecha:** 09/19/2026 18:48:20
+*   **Resultado General:** **FAIL**
 
 ## 📊 Métricas
 
@@ -10,12 +10,13 @@
 | Archivos C#      | 59 |
 | Líneas de Código | 1448 |
 
-## 🛠️ Compilación: OK
+## 🛠️ Compilación: FAIL
 
-## 🧪 Pruebas: PASS
+## 🧪 Pruebas: SKIPPED
 
-## 📜 Resumen de Hallazgos (1)
+## 📜 Resumen de Hallazgos (2)
 
+- [CRITICAL] [BUILD] La compilación falló con exit code 1.
 - [MEDIUM] [ARQUITECTURA] El middleware 'SignatureVerificationMiddleware' no está conectado en 'Program.cs'.
 
 
