@@ -111,13 +111,10 @@ foreach ($line in $buildLog) {
     }
 }
 
-if ($findings.BuildErrors.Count -eq 0) {
-    Write-Host "[✓] ¡ÉXITO! La solución compila sin errores de C#." -ForegroundColor Green
 if ($buildExitCode -eq 0) {
     Write-Host "[✓] ¡ÉXITO! La solución compila sin errores (Exit Code: 0)." -ForegroundColor Green
     $findings.BuildStatus = "OK"
 } else {
-    Write-Host "[!] FALLO. Se detectaron errores de compilación." -ForegroundColor Red
     Write-Host "[!] FALLO. 'dotnet build' falló (Exit Code: $buildExitCode)." -ForegroundColor Red
     $findings.BuildStatus = "FAIL"
     $findings.AllFindingsList.Add("[CRITICAL] [BUILD] La compilación falló con exit code $buildExitCode.")
@@ -194,32 +191,23 @@ if ($findings.BuildStatus -ne "OK") {
             $rawTestOutput = Get-Content $testLogFile -Encoding UTF8 -ErrorAction SilentlyContinue
             Remove-Item $testLogFile -Force -ErrorAction SilentlyContinue
 
-            # Usamos un regex más específico para detectar el resumen de fallo
-            if ($rawTestOutput -match "Failed!.*, Total:.*, Passed:.*, Failed:.*") {
             Write-Host "    [INFO] Exit Code: $testExitCode" -ForegroundColor Gray
 
             # El código de salida es la única fuente de verdad para el PASS/FAIL.
             if ($testExitCode -ne 0) {
                 $allTestsPassed = $false
-                $findings.AllFindingsList.Add("[FAIL] [PRUEBAS] La suite '$($testProj.Name)' falló.")
-                $findings.TestFailures.Add("Suite fallida: $($testProj.Name)")
                 Write-Host "    [FAIL] Result: La suite falló." -ForegroundColor Red
                 $findings.AllFindingsList.Add("[FAIL] [PRUEBAS] La suite '$($testProj.Name)' falló con exit code $testExitCode.")
                 $findings.TestFailures.Add("Suite fallida: $($testProj.Name) (Exit Code: $testExitCode)")
                 
                 # La salida de texto se usa como evidencia adicional.
                 $rawTestOutput | ForEach-Object {
-                    if ($_ -match "^\s*Failed!\s*-\s*|Exception|error|Stack Trace") {
                     if ($_ -match "Failed|Exception|error|Stack Trace|TEST FAILED") {
                         $findings.TestFailures.Add("    $_")
-                        Write-Host "    $_" -ForegroundColor Red
-                    } elseif ($_ -match "^\s*Passed!\s*-\s*") {
-                        Write-Host "    $_" -ForegroundColor Green
                         Write-Host "      -> $_" -ForegroundColor Red
                     }
                 }
             } else {
-                Write-Host "    [✓] Suite completada sin fallos detectados." -ForegroundColor Green
                 Write-Host "    [PASS] Result: Suite completada exitosamente." -ForegroundColor Green
             }
         }
