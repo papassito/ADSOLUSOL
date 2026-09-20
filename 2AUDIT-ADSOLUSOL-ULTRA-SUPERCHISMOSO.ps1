@@ -6,7 +6,8 @@
 
 [CmdletBinding()]
 param(
-    [string]$Root = $PSScriptRoot
+    [string]$Root = $PSScriptRoot,
+    [switch]$CI_MODE # Si se especifica, usa exit code y no espera al usuario
 )
 
 Set-StrictMode -Version Latest
@@ -19,6 +20,7 @@ $findings = @{
     UnimplementedStubs = @()
     CodeTodos          = @()
     ArchFindings       = @()
+    AllFindingsList    = [System.Collections.Generic.List[string]]::new()
     Metrics            = @{}
     BuildStatus        = "PENDING"
     TestStatus         = "PENDING"
@@ -145,6 +147,7 @@ if ($programCsFile) {
     $middlewareWired = Get-Content $programCsFile.FullName | Select-String -Pattern "UseMiddleware<SignatureVerificationMiddleware>" -Quiet
     if (-not $middlewareWired) {
         $msg = "El middleware 'SignatureVerificationMiddleware' no está conectado en '$($programCsFile.Name)'."
+        $findings.AllFindingsList.Add("[MEDIUM] [ARQUITECTURA] $msg")
         $findings.ArchFindings += $msg
         Write-Host "[!] Hallazgo de arquitectura: $msg" -ForegroundColor Yellow
     } else {
@@ -165,6 +168,7 @@ if ($findings.BuildStatus -ne "OK") {
     $testProjects = Get-ChildItem -Path $Root -Filter "*Test*.csproj" -Recurse
     if (-not $testProjects) {
         Write-Host "[WARNING] No se localizaron proyectos de prueba con el patrón '*Test*'." -ForegroundColor Yellow
+        $findings.AllFindingsList.Add("[INFO] [PRUEBAS] No se encontraron proyectos de prueba.")
         $findings.TestStatus = "NO_TESTS_FOUND"
     } else {
         $allTestsPassed = $true
@@ -185,6 +189,7 @@ if ($findings.BuildStatus -ne "OK") {
             # Usamos un regex más específico para detectar el resumen de fallo
             if ($rawTestOutput -match "Failed!.*, Total:.*, Passed:.*, Failed:.*") {
                 $allTestsPassed = $false
+                $findings.AllFindingsList.Add("[FAIL] [PRUEBAS] La suite '$($testProj.Name)' falló.")
                 $findings.TestFailures.Add("Suite fallida: $($testProj.Name)")
                 $rawTestOutput | ForEach-Object {
                     if ($_ -match "^\s*Failed!\s*-\s*|Exception|error|Stack Trace") {
@@ -241,28 +246,112 @@ Write-Host ""
 # --- Hallazgos de Calidad y Arquitectura ---
 Write-Host "🤔 HALLAZGOS DE CALIDAD Y ARQUITECTURA" -ForegroundColor Cyan
 $totalSmells = $findings.UnimplementedStubs.Count + $findings.CodeTodos.Count + $findings.ArchFindings.Count
-if ($totalSmells -eq 0) {
+if ($totalSmells -eq 0) {    
     Write-Host "   [✓] ¡Excelente! No se encontraron hallazgos automáticos." -ForegroundColor Green
 } else {
     if ($findings.UnimplementedStubs.Count -gt 0) {
         Write-Host "   - Endpoints/Stubs no implementados:" -ForegroundColor Yellow
-        $findings.UnimplementedStubs | ForEach-Object { Write-Host "     - $($_.Path) (Línea: $($_.LineNumber))" -ForegroundColor Gray }
+        $findings.UnimplementedStubs | ForEach-Object { 
+            $findingMsg = "[MEDIUM] [CALIDAD] NotImplementedException en '$($_.Path)' (Línea: $($_.LineNumber))"
+            $findings.AllFindingsList.Add($findingMsg)
+            Write-Host "     - $($_.Path) (Línea: $($_.LineNumber))" -ForegroundColor Gray 
+        }
     }
     if ($findings.CodeTodos.Count -gt 0) {
         Write-Host "   - Tareas pendientes (TODO/FIXME):" -ForegroundColor Yellow
-        $findings.CodeTodos | ForEach-Object { Write-Host "     - $($_.Path) (Línea: $($_.LineNumber)): $($_.Line.Trim())" -ForegroundColor Gray }
+        $findings.CodeTodos | ForEach-Object { 
+            $findingMsg = "[LOW] [CALIDAD] Comentario TODO/FIXME en '$($_.Path)' (Línea: $($_.LineNumber)): $($_.Line.Trim())"
+            $findings.AllFindingsList.Add($findingMsg)
+            Write-Host "     - $($_.Path) (Línea: $($_.LineNumber)): $($_.Line.Trim())" -ForegroundColor Gray 
+        }
     }
     if ($findings.ArchFindings.Count -gt 0) {
         Write-Host "   - Problemas de arquitectura detectados:" -ForegroundColor Yellow
         $findings.ArchFindings | ForEach-Object { Write-Host "     - $_" -ForegroundColor Gray }
     }
 }
+
+# ==============================================================================
+# 7. GENERACIÓN DE REPORTES
+# ==============================================================================
+Write-Host "`n>>> [FASE 7] Generando reportes de auditoría..." -ForegroundColor Yellow
+
+$finalStatus = if ($findings.BuildStatus -ne 'OK' -or $findings.TestStatus -eq 'FAIL') { "FAIL" } else { "PASS" }
+
+$reportObject = @{
+    Timestamp = (Get-Date).ToString("o")
+    Project = "ADSOLUSOL"
+    Status = $finalStatus
+    Metrics = $findings.Metrics
+    Build = @{
+        Status = $findings.BuildStatus
+        Errors = $findings.BuildErrors
+    }
+    Tests = @{
+        Status = $findings.TestStatus
+        Failures = $findings.TestFailures
+    }
+    CodeQuality = @{
+        Unimplemented = $findings.UnimplementedStubs
+        Todos = $findings.CodeTodos
+    }
+    Architecture = @{
+        Findings = $findings.ArchFindings
+    }
+    SummaryFindings = $findings.AllFindingsList
+}
+
+# --- Reporte JSON ---
+$jsonReportPath = Join-Path $Root "audit_report_adsolusol.json"
+try {
+    $reportObject | ConvertTo-Json -Depth 5 | Set-Content -Path $jsonReportPath -Encoding UTF8
+    Write-Host "[✓] Reporte JSON generado en: $jsonReportPath" -ForegroundColor Green
+} catch {
+    Write-Host "[!] No se pudo escribir el reporte JSON: $($_.Exception.Message)" -ForegroundColor Red
+}
+
+# --- Reporte Markdown ---
+$mdReportPath = Join-Path $Root "audit_report_adsolusol.md"
+$mdContent = @"
+# 📋 Reporte de Auditoría: ADSOLUSOL
+
+*   **Fecha:** $(Get-Date)
+*   **Resultado General:** **$($reportObject.Status)**
+
+## 📊 Métricas
+
+| Métrica          | Valor                               |
+| ---------------- | ----------------------------------- |
+| Archivos C#      | $($reportObject.Metrics.ArchivosCSharp) |
+| Líneas de Código | $($reportObject.Metrics.LineasDeCodigo) |
+
+## 🛠️ Compilación: $($reportObject.Build.Status)
+
+## 🧪 Pruebas: $($reportObject.Tests.Status)
+
+## 📜 Resumen de Hallazgos ($($reportObject.SummaryFindings.Count))
+
+$($reportObject.SummaryFindings | ForEach-Object { "- $($_)" } | Out-String)
+
+"@
+try {
+    $mdContent | Set-Content -Path $mdReportPath -Encoding UTF8
+    Write-Host "[✓] Reporte Markdown generado en: $mdReportPath" -ForegroundColor Green
+} catch {
+    Write-Host "[!] No se pudo escribir el reporte Markdown: $($_.Exception.Message)" -ForegroundColor Red
+}
+
 Write-Host ""
 Write-Host "==========================================================================" -ForegroundColor Magenta
 Write-Host " FIN DE LA AUDITORÍA" -ForegroundColor Magenta
 Write-Host "==========================================================================" -ForegroundColor Magenta
 
 # Finaliza con un código de error si hubo fallos críticos
-if ($findings.BuildStatus -ne 'OK' -or $findings.TestStatus -eq 'FAIL') {
+if (-not $CI_MODE) {
+    Write-Host ""
+    Read-Host "Presiona ENTER para cerrar la auditoría"
+}
+
+if ($finalStatus -eq 'FAIL' -and $CI_MODE) {
     exit 1
 }
