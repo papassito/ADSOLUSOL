@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿using ADSOLUSOL.Domain.Entities;
+﻿﻿﻿﻿﻿﻿﻿﻿using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 
 namespace ADSOLUSOL.Application.Services;
@@ -6,10 +6,12 @@ namespace ADSOLUSOL.Application.Services;
 public class CampaignService
 {
     private readonly ICampaignRepository _campaignRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public CampaignService(ICampaignRepository campaignRepository)
+    public CampaignService(ICampaignRepository campaignRepository, IUnitOfWork unitOfWork)
     {
         _campaignRepository = campaignRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public Task<IEnumerable<Campaign>> ListAsync(string tenantId, CancellationToken token = default)
@@ -48,6 +50,7 @@ public class CampaignService
             EndDateUtc = endDate ?? effectiveStartDate.AddDays(30)
         };
         await _campaignRepository.CreateAsync(campaign);
+        await _unitOfWork.SaveChangesAsync(token);
         return campaign;
     }
 
@@ -61,6 +64,7 @@ public class CampaignService
 
         campaign.Status = status;
         await _campaignRepository.UpdateAsync(campaign);
+        await _unitOfWork.SaveChangesAsync();
         return campaign;
     }
 }

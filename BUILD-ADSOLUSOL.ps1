@@ -151,6 +151,11 @@ if ($PackageJson) {
     Write-Host "[INFO] Frontend detectado:" -ForegroundColor Gray
     Write-Host "       $FrontendRoot" -ForegroundColor Gray
 
+    # FIX: Resolve the real physical path to avoid issues with subst'd drives.
+    Write-Host "[INFO] Resolving real frontend path to prevent Vite path errors..." -ForegroundColor Gray
+    $FrontendRealRoot = & node -e "const fs=require('fs'); process.stdout.write(fs.realpathSync.native(process.argv[1]));" "$FrontendRoot"
+    Write-Host "[INFO] Frontend physical path: $FrontendRealRoot" -ForegroundColor Gray
+
     $Npm = Get-Command npm -ErrorAction SilentlyContinue
 
     if (-not $Npm) {
@@ -158,7 +163,7 @@ if ($PackageJson) {
         return
     }
 
-    Push-Location $FrontendRoot
+    Push-Location $FrontendRealRoot
 
     try {
 
