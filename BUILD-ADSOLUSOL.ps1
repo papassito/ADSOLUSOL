@@ -125,153 +125,13 @@ Write-Host ""
 Write-Host "[PASS] Solución .NET compilada." -ForegroundColor Green
 
 # ---------------------------------------------------------------------------
-# 5. FRONTEND
-# ---------------------------------------------------------------------------
-
-Write-Host ""
-Write-Host "======================================================================" -ForegroundColor Yellow
-Write-Host " [3/5] FRONTEND PRODUCTION BUILD" -ForegroundColor Yellow
-Write-Host "======================================================================" -ForegroundColor Yellow
-
-$PackageJson = Get-ChildItem `
-    -Path $Root `
-    -Filter "package.json" `
-    -File `
-    -Recurse `
-    -ErrorAction SilentlyContinue |
-    Where-Object {
-        $_.FullName -notmatch "\\node_modules\\"
-    } |
-    Select-Object -First 1
-
-if ($PackageJson) {
-
-    $FrontendRoot = $PackageJson.Directory.FullName
-
-    Write-Host "[INFO] Frontend detectado:" -ForegroundColor Gray
-    Write-Host "       $FrontendRoot" -ForegroundColor Gray
-
-    # FIX: Resolve the real physical path to avoid issues with subst'd drives.
-    Write-Host "[INFO] Resolving real frontend path to prevent Vite path errors..." -ForegroundColor Gray
-    $FrontendRealRoot = & node -e "const fs=require('fs'); process.stdout.write(fs.realpathSync.native(process.argv[1]));" "$FrontendRoot"
-    Write-Host "[INFO] Frontend physical path: $FrontendRealRoot" -ForegroundColor Gray
-
-    $Npm = Get-Command npm -ErrorAction SilentlyContinue
-
-    if (-not $Npm) {
-        Write-Host "[FAIL] npm no está disponible." -ForegroundColor Red
-        return
-    }
-
-    Push-Location $FrontendRealRoot
-
-    try {
-
-        $PackageLock = Join-Path $FrontendRoot "package-lock.json"
-
-        if (Test-Path $PackageLock) {
-            Write-Host "[INFO] Ejecutando npm ci..." -ForegroundColor Gray
-
-            & npm ci
-
-            if ($LASTEXITCODE -ne 0) {
-                Write-Host "[FAIL] npm ci falló." -ForegroundColor Red
-                return
-            }
-        }
-        else {
-            Write-Host "[INFO] package-lock.json ausente. Ejecutando npm install..." -ForegroundColor Gray
-
-            & npm install
-
-            if ($LASTEXITCODE -ne 0) {
-                Write-Host "[FAIL] npm install falló." -ForegroundColor Red
-                return
-            }
-        }
-
-        & npm run build
-
-        $FrontendBuildCode = $LASTEXITCODE
-
-        if ($FrontendBuildCode -ne 0) {
-            Write-Host "[FAIL] Frontend build falló." -ForegroundColor Red
-            return
-        }
-
-        Write-Host "[PASS] Frontend compilado." -ForegroundColor Green
-    }
-    finally {
-        Pop-Location
-    }
-
-    # -----------------------------------------------------------------------
-    # LOCALIZAR DIST
-    # -----------------------------------------------------------------------
-
-    $DistCandidates = @(
-        (Join-Path $FrontendRoot "dist"),
-        (Join-Path $FrontendRoot "build")
-    )
-
-    $FrontendDist = $DistCandidates |
-        Where-Object { Test-Path $_ } |
-        Select-Object -First 1
-
-    if (-not $FrontendDist) {
-        Write-Host "[FAIL] No se encontró dist/build del frontend." -ForegroundColor Red
-        return
-    }
-
-    # -----------------------------------------------------------------------
-    # COPIAR FRONTEND A WWWROOT
-    # -----------------------------------------------------------------------
-
-    Write-Host ""
-    Write-Host "[INFO] Integrando frontend en wwwroot..." -ForegroundColor Gray
-
-    if (Test-Path $ApiWwwRoot) {
-        Remove-Item `
-            (Join-Path $ApiWwwRoot "*") `
-            -Recurse `
-            -Force `
-            -ErrorAction SilentlyContinue
-    }
-    else {
-        New-Item `
-            -ItemType Directory `
-            -Path $ApiWwwRoot `
-            -Force |
-            Out-Null
-    }
-
-    Copy-Item `
-        (Join-Path $FrontendDist "*") `
-        $ApiWwwRoot `
-        -Recurse `
-        -Force
-
-    $IndexHtml = Join-Path $ApiWwwRoot "index.html"
-
-    if (-not (Test-Path $IndexHtml)) {
-        Write-Host "[FAIL] wwwroot\index.html no fue generado." -ForegroundColor Red
-        return
-    }
-
-    Write-Host "[PASS] Frontend integrado en API/wwwroot." -ForegroundColor Green
-}
-else {
-    Write-Host "[WARNING] No se encontró package.json. Se continúa con backend." -ForegroundColor Yellow
-}
-
-# ---------------------------------------------------------------------------
 # 6. REBUILD DESPUÉS DE INTEGRAR FRONTEND
 # ---------------------------------------------------------------------------
 
 Write-Host ""
 Write-Host "======================================================================" -ForegroundColor Yellow
 Write-Host " [4/5] BUILD FINAL" -ForegroundColor Yellow
-Write-Host "======================================================================" -ForegroundColor Yellow
+Write-Host "======================================================================" -ForegroundColor Yellow # This step is now redundant, but kept for numbering consistency.
 
 Set-Location $Root
 
@@ -351,12 +211,7 @@ Write-Host ""
 Write-Host "RESTORE  : PASS" -ForegroundColor Green
 Write-Host "BUILD    : PASS" -ForegroundColor Green
 
-if ($PackageJson) {
-    Write-Host "FRONTEND : PASS" -ForegroundColor Green
-}
-else {
-    Write-Host "FRONTEND : NOT FOUND" -ForegroundColor Yellow
-}
+Write-Host "FRONTEND : INTEGRATED (BLAZOR)" -ForegroundColor Green
 
 Write-Host "PUBLISH  : PASS" -ForegroundColor Green
 Write-Host ""

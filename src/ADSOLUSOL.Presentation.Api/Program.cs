@@ -1,10 +1,11 @@
-﻿﻿using ADSOLUSOL.Application.Interfaces;
+﻿﻿﻿﻿using ADSOLUSOL.Application.Interfaces;
 using ADSOLUSOL.Application.Services;
 using ADSOLUSOL.Domain.Interfaces;
 using ADSOLUSOL.Infrastructure.Authentication;
 using ADSOLUSOL.Infrastructure.Persistence;
 using ADSOLUSOL.Infrastructure.Repositories;
 using ADSOLUSOL.Presentation.Api.Middleware;
+using ADSOLUSOL.Presentation.Api.Components;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,6 +33,9 @@ builder.Services.AddScoped<MetricsService>();
 builder.Services.AddSingleton<IMarketingBrainService, NoOpMarketingBrainService>();
 
 builder.Services.AddControllers();
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -45,17 +49,16 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Serve static files from wwwroot (for the React frontend)
-app.UseDefaultFiles();
-app.UseStaticFiles();
+app.UseStaticFiles(); // Para CSS, JS, etc. de Blazor
+app.UseAntiforgery();
 
 app.UseMiddleware<SignatureVerificationMiddleware>();
 
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.MapFallbackToFile("index.html");
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
 
 app.Run();
 

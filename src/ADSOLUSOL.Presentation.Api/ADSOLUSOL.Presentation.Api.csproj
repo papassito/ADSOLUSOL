@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ADSOLUSOL.Application\ADSOLUSOL.Application.csproj" />
+    <ProjectReference Include="..\ADSOLUSOL.Domain\ADSOLUSOL.Domain.csproj" />
     <ProjectReference Include="..\ADSOLUSOL.Infrastructure\ADSOLUSOL.Infrastructure.csproj" />
   </ItemGroup>
 </Project>
