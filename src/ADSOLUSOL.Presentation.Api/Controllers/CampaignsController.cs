@@ -1,4 +1,4 @@
-﻿﻿using ADSOLUSOL.Domain.Entities;
+﻿﻿﻿﻿using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 using ADSOLUSOL.Application.Services;
 using ADSOLUSOL.Domain.Enums;
@@ -59,6 +59,12 @@ public class CampaignsController : ControllerBase
     [HttpGet("{id}/metrics")]
     public async Task<IActionResult> GetMetrics(string id)
     {
+        // FIX: Authorize access to the campaign before retrieving metrics.
+        var campaign = await _campaignService.GetAsync(TenantId, id);
+        if (campaign is null)
+        {
+            return NotFound(); // Do not reveal the existence of a campaign belonging to another tenant.
+        }
         var metrics = await _metricsService.GetMetricsForCampaign(id);
         return metrics is null ? NotFound() : Ok(metrics);
     }

@@ -1,21 +1,30 @@
-﻿﻿using System.Security.Cryptography;
+﻿﻿﻿﻿using System.Security.Cryptography;
 using System.Text;
 using ADSOLUSOL.Domain.Interfaces;
 using NSec.Cryptography;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace ADSOLUSOL.Presentation.Api.Middleware;
 
 public class SignatureVerificationMiddleware
 {
     private readonly RequestDelegate _next;
+    private static readonly PathString[] s_publicPaths = { "/", "/api/health" };
 
     public SignatureVerificationMiddleware(RequestDelegate next)
     {
         _next = next;
     }
 
-    public async Task InvokeAsync(HttpContext context, INodeRegistry nodeRegistry)
+    public async Task InvokeAsync(HttpContext context, INodeRegistry nodeRegistry, IMemoryCache nonceCache)
     {
+        // FIX: Bypass signature verification for public UI and health check endpoints.
+        if (Array.Exists(s_publicPaths, p => context.Request.Path.StartsWithSegments(p)) && context.Request.Path.Value?.EndsWith("blazor.web.js") != true)
+        {
+            await _next(context);
+            return;
+        }
+
         if (!context.Request.Headers.TryGetValue("X-Solusol-Node-Id", out var nodeId) ||
             !context.Request.Headers.TryGetValue("X-Solusol-Timestamp", out var timestampStr) ||
             !context.Request.Headers.TryGetValue("X-Solusol-Nonce", out var nonce) ||
@@ -32,6 +41,15 @@ public class SignatureVerificationMiddleware
             await context.Response.WriteAsync("Invalid or expired timestamp.");
             return;
         }
+
+        // FIX: Implement nonce replay protection.
+        if (nonceCache.TryGetValue(nonce.ToString(), out _))
+        {
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            await context.Response.WriteAsync("Replay attack detected (nonce already used).");
+            return;
+        }
+        nonceCache.Set(nonce.ToString(), true, TimeSpan.FromMinutes(5));
 
         var (tenantId, publicKeyHex) = nodeRegistry.GetNodeInfo(nodeId.ToString());
         if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(publicKeyHex))

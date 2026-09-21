@@ -31,7 +31,8 @@ public class PlacementRepository : IPlacementRepository
             SELECT c.* FROM Campaigns c
             INNER JOIN CampaignPlacements cp ON c.Id = cp.CampaignId
             INNER JOIN Placements p ON cp.PlacementId = p.Id
-            WHERE p.PlacementCode = @PlacementCode 
+            WHERE p.PlacementCode = @PlacementCode
+              AND p.IsEnabled = 1
               AND c.TenantId = @TenantId 
               AND c.Status = 'ACTIVE' 
               AND c.Budget > c.BudgetSpent

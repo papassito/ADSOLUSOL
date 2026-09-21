@@ -28,13 +28,9 @@ Write-Host ""
 
 $Solution = Join-Path $Root "ADSOLUSOL.sln"
 
-$ApiProject = Join-Path `
+$DesktopProject = Join-Path `
     $Root `
-    "src\ADSOLUSOL.Presentation.Api\ADSOLUSOL.Presentation.Api.csproj"
-
-$ApiWwwRoot = Join-Path `
-    $Root `
-    "src\ADSOLUSOL.Presentation.Api\wwwroot"
+    "src\ADSOLUSOL.Presentation.Desktop\ADSOLUSOL.Presentation.Desktop.csproj"
 
 $FinalBuild = Join-Path `
     $Root `
@@ -54,12 +50,6 @@ Set-Location $Root
 
 if (-not (Test-Path $Solution)) {
     Write-Host "[FAIL] No existe ADSOLUSOL.sln" -ForegroundColor Red
-    return
-}
-
-if (-not (Test-Path $ApiProject)) {
-    Write-Host "[FAIL] No existe el proyecto API:" -ForegroundColor Red
-    Write-Host $ApiProject -ForegroundColor Red
     return
 }
 
@@ -125,32 +115,6 @@ Write-Host ""
 Write-Host "[PASS] Solución .NET compilada." -ForegroundColor Green
 
 # ---------------------------------------------------------------------------
-# 6. REBUILD DESPUÉS DE INTEGRAR FRONTEND
-# ---------------------------------------------------------------------------
-
-Write-Host ""
-Write-Host "======================================================================" -ForegroundColor Yellow
-Write-Host " [4/5] BUILD FINAL" -ForegroundColor Yellow
-Write-Host "======================================================================" -ForegroundColor Yellow # This step is now redundant, but kept for numbering consistency.
-
-Set-Location $Root
-
-& dotnet build `
-    $Solution `
-    -c Release `
-    --no-restore `
-    --nologo
-
-$FinalBuildCode = $LASTEXITCODE
-
-if ($FinalBuildCode -ne 0) {
-    Write-Host "[FAIL] Build final falló." -ForegroundColor Red
-    return
-}
-
-Write-Host "[PASS] Build final." -ForegroundColor Green
-
-# ---------------------------------------------------------------------------
 # 7. PUBLISH
 # ---------------------------------------------------------------------------
 
@@ -175,7 +139,7 @@ New-Item `
     Out-Null
 
 & dotnet publish `
-    $ApiProject `
+    $DesktopProject `
     -c Release `
     --no-restore `
     --nologo `
@@ -193,11 +157,11 @@ if ($PublishCode -ne 0) {
 # 8. VERIFICACIÓN ARTEFACTO
 # ---------------------------------------------------------------------------
 
-$PublishedDll = Join-Path `
+$PublishedExe = Join-Path `
     $FinalBuild `
-    "ADSOLUSOL.Presentation.Api.dll"
+    "ADSOLUSOL.Presentation.Desktop.exe"
 
-if (-not (Test-Path $PublishedDll)) {
+if (-not (Test-Path $PublishedExe)) {
     Write-Host ""
     Write-Host "[FAIL] Publish terminó pero falta ADSOLUSOL.Presentation.Api.dll" -ForegroundColor Red
     return
@@ -211,14 +175,12 @@ Write-Host ""
 Write-Host "RESTORE  : PASS" -ForegroundColor Green
 Write-Host "BUILD    : PASS" -ForegroundColor Green
 
-Write-Host "FRONTEND : INTEGRATED (BLAZOR)" -ForegroundColor Green
-
 Write-Host "PUBLISH  : PASS" -ForegroundColor Green
 Write-Host ""
 Write-Host "ARTEFACTO FINAL:" -ForegroundColor Cyan
 Write-Host $FinalBuild -ForegroundColor White
 Write-Host ""
-Write-Host "API:" -ForegroundColor Cyan
-Write-Host $PublishedDll -ForegroundColor White
+Write-Host "EJECUTABLE NATIVO:" -ForegroundColor Cyan
+Write-Host $PublishedExe -ForegroundColor White
 Write-Host ""
 Write-Host "======================================================================" -ForegroundColor Green

@@ -49,8 +49,10 @@ public class EventProcessingService
         var campaign = await _campaignRepository.GetByIdAsync(adEvent.CampaignId);
         if (campaign is null ||
             campaign.TenantId != adEvent.TenantId || // Tenant isolation validation
-            campaign.Status != "ACTIVE" ||
-            (campaign.Budget - campaign.BudgetSpent) <= 0)
+            campaign.Status != "ACTIVE" || // Must be active
+            (campaign.Budget - campaign.BudgetSpent) <= 0 || // Must have budget
+            DateTime.UtcNow < campaign.StartDateUtc || // Must have started
+            DateTime.UtcNow > campaign.EndDateUtc) // Must not have ended
         {
             return EventProcessingStatus.Rejected;
         }
@@ -68,6 +70,9 @@ public class EventProcessingService
             // This case should be handled by upstream validation, but as a safeguard:
             return EventProcessingStatus.Rejected;
         }
+
+        // FIX: Normalize event type to uppercase for consistent storage and querying.
+        adEvent.EventType = eventTypeEnum.ToString().ToUpper();
 
         // Calculate cost once and assign it to the event object. This is the single source of truth.
         adEvent.Cost = eventTypeEnum switch

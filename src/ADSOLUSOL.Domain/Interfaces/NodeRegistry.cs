@@ -1,4 +1,4 @@
-﻿using ADSOLUSOL.Domain.Interfaces;
+﻿﻿using ADSOLUSOL.Domain.Interfaces;
 
 namespace ADSOLUSOL.Infrastructure.Authentication;
 
@@ -9,10 +9,10 @@ namespace ADSOLUSOL.Infrastructure.Authentication;
 public class NodeRegistry : INodeRegistry
 {
     // Test Node: "NODE_ADS_01" is authorized for "tenant-A".
-    // Public Key for private key: "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2"
+    // FIX: Correct public key for the private key used in smoke-test.ps1
     private readonly Dictionary<string, (string TenantId, string PublicKeyHex)> _nodes = new()
     {
-        { "NODE_ADS_01", ("tenant-A", "c1c2c3c4c5c6c1c2c3c4c5c6c1c2c3c4c5c6c1c2c3c4c5c6c1c2c3c4c5c6c1c2") }
+        { "NODE_ADS_01", ("tenant-A", "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a") }
     };
 
     public (string? TenantId, string? PublicKeyHex) GetNodeInfo(string nodeId) =>

@@ -5,7 +5,6 @@ using ADSOLUSOL.Infrastructure.Authentication;
 using ADSOLUSOL.Infrastructure.Persistence;
 using ADSOLUSOL.Infrastructure.Repositories;
 using ADSOLUSOL.Presentation.Api.Middleware;
-using ADSOLUSOL.Presentation.Api.Components;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,6 +31,10 @@ builder.Services.AddScoped<MetricsService>();
 // Per README, the Marketing Brain integration is not yet real. Register a no-op service.
 builder.Services.AddSingleton<IMarketingBrainService, NoOpMarketingBrainService>();
 
+// FIX: Register dependencies for HealthController and SignatureVerificationMiddleware
+builder.Services.AddHttpClient();
+builder.Services.AddMemoryCache();
+
 builder.Services.AddControllers();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
@@ -40,6 +43,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+// FIX: Ensure the database schema is created in development environments.
+if (app.Environment.IsDevelopment())
+{
+    using var scope = app.Services.CreateScope();
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    dbContext.Database.EnsureCreated();
+}
 
 if (app.Environment.IsDevelopment())
 {
@@ -57,7 +68,7 @@ app.UseMiddleware<SignatureVerificationMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapRazorComponents<App>()
+app.MapRazorComponents<ADSOLUSOL.Presentation.Api.App>()
     .AddInteractiveServerRenderMode();
 
 app.Run();

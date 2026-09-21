@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿using ADSOLUSOL.Domain.Entities;
+﻿﻿﻿﻿﻿﻿﻿﻿using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 using ADSOLUSOL.Infrastructure.Persistence;
 using Dapper;
@@ -49,7 +49,9 @@ public class CampaignRepository : ICampaignRepository
         {
             throw new InvalidOperationException("The transaction does not have an associated connection.");
         }
-        var sql = "UPDATE Campaigns SET BudgetSpent = BudgetSpent + @Cost WHERE Id = @CampaignId AND BudgetSpent + @Cost <= Budget;";
+        // FIX: Explicitly CAST to REAL for correct numeric comparison in SQLite, as decimals are stored as TEXT.
+        var sql = @"UPDATE Campaigns SET BudgetSpent = BudgetSpent + @Cost 
+                    WHERE Id = @CampaignId AND CAST(BudgetSpent AS REAL) + @Cost <= CAST(Budget AS REAL);";
         return await transaction.Connection.ExecuteAsync(sql, new { Cost = cost, CampaignId = campaignId }, transaction);
     }
 
