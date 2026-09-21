@@ -1,4 +1,4 @@
-﻿﻿using ADSOLUSOL.Domain.Entities;
+﻿using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 
 namespace ADSOLUSOL.Application.Services;
@@ -21,9 +21,8 @@ public class AdServingService
 
         var eligibleCampaigns = await _placementRepository.GetEligibleCampaignsAsync(tenantId, placementCode);
 
-        var validCampaigns = eligibleCampaigns
-            .OrderBy(_ => Guid.NewGuid())
-            .ToList();
+        // The repository now returns campaigns in a random order.
+        var validCampaigns = eligibleCampaigns.ToList();
 
         foreach (var campaign in validCampaigns)
         {

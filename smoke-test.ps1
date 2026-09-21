@@ -1,4 +1,4 @@
-﻿﻿[CmdletBinding()]
+﻿﻿﻿﻿[CmdletBinding()]
 param()
 
 Set-StrictMode -Version Latest
@@ -12,8 +12,15 @@ $healthUrl = "http://localhost:5000/api/health"
 $nodeId = "NODE_ADS_01"
 $privateKeyHex = "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2"
 
-# Load NSec for signing
-try { Add-Type -Path "C:\Users\$env:UserName\.nuget\packages\nsec.cryptography\24.1.0\lib\net6.0\NSec.Cryptography.dll" }
+# Load NSec for signing from the application's publish directory
+$publishDir = Join-Path $PSScriptRoot "BUILD\ADSOLUSOL"
+$nsecDllPath = Join-Path $publishDir "NSec.Cryptography.dll"
+
+if (-not (Test-Path $nsecDllPath)) {
+    Write-Error "NSec.Cryptography.dll not found in publish directory '$publishDir'. Please run BUILD-ADSOLUSOL.ps1 first."
+    exit 1
+}
+try { Add-Type -Path $nsecDllPath }
 catch { Write-Error "NSec.Cryptography.dll not found. Please ensure it's available or adjust the path."; exit 1 }
 
 

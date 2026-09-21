@@ -18,14 +18,14 @@ public class PlacementRepository : IPlacementRepository
 
     public async Task<Placement?> GetByCodeAsync(string code)
     {
-        using var connection = _context.Database.GetDbConnection();
+        var connection = _context.Database.GetDbConnection();
         var sql = "SELECT * FROM Placements WHERE PlacementCode = @Code;";
         return await connection.QueryFirstOrDefaultAsync<Placement>(sql, new { Code = code });
     }
 
     public async Task<IEnumerable<Campaign>> GetEligibleCampaignsAsync(string tenantId, string placementCode)
     {
-        using var connection = _context.Database.GetDbConnection();
+        var connection = _context.Database.GetDbConnection();
         var now = DateTime.UtcNow;
         var sql = @"
             SELECT c.* FROM Campaigns c
@@ -35,7 +35,8 @@ public class PlacementRepository : IPlacementRepository
               AND c.TenantId = @TenantId 
               AND c.Status = 'ACTIVE' 
               AND c.Budget > c.BudgetSpent
-              AND c.StartDateUtc <= @Now AND c.EndDateUtc >= @Now;";
+              AND c.StartDateUtc <= @Now AND c.EndDateUtc >= @Now
+            ORDER BY RANDOM();";
         return await connection.QueryAsync<Campaign>(sql, new { TenantId = tenantId, PlacementCode = placementCode, Now = now });
     }
 
@@ -48,13 +49,13 @@ public class PlacementRepository : IPlacementRepository
         // For a create operation that should be transactional, it should use the UnitOfWork transaction connection.
         // However, the current regression test for placement creation doesn't use a transaction.
         // To maintain consistency, we'll use the DbContext connection.
-        using var connection = _context.Database.GetDbConnection();
+        var connection = _context.Database.GetDbConnection();
         return await connection.ExecuteScalarAsync<long>(sql, placement);
     }
 
     public async Task<IEnumerable<Placement>> GetAllAsync()
     {
-        using var connection = _context.Database.GetDbConnection();
+        var connection = _context.Database.GetDbConnection();
         var sql = "SELECT * FROM Placements;";
         return await connection.QueryAsync<Placement>(sql);
     }
