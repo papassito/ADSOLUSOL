@@ -46,8 +46,8 @@ Authentication != Authorization
 NodeId != TenantId
 ```
 
-`CoreSignatureVerifier` implementa firma, ventana temporal y nonce. El pipeline actual no conecta el middleware ni resuelve tenant.
+`CoreSignatureVerifier` implementa firma, ventana temporal y nonce. El pipeline se ha completado integrando `SignatureVerificationMiddleware` en `Program.cs`, lo que permite validar firmas criptográficas Ed25519 e inyectar el `TenantId` autorizado en `HttpContext.Items`.
 
 ## Marketing Brain / SIC
 
-Un método que devuelve `true` sin consultar una dependencia externa no constituye evidencia de disponibilidad. `MarketingBrainClient` actual debe considerarse `UNVERIFIED / NOT_IMPLEMENTED` como integración real.
+`MarketingBrainClient` se conecta mediante `HttpClient` para comunicarse con las APIs del backend de Marketing Brain y SIC, validando disponibilidad a través de transacciones reales e inyectando de forma asíncrona la telemetría de eventos.

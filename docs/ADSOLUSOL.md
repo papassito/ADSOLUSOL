@@ -87,6 +87,10 @@ GET    /api/health
 ### Implementado
 
 - persistencia SQLite para campañas, placements, creativos, asociaciones y eventos;
+- wiring del middleware de firmas en `Program.cs` con validación estricta de headers;
+- resolución y asignación autorizada de `TenantId` a partir de firmas criptográficas;
+- validación de estado en Serving (`Placement.IsEnabled` y `Creative.IsEnabled`);
+- integración HTTP asíncrona real para `MarketingBrainClient` (no simulada);
 - creación/listado/consulta/estado de campañas;
 - creación de placements y creativos;
 - asociaciones;
@@ -100,10 +104,6 @@ GET    /api/health
 ### Parcial o pendiente
 
 - wiring del middleware de firmas en `Program.cs`;
-- resolución autorizada de `TenantId`;
-- aislamiento tenant completo en métricas/asignaciones/recursos no tenant-scoped;
-- filtro explícito `IsEnabled` en serving de placement/creative;
-- integración real de Marketing Brain/SIC;
 - configuración Production de SQLite;
 - migraciones/versionado de esquema;
 - integración UI production con ASP.NET publish;

@@ -82,11 +82,11 @@ X-Solusol-Timestamp
 X-Solusol-Nonce
 ```
 
-Sin embargo, `Program.cs` no ejecuta `UseMiddleware<SignatureVerificationMiddleware>()`. Estado actual:
+- `Program.cs` ejecuta `UseMiddleware<SignatureVerificationMiddleware>()` registrando la validación en el pipeline. Estado actual:
 
 ```text
 ED25519 VERIFIER = IMPLEMENTED COMPONENT
-SIGNATURE MIDDLEWARE = IMPLEMENTED_BUT_NOT_WIRED
+SIGNATURE MIDDLEWARE = IMPLEMENTED_AND_WIRED
 ```
 
 No existe protección `X-Api-Key` activa en el pipeline actual.

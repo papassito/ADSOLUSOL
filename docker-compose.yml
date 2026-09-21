@@ -8,9 +8,10 @@ services:
       dockerfile: src/ADSOLUSOL.Presentation.Api/Dockerfile
     container_name: adsolusol_api
     ports:
-      - "5000:80"
+      - "5000:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_HTTP_PORTS=8080
       - ConnectionStrings__DefaultConnection=Data Source=/app/data/adsolusol.db
       - SolusolAuthV1__SicBaseUrl=http://solusol-sic:8080
     volumes:

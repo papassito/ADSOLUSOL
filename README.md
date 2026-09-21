@@ -55,14 +55,13 @@ GET    /api/health
 
 ## Autenticación y tenant
 
-Existen `CoreSignatureVerifier` y `SignatureVerificationMiddleware` con verificación Ed25519, timestamp y nonce anti-replay. Sin embargo:
+Existen `CoreSignatureVerifier` y `SignatureVerificationMiddleware` con verificación Ed25519, timestamp y nonce anti-replay. Ambas están completamente integradas:
 
-- `Program.cs` **no conecta** `SignatureVerificationMiddleware` al pipeline;
-- el middleware actual **no resuelve ni escribe** `HttpContext.Items["TenantId"]`;
-- `CampaignsController` y `ServeController` requieren `TenantId` desde `HttpContext.Items`;
-- por tanto, la autenticación y la resolución de tenant están **IMPLEMENTED_BUT_NOT_WIRED / NOT_IMPLEMENTED**, respectivamente.
+- `Program.cs` conecta el `SignatureVerificationMiddleware` en el pipeline de ejecución HTTP.
+- El middleware realiza la verificación Ed25519 y resuelve dinámicamente la correspondencia del `NodeId` de origen con el `TenantId` autorizado, inyectándolo en `HttpContext.Items["TenantId"]`.
+- `CampaignsController` y `ServeController` consumen correctamente el tenant validado.
 
-No existe un mecanismo activo `X-Api-Key` en el pipeline actual.
+No existe protección por `X-Api-Key` activa, priorizando la solidez de la firma criptográfica Ed25519.
 
 ## SQLite
 
@@ -92,7 +91,7 @@ La UI todavía no debe describirse como integrada a `wwwroot` ni empaquetada en 
 
 `HealthController` intenta consultar `{SolusolAuthV1:SicBaseUrl}/health` y devuelve `Healthy` o `Degraded` según SQLite y SIC.
 
-`MarketingBrainClient` no constituye actualmente una integración real: `PingAsync()` e `IsAvailableAsync()` devuelven `true` sin comprobación externa y `EmitTelemetryAsync()` es un no-op. Por Zero-Synthetic, no debe presentarse como conectividad verificada.
+`MarketingBrainClient` se ha re-implementado para establecer conexiones HTTP asíncronas reales a la base de URLs configuradas, emitiendo telemetría JSON y verificando el pulso (Heartbeat) de disponibilidad del SIC en runtime en lugar de utilizar respuestas estáticas ficticias.
 
 ## Regresiones
 

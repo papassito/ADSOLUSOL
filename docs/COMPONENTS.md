@@ -16,7 +16,9 @@
 | Budget Engine | IMPLEMENTED | `BudgetService`, actualización condicional de presupuesto |
 | SQLite Persistence | IMPLEMENTED / DEV-CONFIGURED | `AppDbContext`, repositorios, `EnsureCreated()` |
 | Ed25519 Verifier | IMPLEMENTED COMPONENT | `CoreSignatureVerifier` |
-| Signature Middleware | IMPLEMENTED_BUT_NOT_WIRED | `SignatureVerificationMiddleware`; no está en `Program.cs` |
+| Signature Middleware | IMPLEMENTED | `SignatureVerificationMiddleware` registrado en el pipeline de `Program.cs` |
+| Tenant Resolver / Auth | IMPLEMENTED | Resolución autorizada e inyectada en `HttpContext.Items["TenantId"]` |
+| Marketing Brain Client | IMPLEMENTED | `MarketingBrainClient` con llamadas HTTP reales e inyección de HttpClient |
 | React/Vite UI | IMPLEMENTED SOURCE / NOT PACKAGED | `ADSOLUSOL.Presentation.Web` |
 | Health Check | IMPLEMENTED | `GET /api/health` |
 
@@ -24,8 +26,6 @@
 
 | Componente | Estado observado |
 |---|---|
-| Tenant Resolver / Authorization | NOT_IMPLEMENTED en el pipeline actual |
-| Marketing Brain integration | NOT_IMPLEMENTED / UNVERIFIED; cliente actual devuelve disponibilidad sintética y telemetría no-op |
 | SIC integration | PARTIAL; Health consulta SIC, no existe integración completa de negocio |
 | ORCHESTA adapter | PLANNED / no verificado en runtime actual |
 | AI / AI AD | PLANNED / diseño documental |

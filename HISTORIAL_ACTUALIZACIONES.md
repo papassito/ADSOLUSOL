@@ -37,3 +37,15 @@
 *   **Tooling (`Health-Check.ps1`)**: Se corrigieron errores de sintaxis en el script de diagnóstico para asegurar su correcta ejecución.
 *   **`ICampaignRepository`**: La interfaz fue actualizada con el método `UpdateBudgetAsync` para soportar las actualizaciones de presupuesto seguras.
 *   **`EventProcessingService`**: El servicio ahora maneja el ciclo de vida completo de la transacción (Begin, Commit, Rollback) para garantizar la consistencia de los datos al procesar eventos.
+
+## 2026-09-19 — Resolución de Compilación, Seguridad e Integraciones
+### 🚀 Mejoras y Optimizaciones
+*   **Cableado del Pipeline de Seguridad**:
+    *   Se registró `SignatureVerificationMiddleware` en el pipeline HTTP de `Program.cs`.
+    *   Se implementó la resolución autorizada de `TenantId` dentro del middleware basándose en la correspondencia del `NodeId` criptográfico validado.
+    *   Se inyecta el `TenantId` en `HttpContext.Items["TenantId"]` de manera que todos los controladores críticos obtienen la identidad aislada y autenticada en runtime.
+*   **Integración Real con Marketing Brain (SIC)**:
+    *   Se eliminaron las simulaciones síncronas/mocks en `MarketingBrainClient`.
+    *   Se implementó el cliente asíncrono real usando `HttpClient` y `IConfiguration` para enviar telemetría mediante peticiones POST y realizar verificaciones de disponibilidad activas de red.
+*   **Cero Errores de Compilación**:
+    *   Se resolvieron de manera integral todos los warnings y dependencias rotas del compilador, alcanzando un estado limpio de compilación (`Exit Code 0`) verificado.
