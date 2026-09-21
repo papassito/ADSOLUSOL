@@ -20,7 +20,7 @@ public class BudgetService
         {
             // UpdateBudgetAsync now returns the number of affected rows.
             // If 0, it means the budget would be exceeded, and the update was blocked.
-            var rowsAffected = await _campaignRepository.UpdateBudgetAsync(campaign.Id, cost, transaction);
+            var rowsAffected = await _campaignRepository.UpdateBudgetAsync(campaignId, cost, transaction);
             return rowsAffected > 0;
         }
         
