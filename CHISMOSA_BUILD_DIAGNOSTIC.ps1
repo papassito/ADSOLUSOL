@@ -2,9 +2,6 @@
 # Extrae la lista exacta de archivos, líneas y errores que hacen fallar dotnet build
 
 $dotnetPath = (Get-Command dotnet -ErrorAction SilentlyContinue).Source
-if (-not $dotnetPath -or -not (Test-Path $dotnetPath)) {
-    $dotnetPath = "C:\Program Files\dotnet\dotnet.exe"
-}
 
 Write-Host "======================================================================" -ForegroundColor Cyan
 Write-Host " DIAGNÓSTICO DE ERRORES DE COMPILACIÓN (SACANDO LA SOPA)" -ForegroundColor Cyan
@@ -37,7 +34,7 @@ Remove-Item $tempLog -Force -ErrorAction SilentlyContinue
 if ($errors.Count -eq 0) {
     Write-Host "`n[!] No se detectaron errores de código C#. El fallo de build se debe a un problema de MSBuild, archivo corrupto o proceso bloqueado." -ForegroundColor Yellow
     Write-Host "`nSalida cruda del compilador:" -ForegroundColor Gray
-    $logContent | Select-Object -Last 20 | ForEach-Object { Write-Host $_ -ForegroundColor Red }
+    $logContent | Select-Object -Last 20 | ForEach-Host { Write-Host $_ -ForegroundColor Red }
 } else {
     Write-Host "`n[CRÍTICO] Se encontraron $($errors.Count) error(es) de compilación:`n" -ForegroundColor Red
     

@@ -9,16 +9,16 @@ COPY src/ADSOLUSOL.Domain/ADSOLUSOL.Domain.csproj ./src/ADSOLUSOL.Domain/
 COPY src/ADSOLUSOL.Application/ADSOLUSOL.Application.csproj ./src/ADSOLUSOL.Application/
 COPY src/ADSOLUSOL.Infrastructure/ADSOLUSOL.Infrastructure.csproj ./src/ADSOLUSOL.Infrastructure/
 COPY src/ADSOLUSOL.Presentation.Api/ADSOLUSOL.Presentation.Api.csproj ./src/ADSOLUSOL.Presentation.Api/
-
-# Restore dependencies for the entire solution
-RUN dotnet restore ADSOLUSOL.sln
+ 
+# Restore dependencies for the API project and its dependencies
+RUN dotnet restore "src/ADSOLUSOL.Presentation.Api/ADSOLUSOL.Presentation.Api.csproj"
 
 # Copy the rest of the source code
-COPY . .
+COPY src/ ./src/
 
 # Publish the API project for release
-WORKDIR /source/src/ADSOLUSOL.Presentation.Api
-RUN dotnet publish -c Release -o /app/publish /p:UseAppHost=false
+WORKDIR /source
+RUN dotnet publish "src/ADSOLUSOL.Presentation.Api/ADSOLUSOL.Presentation.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 # Stage 2: Create the final, lightweight runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final

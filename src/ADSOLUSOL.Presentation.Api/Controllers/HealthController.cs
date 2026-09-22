@@ -1,4 +1,4 @@
-﻿﻿﻿﻿using Microsoft.AspNetCore.Mvc;
+﻿﻿﻿﻿﻿﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
 namespace ADSOLUSOL.Presentation.Api.Controllers;
@@ -33,6 +33,7 @@ public class HealthController : ControllerBase
             Checks = new
             {
                 Database = isDbHealthy ? "UP" : "DOWN"
+            }
         };
 
         return Ok(statusObject);

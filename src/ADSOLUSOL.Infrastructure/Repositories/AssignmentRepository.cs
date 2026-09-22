@@ -20,7 +20,7 @@ public class AssignmentRepository : IAssignmentRepository
         if (!exists)
         {
             _context.CampaignPlacements.Add(new CampaignPlacement { CampaignId = campaignId, PlacementId = placementId });
-    }
+        }
     }
 
     public async Task AssignCreativeToCampaignAsync(string campaignId, long creativeId)
@@ -30,4 +30,5 @@ public class AssignmentRepository : IAssignmentRepository
         {
             _context.CampaignCreatives.Add(new CampaignCreative { CampaignId = campaignId, CreativeId = creativeId });
     }
+}
 }

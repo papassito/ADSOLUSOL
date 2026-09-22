@@ -74,7 +74,7 @@ La interfaz de usuario es una aplicación de escritorio nativa de Windows constr
 
 ## SIC / Marketing Brain
 
-`HealthController` ya no intenta consultar `{SolusolAuthV1:SicBaseUrl}/health`. Su única responsabilidad es verificar la salud de la base de datos local.
+`HealthController` no intenta consultar `{SolusolAuthV1:SicBaseUrl}/health`. Su única responsabilidad es verificar la salud de la base de datos local.
 
 `MarketingBrainClient` no constituye actualmente una integración real: `PingAsync()` e `IsAvailableAsync()` devuelven `true` sin comprobación externa y `EmitTelemetryAsync()` es un no-op. Por Zero-Synthetic, no debe presentarse como conectividad verificada.
 
