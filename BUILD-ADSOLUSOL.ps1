@@ -5,7 +5,7 @@
 
 [CmdletBinding()]
 param(
-    [string]$Root = "Y:\Documentos\GitHub\ADSOLUSOL"
+    [string]$Root = $PSScriptRoot
 )
 
 Set-StrictMode -Version Latest
@@ -13,8 +13,6 @@ $ErrorActionPreference = "Stop"
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
-
-$BuildFailed = $false
 
 Write-Host ""
 Write-Host "======================================================================" -ForegroundColor Cyan
@@ -43,21 +41,21 @@ $FinalBuild = Join-Path `
 if (-not (Test-Path $Root)) {
     Write-Host "[FAIL] No existe la raíz:" -ForegroundColor Red
     Write-Host $Root -ForegroundColor Red
-    return
+    exit 1
 }
 
 Set-Location $Root
 
 if (-not (Test-Path $Solution)) {
     Write-Host "[FAIL] No existe ADSOLUSOL.sln" -ForegroundColor Red
-    return
+    exit 1
 }
 
 $Dotnet = Get-Command dotnet -ErrorAction SilentlyContinue
 
 if (-not $Dotnet) {
     Write-Host "[FAIL] dotnet no está disponible." -ForegroundColor Red
-    return
+    exit 1
 }
 
 Write-Host "[OK] Root: $Root" -ForegroundColor Green
@@ -73,7 +71,7 @@ Write-Host ""
 # ---------------------------------------------------------------------------
 
 Write-Host "======================================================================" -ForegroundColor Yellow
-Write-Host " [1/5] RESTORE" -ForegroundColor Yellow
+Write-Host " [1/3] RESTORE" -ForegroundColor Yellow
 Write-Host "======================================================================" -ForegroundColor Yellow
 
 & dotnet restore $Solution
@@ -83,7 +81,7 @@ $RestoreCode = $LASTEXITCODE
 if ($RestoreCode -ne 0) {
     Write-Host ""
     Write-Host "[FAIL] RESTORE FALLÓ. Exit Code: $RestoreCode" -ForegroundColor Red
-    return
+    exit 1
 }
 
 Write-Host "[PASS] Restore" -ForegroundColor Green
@@ -94,7 +92,7 @@ Write-Host "[PASS] Restore" -ForegroundColor Green
 
 Write-Host ""
 Write-Host "======================================================================" -ForegroundColor Yellow
-Write-Host " [2/5] BUILD .NET RELEASE" -ForegroundColor Yellow
+Write-Host " [2/3] BUILD .NET RELEASE" -ForegroundColor Yellow
 Write-Host "======================================================================" -ForegroundColor Yellow
 
 & dotnet build `
@@ -108,7 +106,7 @@ $BuildCode = $LASTEXITCODE
 if ($BuildCode -ne 0) {
     Write-Host ""
     Write-Host "[FAIL] BUILD FALLÓ. Exit Code: $BuildCode" -ForegroundColor Red
-    return
+    exit 1
 }
 
 Write-Host ""
@@ -120,7 +118,7 @@ Write-Host "[PASS] Solución .NET compilada." -ForegroundColor Green
 
 Write-Host ""
 Write-Host "======================================================================" -ForegroundColor Yellow
-Write-Host " [5/5] PUBLISH" -ForegroundColor Yellow
+Write-Host " [3/3] PUBLISH" -ForegroundColor Yellow
 Write-Host "======================================================================" -ForegroundColor Yellow
 
 if (Test-Path $FinalBuild) {
@@ -150,7 +148,7 @@ $PublishCode = $LASTEXITCODE
 if ($PublishCode -ne 0) {
     Write-Host ""
     Write-Host "[FAIL] PUBLISH FALLÓ. Exit Code: $PublishCode" -ForegroundColor Red
-    return
+    exit 1
 }
 
 # ---------------------------------------------------------------------------
@@ -164,7 +162,7 @@ $PublishedExe = Join-Path `
 if (-not (Test-Path $PublishedExe)) {
     Write-Host ""
     Write-Host "[FAIL] Publish terminó pero falta el ejecutable principal: $(Split-Path $PublishedExe -Leaf)" -ForegroundColor Red
-    return
+    exit 1
 }
 
 Write-Host ""
