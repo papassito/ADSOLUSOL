@@ -7,6 +7,20 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+Write-Host ">>> Verificando compilacion previa al sello de Release..." -ForegroundColor Yellow
+dotnet build ADSOLUSOL.sln --nologo -v:quiet
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "CRÍTICO: La solución tiene errores de compilación. No se puede generar el sello $Version."
+    exit 1
+}
+
+Write-Host ">>> Ejecutando suite de pruebas unitarias y de regresión..." -ForegroundColor Yellow
+dotnet test ADSOLUSOL.sln --no-build --nologo -v:quiet
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "CRÍTICO: Las pruebas fallaron. No se puede generar el sello $Version."
+    exit 1
+}
+
 Write-Host ">>> Agregando cambios al staging de Git (ADSOLUSOL)..." -ForegroundColor Yellow
 git add .
 

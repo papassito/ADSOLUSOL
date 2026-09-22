@@ -84,7 +84,7 @@ Adicionalmente, existe un panel de administración web desarrollado en React (`s
 
 ## SIC / Marketing Brain
 
-`HealthController` no intenta consultar `{SolusolAuthV1:SicBaseUrl}/health`. Su única responsabilidad es verificar la salud de la base de datos local.
+`HealthController` verifica la conectividad de la base de datos SQLite local y comprueba la disponibilidad del motor SIC mediante `{SolusolAuthV1:SicBaseUrl}/health`, respondiendo con el contrato canónico `HealthResponse` conteniendo los checks `Database` y `SicEngine`.
 
 La integración con **Marketing Brain (SIC) es real y está activa**. El cliente (`MarketingBrainClient`) utiliza `HttpClient` para enviar telemetría de eventos (impresiones, clics) al servicio externo y realiza comprobaciones de disponibilidad de red. Se han eliminado todas las implementaciones ficticias (mocks).
 

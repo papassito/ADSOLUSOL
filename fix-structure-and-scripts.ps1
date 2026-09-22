@@ -20,24 +20,25 @@ if (Test-Path $orphanMaui) {
 # 2. Corregir ForEach-Host en CHISMOSA_BUILD_DIAGNOSTIC.ps1
 $chismosaPath = "CHISMOSA_BUILD_DIAGNOSTIC.ps1"
 if (Test-Path $chismosaPath) {
-    $content = Get-Content$chismosaPath -Raw
-    $fixedContent =$content -replace 'ForEach-Host', 'ForEach-Object'
-    Set-Content -Path $chismosaPath -Value$fixedContent -Encoding UTF8
+    $content = Get-Content $chismosaPath -Raw
+    $fixedContent = $content -replace 'ForEach-Host', 'ForEach-Object'
+    Set-Content -Path $chismosaPath -Value $fixedContent -Encoding UTF8
     Write-Host " [✓] Sintaxis corregida en $chismosaPath (ForEach-Host -> ForEach-Object)" -ForegroundColor Green
 }
 
 # 3. Corregir falsos positivos Regex en Run-Master-Audit.ps1
 $auditScript = "Run-Master-Audit.ps1"
 if (Test-Path $auditScript) {
-    $content = Get-Content$auditScript -Raw
-    $fixedContent =$content -replace 'Select-String -Pattern "\\b\(TODO\Vert{}FIXME\)\\b"', 'Select-String -Pattern "\b(TODO|FIXME)\b" -CaseSensitive'
-    Set-Content -Path $auditScript -Value$fixedContent -Encoding UTF8
+    $content = Get-Content $auditScript -Raw
+    $fixedContent = $content -replace 'Select-String -Pattern "\\b\(TODO\Vert{}FIXME\)\\b"', 'Select-String -Pattern "\b(TODO|FIXME)\b" -CaseSensitive'
+    Set-Content -Path $auditScript -Value $fixedContent -Encoding UTF8
     Write-Host " [✓] Sensibilidad a mayusculas/minusculas corregida en $auditScript" -ForegroundColor Green
 }
 
 # 4. Ajustar seal_adsolusol_release.ps1 para requerir 'dotnet build' exitoso antes del commit/tag
 $sealScript = "seal_adsolusol_release.ps1"
-if (Test-Path $sealScript) {$sealContent = @"
+if (Test-Path $sealScript) {
+    $sealContent = @"
 [CmdletBinding()]
 param(
     [string]`$Version = "v1.0.0-INTEGRATED",
@@ -65,7 +66,7 @@ git tag -a "`$Version" -m "ADSOLUSOL Marketing Engine - Fully Integrated with SI
 Write-Host ""
 Write-Host "✅ [OK] Repositorio ADSOLUSOL sellado exitosamente con el tag `$Version" -ForegroundColor Green
 "@
-    Set-Content -Path $sealScript -Value$sealContent -Encoding UTF8
+    Set-Content -Path $sealScript -Value $sealContent -Encoding UTF8
     Write-Host " [✓] Guardagancho de compilacion agragado a $sealScript" -ForegroundColor Green
 }
 

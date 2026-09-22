@@ -61,7 +61,7 @@ GET /api/health
 
 El endpoint comprueba apertura de SQLite y consulta `{SolusolAuthV1:SicBaseUrl}/health`. Devuelve HTTP 200 con `Status = Healthy` o `Degraded` y checks `Database` / `SicEngine`.
 
-## Ruta reservada sin acciones activas
+## Endpoints de Marketing
 
 `MarketingController` declara:
 

@@ -61,7 +61,7 @@ GET /api/health
 
 El endpoint comprueba apertura de SQLite y consulta `{SolusolAuthV1:SicBaseUrl}/health`. Devuelve HTTP 200 con `Status = Healthy` o `Degraded` y checks `Database` / `SicEngine`.
 
-## Ruta reservada sin acciones activas
+## Endpoints de Marketing
 
 `MarketingController` declara:
 
@@ -82,11 +82,11 @@ X-Solusol-Timestamp
 X-Solusol-Nonce
 ```
 
-Sin embargo, `Program.cs` no ejecuta `UseMiddleware<SignatureVerificationMiddleware>()`. Estado actual:
+`Program.cs` registra e invoca `UseMiddleware<SignatureVerificationMiddleware>()` protegiendo los endpoints de la API. Estado actual:
 
 ```text
 ED25519 VERIFIER = IMPLEMENTED COMPONENT
-SIGNATURE MIDDLEWARE = IMPLEMENTED_BUT_NOT_WIRED
+SIGNATURE MIDDLEWARE = IMPLEMENTED_AND_WIRED
 ```
 
 No existe protección `X-Api-Key` activa en el pipeline actual.

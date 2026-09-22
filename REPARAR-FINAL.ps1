@@ -5,7 +5,7 @@
 
 [CmdletBinding()]
 param(
-    [string]$Root = "Y:\Documentos\GitHub\ADSOLUSOL"
+    [string]$Root = $PSScriptRoot
 )
 
 Set-StrictMode -Version Latest

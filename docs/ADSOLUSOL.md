@@ -103,7 +103,6 @@ GET    /api/health
 
 ### Parcial o pendiente
 
-- wiring del middleware de firmas en `Program.cs`;
 - configuración Production de SQLite;
 - migraciones/versionado de esquema;
 - integración UI production con ASP.NET publish;

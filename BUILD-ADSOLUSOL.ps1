@@ -22,11 +22,8 @@ Write-Host ""
 
 # --- VALIDACIÓN DE EJECUCIÓN ---
 if ([string]::IsNullOrWhiteSpace($Root)) {
-    Write-Host "[FAIL] La ruta raíz del proyecto está vacía." -ForegroundColor Red
-    Write-Host "[INFO] Este error ocurre si el script se ejecuta pegando su contenido en la consola." -ForegroundColor Yellow
-    Write-Host "[INFO] Por favor, ejecuta el script directamente desde su archivo:" -ForegroundColor Yellow
-    Write-Host "       .\BUILD-ADSOLUSOL.ps1" -ForegroundColor White
-    exit 1
+    $Root = (Get-Location).Path
+    Write-Host "[INFO] `$PSScriptRoot no detectado (ejecución interactiva). Usando directorio actual: $Root" -ForegroundColor Yellow
 }
 
 # ---------------------------------------------------------------------------
