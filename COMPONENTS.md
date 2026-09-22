@@ -20,6 +20,7 @@
 | Tenant Resolver / Auth | IMPLEMENTED | Resolución autorizada e inyectada en `HttpContext.Items["TenantId"]` |
 | Marketing Brain Client | IMPLEMENTED | `MarketingBrainClient` con llamadas HTTP reales e inyección de HttpClient |
 | MAUI Blazor UI | IMPLEMENTED | `ADSOLUSOL.Presentation.Desktop` y `ADSOLUSOL.Presentation.Shared` |
+| React/Vite UI | IMPLEMENTED SOURCE / NOT PACKAGED | `ADSOLUSOL.Presentation.Web` |
 | Health Check | IMPLEMENTED | `GET /api/health` |
 
 ## Componentes incompletos o no verificados

@@ -15,6 +15,17 @@ public class CreativesController : ControllerBase
         _creativeRepository = creativeRepository;
     }
 
+    [HttpGet("{id:long}")]
+    public async Task<IActionResult> GetById(long id)
+    {
+        var creative = await _creativeRepository.GetByIdAsync(id);
+        if (creative is null)
+        {
+            return NotFound();
+        }
+        return Ok(creative);
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateCreative([FromBody] Creative creative)
     {
@@ -22,6 +33,6 @@ public class CreativesController : ControllerBase
         creative.UpdatedAt = DateTime.UtcNow;
         var id = await _creativeRepository.CreateAsync(creative);
         var createdCreative = await _creativeRepository.GetByIdAsync(id);
-        return CreatedAtAction(nameof(CreateCreative), new { id }, createdCreative);
+        return CreatedAtAction(nameof(GetById), new { id }, createdCreative);
     }
 }

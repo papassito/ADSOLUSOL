@@ -1,11 +1,11 @@
 {
-    "Timestamp":  "2026-09-21T22:29:41.8725360-07:00",
+    "Timestamp":  "2026-09-22T09:47:35.9987041-07:00",
     "Project":  "ADSOLUSOL",
     "Build":  {
                   "Errors":  [
 
                              ],
-                  "Status":  "FAIL"
+                  "Status":  "OK"
               },
     "Status":  "FAIL",
     "Forensics":  {
@@ -13,7 +13,7 @@
 
                                    ],
                       "CodeQuality":  [
-                                          "[LOW] [CALIDAD] Comentario TODO/FIXME en MauiProgram.cs:36 -> // Registrar todos los servicios y repositorios reales"
+                                          "[MEDIUM] [CALIDAD] Bloque catch silencioso (ignora errores) en HealthController.cs:27"
                                       ],
                       "Architecture":  [
 
@@ -21,16 +21,16 @@
                   },
     "Tests":  {
                   "Failures":  [
-
+                                   "[FAIL] [TESTS] La suite \u0027ADSOLUSOL.RegressionTests.csproj\u0027 falló."
                                ],
-                  "Status":  "SKIPPED"
+                  "Status":  "FAIL"
               },
     "Metrics":  {
-                    "ArchivosCSharp":  65,
-                    "LineasDeCodigo":  1575
+                    "ArchivosCSharp":  122,
+                    "LineasDeCodigo":  2308
                 },
     "SummaryFindings":  [
-                            "[CRITICAL] [BUILD] La compilación falló con exit code 1.",
-                            "[LOW] [CALIDAD] Comentario TODO/FIXME en MauiProgram.cs:36 -> // Registrar todos los servicios y repositorios reales"
+                            "[MEDIUM] [CALIDAD] Bloque catch silencioso (ignora errores) en HealthController.cs:27",
+                            "[FAIL] [TESTS] La suite \u0027ADSOLUSOL.RegressionTests.csproj\u0027 falló."
                         ]
 }

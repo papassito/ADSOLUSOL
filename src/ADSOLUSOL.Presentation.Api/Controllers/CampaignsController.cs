@@ -1,4 +1,4 @@
-﻿﻿using ADSOLUSOL.Domain.Entities;
+﻿﻿﻿﻿using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 using ADSOLUSOL.Application.Services;
 using ADSOLUSOL.Domain.Enums;
@@ -25,6 +25,26 @@ public class CampaignsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateCampaign([FromBody] CreateCampaignRequest request)
     {
+        if (string.IsNullOrWhiteSpace(request.Name))
+        {
+            return BadRequest(new { message = "El nombre de la campaña es requerido." });
+        }
+
+        if (request.Budget <= 0)
+        {
+            return BadRequest(new { message = "El presupuesto debe ser mayor a cero." });
+        }
+
+        if (request.CostPerMille < 0 || request.CostPerClick < 0)
+        {
+            return BadRequest(new { message = "Los costos CPM y CPC no pueden ser negativos." });
+        }
+
+        if (request.StartDateUtc.HasValue && request.EndDateUtc.HasValue && request.EndDateUtc < request.StartDateUtc)
+        {
+            return BadRequest(new { message = "La fecha final no puede ser anterior a la fecha inicial." });
+        }
+
         var campaign = await _campaignService.CreateAsync(TenantId, request.Name, request.Budget, request.CostPerMille, request.CostPerClick, request.StartDateUtc, request.EndDateUtc);
 
         return CreatedAtAction(nameof(GetCampaignById), new { id = campaign.Id }, campaign);
@@ -48,6 +68,13 @@ public class CampaignsController : ControllerBase
     [HttpPost("{id}/status")]
     public async Task<IActionResult> UpdateStatus(string id, [FromBody] UpdateStatusRequest request)
     {
+        var allowedStatuses = new[] { "ACTIVE", "PAUSED", "SCHEDULED", "COMPLETED" };
+        var normalizedStatus = request.Status?.Trim().ToUpperInvariant();
+        if (string.IsNullOrWhiteSpace(normalizedStatus) || !allowedStatuses.Contains(normalizedStatus))
+        {
+            return BadRequest(new { message = $"Estado inválido: '{request.Status}'. Estados permitidos: ACTIVE, PAUSED, SCHEDULED, COMPLETED." });
+        }
+
         var updatedCampaign = await _campaignService.UpdateStatusAsync(TenantId, id, request.Status);
         if (updatedCampaign is null)
         {

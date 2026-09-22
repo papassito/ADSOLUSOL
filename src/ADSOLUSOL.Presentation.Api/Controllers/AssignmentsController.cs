@@ -1,4 +1,4 @@
-﻿﻿using ADSOLUSOL.Domain.Interfaces;
+﻿﻿﻿﻿using ADSOLUSOL.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ADSOLUSOL.Presentation.Api.Controllers;
@@ -24,14 +24,15 @@ public class AssignmentsController : ControllerBase
     [HttpPost("creative")]
     public async Task<IActionResult> AssignCreative([FromBody] AssignmentRequest request)
     {
+        var campaign = await _campaignRepository.GetByIdAsync(request.CampaignId);
+        if (campaign is null || campaign.TenantId != TenantId)
+        {
+            return NotFound();
+        }
+
         await _unitOfWork.BeginTransactionAsync();
         try
         {
-            var campaign = await _campaignRepository.GetByIdAsync(request.CampaignId);
-            if (campaign is null || campaign.TenantId != TenantId)
-            {
-                return NotFound();
-            }
             await _assignmentRepository.AssignCreativeToCampaignAsync(request.CampaignId, request.EntityId);
             await _unitOfWork.CommitAsync();
             return Ok();
@@ -46,14 +47,15 @@ public class AssignmentsController : ControllerBase
     [HttpPost("placement")]
     public async Task<IActionResult> AssignPlacement([FromBody] AssignmentRequest request)
     {
+        var campaign = await _campaignRepository.GetByIdAsync(request.CampaignId);
+        if (campaign is null || campaign.TenantId != TenantId)
+        {
+            return NotFound();
+        }
+
         await _unitOfWork.BeginTransactionAsync();
         try
         {
-            var campaign = await _campaignRepository.GetByIdAsync(request.CampaignId);
-            if (campaign is null || campaign.TenantId != TenantId)
-            {
-                return NotFound();
-            }
             await _assignmentRepository.AssignPlacementToCampaignAsync(request.CampaignId, request.EntityId);
             await _unitOfWork.CommitAsync();
             return Ok();

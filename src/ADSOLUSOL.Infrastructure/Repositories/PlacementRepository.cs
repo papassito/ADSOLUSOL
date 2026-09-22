@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿using ADSOLUSOL.Domain.Entities;
+﻿﻿﻿﻿﻿﻿﻿﻿using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 using ADSOLUSOL.Infrastructure.Persistence;
 using Dapper;
@@ -43,8 +43,8 @@ public class PlacementRepository : IPlacementRepository
 
     public async Task<long> CreateAsync(Placement placement)
     {
-        // The UnitOfWork is responsible for calling SaveChangesAsync.
         await _context.Placements.AddAsync(placement);
+        await _context.SaveChangesAsync();
         return placement.Id;
     }
 

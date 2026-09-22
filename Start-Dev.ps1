@@ -4,6 +4,10 @@ param()
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Continue"
 
+if ([string]::IsNullOrWhiteSpace($PSScriptRoot)) {
+    $PSScriptRoot = (Get-Location).Path
+}
+
 Write-Host "==================================================" -ForegroundColor Cyan
 Write-Host "    LIMPIEZA DE PROCESOS Y ARRANQUE DE ADSOLUSOL  " -ForegroundColor Cyan
 Write-Host "==================================================" -ForegroundColor Cyan

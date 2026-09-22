@@ -20,12 +20,15 @@ POST   /api/Campaigns/{id}/impression
 ### PlacementsController
 
 ```text
+GET    /api/Placements
+GET    /api/Placements/{code}
 POST   /api/Placements
 ```
 
 ### CreativesController
 
 ```text
+GET    /api/Creatives/{id}
 POST   /api/Creatives
 ```
 
@@ -99,10 +102,10 @@ No existe protección `X-Api-Key` activa en el pipeline actual.
 HttpContext.Items["TenantId"]
 ```
 
-El middleware de firma actual no asigna ese valor y no existe un resolver NodeId→TenantId conectado. Por tanto:
+El middleware de firma resuelve el NodeId contra `INodeRegistry` e inyecta el TenantId en el contexto HTTP:
 
 ```text
-TENANT RESOLUTION = NOT_IMPLEMENTED IN CURRENT PIPELINE
+TENANT RESOLUTION = IMPLEMENTED_AND_WIRED
 AUTHENTICATION != AUTHORIZATION
 ```
 

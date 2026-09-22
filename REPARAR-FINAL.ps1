@@ -23,6 +23,12 @@ if (Test-Path $strayMauiProgram) {
     Write-Host "[FIX] Eliminado 'MauiProgram.cs' fuera de lugar en Presentation.Api." -ForegroundColor Green
 }
 
+$strayMauiProgramRepo = Join-Path $Root "src\ADSOLUSOL.Infrastructure\Repositories\MauiProgram.cs"
+if (Test-Path $strayMauiProgramRepo) {
+    Remove-Item $strayMauiProgramRepo -Force
+    Write-Host "[FIX] Eliminado 'MauiProgram.cs' fuera de lugar en Infrastructure/Repositories." -ForegroundColor Green
+}
+
 # 2. Corregir namespace 'Authentication' a 'Security' o 'Cryptography' en Program.cs
 $programCs = Join-Path $Root "src\ADSOLUSOL.Presentation.Api\Program.cs"
 if (Test-Path $programCs) {

@@ -10,17 +10,34 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+return await RegressionSuiteRunner.RunAsync(args);
+
+public class RegressionTestFacts
+{
+    [Xunit.Fact]
+    public async Task BusinessRules_17Verifications_AllPass()
+    {
+        int exitCode = await RegressionSuiteRunner.RunAsync(Array.Empty<string>(), rethrowException: true);
+        Xunit.Assert.Equal(0, exitCode);
+    }
+}
+
+public static class RegressionSuiteRunner
+{
+    public static async Task<int> RunAsync(string[] args, bool rethrowException = false)
+    {
 Console.WriteLine("==============================================================================");
 Console.WriteLine(" ADSOLUSOL - SUITE DE REGRESIÓN DE NEGOCIO (ENTORNO VERIFICADO)");
 Console.WriteLine("==============================================================================");
 
+var dbInstanceName = "reg_tests_" + Guid.NewGuid().ToString("N");
 using var host = Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration(config =>
     {
         // Use a shared in-memory database for the entire test run.
         config.AddInMemoryCollection(new Dictionary<string, string?>
         {
-            ["ConnectionStrings:DefaultConnection"] = "DataSource=file:reg_tests?mode=memory&cache=shared"
+            ["ConnectionStrings:DefaultConnection"] = $"DataSource=file:{dbInstanceName}?mode=memory&cache=shared"
         });
     })
     .ConfigureServices((context, services) =>
@@ -104,6 +121,7 @@ try
     await LogTest("[06] Campaign <-> Placement persistence", async () =>
     {
         await assignmentRepo.AssignPlacementToCampaignAsync(campaignA.Id, placementId);
+        await dbContext.SaveChangesAsync();
         var campaignsForPlacement = await placementRepo.GetEligibleCampaignsAsync("tenant-A", "P1");
         Assert(!campaignsForPlacement.Any(c => c.Id == campaignA.Id), "Campaign correctly associated, but not eligible while PAUSED.");
     });
@@ -111,6 +129,7 @@ try
     await LogTest("[07] Campaign <-> Creative persistence", async () =>
     {
         await assignmentRepo.AssignCreativeToCampaignAsync(campaignA.Id, creativeId);
+        await dbContext.SaveChangesAsync();
         var creativeForCampaign = await creativeRepo.GetEligibleCreativeForCampaignAsync(campaignA.Id);
         Assert(creativeForCampaign?.Id == creativeId, "Creative correctly associated with campaign.");
     });
@@ -168,6 +187,7 @@ try
         await campaignService.UpdateStatusAsync("tenant-C", tinyCampaign.Id, "ACTIVE");
         await assignmentRepo.AssignCreativeToCampaignAsync(tinyCampaign.Id, creativeId); // Associate campaign with creative
         await assignmentRepo.AssignPlacementToCampaignAsync(tinyCampaign.Id, placementId); // Associate campaign with placement
+        await dbContext.SaveChangesAsync();
         var overspendEvent = new AdEvent { EventId = "evt_over_1", CampaignId = tinyCampaign.Id, CreativeId = creativeId.ToString(), PlacementCode = "P1", EventType = "Click", TenantId = "tenant-C" };
         var status = await eventProcessingService.ProcessEvent(overspendEvent);
         Assert(status == EventProcessingStatus.Rejected, "Event rejected as it would exceed budget.");
@@ -196,29 +216,35 @@ catch (Exception ex)
     Console.WriteLine($"\n--- TEST FAILED ---");
     Console.WriteLine(ex.ToString());
     Console.ResetColor();
+    if (rethrowException)
+    {
+        throw;
+    }
     return 1;
 }
 finally
 {
     services.GetRequiredService<SqliteConnection>().Close();
 }
+    }
 
-async Task<T> LogTestValue<T>(string testName, Func<Task<T>> testAction)
+    private static async Task<T> LogTestValue<T>(string testName, Func<Task<T>> testAction)
 {
     Console.WriteLine($"\n[TEST] {testName}...");
     return await testAction();
 }
 
-async Task LogTest(string testName, Func<Task> testAction)
+    private static async Task LogTest(string testName, Func<Task> testAction)
 {
     Console.WriteLine($"\n[TEST] {testName}...");
     await testAction();
 }
 
-void Assert([System.Diagnostics.CodeAnalysis.DoesNotReturnIf(false)] bool condition, string message)
+    private static void Assert([System.Diagnostics.CodeAnalysis.DoesNotReturnIf(false)] bool condition, string message)
 {
     if (!condition) throw new Exception($"Assertion Failed: {message}");
     Console.WriteLine($"  [✓] PASS: {message}");
+}
 }
 
 public class MockMarketingBrainService : IMarketingBrainService

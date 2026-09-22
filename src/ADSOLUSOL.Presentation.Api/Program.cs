@@ -1,17 +1,28 @@
-﻿using ADSOLUSOL.Application.Interfaces;
+﻿﻿using ADSOLUSOL.Application.Interfaces;
 using ADSOLUSOL.Application.Services;
 using ADSOLUSOL.Domain.Interfaces;
-using ADSOLUSOL.Infrastructure.Integration;
+using ADSOLUSOL.Infrastructure.ExternalServices.MarketingBrain;
 using ADSOLUSOL.Infrastructure.Security;
+using ADSOLUSOL.Presentation.Api.Middleware;
 using ADSOLUSOL.Infrastructure.Persistence;
 using ADSOLUSOL.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Concurrent;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+    ?? "Data Source=App_Data/adsolusol.db";
+
+var appDataDir = Path.Combine(builder.Environment.ContentRootPath, "App_Data");
+if (!Directory.Exists(appDataDir))
+{
+    Directory.CreateDirectory(appDataDir);
+}
+
 // Configuración de la base de datos de la API
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(connectionString));
 
 // Registro de Repositorios del Dominio
 builder.Services.AddScoped<ICampaignRepository, CampaignRepository>();
@@ -20,6 +31,7 @@ builder.Services.AddScoped<ICreativeRepository, CreativeRepository>();
 builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
 builder.Services.AddScoped<IAdEventRepository, AdEventRepository>();
 builder.Services.AddSingleton<ICoreSignatureVerifier, CoreSignatureVerifier>();
+builder.Services.AddSingleton(new ConcurrentDictionary<string, DateTime>());
 builder.Services.AddSingleton<INodeRegistry, NodeRegistry>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -56,6 +68,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 app.UseMiddleware<SignatureVerificationMiddleware>();
 app.UseAuthorization();

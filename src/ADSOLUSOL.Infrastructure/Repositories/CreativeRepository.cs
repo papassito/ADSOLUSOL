@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿using ADSOLUSOL.Domain.Entities;
+﻿﻿﻿﻿﻿﻿﻿﻿using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 using ADSOLUSOL.Infrastructure.Persistence;
 using Dapper;
@@ -36,8 +36,8 @@ public class CreativeRepository : ICreativeRepository
 
     public async Task<long> CreateAsync(Creative creative)
     {
-        // The UnitOfWork is responsible for calling SaveChangesAsync.
         await _context.Creatives.AddAsync(creative);
+        await _context.SaveChangesAsync();
         return creative.Id;
     }
 }

@@ -80,7 +80,7 @@ GET    /api/Serve?placementCode={code}
 GET    /api/health
 ```
 
-`/api/marketing/adsolusol` existe únicamente como ruta base de un controller sin acciones; no se considera endpoint operativo.
+`/api/marketing/adsolusol` expone comprobaciones operativas `/status` y `/ping` mediante `MarketingBrainService`.
 
 ## 7. Estado de implementación
 
