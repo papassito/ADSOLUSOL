@@ -29,17 +29,19 @@ public static class MauiProgram
         builder.Services.AddBlazorWebViewDeveloperTools();
         builder.Logging.AddDebug();
 #endif
-        // Configurar la base de datos
+        // Configuración de la base de datos SQLite en el directorio local
         var dbPath = Path.Combine(FileSystem.AppDataDirectory, "adsolusol.db");
         builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite($"Data Source={dbPath}"));
 
-        // Registrar todos los servicios y repositorios reales
+        // Registro de capas de persistencia y repositorios
         builder.Services.AddScoped<ICampaignRepository, CampaignRepository>();
         builder.Services.AddScoped<IPlacementRepository, PlacementRepository>();
         builder.Services.AddScoped<ICreativeRepository, CreativeRepository>();
         builder.Services.AddScoped<IAdEventRepository, AdEventRepository>();
         builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        // Registro de servicios del dominio y aplicación
         builder.Services.AddScoped<CampaignService>();
         builder.Services.AddScoped<EventProcessingService>();
         builder.Services.AddScoped<BudgetService>();

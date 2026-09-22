@@ -20,7 +20,7 @@ $ErrorActionPreference = "Continue"
 
 # --- ESTRUCTURA DE HALLAZGOS ---
 $findings = @{
-    BuildErrors        = @()
+    BuildErrors        = [System.Collections.Generic.List[string]]::new()
     TestFailures       = [System.Collections.Generic.List[string]]::new()
     CodeQuality        = [System.Collections.Generic.List[string]]::new()
     Security           = [System.Collections.Generic.List[string]]::new()
@@ -94,16 +94,9 @@ Write-Header "FASE 2: ANÁLISIS DE COMPILACIÓN"
 $buildLog = & $dotnetExe build "$($slnPath.FullName)" -v:normal /noconlog 2>&1
 $buildExitCode = $LASTEXITCODE
 
-$errorRegex = '^(?<file>.*?\.cs)\((?<line>\d+),(?<col>\d+)\):\s+error\s+(?<code>CS\d+):\s+(?<msg>.*)$'
-foreach ($line in $buildLog) {
-    if ($line -match $errorRegex) {
-        $findings.BuildErrors += [PSCustomObject]@{
-            Archivo = $Matches['file']
-            Linea   = $Matches['line']
-            Codigo  = $Matches['code']
-            Mensaje = $Matches['msg'].Trim()
-        }
-    }
+# Captura errores de C# (CS), MSBuild (MSB), y NuGet (NU) para un diagnóstico completo.
+$buildLog | Where-Object { $_ -match ':\s*error\s+(CS|MSB|NU)\d+:' } | ForEach-Object {
+    $findings.BuildErrors.Add($_.Trim())
 }
 
 if ($buildExitCode -eq 0) {
@@ -153,7 +146,8 @@ $csharpFiles | Select-String -Pattern "NotImplementedException" | ForEach-Object
 $csharpFiles | Select-String -Pattern "catch\s*\([^\)]*\)\s*\{\s*\}" | ForEach-Object {
     Report-Finding "MEDIUM" "CALIDAD" "Bloque catch silencioso (ignora errores) en $(Split-Path $_.Path -Leaf):$($_.LineNumber)"
 }
-$csharpFiles | Select-String -Pattern "TODO|FIXME" | ForEach-Object {
+# Usa \b para buscar palabras completas y evitar falsos positivos como en "todos".
+$csharpFiles | Select-String -Pattern "\b(TODO|FIXME)\b" | ForEach-Object {
     Report-Finding "LOW" "CALIDAD" "Comentario TODO/FIXME en $(Split-Path $_.Path -Leaf):$($_.LineNumber) -> $($_.Line.Trim())"
 }
 
@@ -226,11 +220,8 @@ Write-Host "   └── Líneas de código : $($findings.Metrics.LineasDeCodigo
 # --- Estado de Compilación ---
 Write-Host "`n🛠️ ESTADO DE COMPILACIÓN: $($findings.BuildStatus)" -ForegroundColor $(if ($findings.BuildStatus -eq 'OK') {'Green'} else {'Red'})
 if ($findings.BuildErrors.Count -gt 0) {
-    $findings.BuildErrors | Group-Object Archivo | ForEach-Object {
-        Write-Host "   📄 ARCHIVO: $($_.Name)" -ForegroundColor Yellow
-        foreach ($err in $_.Group) {
-            Write-Host "      ├── Línea $($err.Linea): [$($err.Codigo)] $($err.Mensaje)" -ForegroundColor Red
-        }
+    $findings.BuildErrors | ForEach-Object {
+        Write-Host "   -> $_" -ForegroundColor Red
     }
 }
 

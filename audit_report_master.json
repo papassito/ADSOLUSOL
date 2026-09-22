@@ -1,0 +1,35 @@
+﻿{
+    "Timestamp":  "2026-09-21T22:32:26.3936941-07:00",
+    "Project":  "ADSOLUSOL",
+    "Build":  {
+                  "Errors":  [
+
+                             ],
+                  "Status":  "FAIL"
+              },
+    "Status":  "FAIL",
+    "Forensics":  {
+                      "Security":  [
+
+                                   ],
+                      "CodeQuality":  [
+
+                                      ],
+                      "Architecture":  [
+
+                                       ]
+                  },
+    "Tests":  {
+                  "Failures":  [
+
+                               ],
+                  "Status":  "SKIPPED"
+              },
+    "Metrics":  {
+                    "ArchivosCSharp":  65,
+                    "LineasDeCodigo":  1576
+                },
+    "SummaryFindings":  [
+                            "[CRITICAL] [BUILD] La compilación falló con exit code 1."
+                        ]
+}

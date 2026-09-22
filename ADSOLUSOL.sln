@@ -18,7 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADSOLUSOL.Presentation.Cmd"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADSOLUSOL.RegressionTests", "tests\ADSOLUSOL.RegressionTests\ADSOLUSOL.RegressionTests.csproj", "{FA6DD148-9D5D-43E6-955B-61CF4952A509}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADSOLUSOL.Presentation.Desktop", "src\ADSOLUSOL.Presentation.Desktop\ADSOLUSOL.Presentation.Desktop.csproj", "{9A19103F-16F7-4668-BE54-9A1E7A4F7556}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ADSOLUSOL.Presentation.Desktop", "src\ADSOLUSOL.Presentation.Desktop\ADSOLUSOL.Presentation.Desktop.csproj", "{9A19103F-16F7-4668-BE54-9A1E7A4F7556}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
