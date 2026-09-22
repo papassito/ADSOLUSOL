@@ -147,7 +147,7 @@ $csharpFiles | Select-String -Pattern "catch\s*\([^\)]*\)\s*\{\s*\}" | ForEach-O
     Report-Finding "MEDIUM" "CALIDAD" "Bloque catch silencioso (ignora errores) en $(Split-Path $_.Path -Leaf):$($_.LineNumber)"
 }
 # Usa \b para buscar palabras completas y evitar falsos positivos como en "todos".
-$csharpFiles | Select-String -Pattern "\b(TODO|FIXME)\b" | ForEach-Object {
+$csharpFiles | Select-String -Pattern "\b(TODO|FIXME)\b" -CaseSensitive | ForEach-Object {
     Report-Finding "LOW" "CALIDAD" "Comentario TODO/FIXME en $(Split-Path $_.Path -Leaf):$($_.LineNumber) -> $($_.Line.Trim())"
 }
 
@@ -278,7 +278,8 @@ $reportObject = @{
 
 $jsonReportPath = Join-Path $Root "audit_report_master.json"
 try {
-    $reportObject | ConvertTo-Json -Depth 5 | Set-Content -Path $jsonReportPath -Encoding UTF8
+    $jsonContent = $reportObject | ConvertTo-Json -Depth 5
+    [System.IO.File]::WriteAllText($jsonReportPath, $jsonContent, [System.Text.UTF8Encoding]::new($false))
     Write-Host "[✓] Reporte JSON generado en: $jsonReportPath" -ForegroundColor Green
 } catch {
     Write-Host "[!] No se pudo escribir el reporte JSON: $($_.Exception.Message)" -ForegroundColor Red
@@ -294,7 +295,7 @@ $mdContent = @"
 $($reportObject.SummaryFindings | ForEach-Object { "- $_" } | Out-String)
 "@
 try {
-    $mdContent | Set-Content -Path $mdReportPath -Encoding UTF8
+    [System.IO.File]::WriteAllText($mdReportPath, $mdContent, [System.Text.UTF8Encoding]::new($false))
     Write-Host "[✓] Reporte Markdown generado en: $mdReportPath" -ForegroundColor Green
 } catch {
     Write-Host "[!] No se pudo escribir el reporte Markdown: $($_.Exception.Message)" -ForegroundColor Red

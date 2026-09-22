@@ -1,5 +1,5 @@
-﻿{
-    "Timestamp":  "2026-09-21T22:32:26.3936941-07:00",
+{
+    "Timestamp":  "2026-09-21T22:29:41.8725360-07:00",
     "Project":  "ADSOLUSOL",
     "Build":  {
                   "Errors":  [
@@ -13,7 +13,7 @@
 
                                    ],
                       "CodeQuality":  [
-
+                                          "[LOW] [CALIDAD] Comentario TODO/FIXME en MauiProgram.cs:36 -> // Registrar todos los servicios y repositorios reales"
                                       ],
                       "Architecture":  [
 
@@ -27,9 +27,10 @@
               },
     "Metrics":  {
                     "ArchivosCSharp":  65,
-                    "LineasDeCodigo":  1576
+                    "LineasDeCodigo":  1575
                 },
     "SummaryFindings":  [
-                            "[CRITICAL] [BUILD] La compilación falló con exit code 1."
+                            "[CRITICAL] [BUILD] La compilación falló con exit code 1.",
+                            "[LOW] [CALIDAD] Comentario TODO/FIXME en MauiProgram.cs:36 -> // Registrar todos los servicios y repositorios reales"
                         ]
 }

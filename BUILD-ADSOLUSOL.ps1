@@ -148,6 +148,8 @@ New-Item `
 & dotnet publish `
     $DesktopProject `
     -c Release `
+    -f net8.0-windows10.0.19041.0 `
+    -r win-x64 `
     --no-restore `
     --nologo `
     -o $FinalBuild
@@ -164,11 +166,10 @@ if ($PublishCode -ne 0) {
 # 8. VERIFICACIÓN ARTEFACTO
 # ---------------------------------------------------------------------------
 
-$PublishedExe = Join-Path `
-    $FinalBuild `
-    "ADSOLUSOL.Presentation.Desktop.exe"
+$PublishedExe = Get-ChildItem -Path $FinalBuild -Filter "ADSOLUSOL.Presentation.Desktop.exe" -Recurse |
+    Select-Object -ExpandProperty FullName -First 1
 
-if (-not (Test-Path $PublishedExe)) {
+if ([string]::IsNullOrWhiteSpace($PublishedExe) -or -not (Test-Path $PublishedExe)) {
     Write-Host ""
     Write-Host "[FAIL] Publish terminó pero falta el ejecutable principal: $(Split-Path $PublishedExe -Leaf)" -ForegroundColor Red
     exit 1

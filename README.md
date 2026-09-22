@@ -50,6 +50,8 @@ POST   /api/assignments/creative
 
 GET    /api/Serve?placementCode={code}
 GET    /api/health
+GET    /api/marketing/adsolusol/status
+GET    /api/marketing/adsolusol/ping
 ```
 
 `MarketingController` declara la ruta base `/api/marketing/adsolusol`, pero actualmente no contiene acciones. Esa ruta no debe tratarse como API funcional todavía.
