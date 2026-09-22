@@ -1,4 +1,4 @@
-﻿﻿[CmdletBinding()]
+﻿﻿﻿﻿[CmdletBinding()]
 param()
 
 Set-StrictMode -Version Latest
@@ -25,4 +25,4 @@ if (-not (Test-Path $desktopFullPath)) {
     exit 1
 }
 Set-Location $desktopFullPath
-dotnet watch run -c Release
+dotnet watch run -c Debug

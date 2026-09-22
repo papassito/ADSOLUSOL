@@ -73,7 +73,12 @@ if (-not $dotnetExe) {
 }
 Write-Host "[✓] .NET SDK detectado en: $($dotnetExe.Source)" -ForegroundColor Green
 
-$slnPath = Get-ChildItem -Path $Root -Filter "*.sln" -Recurse | Select-Object -First 1
+$canonicalSln = Join-Path $Root "ADSOLUSOL.sln"
+$slnPath = if (Test-Path $canonicalSln) { 
+    Get-Item $canonicalSln 
+} else { 
+    Get-ChildItem -Path $Root -Filter "*.sln" -Recurse | Select-Object -First 1 
+}
 if (-not $slnPath) {
     Write-Host "[CRÍTICO] No se encontró ningún archivo .sln. La auditoría no puede continuar." -ForegroundColor Red
     exit 1
@@ -143,7 +148,7 @@ foreach ($csFile in $csharpFiles) {
 $csharpFiles | Select-String -Pattern "NotImplementedException" | ForEach-Object {
     Report-Finding "MEDIUM" "CALIDAD" "NotImplementedException en $(Split-Path $_.Path -Leaf):$($_.LineNumber)"
 }
-$csharpFiles | Select-String -Pattern "catch\s*\([^\)]*\)\s*\{\s*\}" | ForEach-Object {
+$csharpFiles | Select-String -Pattern "catch\s*(\([^\)]*\))?\s*\{\s*\}" | ForEach-Object {
     Report-Finding "MEDIUM" "CALIDAD" "Bloque catch silencioso (ignora errores) en $(Split-Path $_.Path -Leaf):$($_.LineNumber)"
 }
 # Usa \b para buscar palabras completas y evitar falsos positivos como en "todos".
@@ -161,7 +166,9 @@ foreach ($repo in $repoFiles) {
 }
 
 # Verificación de DI en MauiProgram
-$mauiProgram = $csharpFiles | Where-Object { $_.Name -eq "MauiProgram.cs" } | Select-Object -First 1
+$mauiProgram = $csharpFiles | Where-Object { 
+    $_.Name -eq "MauiProgram.cs" -and $_.FullName -like "*Presentation.Desktop*" 
+} | Select-Object -First 1
 if ($mauiProgram) {
     $mauiContent = Get-Content $mauiProgram.FullName -Raw
     $requiredServices = @("ICreativeRepository", "IPlacementRepository", "BudgetService", "MetricsService")

@@ -170,8 +170,9 @@ $PublishedExe = Get-ChildItem -Path $FinalBuild -Filter "ADSOLUSOL.Presentation.
     Select-Object -ExpandProperty FullName -First 1
 
 if ([string]::IsNullOrWhiteSpace($PublishedExe) -or -not (Test-Path $PublishedExe)) {
+    $missingName = if (-not [string]::IsNullOrWhiteSpace($PublishedExe)) { Split-Path $PublishedExe -Leaf } else { "ADSOLUSOL.Presentation.Desktop.exe" }
     Write-Host ""
-    Write-Host "[FAIL] Publish terminó pero falta el ejecutable principal: $(Split-Path $PublishedExe -Leaf)" -ForegroundColor Red
+    Write-Host "[FAIL] Publish terminó pero falta el ejecutable principal: $missingName" -ForegroundColor Red
     exit 1
 }
 
