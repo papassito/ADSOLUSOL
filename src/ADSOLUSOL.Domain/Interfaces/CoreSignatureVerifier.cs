@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text;
 using ADSOLUSOL.Domain.Interfaces;
 
@@ -12,7 +12,6 @@ public class CoreSignatureVerifier : ICoreSignatureVerifier
         {
             // This method's logic is now encapsulated within the SignatureVerificationMiddleware.
             // This class is kept to satisfy the dependency contract but the real logic is in the middleware.
-            // In a real refactor, this would be the place for the core verification algorithm.
             return false; // The middleware will perform the actual check.
         }
         catch { return false; }

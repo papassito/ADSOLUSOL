@@ -9,7 +9,6 @@ namespace ADSOLUSOL.Infrastructure.Authentication;
 public class NodeRegistry : INodeRegistry
 {
     // Test Node: "NODE_ADS_01" is authorized for "tenant-A".
-    // FIX: Correct public key for the private key used in smoke-test.ps1
     private readonly Dictionary<string, (string TenantId, string PublicKeyHex)> _nodes = new()
     {
         { "NODE_ADS_01", ("tenant-A", "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a") }
