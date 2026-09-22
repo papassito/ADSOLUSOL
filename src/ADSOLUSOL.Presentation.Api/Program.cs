@@ -1,10 +1,10 @@
 ﻿using ADSOLUSOL.Application.Interfaces;
 using ADSOLUSOL.Application.Services;
 using ADSOLUSOL.Domain.Interfaces;
+using ADSOLUSOL.Infrastructure.Integration;
 using ADSOLUSOL.Infrastructure.Security;
 using ADSOLUSOL.Infrastructure.Persistence;
 using ADSOLUSOL.Infrastructure.Repositories;
-using ADSOLUSOL.Presentation.Api.Middleware;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,8 +28,8 @@ builder.Services.AddScoped<BudgetService>();
 builder.Services.AddScoped<EventProcessingService>();
 builder.Services.AddScoped<MetricsService>();
 
-// Per README, the Marketing Brain integration is not yet real. Register a no-op service.
-builder.Services.AddSingleton<IMarketingBrainService, NoOpMarketingBrainService>();
+// Registrar la implementación real del cliente de Marketing Brain, según HISTORIAL_ACTUALIZACIONES.md
+builder.Services.AddScoped<IMarketingBrainService, MarketingBrainClient>();
 
 // FIX: Register dependencies for HealthController and SignatureVerificationMiddleware
 builder.Services.AddHttpClient();
@@ -66,15 +66,4 @@ app.MapControllers();
 
 app.Run();
 
-/// <summary>
-/// Dummy implementation for the Marketing Brain service, as the real integration is not yet complete.
-/// This allows the rest of the application to compile and run without depending on the external service.
-/// </summary>
-public class NoOpMarketingBrainService : IMarketingBrainService
-{
-    public Task EmitTelemetryAsync(string campaignId, string eventType, decimal cost = 0) => Task.CompletedTask;
-
-    public Task<bool> IsAvailableAsync(CancellationToken cancellationToken = default) => Task.FromResult(true);
-
-    public Task<bool> PingAsync() => Task.FromResult(true);
-}
+// La implementación ficticia 'NoOpMarketingBrainService' ya no es necesaria y puede ser eliminada.

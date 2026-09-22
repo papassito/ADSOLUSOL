@@ -70,13 +70,21 @@ La aplicación de escritorio MAUI crea una base de datos `adsolusol.db` en el di
 
 ## UI
 
-La interfaz de usuario es una aplicación de escritorio nativa de Windows construida con **.NET MAUI Blazor**. Los componentes de la UI residen en el proyecto `src/ADSOLUSOL.Presentation.Shared` y son consumidos por el proyecto de escritorio `src/ADSOLUSOL.Presentation.Desktop`.
+El proyecto cuenta con dos interfaces de usuario:
+
+### 1. Aplicación de Escritorio (MAUI Blazor)
+
+La interfaz de usuario principal es una aplicación de escritorio nativa de Windows construida con **.NET MAUI Blazor**. Los componentes de la UI residen en el proyecto `src/ADSOLUSOL.Presentation.Shared` y son consumidos por el proyecto de escritorio `src/ADSOLUSOL.Presentation.Desktop`.
+
+### 2. Panel Web (React)
+
+Adicionalmente, existe un panel de administración web desarrollado en React (`src/ADSOLUSOL.Presentation.Web`) que consume la API para visualización y gestión de campañas. Esta interfaz sigue el principio de "Zero Synthetic", mostrando únicamente datos reales devueltos por el backend.
 
 ## SIC / Marketing Brain
 
 `HealthController` no intenta consultar `{SolusolAuthV1:SicBaseUrl}/health`. Su única responsabilidad es verificar la salud de la base de datos local.
 
-`MarketingBrainClient` no constituye actualmente una integración real: `PingAsync()` e `IsAvailableAsync()` devuelven `true` sin comprobación externa y `EmitTelemetryAsync()` es un no-op. Por Zero-Synthetic, no debe presentarse como conectividad verificada.
+La integración con **Marketing Brain (SIC) es real y está activa**. El cliente (`MarketingBrainClient`) utiliza `HttpClient` para enviar telemetría de eventos (impresiones, clics) al servicio externo y realiza comprobaciones de disponibilidad de red. Se han eliminado todas las implementaciones ficticias (mocks).
 
 ## Regresiones
 
