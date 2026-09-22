@@ -9,9 +9,13 @@ COPY src/ADSOLUSOL.Domain/ADSOLUSOL.Domain.csproj ./src/ADSOLUSOL.Domain/
 COPY src/ADSOLUSOL.Application/ADSOLUSOL.Application.csproj ./src/ADSOLUSOL.Application/
 COPY src/ADSOLUSOL.Infrastructure/ADSOLUSOL.Infrastructure.csproj ./src/ADSOLUSOL.Infrastructure/
 COPY src/ADSOLUSOL.Presentation.Api/ADSOLUSOL.Presentation.Api.csproj ./src/ADSOLUSOL.Presentation.Api/
+COPY src/ADSOLUSOL.Motor/ADSOLUSOL.Motor.csproj ./src/ADSOLUSOL.Motor/
+COPY src/ADSOLUSOL.Orchestrator/ADSOLUSOL.Orchestrator.csproj ./src/ADSOLUSOL.Orchestrator/
+COPY src/ADSOLUSOL.Presentation.Cmd/ADSOLUSOL.Presentation.Cmd.csproj ./src/ADSOLUSOL.Presentation.Cmd/
+COPY tests/ADSOLUSOL.RegressionTests/ADSOLUSOL.RegressionTests.csproj ./tests/ADSOLUSOL.RegressionTests/
  
 # Restore dependencies for the API project and its dependencies
-RUN dotnet restore "src/ADSOLUSOL.Presentation.Api/ADSOLUSOL.Presentation.Api.csproj"
+RUN dotnet restore ADSOLUSOL.sln
 
 # Copy the rest of the source code
 COPY src/ ./src/

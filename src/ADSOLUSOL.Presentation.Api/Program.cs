@@ -1,7 +1,7 @@
-﻿﻿﻿﻿using ADSOLUSOL.Application.Interfaces;
+﻿using ADSOLUSOL.Application.Interfaces;
 using ADSOLUSOL.Application.Services;
 using ADSOLUSOL.Domain.Interfaces;
-using ADSOLUSOL.Infrastructure.Authentication;
+using ADSOLUSOL.Infrastructure.Security;
 using ADSOLUSOL.Infrastructure.Persistence;
 using ADSOLUSOL.Infrastructure.Repositories;
 using ADSOLUSOL.Presentation.Api.Middleware;
@@ -18,7 +18,7 @@ builder.Services.AddScoped<IPlacementRepository, PlacementRepository>();
 builder.Services.AddScoped<ICreativeRepository, CreativeRepository>();
 builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
 builder.Services.AddScoped<IAdEventRepository, AdEventRepository>();
-builder.Services.AddSingleton<ICoreSignatureVerifier, ADSOLUSOL.Infrastructure.Cryptography.CoreSignatureVerifier>();
+builder.Services.AddSingleton<ICoreSignatureVerifier, CoreSignatureVerifier>();
 builder.Services.AddSingleton<INodeRegistry, NodeRegistry>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -36,8 +36,6 @@ builder.Services.AddHttpClient();
 builder.Services.AddMemoryCache();
 
 builder.Services.AddControllers();
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -60,16 +58,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseStaticFiles(); // Para CSS, JS, etc. de Blazor
-app.UseAntiforgery();
-
 app.UseMiddleware<SignatureVerificationMiddleware>();
 
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapRazorComponents<ADSOLUSOL.Presentation.Api.App>()
-    .AddInteractiveServerRenderMode();
 
 app.Run();
 

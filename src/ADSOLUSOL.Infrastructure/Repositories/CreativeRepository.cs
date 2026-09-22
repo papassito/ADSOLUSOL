@@ -36,11 +36,8 @@ public class CreativeRepository : ICreativeRepository
 
     public async Task<long> CreateAsync(Creative creative)
     {
-        var connection = _context.Database.GetDbConnection();
-        var sql = @"
-            INSERT INTO Creatives (Name, ContentUrl, TargetUrl, IsEnabled, CreatedAt, UpdatedAt)
-            VALUES (@Name, @ContentUrl, @TargetUrl, @IsEnabled, @CreatedAt, @UpdatedAt);
-            SELECT last_insert_rowid();";
-        return await connection.ExecuteScalarAsync<long>(sql, creative);
+        // The UnitOfWork is responsible for calling SaveChangesAsync.
+        await _context.Creatives.AddAsync(creative);
+        return creative.Id;
     }
 }

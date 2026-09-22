@@ -1,4 +1,4 @@
-﻿﻿﻿﻿using ADSOLUSOL.Domain.Entities;
+﻿﻿﻿﻿﻿﻿using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 using ADSOLUSOL.Infrastructure.Persistence;
 using Dapper;
@@ -43,15 +43,9 @@ public class PlacementRepository : IPlacementRepository
 
     public async Task<long> CreateAsync(Placement placement)
     {
-        var sql = @"
-            INSERT INTO Placements (PlacementCode, Name, IsEnabled, CreatedAt, UpdatedAt)
-            VALUES (@PlacementCode, @Name, @IsEnabled, @CreatedAt, @UpdatedAt);
-            SELECT last_insert_rowid();";
-        // For a create operation that should be transactional, it should use the UnitOfWork transaction connection.
-        // However, the current regression test for placement creation doesn't use a transaction.
-        // To maintain consistency, we'll use the DbContext connection.
-        var connection = _context.Database.GetDbConnection();
-        return await connection.ExecuteScalarAsync<long>(sql, placement);
+        // The UnitOfWork is responsible for calling SaveChangesAsync.
+        await _context.Placements.AddAsync(placement);
+        return placement.Id;
     }
 
     public async Task<IEnumerable<Placement>> GetAllAsync()

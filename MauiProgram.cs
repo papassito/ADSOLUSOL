@@ -1,4 +1,4 @@
-﻿﻿using ADSOLUSOL.Application.Interfaces;
+﻿using ADSOLUSOL.Application.Interfaces;
 using ADSOLUSOL.Application.Services;
 using ADSOLUSOL.Domain.Interfaces;
 using ADSOLUSOL.Infrastructure.Authentication;
@@ -46,13 +46,6 @@ public static class MauiProgram
         builder.Services.AddScoped<MetricsService>();
         builder.Services.AddScoped<AdServingService>();
 
-        var app = builder.Build();
-
-        // Ensure the database is created
-        using var scope = app.Services.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        dbContext.Database.EnsureCreated();
-
-        return app;
+        return builder.Build();
     }
 }

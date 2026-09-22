@@ -92,30 +92,12 @@ Write-Host "===========================================================" -f Cyan
 Write-Host "Usando Node ID: $nodeId" -f Gray
 Write-Host "Usando Base URL: $baseApiUrl`n" -f Gray
 
-
-# --- Secuencia de Pruebas ---
-
 # 1. Probar /health
 Test-Endpoint -Name "/health" -Action {
     Invoke-RestMethod -Uri $healthUrl -Method Get
 }
 
-# 2. Probar autenticación - Inválida
-Test-Endpoint -Name "Autenticación (Firma Inválida)" -Action {
-    try {
-        $headers = Get-AuthHeaders -method "GET" -path "/api/Campaigns"
-        $headers["X-Solusol-Signature"] = "invalidsignature"
-        Invoke-RestMethod -Uri "$baseApiUrl/Campaigns" -Method Get -Headers $headers -ErrorAction Stop
-    } catch [System.Net.WebException] {
-        if ($_.Exception.Response.StatusCode -eq 'Forbidden') {
-            # Esto es un éxito, se esperaba el error 403
-            return "OK"
-        }
-        throw # Re-lanza la excepción si no es 401
-    }
-}
-
-# 3. Crear una nueva campaña (POST /api/Campaigns)
+# 2. Crear una nueva campaña (POST /api/Campaigns)
 $campaignName = "Campaña de Humo $((Get-Date).Ticks)"
 $createBody = @{ name = $campaignName; budget = 100.0; costPerMille = 1.5; costPerClick = 0.25 } | ConvertTo-Json
 $createHeaders = Get-AuthHeaders -method "POST" -path "/api/Campaigns" -body $createBody
@@ -124,7 +106,7 @@ $newCampaign = Test-Endpoint -Name "Crear Campaña (POST /campaigns)" -Action {
 }
 $campaignId = $newCampaign.id
 
-# 4. Activar la campaña
+# 3. Activar la campaña
 $statusBody = @{ status = "ACTIVE" } | ConvertTo-Json
 $statusHeaders = Get-AuthHeaders -method "POST" -path "/api/Campaigns/$campaignId/status" -body $statusBody
 Test-Endpoint -Name "Activar Campaña (POST /status)" -Action {

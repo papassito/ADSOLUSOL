@@ -1,5 +1,5 @@
-﻿$ErrorActionPreference = "Continue"
-$RootPath = "Y:\Documentos\GitHub\ADSOLUSOL"
+﻿﻿$ErrorActionPreference = "Continue"
+$RootPath = $PSScriptRoot
 
 Write-Host "==================================================" -ForegroundColor Cyan
 Write-Host "   DIAGNÓSTICO DE SOLO LECTURA - ADSOLUSOL        " -ForegroundColor Cyan
