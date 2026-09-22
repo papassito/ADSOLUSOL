@@ -1,4 +1,4 @@
-﻿using ADSOLUSOL.Application.Interfaces;
+﻿﻿using ADSOLUSOL.Application.Interfaces;
 using ADSOLUSOL.Application.Services;
 using ADSOLUSOL.Domain.Interfaces;
 using ADSOLUSOL.Infrastructure.Authentication;
@@ -36,11 +36,23 @@ public static class MauiProgram
         // Registrar todos los servicios y repositorios reales
         builder.Services.AddScoped<ICampaignRepository, CampaignRepository>();
         builder.Services.AddScoped<IPlacementRepository, PlacementRepository>();
-        // ... registrar todos los demás repositorios y servicios ...
+        builder.Services.AddScoped<ICreativeRepository, CreativeRepository>();
+        builder.Services.AddScoped<IAdEventRepository, AdEventRepository>();
+        builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
         builder.Services.AddScoped<CampaignService>();
         builder.Services.AddScoped<EventProcessingService>();
+        builder.Services.AddScoped<BudgetService>();
+        builder.Services.AddScoped<MetricsService>();
+        builder.Services.AddScoped<AdServingService>();
 
-        return builder.Build();
+        var app = builder.Build();
+
+        // Ensure the database is created
+        using var scope = app.Services.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        dbContext.Database.EnsureCreated();
+
+        return app;
     }
 }

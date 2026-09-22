@@ -21,10 +21,8 @@ public class AdServingService
 
         var eligibleCampaigns = await _placementRepository.GetEligibleCampaignsAsync(tenantId, placementCode);
 
-        // The repository now returns campaigns in a random order.
-        var validCampaigns = eligibleCampaigns.ToList();
-
-        foreach (var campaign in validCampaigns)
+        // The repository now returns campaigns in a random order. Iterate directly to save memory.
+        foreach (var campaign in eligibleCampaigns)
         {
             var creative = await _creativeRepository.GetEligibleCreativeForCampaignAsync(campaign.Id);
             if (creative != null)

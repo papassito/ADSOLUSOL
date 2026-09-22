@@ -1,5 +1,4 @@
-﻿﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.Sqlite;
+﻿﻿﻿﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
 namespace ADSOLUSOL.Presentation.Api.Controllers;
@@ -9,54 +8,33 @@ namespace ADSOLUSOL.Presentation.Api.Controllers;
 public class HealthController : ControllerBase
 {
     private readonly IConfiguration _configuration;
-    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly ADSOLUSOL.Infrastructure.Persistence.AppDbContext _context;
 
-    public HealthController(IConfiguration configuration, IHttpClientFactory httpClientFactory)
+    public HealthController(IConfiguration configuration, ADSOLUSOL.Infrastructure.Persistence.AppDbContext context)
     {
         _configuration = configuration;
-        _httpClientFactory = httpClientFactory;
+        _context = context;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetHealthStatus()
     {
         var isDbHealthy = false;
-        var isSicHealthy = false;
-
         try
         {
-            using var connection = new SqliteConnection(_configuration.GetConnectionString("DefaultConnection"));
-            await connection.OpenAsync();
-            isDbHealthy = true;
+            isDbHealthy = await _context.Database.CanConnectAsync();
         }
         catch { }
 
-        try
+        var statusObject = new
         {
-            // FIX P1-06: Use the configured SIC base URL instead of a hardcoded value.
-            var sicBaseUrl = _configuration["SolusolAuthV1:SicBaseUrl"];
-            if (!string.IsNullOrEmpty(sicBaseUrl))
-            {
-                var healthCheckUrl = new Uri(new Uri(sicBaseUrl.TrimEnd('/') + '/'), "health");
-                var client = _httpClientFactory.CreateClient();
-                client.Timeout = TimeSpan.FromSeconds(2);
-                var response = await client.GetAsync(healthCheckUrl);
-                isSicHealthy = response.IsSuccessStatusCode;
-            }
-        }
-        catch { }
-
-        var status = new
-        {
-            Status = (isDbHealthy && isSicHealthy) ? "Healthy" : "Degraded",
+            Status = isDbHealthy ? "Healthy" : "Degraded",
             Timestamp = DateTime.UtcNow,
             Checks = new
             {
-                Database = isDbHealthy ? "UP" : "DOWN",
-                SicEngine = isSicHealthy ? "UP" : "DOWN"
-            }
+                Database = isDbHealthy ? "UP" : "DOWN"
         };
 
-        return Ok(status);
+        return Ok(statusObject);
     }
 }

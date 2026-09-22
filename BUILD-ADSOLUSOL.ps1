@@ -163,7 +163,7 @@ $PublishedExe = Join-Path `
 
 if (-not (Test-Path $PublishedExe)) {
     Write-Host ""
-    Write-Host "[FAIL] Publish terminó pero falta ADSOLUSOL.Presentation.Api.dll" -ForegroundColor Red
+    Write-Host "[FAIL] Publish terminó pero falta el ejecutable principal: $(Split-Path $PublishedExe -Leaf)" -ForegroundColor Red
     return
 }
 

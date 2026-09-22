@@ -9,11 +9,13 @@ namespace ADSOLUSOL.Presentation.Api.Middleware;
 public class SignatureVerificationMiddleware
 {
     private readonly RequestDelegate _next;
+    private readonly ICoreSignatureVerifier _verifier;
     private static readonly PathString[] s_publicPaths = { "/", "/api/health" };
 
-    public SignatureVerificationMiddleware(RequestDelegate next)
+    public SignatureVerificationMiddleware(RequestDelegate next, ICoreSignatureVerifier verifier)
     {
         _next = next;
+        _verifier = verifier;
     }
 
     public async Task InvokeAsync(HttpContext context, INodeRegistry nodeRegistry, IMemoryCache nonceCache)
@@ -63,11 +65,16 @@ public class SignatureVerificationMiddleware
         var body = await new StreamReader(context.Request.Body).ReadToEndAsync();
         context.Request.Body.Position = 0;
 
-        string bodyHash = string.IsNullOrEmpty(body) ? "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" : Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(body))).ToLower();
-
-        string canonicalString = $"{timestamp}|{nonce}|{context.Request.Method.ToUpper()}|{context.Request.Path.Value}|{context.Request.QueryString.Value}|{bodyHash}";
-
-        if (!VerifySignature(publicKeyHex, canonicalString, signature.ToString()))
+        if (!_verifier.Verify(
+            signature.ToString(),
+            nodeId.ToString(),
+            timestamp,
+            nonce.ToString(),
+            Encoding.UTF8.GetBytes(body),
+            context.Request.Method,
+            context.Request.Path.Value ?? string.Empty,
+            context.Request.QueryString.Value ?? string.Empty
+        ))
         {
             context.Response.StatusCode = StatusCodes.Status403Forbidden;
             await context.Response.WriteAsync("Invalid signature.");
@@ -86,24 +93,5 @@ public class SignatureVerificationMiddleware
         var now = DateTimeOffset.UtcNow;
         // Reject requests older than 5 minutes or more than 1 minute in the future.
         return requestTime < now.AddMinutes(-5) || requestTime > now.AddMinutes(1);
-    }
-
-    private bool VerifySignature(string publicKeyHex, string message, string signatureBase64)
-    {
-        try
-        {
-            byte[] publicKeyBytes = Convert.FromHexString(publicKeyHex);
-            byte[] dataToVerify = Encoding.UTF8.GetBytes(message);
-            byte[] signatureBytes = Convert.FromBase64String(signatureBase64);
-
-            var algorithm = SignatureAlgorithm.Ed25519;
-            var pubKey = PublicKey.Import(algorithm, publicKeyBytes, KeyBlobFormat.RawPublicKey);
-            
-            return algorithm.Verify(pubKey, dataToVerify, signatureBytes);
-        }
-        catch
-        {
-            return false;
-        }
     }
 }

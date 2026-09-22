@@ -10,14 +10,19 @@ $healthUrl = "http://localhost:5000/api/health"
 
 # Test identity corresponding to the mock NodeRegistry
 $nodeId = "NODE_ADS_01"
-$privateKeyHex = "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2"
+$privateKeyHex = $env:ADS_SMOKE_TEST_KEY
 
-# Load NSec for signing from the application's publish directory
+if ([string]::IsNullOrWhiteSpace($privateKeyHex)) {
+    Write-Error "La variable de entorno 'ADS_SMOKE_TEST_KEY' no está configurada. No se puede firmar las solicitudes."
+    exit 1
+}
+
+# Load NSec for signing from the application's build output directory
 $publishDir = Join-Path $PSScriptRoot "BUILD\ADSOLUSOL"
 $nsecDllPath = Join-Path $publishDir "NSec.Cryptography.dll"
 
 if (-not (Test-Path $nsecDllPath)) {
-    Write-Error "NSec.Cryptography.dll not found in publish directory '$publishDir'. Please run BUILD-ADSOLUSOL.ps1 first."
+    Write-Error "NSec.Cryptography.dll not found in build output directory '$publishDir'. Please run BUILD-ADSOLUSOL.ps1 first."
     exit 1
 }
 try { Add-Type -Path $nsecDllPath }

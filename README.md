@@ -24,7 +24,8 @@ ADS mantiene separación estricta respecto de SEO/SUPER SEO, CORE, ORCHESTA y SI
 ## Stack observado
 
 - .NET 8 / ASP.NET Core
-- React 18 + TypeScript + Vite
+- .NET MAUI Blazor (Aplicación de escritorio nativa de Windows)
+- UI compartida en una Librería de Clases Razor (RCL)
 - SQLite
 - EF Core para contexto/esquema y Dapper en repositorios específicos
 
@@ -53,45 +54,29 @@ GET    /api/health
 
 `MarketingController` declara la ruta base `/api/marketing/adsolusol`, pero actualmente no contiene acciones. Esa ruta no debe tratarse como API funcional todavía.
 
-## Autenticación y tenant
+## Autenticación y Tenant
 
-Existen `CoreSignatureVerifier` y `SignatureVerificationMiddleware` con verificación Ed25519, timestamp y nonce anti-replay. Ambas están completamente integradas:
+El sistema utiliza un `SignatureVerificationMiddleware` para proteger los endpoints de la API.
 
-- `Program.cs` conecta el `SignatureVerificationMiddleware` en el pipeline de ejecución HTTP.
-- El middleware realiza la verificación Ed25519 y resuelve dinámicamente la correspondencia del `NodeId` de origen con el `TenantId` autorizado, inyectándolo en `HttpContext.Items["TenantId"]`.
-- `CampaignsController` y `ServeController` consumen correctamente el tenant validado.
-
-No existe protección por `X-Api-Key` activa, priorizando la solidez de la firma criptográfica Ed25519.
+- **Estado:** `IMPLEMENTED_AND_WIRED`. El middleware está conectado en `Program.cs`.
+- **Mecanismo:** Verificación de firmas Ed25519, timestamp y protección anti-reenvío con nonce.
+- **Resolución de Tenant:** El middleware resuelve el `NodeId` a un `TenantId` autorizado y lo inyecta en `HttpContext.Items["TenantId"]`.
+- **Rutas Públicas:** La UI de Blazor y el endpoint `/api/health` son accesibles sin firma.
 
 ## SQLite
 
-En Development existe:
+La aplicación de escritorio MAUI crea una base de datos `adsolusol.db` en el directorio de datos de la aplicación del usuario (`AppDataDirectory`) y asegura que el esquema se cree al arrancar. La API web utiliza una cadena de conexión definida en la configuración.
 
-```text
-ConnectionStrings:DefaultConnection = Data Source=App_Data/adsolusol.db
-```
-
-`Program.cs` crea `App_Data` bajo `ContentRootPath` y usa `EnsureCreated()`.
-
-En `appsettings.json` de Production **no existe todavía** `ConnectionStrings:DefaultConnection`. La ubicación final de datos de producción, la migración/versionado de esquema y `ProgramData` siguen pendientes del cierre de release.
 
 ## UI
 
-La UI existe en:
-
-```text
-src/ADSOLUSOL.Presentation.Web
-```
-
-`api.ts` usa las rutas reales `/api/...` y soporta base same-origin. El proxy de Vite apunta a `http://127.0.0.1:5000` durante desarrollo, pero eso no demuestra un binding por defecto de ASP.NET.
-
-La UI todavía no debe describirse como integrada a `wwwroot` ni empaquetada en `dotnet publish` mientras `Program.cs` y el `.csproj` no demuestren esa integración.
+La interfaz de usuario es una aplicación de escritorio nativa de Windows construida con **.NET MAUI Blazor**. Los componentes de la UI residen en el proyecto `src/ADSOLUSOL.Presentation.Shared` y son consumidos por el proyecto de escritorio `src/ADSOLUSOL.Presentation.Desktop`.
 
 ## SIC / Marketing Brain
 
-`HealthController` intenta consultar `{SolusolAuthV1:SicBaseUrl}/health` y devuelve `Healthy` o `Degraded` según SQLite y SIC.
+`HealthController` ya no intenta consultar `{SolusolAuthV1:SicBaseUrl}/health`. Su única responsabilidad es verificar la salud de la base de datos local.
 
-`MarketingBrainClient` se ha re-implementado para establecer conexiones HTTP asíncronas reales a la base de URLs configuradas, emitiendo telemetría JSON y verificando el pulso (Heartbeat) de disponibilidad del SIC en runtime en lugar de utilizar respuestas estáticas ficticias.
+`MarketingBrainClient` no constituye actualmente una integración real: `PingAsync()` e `IsAvailableAsync()` devuelven `true` sin comprobación externa y `EmitTelemetryAsync()` es un no-op. Por Zero-Synthetic, no debe presentarse como conectividad verificada.
 
 ## Regresiones
 
@@ -99,28 +84,20 @@ La UI todavía no debe describirse como integrada a `wwwroot` ni empaquetada en 
 
 ## Desarrollo
 
+Para iniciar la aplicación de escritorio en modo de desarrollo con hot-reload, ejecuta:
 ```powershell
-dotnet build ADSOLUSOL.sln
-
-dotnet run --project tests/ADSOLUSOL.RegressionTests/ADSOLUSOL.RegressionTests.csproj
-
 .\Start-Dev.ps1
 ```
-
-El puerto de desarrollo de ASP.NET no debe documentarse como fijo hasta que exista binding explícito. Vite actualmente espera la API en `127.0.0.1:5000` mediante proxy de desarrollo.
+Para construir el ejecutable de producción, usa:
+```powershell
+.\BUILD-ADSOLUSOL.ps1
+```
 
 ## Estado antes de release
 
-Pendientes de cierre técnico, entre otros:
-
-- UI de producción servida por ASP.NET / `wwwroot`;
-- configuración SQLite de Production y ruta de datos instalada;
-- estrategia segura de actualización de esquema;
-- wiring de autenticación;
-- resolución NodeId/identidad autorizada a TenantId;
-- aislamiento tenant completo en todas las superficies;
-- integración real o estado `DISCONNECTED` de Marketing Brain/SIC;
-- `dotnet publish` reproducible;
-- instalador y smoke test en máquina limpia.
+Pendientes de cierre técnico:
+- Aislamiento de tenant completo en todas las superficies (en progreso).
+- Integración real o estado `DISCONNECTED` de Marketing Brain/SIC.
+- Estrategia de empaquetado y despliegue para la aplicación MAUI (e.g., MSIX).
 
 La documentación de detalle está indexada en [`docs/LIBRARY.md`](docs/LIBRARY.md).
