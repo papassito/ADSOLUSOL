@@ -10,7 +10,7 @@ namespace ADSOLUSOL.Presentation.Api.Controllers;
 [Route("api/[controller]")]
 public class CampaignsController : ControllerBase
 {
-    private string TenantId => HttpContext.Items["TenantId"] as string ?? throw new InvalidOperationException("TenantId no fue encontrado. El middleware de firma puede no estar configurado.");
+    private string? TenantId => HttpContext.Items["TenantId"] as string;
     private readonly CampaignService _campaignService;
     private readonly MetricsService _metricsService;
     private readonly EventProcessingService _eventProcessingService;
@@ -25,6 +25,11 @@ public class CampaignsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateCampaign([FromBody] CreateCampaignRequest request)
     {
+        if (string.IsNullOrWhiteSpace(TenantId))
+        {
+            return Forbid();
+        }
+
         if (string.IsNullOrWhiteSpace(request.Name))
         {
             return BadRequest(new { message = "El nombre de la campaña es requerido." });
@@ -53,6 +58,11 @@ public class CampaignsController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetCampaignById(string id)
     {
+        if (string.IsNullOrWhiteSpace(TenantId))
+        {
+            return Forbid();
+        }
+
         var campaign = await _campaignService.GetAsync(TenantId, id);
         if (campaign == null) return NotFound();
         return Ok(campaign);
@@ -61,6 +71,11 @@ public class CampaignsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllCampaigns()
     {
+        if (string.IsNullOrWhiteSpace(TenantId))
+        {
+            return Forbid();
+        }
+
         var campaigns = await _campaignService.ListAsync(TenantId, CancellationToken.None);
         return Ok(campaigns);
     }
@@ -68,6 +83,11 @@ public class CampaignsController : ControllerBase
     [HttpPost("{id}/status")]
     public async Task<IActionResult> UpdateStatus(string id, [FromBody] UpdateStatusRequest request)
     {
+        if (string.IsNullOrWhiteSpace(TenantId))
+        {
+            return Forbid();
+        }
+
         var allowedStatuses = new[] { "ACTIVE", "PAUSED", "SCHEDULED", "COMPLETED" };
         var normalizedStatus = request.Status?.Trim().ToUpperInvariant();
         if (string.IsNullOrWhiteSpace(normalizedStatus) || !allowedStatuses.Contains(normalizedStatus))
@@ -86,6 +106,11 @@ public class CampaignsController : ControllerBase
     [HttpGet("{id}/metrics")]
     public async Task<IActionResult> GetMetrics(string id)
     {
+        if (string.IsNullOrWhiteSpace(TenantId))
+        {
+            return Forbid();
+        }
+
         // FIX: Authorize access to the campaign before retrieving metrics.
         var campaign = await _campaignService.GetAsync(TenantId, id);
         if (campaign is null)
@@ -99,12 +124,20 @@ public class CampaignsController : ControllerBase
     [HttpPost("{id}/click")]
     public async Task<IActionResult> RegisterClick(string id, [FromBody] EventRequest request)
     {
+        if (string.IsNullOrWhiteSpace(TenantId))
+        {
+            return Forbid();
+        }
         return await RegisterEventAsync(TenantId, id, request, EventType.Click);
     }
 
     [HttpPost("{id}/impression")]
     public async Task<IActionResult> RegisterImpression(string id, [FromBody] EventRequest request)
     {
+        if (string.IsNullOrWhiteSpace(TenantId))
+        {
+            return Forbid();
+        }
         return await RegisterEventAsync(TenantId, id, request, EventType.Impression);
     }
 

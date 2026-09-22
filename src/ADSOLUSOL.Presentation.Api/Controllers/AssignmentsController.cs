@@ -9,7 +9,7 @@ public record AssignmentRequest(string CampaignId, long EntityId);
 [Route("api/assignments")]
 public class AssignmentsController : ControllerBase
 {
-    private string TenantId => HttpContext.Items["TenantId"] as string ?? throw new InvalidOperationException("TenantId no fue encontrado. El middleware de firma puede no estar configurado.");
+    private string? TenantId => HttpContext.Items["TenantId"] as string;
     private readonly IAssignmentRepository _assignmentRepository;
     private readonly ICampaignRepository _campaignRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -24,6 +24,11 @@ public class AssignmentsController : ControllerBase
     [HttpPost("creative")]
     public async Task<IActionResult> AssignCreative([FromBody] AssignmentRequest request)
     {
+        if (string.IsNullOrWhiteSpace(TenantId))
+        {
+            return Forbid();
+        }
+
         var campaign = await _campaignRepository.GetByIdAsync(request.CampaignId);
         if (campaign is null || campaign.TenantId != TenantId)
         {
@@ -47,6 +52,11 @@ public class AssignmentsController : ControllerBase
     [HttpPost("placement")]
     public async Task<IActionResult> AssignPlacement([FromBody] AssignmentRequest request)
     {
+        if (string.IsNullOrWhiteSpace(TenantId))
+        {
+            return Forbid();
+        }
+
         var campaign = await _campaignRepository.GetByIdAsync(request.CampaignId);
         if (campaign is null || campaign.TenantId != TenantId)
         {

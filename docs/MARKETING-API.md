@@ -85,7 +85,7 @@ X-Solusol-Timestamp
 X-Solusol-Nonce
 ```
 
-- `Program.cs` ejecuta `UseMiddleware<SignatureVerificationMiddleware>()` registrando la validación en el pipeline. Estado actual:
+`Program.cs` registra e invoca `UseMiddleware<SignatureVerificationMiddleware>()` protegiendo los endpoints de la API. Estado actual:
 
 ```text
 ED25519 VERIFIER = IMPLEMENTED COMPONENT
