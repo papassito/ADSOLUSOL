@@ -83,7 +83,7 @@ public class EventProcessingService
         };
 
         await _unitOfWork.BeginTransactionAsync();
-        try 
+        try
         {
             await _eventRepository.AddAsync(adEvent, _unitOfWork.Transaction);
 
@@ -93,14 +93,15 @@ public class EventProcessingService
                 await _unitOfWork.RollbackAsync();
                 return EventProcessingStatus.Rejected; // Budget exceeded or other debit failure
             }
-            
+
             await _unitOfWork.CommitAsync();
 
             // The cost is now correctly reported to the telemetry service.
             await _marketingBrainService.EmitTelemetryAsync(adEvent.CampaignId, $"ADS_{eventTypeEnum.ToString().ToUpper()}", adEvent.Cost);
 
             return EventProcessingStatus.Accepted;
-        } catch 
+        }
+        catch
         {
             await _unitOfWork.RollbackAsync();
             throw;

@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿using ADSOLUSOL.Domain.Entities;
+using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 
 namespace ADSOLUSOL.Application.Services;
@@ -32,7 +32,7 @@ public class CampaignService
     public async Task<Campaign> CreateAsync(string tenantId, string name, decimal budget, decimal cpm, decimal cpc, DateTime? startDate, DateTime? endDate, CancellationToken token = default)
     {
         var effectiveStartDate = startDate ?? DateTime.UtcNow;
-        
+
         // A campaign starting in the future should be scheduled, otherwise it's paused by default.
         var initialStatus = (effectiveStartDate > DateTime.UtcNow) ? "SCHEDULED" : "PAUSED";
 

@@ -1,4 +1,4 @@
-﻿[CmdletBinding()]
+[CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, HelpMessage="El mensaje para el commit es obligatorio.")]
     [string]$CommitMessage,

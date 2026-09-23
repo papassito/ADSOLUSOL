@@ -1,4 +1,4 @@
-﻿namespace ADSOLUSOL.Domain.Interfaces;
+namespace ADSOLUSOL.Domain.Interfaces;
 
 public interface IMarketingBrainService
 {

@@ -1,4 +1,4 @@
-﻿using ADSOLUSOL.Infrastructure.Persistence;
+using ADSOLUSOL.Infrastructure.Persistence;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace ADSOLUSOL.Presentation.Api.Health;
@@ -17,8 +17,8 @@ public class DependencyHealthCheck : IHealthCheck
         try
         {
             var canConnect = await _context.Database.CanConnectAsync(cancellationToken);
-            return canConnect 
-                ? HealthCheckResult.Healthy("Database is accessible.") 
+            return canConnect
+                ? HealthCheckResult.Healthy("Database is accessible.")
                 : HealthCheckResult.Unhealthy("Cannot connect to database.");
         }
         catch (Exception ex)

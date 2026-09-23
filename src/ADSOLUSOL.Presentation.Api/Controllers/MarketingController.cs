@@ -1,4 +1,4 @@
-﻿﻿﻿using ADSOLUSOL.Domain.Interfaces;
+using ADSOLUSOL.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ADSOLUSOL.Presentation.Api.Controllers;

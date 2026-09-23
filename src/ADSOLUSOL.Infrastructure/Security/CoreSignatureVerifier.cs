@@ -1,4 +1,4 @@
-﻿using ADSOLUSOL.Domain.Interfaces;
+using ADSOLUSOL.Domain.Interfaces;
 using Microsoft.Extensions.Configuration;
 using NSec.Cryptography;
 using System.Collections.Concurrent;

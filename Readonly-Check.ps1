@@ -1,4 +1,4 @@
-﻿﻿$ErrorActionPreference = "Continue"
+$ErrorActionPreference = "Continue"
 $RootPath = $PSScriptRoot
 
 Write-Host "==================================================" -ForegroundColor Cyan

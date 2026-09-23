@@ -23,7 +23,7 @@ public class BudgetService
             var rowsAffected = await _campaignRepository.UpdateBudgetAsync(campaignId, cost, transaction);
             return rowsAffected > 0;
         }
-        
+
         // If cost is zero, the debit is trivially successful.
         return true;
     }

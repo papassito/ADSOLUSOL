@@ -142,14 +142,22 @@ New-Item `
     -Force |
     Out-Null
 
-& dotnet publish `
-    $DesktopProject `
-    -c Release `
-    -f net8.0-windows10.0.19041.0 `
-    -r win-x64 `
-    --no-restore `
-    --nologo `
-    -o $FinalBuild
+$publishArgs = @(
+    "publish",
+    $DesktopProject,
+    "-c", "Release",
+    "-f", "net8.0-windows10.0.19041.0",
+    "-r", "win-x64",
+    "--no-restore",
+    "--nologo",
+    "-p:WindowsPackageType=None",
+    "-p:AppxPackage=false",
+    "-p:GenerateAppxPackageOnBuild=false",
+    "-p:WindowsAppSDKSelfContained=false",
+    "-p:IgnoreMissingWorkloads=true",
+    "-o", $FinalBuild
+)
+& dotnet @publishArgs
 
 $PublishCode = $LASTEXITCODE
 
@@ -166,8 +174,11 @@ if ($PublishCode -ne 0) {
 $PublishedExe = Get-ChildItem -Path $FinalBuild -Filter "ADSOLUSOL.Presentation.Desktop.exe" -Recurse |
     Select-Object -ExpandProperty FullName -First 1
 
-if ([string]::IsNullOrWhiteSpace($PublishedExe) -or -not (Test-Path $PublishedExe)) {
-    $missingName = if (-not [string]::IsNullOrWhiteSpace($PublishedExe)) { Split-Path $PublishedExe -Leaf } else { "ADSOLUSOL.Presentation.Desktop.exe" }
+if ([string]::IsNullOrWhiteSpace($PublishedExe) -or (-not (Test-Path $PublishedExe))) {
+    $missingName = "ADSOLUSOL.Presentation.Desktop.exe"
+    if (-not [string]::IsNullOrWhiteSpace($PublishedExe)) {
+        $missingName = Split-Path $PublishedExe -Leaf
+    }
     Write-Host ""
     Write-Host "[FAIL] Publish terminó pero falta el ejecutable principal: $missingName" -ForegroundColor Red
     exit 1

@@ -1,4 +1,4 @@
-﻿namespace ADSOLUSOL.Domain.Entities;
+namespace ADSOLUSOL.Domain.Entities;
 
 public enum EventProcessingStatus
 {

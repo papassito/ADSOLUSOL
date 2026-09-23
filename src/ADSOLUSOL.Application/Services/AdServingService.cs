@@ -1,4 +1,4 @@
-﻿using ADSOLUSOL.Domain.Entities;
+using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 
 namespace ADSOLUSOL.Application.Services;

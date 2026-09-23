@@ -1,4 +1,4 @@
-﻿﻿using ADSOLUSOL.Application.Interfaces;
+using ADSOLUSOL.Application.Interfaces;
 using ADSOLUSOL.Application.Services;
 using ADSOLUSOL.Domain.Interfaces;
 using ADSOLUSOL.Infrastructure.ExternalServices.MarketingBrain;
@@ -11,7 +11,7 @@ using System.Collections.Concurrent;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? "Data Source=App_Data/adsolusol.db";
 
 var appDataDir = Path.Combine(builder.Environment.ContentRootPath, "App_Data");

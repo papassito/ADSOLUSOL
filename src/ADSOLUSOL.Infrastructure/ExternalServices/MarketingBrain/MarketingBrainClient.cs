@@ -1,4 +1,4 @@
-﻿using ADSOLUSOL.Domain.Interfaces;
+using ADSOLUSOL.Domain.Interfaces;
 
 namespace ADSOLUSOL.Infrastructure.ExternalServices.MarketingBrain;
 

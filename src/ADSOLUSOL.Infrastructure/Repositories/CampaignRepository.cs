@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿using ADSOLUSOL.Domain.Entities;
+using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 using ADSOLUSOL.Infrastructure.Persistence;
 using Dapper;
@@ -33,7 +33,12 @@ public class CampaignRepository : ICampaignRepository
 
     public async Task<Campaign?> GetByIdAsync(string id)
     {
-        return await _context.Campaigns.FirstOrDefaultAsync(c => c.Id == id);
+        var local = _context.Campaigns.Local.FirstOrDefault(c => c.Id == id);
+        if (local != null)
+        {
+            return local;
+        }
+        return await _context.Campaigns.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
     }
 
     public Task UpdateAsync(Campaign campaign)
@@ -49,10 +54,21 @@ public class CampaignRepository : ICampaignRepository
         {
             throw new InvalidOperationException("The transaction does not have an associated connection.");
         }
-        // FIX: Explicitly CAST to REAL for correct numeric comparison in SQLite, as decimals are stored as TEXT.
-        var sql = @"UPDATE Campaigns SET BudgetSpent = BudgetSpent + @Cost 
-                    WHERE Id = @CampaignId AND CAST(BudgetSpent AS REAL) + @Cost <= CAST(Budget AS REAL);";
-        return await transaction.Connection.ExecuteAsync(sql, new { Cost = cost, CampaignId = campaignId }, transaction);
+        // SQLite almacena tipos decimal como TEXT; se utiliza COALESCE y CAST a REAL para asegurar la suma y comparación numérica
+        var sql = @"UPDATE Campaigns 
+                    SET BudgetSpent = COALESCE(CAST(BudgetSpent AS REAL), 0) + @Cost 
+                    WHERE Id = @CampaignId 
+                      AND (COALESCE(CAST(BudgetSpent AS REAL), 0) + @Cost) <= CAST(Budget AS REAL);";
+        var rows = await transaction.Connection.ExecuteAsync(sql, new { Cost = (double)cost, CampaignId = campaignId }, transaction);
+
+        var local = _context.Campaigns.Local.FirstOrDefault(c => c.Id == campaignId);
+        if (local != null)
+        {
+            local.BudgetSpent += cost;
+            _context.Entry(local).Property(c => c.BudgetSpent).IsModified = false;
+        }
+
+        return rows;
     }
 
     public async Task<bool> IsPlacementAssociatedAsync(string campaignId, long placementId)

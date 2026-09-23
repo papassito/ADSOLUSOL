@@ -1,4 +1,4 @@
-﻿using ADSOLUSOL.Application.Services;
+using ADSOLUSOL.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ADSOLUSOL.Presentation.Api.Controllers;
@@ -8,7 +8,7 @@ namespace ADSOLUSOL.Presentation.Api.Controllers;
 public class ServeController : ControllerBase
 {
     private readonly AdServingService _adServingService;
-    private string TenantId => HttpContext.Items["TenantId"] as string 
+    private string TenantId => HttpContext.Items["TenantId"] as string
         ?? throw new InvalidOperationException("TenantId no fue encontrado en el contexto de la solicitud.");
 
     public ServeController(AdServingService adServingService)
