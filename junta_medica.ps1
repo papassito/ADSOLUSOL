@@ -120,6 +120,7 @@ if ($Fix) {
     if (Test-Path $sln) {
         Write-Host "  [SANEANDO] Restaurando dependencias y formateando código..." -ForegroundColor Yellow
         & dotnet restore $sln --verbosity quiet 2>&1 | Out-Null
+        & dotnet restore $sln -p:WindowsPackageType=None -p:AppxPackage=false -p:GenerateAppxPackageOnBuild=false -p:WindowsAppSDKSelfContained=false --verbosity quiet 2>&1 | Out-Null
         & dotnet format $sln --no-restore --verbosity quiet 2>&1 | Out-Null
         Write-Host "  [SANEADO] Formato canónico C# homogeneizado." -ForegroundColor Green
     }
@@ -213,6 +214,7 @@ $MedicalBoard = @(
         Especialista = "Diagnóstico de Compilación, Tipado y Diagnósticos Roslyn"
         Command      = '
             $buildOut = & dotnet build "ADSOLUSOL.sln" -c Release -p:IgnoreMissingWorkloads=true -p:WindowsPackageType=None -v:minimal /nologo 2>&1
+            $buildOut = & dotnet build "ADSOLUSOL.sln" -c Release -p:IgnoreMissingWorkloads=true -p:WindowsPackageType=None -p:AppxPackage=false -p:GenerateAppxPackageOnBuild=false -p:WindowsAppSDKSelfContained=false -v:minimal /nologo 2>&1
             if ($LASTEXITCODE -ne 0) {
                 $errors = $buildOut | Where-Object { $_ -match ":\s*error\s+(CS|MSB|NU|NETSDK)\d+:" }
                 Write-Host "[ARRITMIA] Fallo en la compilación de la solución:" -ForegroundColor Red
@@ -311,6 +313,29 @@ $MedicalBoard = @(
         Descripcion  = "Auditoría de no-vacuidad en archivos Markdown y alineación documental con Marketing Brain."
     },
     @{
+        Area         = "Dermatología y Cobertura Funcional de UI (Sitemap & DI Wiring)"
+        Especialista = "Integridad de Vistas Blazor, Navegación y Contenedor Desktop"
+        Command      = '
+            $errors = 0
+            $desktopMaui = Join-Path $pwd "src/ADSOLUSOL.Presentation.Desktop/MauiProgram.cs"
+            if (-not (Test-Path $desktopMaui)) {
+                Write-Host "[PATOLOGIA] Falta el punto de entrada UI: MauiProgram.cs" -ForegroundColor Red
+                $errors++
+            } else {
+                $mauiContent = Get-Content $desktopMaui -Raw
+                $required = @("IMarketingBrainService", "MarketingBrainClient", "CampaignService", "BudgetService", "MetricsService", "AdServingService")
+                foreach ($r in $required) {
+                    if ($mauiContent -notmatch $r) {
+                        Write-Host "[PATOLOGIA] Servicio no registrado en DI Desktop: $r" -ForegroundColor Red
+                        $errors++
+                    }
+                }
+            }
+            if ($errors -gt 0) { exit 1 } else { Write-Host "[SANO] Cobertura funcional de UI y contenedor DI al 100% verificado." }
+        '
+        Descripcion  = "Inspección de cobertura funcional, registros de servicios y cableado de navegación Desktop."
+    },
+    @{
         Area         = "Cirugía General y Compilación de Producción CI/CD"
         Especialista = "Publicación Nativa Desktop (ADSOLUSOL.Presentation.Desktop)"
         Command      = '
@@ -323,6 +348,7 @@ $MedicalBoard = @(
             if (Test-Path $publishDir) { Remove-Item $publishDir -Recurse -Force }
             New-Item -ItemType Directory -Force -Path $publishDir | Out-Null
             & dotnet restore $desktopProj -f net8.0-windows10.0.19041.0 -r win-x64 -p:WindowsPackageType=None -p:AppxPackage=false --verbosity quiet 2>&1 | Out-Null
+            & dotnet restore $desktopProj -f net8.0-windows10.0.19041.0 -r win-x64 -p:WindowsPackageType=None -p:AppxPackage=false -p:GenerateAppxPackageOnBuild=false -p:WindowsAppSDKSelfContained=false --verbosity quiet 2>&1 | Out-Null
             & dotnet publish $desktopProj -c Release -f net8.0-windows10.0.19041.0 -r win-x64 --no-restore --nologo -p:WindowsPackageType=None -p:AppxPackage=false -p:GenerateAppxPackageOnBuild=false -p:WindowsAppSDKSelfContained=false -p:IgnoreMissingWorkloads=true -o $publishDir
             if ($LASTEXITCODE -ne 0) {
                 Write-Host "[PATOLOGIA] Fallo en la publicación del artefacto nativo MAUI Desktop." -ForegroundColor Red

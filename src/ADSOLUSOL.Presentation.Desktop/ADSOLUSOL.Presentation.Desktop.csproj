@@ -24,6 +24,15 @@
     <SkipCheckForMissingWorkload>true</SkipCheckForMissingWorkload>
     <SkipWorkloadValidation>true</SkipWorkloadValidation>
     <SkipValidateMauiWorkloads>true</SkipValidateMauiWorkloads>
+
+    <!-- Metadatos de Confianza e Identidad Corporativa -->
+    <Company>KLIK Soft PRO / solusol.net</Company>
+    <Product>AD SOLUSOL - Advertising &amp; Growth Engine</Product>
+    <AssemblyTitle>ADSOLUSOL.Presentation.Desktop</AssemblyTitle>
+    <Description>Motor de publicidad, monetización y analítica publicitaria del ecosistema solusol.net</Description>
+    <Copyright>Copyright © 2026 solusol.net. Todos los derechos reservados.</Copyright>
+    <Deterministic>true</Deterministic>
+    <HighEntropyVA>true</HighEntropyVA>
     <NoWarn Condition="'$(IsWindows)' != 'true'">$(NoWarn);CS2008</NoWarn>
 
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>

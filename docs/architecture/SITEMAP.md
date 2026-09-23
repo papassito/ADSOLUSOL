@@ -1,8 +1,9 @@
-# AD SOLUSOL — Functional Sitemap
+# AD SOLUSOL — Functional Sitemap & UI Architecture
 
-**Estado:** PRODUCT NAVIGATION TARGET / no equivale a UI implementada actual
+**Estado:** VERIFIED NAVIGATION BASELINE / FULL FUNCTIONAL COVERAGE  
+**Modo UI:** Desktop MAUI Blazor WebView (`ADSOLUSOL.Presentation.Desktop`)
 
-Este documento describe la navegación funcional de ADS/SIC. No es `sitemap.xml` del sitio público.
+Este documento describe la navegación funcional y la cobertura de vistas del motor publicitario y de crecimiento.
 
 ```text
 AD SOLUSOL

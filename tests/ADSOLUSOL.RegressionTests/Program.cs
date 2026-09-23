@@ -15,7 +15,7 @@ return await RegressionSuiteRunner.RunAsync(args);
 public class RegressionTestFacts
 {
     [Xunit.Fact]
-    public async Task BusinessRules_17Verifications_AllPass()
+    public async Task BusinessRules_19Verifications_AllPass()
     {
         int exitCode = await RegressionSuiteRunner.RunAsync(Array.Empty<string>(), rethrowException: true);
         Xunit.Assert.Equal(0, exitCode);
@@ -206,9 +206,41 @@ public static class RegressionSuiteRunner
                 }
             });
 
+            await LogTest("[18] Delivery pacing algorithm prioritizes campaign with highest remaining budget", async () =>
+            {
+                var campaignHigh = await campaignService.CreateAsync("tenant-A", "High Budget Campaign", 500m, 1.5m, 0.25m, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow.AddDays(30));
+                await campaignService.UpdateStatusAsync("tenant-A", campaignHigh.Id, "ACTIVE");
+                await assignmentRepo.AssignPlacementToCampaignAsync(campaignHigh.Id, placementId);
+                await assignmentRepo.AssignCreativeToCampaignAsync(campaignHigh.Id, creativeId);
+                await dbContext.SaveChangesAsync();
+
+                var eligible = (await placementRepo.GetEligibleCampaignsAsync("tenant-A", "P1")).ToList();
+                Assert(eligible.Count >= 2, "Multiple active campaigns eligible for placement.");
+                Assert(eligible.First().Id == campaignHigh.Id, $"Pacing prioritized campaign with higher remaining budget (Expected: {campaignHigh.Id}, Actual: {eligible.First().Id}).");
+            });
+
+            await LogTest("[19] Idempotent replay immunity preserves exact ledger balance against duplicate bursts", async () =>
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    var dupImp = new AdEvent { EventId = "evt_imp_1", CampaignId = campaignA.Id, CreativeId = creativeId.ToString(), PlacementCode = "P1", EventType = "Impression", TenantId = "tenant-A" };
+                    var dupClick = new AdEvent { EventId = "evt_click_1", CampaignId = campaignA.Id, CreativeId = creativeId.ToString(), PlacementCode = "P1", EventType = "Click", TenantId = "tenant-A" };
+                    var stImp = await eventProcessingService.ProcessEvent(dupImp);
+                    var stClick = await eventProcessingService.ProcessEvent(dupClick);
+                    Assert(stImp == EventProcessingStatus.Duplicate, "Replayed impression returned Duplicate.");
+                    Assert(stClick == EventProcessingStatus.Duplicate, "Replayed click returned Duplicate.");
+                }
+
+                dbContext.ChangeTracker.Clear();
+                var metrics = await metricsService.GetMetricsForCampaign(campaignA.Id);
+                Assert(metrics?.Impressions == 1, "[19.1] Impression count invariant preserved (1).");
+                Assert(metrics?.Clicks == 1, "[19.2] Click count invariant preserved (1).");
+                Assert(metrics?.BudgetSpent == (1.5m / 1000) + 0.25m, "[19.3] Financial ledger invariant preserved against duplicate event bursts.");
+            });
+
             Console.WriteLine("\n------------------------------------------------------------------------------");
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("✅ All regression tests passed successfully.");
+            Console.WriteLine("✅ All regression tests passed successfully (19/19 checks).");
             Console.ResetColor();
             return 0;
         }

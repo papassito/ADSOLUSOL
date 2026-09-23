@@ -37,7 +37,7 @@ public class PlacementRepository : IPlacementRepository
               AND c.Status = 'ACTIVE' 
               AND c.Budget > c.BudgetSpent
               AND c.StartDateUtc <= @Now AND c.EndDateUtc >= @Now
-            ORDER BY RANDOM();";
+            ORDER BY (c.Budget - c.BudgetSpent) DESC, c.CreatedAtUtc ASC;";
         return await connection.QueryAsync<Campaign>(sql, new { TenantId = tenantId, PlacementCode = placementCode, Now = now });
     }
 

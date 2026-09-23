@@ -2,6 +2,7 @@ using ADSOLUSOL.Application.Interfaces;
 using ADSOLUSOL.Application.Services;
 using ADSOLUSOL.Domain.Interfaces;
 using ADSOLUSOL.Infrastructure.Security;
+using ADSOLUSOL.Infrastructure.ExternalServices.MarketingBrain;
 using ADSOLUSOL.Infrastructure.Persistence;
 using ADSOLUSOL.Infrastructure.Repositories;
 using Microsoft.Data.Sqlite;
@@ -40,6 +41,10 @@ public static class MauiProgram
         builder.Services.AddScoped<IAdEventRepository, AdEventRepository>();
         builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        // Clientes HTTP y telemetría SIC / Marketing Brain
+        builder.Services.AddHttpClient();
+        builder.Services.AddScoped<IMarketingBrainService, MarketingBrainClient>();
 
         // Registro de servicios del dominio y aplicación
         builder.Services.AddScoped<CampaignService>();

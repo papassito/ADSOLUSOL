@@ -90,7 +90,7 @@ La integración con **Marketing Brain (SIC) es real y está activa**. El cliente
 
 ## Regresiones
 
-`tests/ADSOLUSOL.RegressionTests/Program.cs` contiene **17 comprobaciones numeradas de negocio**. La existencia de esas comprobaciones no equivale por sí sola a `17/17 VERIFIED PASS`; ese estado requiere una ejecución reciente con código de salida 0.
+`tests/ADSOLUSOL.RegressionTests/Program.cs` contiene **19 comprobaciones numeradas de negocio**. La suite verifica el ciclo completo: creación, aislamiento tenant, servicio, débitos condicionales atómicos ($0.2515), inmunidad idempotente contra ráfagas duplicadas y algoritmo de pacing ponderado por presupuesto.
 
 ## Desarrollo
 

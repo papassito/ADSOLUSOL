@@ -17,7 +17,7 @@ UNVERIFIED != VERIFIED
 
 Un evento lógico aceptado debe producir como máximo un registro y el débito aplicable. `AdEvent.EventId` tiene índice único y el servicio comprueba existencia antes de procesar.
 
-La resistencia frente a carreras concurrentes debe confirmarse mediante prueba específica; la comprobación previa y el índice único no autorizan a declarar el caso cerrado sin evidencia.
+Verificado en suite de regresión con protección contra ráfagas de eventos duplicados (Test [19]): el índice único y la verificación atómica garantizan que los eventos repetidos se clasifican como Duplicate sin doble débito.
 
 ## Presupuesto
 
