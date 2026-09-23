@@ -18,7 +18,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <MauiVersion Condition="'$(MauiVersion)' == ''">8.0.3</MauiVersion>
-    <NoWarn>$(NoWarn);NETSDK1206</NoWarn>
+    <NoWarn>$(NoWarn);NETSDK1206;CS0436</NoWarn>
     <IgnoreMissingWorkloads>true</IgnoreMissingWorkloads>
     <SkipCheckForMissingWorkloads>true</SkipCheckForMissingWorkloads>
     <SkipCheckForMissingWorkload>true</SkipCheckForMissingWorkload>

@@ -1,6 +1,6 @@
 # Expediente ClÃ­nico Maestro - ADSOLUSOL (Ads & Growth Engine)
 
-**Fecha y Hora del Chequeo Forense:** 2026-09-23 13:00:23
+**Fecha y Hora del Chequeo Forense:** 2026-09-23 13:06:21
 
 **Ecosistema Auditado:** C# / .NET 8 (59 archivos) | PowerShell (19 scripts) | Markdown Docs (58 archivos) | JSON / Config (14 archivos)
 
@@ -66,7 +66,7 @@
 *Alcance ClÃ­nico:* EvaluaciÃ³n de suites de regresiÃ³n, integridad de dÃ©bito atÃ³mico y telemetrÃ­a de rendimiento.
 
 ```text
-[SANO] Pulso cardÃ­aco regular: 100% pruebas de regresiÃ³n aprobadas en 11.52s (rendimiento Ã³ptimo).
+[SANO] Pulso cardÃ­aco regular: 100% pruebas de regresiÃ³n aprobadas en 10.96s (rendimiento Ã³ptimo).
 ```
 
 ### Ãrea: FarmacologÃ­a, CriptografÃ­a y Blindaje Perimetral EDR
@@ -105,9 +105,6 @@
 ADSOLUSOL.Domain -> Y:\Documentos\GitHub\ADSOLUSOL\.build\bin\ADSOLUSOL.Domain\Release\net8.0\ADSOLUSOL.Domain.dll
   ADSOLUSOL.Infrastructure -> Y:\Documentos\GitHub\ADSOLUSOL\.build\bin\ADSOLUSOL.Infrastructure\Release\net8.0\ADSOLUSOL.Infrastructure.dll
   ADSOLUSOL.Application -> Y:\Documentos\GitHub\ADSOLUSOL\.build\bin\ADSOLUSOL.Application\Release\net8.0\ADSOLUSOL.Application.dll
-C:\Users\Radio 2027\.nuget\packages\microsoft.windowsappsdk\1.3.230724000\include\MddBootstrapAutoInitializer.cs(34,38): warning CS0436: El tipo 'Release' de 'C:\Users\Radio 2027\.nuget\packages\microsoft.windowsappsdk\1.3.230724000\buildTransitive\..\include\WindowsAppSDK-VersionInfo.cs' está en conflicto con el tipo importado 'Release' de 'Microsoft.WindowsAppRuntime.Release.Net, Version=1.3.0.0, Culture=neutral, PublicKeyToken=null'. Se usará el tipo definido en 'C:\Users\Radio 2027\.nuget\packages\microsoft.windowsappsdk\1.3.230724000\buildTransitive\..\include\WindowsAppSDK-VersionInfo.cs'. [Y:\Documentos\GitHub\ADSOLUSOL\src\ADSOLUSOL.Presentation.Desktop\ADSOLUSOL.Presentation.Desktop.csproj::TargetFramework=net8.0-windows10.0.19041.0]
-C:\Users\Radio 2027\.nuget\packages\microsoft.windowsappsdk\1.3.230724000\include\MddBootstrapAutoInitializer.cs(35,33): warning CS0436: El tipo 'Release' de 'C:\Users\Radio 2027\.nuget\packages\microsoft.windowsappsdk\1.3.230724000\buildTransitive\..\include\WindowsAppSDK-VersionInfo.cs' está en conflicto con el tipo importado 'Release' de 'Microsoft.WindowsAppRuntime.Release.Net, Version=1.3.0.0, Culture=neutral, PublicKeyToken=null'. Se usará el tipo definido en 'C:\Users\Radio 2027\.nuget\packages\microsoft.windowsappsdk\1.3.230724000\buildTransitive\..\include\WindowsAppSDK-VersionInfo.cs'. [Y:\Documentos\GitHub\ADSOLUSOL\src\ADSOLUSOL.Presentation.Desktop\ADSOLUSOL.Presentation.Desktop.csproj::TargetFramework=net8.0-windows10.0.19041.0]
-C:\Users\Radio 2027\.nuget\packages\microsoft.windowsappsdk\1.3.230724000\include\MddBootstrapAutoInitializer.cs(36,49): warning CS0436: El tipo 'Version' de 'C:\Users\Radio 2027\.nuget\packages\microsoft.windowsappsdk\1.3.230724000\buildTransitive\..\include\WindowsAppSDK-VersionInfo.cs' está en conflicto con el tipo importado 'Version' de 'Microsoft.WindowsAppRuntime.Release.Net, Version=1.3.0.0, Culture=neutral, PublicKeyToken=null'. Se usará el tipo definido en 'C:\Users\Radio 2027\.nuget\packages\microsoft.windowsappsdk\1.3.230724000\buildTransitive\..\include\WindowsAppSDK-VersionInfo.cs'. [Y:\Documentos\GitHub\ADSOLUSOL\src\ADSOLUSOL.Presentation.Desktop\ADSOLUSOL.Presentation.Desktop.csproj::TargetFramework=net8.0-windows10.0.19041.0]
 Y:\Documentos\GitHub\ADSOLUSOL\src\ADSOLUSOL.Presentation.Desktop\MauiProgram.cs(46,26): error CS1061: "IServiceCollection" no contiene una definición para "AddHttpClient" ni un método de extensión accesible "AddHttpClient" que acepte un primer argumento del tipo "IServiceCollection" (¿falta alguna directiva using o una referencia de ensamblado?) [Y:\Documentos\GitHub\ADSOLUSOL\src\ADSOLUSOL.Presentation.Desktop\ADSOLUSOL.Presentation.Desktop.csproj::TargetFramework=net8.0-windows10.0.19041.0]
 [PATOLOGIA] Fallo en la publicaciÃ³n del artefacto nativo MAUI Desktop.
 ```

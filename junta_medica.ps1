@@ -119,7 +119,6 @@ if ($Fix) {
     $sln = Join-Path $ScriptRoot "ADSOLUSOL.sln"
     if (Test-Path $sln) {
         Write-Host "  [SANEANDO] Restaurando dependencias y formateando código..." -ForegroundColor Yellow
-        & dotnet restore $sln --verbosity quiet 2>&1 | Out-Null
         & dotnet restore $sln -p:WindowsPackageType=None -p:AppxPackage=false -p:GenerateAppxPackageOnBuild=false -p:WindowsAppSDKSelfContained=false --verbosity quiet 2>&1 | Out-Null
         & dotnet format $sln --no-restore --verbosity quiet 2>&1 | Out-Null
         Write-Host "  [SANEADO] Formato canónico C# homogeneizado." -ForegroundColor Green
@@ -213,7 +212,6 @@ $MedicalBoard = @(
         Area         = "Neurología y Análisis Estático (dotnet build & Roslyn)"
         Especialista = "Diagnóstico de Compilación, Tipado y Diagnósticos Roslyn"
         Command      = '
-            $buildOut = & dotnet build "ADSOLUSOL.sln" -c Release -p:IgnoreMissingWorkloads=true -p:WindowsPackageType=None -v:minimal /nologo 2>&1
             $buildOut = & dotnet build "ADSOLUSOL.sln" -c Release -p:IgnoreMissingWorkloads=true -p:WindowsPackageType=None -p:AppxPackage=false -p:GenerateAppxPackageOnBuild=false -p:WindowsAppSDKSelfContained=false -v:minimal /nologo 2>&1
             if ($LASTEXITCODE -ne 0) {
                 $errors = $buildOut | Where-Object { $_ -match ":\s*error\s+(CS|MSB|NU|NETSDK)\d+:" }
@@ -347,7 +345,6 @@ $MedicalBoard = @(
             $publishDir = Join-Path $pwd "BUILD\ADSOLUSOL"
             if (Test-Path $publishDir) { Remove-Item $publishDir -Recurse -Force }
             New-Item -ItemType Directory -Force -Path $publishDir | Out-Null
-            & dotnet restore $desktopProj -f net8.0-windows10.0.19041.0 -r win-x64 -p:WindowsPackageType=None -p:AppxPackage=false --verbosity quiet 2>&1 | Out-Null
             & dotnet restore $desktopProj -f net8.0-windows10.0.19041.0 -r win-x64 -p:WindowsPackageType=None -p:AppxPackage=false -p:GenerateAppxPackageOnBuild=false -p:WindowsAppSDKSelfContained=false --verbosity quiet 2>&1 | Out-Null
             & dotnet publish $desktopProj -c Release -f net8.0-windows10.0.19041.0 -r win-x64 --no-restore --nologo -p:WindowsPackageType=None -p:AppxPackage=false -p:GenerateAppxPackageOnBuild=false -p:WindowsAppSDKSelfContained=false -p:IgnoreMissingWorkloads=true -o $publishDir
             if ($LASTEXITCODE -ne 0) {
