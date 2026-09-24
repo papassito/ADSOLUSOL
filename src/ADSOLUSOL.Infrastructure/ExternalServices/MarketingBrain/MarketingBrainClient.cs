@@ -37,7 +37,7 @@ public class MarketingBrainClient : IMarketingBrainService
             var response = await _httpClient.GetAsync("health", cancellationToken);
             return response.IsSuccessStatusCode;
         }
-        catch (Exception ex) when (ex is HttpRequestException || ex is OperationCanceledException || ex is InvalidOperationException)
+        catch (Exception ex) when (ex is HttpRequestException || ex is OperationCanceledException || ex is TimeoutException || ex is InvalidOperationException)
         {
             return false;
         }
@@ -63,7 +63,7 @@ public class MarketingBrainClient : IMarketingBrainService
             // Fire-and-forget: no esperamos la respuesta, pero sí controlamos el fallo.
             await _httpClient.PostAsJsonAsync("api/telemetry", telemetryEvent, CancellationToken.None);
         }
-        catch (Exception ex) when (ex is HttpRequestException || ex is OperationCanceledException || ex is InvalidOperationException)
+        catch (Exception ex) when (ex is HttpRequestException || ex is OperationCanceledException || ex is TimeoutException || ex is InvalidOperationException)
         {
             // Se absorbe el error para no impactar el flujo principal, cumpliendo con el
             // principio de "Disconnected Tolerant". Se debería registrar en un log.

@@ -34,7 +34,7 @@ if ($Reseal) {
     foreach ($f in $mdFiles) {
         $rel = $f.FullName.Substring($ScriptRoot.Length).TrimStart("\", "/").Replace("\", "/")
         $hash = (Get-FileHash $f.FullName -Algorithm SHA256).Hash.ToLower()
-        $lines += "| \`$rel\` | \`$hash\` |"
+        $lines += "| ``$rel`` | ``$hash`` |"
     }
     $content = ($lines -join "`r`n") + "`r`n"
     $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
