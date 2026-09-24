@@ -63,11 +63,11 @@ if ($Fix) {
     }
 
     # B. Extirpación de archivos vacíos (0 bytes) que pudren la compilación
-    $emptyCs = Get-ChildItem -Path $ScriptRoot -Recurse -Filter "*.cs" -File -ErrorAction SilentlyContinue |
+    $emptyFiles = Get-ChildItem -Path $ScriptRoot -Recurse -Include "*.cs", "*.md", "*.json", "*.ps1" -File -ErrorAction SilentlyContinue |
         Where-Object { $_.Length -eq 0 -and $_.FullName -notmatch "[\\/](\.git|bin|obj|BUILD)[\\/]" }
-    foreach ($ec in $emptyCs) {
-        Remove-Item $ec.FullName -Force -ErrorAction SilentlyContinue
-        Write-Host "  [EXTIRPADO] Archivo C# vacío (0 bytes): $($ec.FullName.Substring($ScriptRoot.Length))" -ForegroundColor Green
+    foreach ($ef in $emptyFiles) {
+        Remove-Item $ef.FullName -Force -ErrorAction SilentlyContinue
+        Write-Host "  [EXTIRPADO] Archivo vacío (0 bytes): $($ef.FullName.Substring($ScriptRoot.Length))" -ForegroundColor Green
     }
 
     # C. Reubicación/Eliminación de MauiProgram.cs huérfano fuera de Presentation.Desktop
@@ -147,8 +147,8 @@ $MedicalBoard = @(
                     $errors++
                 }
                 $txt = [System.IO.File]::ReadAllText($file.FullName)
-                if ($txt.Contains([char]0)) {
-                    Write-Host "[PATOLOGIA] Carácter nulo (\0) corrupto detectado en: $($file.Name)" -ForegroundColor Red
+                if ([System.Text.RegularExpressions.Regex]::IsMatch($txt, "[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]")) {
+                    Write-Host "[PATOLOGIA] Caracteres de control inválidos detectados en: $($file.Name)" -ForegroundColor Red
                     $errors++
                 }
                 if ($txt.Contains([char]0xFFFD)) {
@@ -287,28 +287,51 @@ $MedicalBoard = @(
         Descripcion  = "Inspección perimetral de cadenas sensibles y blindaje contra falsos positivos EDR/Antivirus."
     },
     @{
-        Area         = "Gobernanza Documental y Coherencia de Contratos (Markdown)"
-        Especialista = "Integridad de Documentación Canónica y Coherencia de Integración"
+        Area         = "Calidad de Código y Olores (Code Smells)"
+        Especialista = "Detección de Excepciones no Implementadas, Capturas Silenciosas y Comentarios TODO/FIXME"
         Command      = '
             $errors = 0
-            $docFiles = Get-ChildItem -Path docs -Recurse -Filter "*.md" -File -ErrorAction SilentlyContinue
-            foreach ($df in $docFiles) {
-                if ($df.Length -eq 0) {
-                    Write-Host "[PATOLOGIA] Documento Markdown vacío: $($df.Name)" -ForegroundColor Red
-                    $errors++
-                }
+            $sourceFiles = Get-ChildItem -Path "src", "tests" -Recurse -Filter "*.cs" -File -ErrorAction SilentlyContinue |
+                Where-Object { $_.FullName -notmatch "[\\/](\.git|bin|obj|BUILD)[\\/]" }
+            
+            $sourceFiles | Select-String -Pattern "NotImplementedException" | ForEach-Object {
+                Write-Host "[PATOLOGIA] NotImplementedException en $(Split-Path $_.Path -Leaf):$($_.LineNumber)" -ForegroundColor Red
+                $errors++
             }
-            $brain = Join-Path $pwd "docs/MARKETING-BRAIN.md"
-            if (Test-Path $brain) {
-                $bContent = Get-Content $brain -Raw
-                if ($bContent -match "NOT_IMPLEMENTED / UNVERIFIED") {
-                    Write-Host "[PATOLOGIA] MARKETING-BRAIN.md contiene estado obsoleto (NOT_IMPLEMENTED)" -ForegroundColor Red
-                    $errors++
-                }
+            $sourceFiles | Select-String -Pattern "catch\s*(\([^\)]*\))?\s*\{\s*\}" | ForEach-Object {
+                Write-Host "[PATOLOGIA] Bloque catch silencioso (ignora errores) en $(Split-Path $_.Path -Leaf):$($_.LineNumber)" -ForegroundColor Red
+                $errors++
             }
-            if ($errors -gt 0) { exit 1 } else { Write-Host "[SANO] Biblioteca documental íntegra y sincronizada con el runtime real." }
+            $sourceFiles | Select-String -Pattern "\b(TODO|FIXME)\b" -CaseSensitive | ForEach-Object {
+                Write-Host "[OBSERVACION] Comentario TODO/FIXME en $(Split-Path $_.Path -Leaf):$($_.LineNumber) -> $($_.Line.Trim())" -ForegroundColor Yellow
+            }
+
+            if ($errors -gt 0) { exit 1 } else { Write-Host "[SANO] Código libre de olores críticos (excepciones no implementadas, capturas silenciosas)." }
         '
-        Descripcion  = "Auditoría de no-vacuidad en archivos Markdown y alineación documental con Marketing Brain."
+        Descripcion  = "Análisis estático para detectar patrones de código problemáticos como NotImplementedException, bloques catch vacíos y comentarios de trabajo pendiente."
+    },
+    @{
+        Area         = "Gobernanza y Verificación de Integración Externa (SIC)"
+        Especialista = "Análisis de Código Fuente para Conectividad Real (No Mocks)"
+        Command      = '
+            $errors = 0
+            $clientFile = Join-Path $pwd "src/ADSOLUSOL.Infrastructure/ExternalServices/MarketingBrain/MarketingBrainClient.cs"
+            if (-not (Test-Path $clientFile)) {
+                Write-Host "[PATOLOGIA] No se encontró el archivo del cliente: MarketingBrainClient.cs" -ForegroundColor Red
+                exit 1
+            }
+            $content = Get-Content $clientFile -Raw
+            if ($content -match "Task\.FromResult" -or $content -match "Task\.CompletedTask") {
+                Write-Host "[PATOLOGIA] MarketingBrainClient.cs contiene una implementación simulada (mock) con Task.FromResult o Task.CompletedTask." -ForegroundColor Red
+                $errors++
+            }
+            if ($content -notmatch "HttpClient" -and $content -notmatch "IHttpClientFactory") {
+                Write-Host "[PATOLOGIA] MarketingBrainClient.cs no parece utilizar HttpClient para conectividad real." -ForegroundColor Red
+                $errors++
+            }
+            if ($errors -gt 0) { exit 1 } else { Write-Host "[SANO] Verificación de código fuente confirma integración real de MarketingBrainClient (uso de HttpClient)." }
+        '
+        Descripcion  = "Auditoría de código fuente de MarketingBrainClient para asegurar que no es una simulación (mock) y que utiliza HttpClient para comunicación de red."
     },
     @{
         Area         = "Dermatología y Cobertura Funcional de UI (Sitemap & DI Wiring)"
@@ -360,6 +383,26 @@ $MedicalBoard = @(
             Write-Host "[SANO] Publicación exitosa: $($exe.Name) ($sizeMB MB) listo para distribución en Windows."
         '
         Descripcion  = "Validación del pipeline de publicación nativa Windows net8.0 x64."
+    },
+    @{
+        Area         = "Endoscopía y Pruebas de Componentes UI (bUnit)"
+        Especialista = "Verificación Funcional de Componentes Blazor Aislados"
+        Command      = '
+            $uiTestProject = Get-ChildItem -Path "tests" -Filter "*UITests*.csproj" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+            if (-not $uiTestProject) {
+                Write-Host "[INFO] No se localizaron proyectos de pruebas de UI (bUnit) en tests/." -ForegroundColor Yellow
+                exit 0
+            }
+            Write-Host "Ejecutando pruebas de componentes UI para: $($uiTestProject.Name)" -ForegroundColor Cyan
+            $testOut = & dotnet test $uiTestProject.FullName --no-build -c Release -v:q --nologo 2>&1
+            if ($LASTEXITCODE -ne 0) {
+                Write-Host "[PATOLOGIA] Fallo en las pruebas de componentes de la interfaz de usuario." -ForegroundColor Red
+                $testOut | Where-Object { $_ -match "Failed|Exception" } | ForEach-Object { Write-Host "  -> $_" -ForegroundColor Red }
+                exit 1
+            }
+            Write-Host "[SANO] Todos los componentes de la interfaz de usuario pasaron sus pruebas funcionales."
+        '
+        Descripcion  = "Ejecuta la suite de pruebas de componentes de UI (bUnit) para validar la lógica y el renderizado de los componentes Razor de forma aislada."
     }
 )
 
@@ -479,13 +522,13 @@ Write-Host "[OK] Expediente clínico guardado en: $reportPath" -ForegroundColor 
 $criticalFailures = @($medicalRecords | Where-Object { $_.Status -notlike "SANO*" })
 
 Write-Host "`n=========================================================" -ForegroundColor Cyan
-Write-Host "           DICTAMEN MEDICO FINAL DE ADSOLUSOL            " -ForegroundColor Cyan
+Write-Host "           DICTAMEN MÉDICO FINAL DE ADSOLUSOL            " -ForegroundColor Cyan
 Write-Host "=========================================================" -ForegroundColor Cyan
 
 if ($criticalFailures.Count -eq 0) {
-    Write-Host "[PASS] ALTA MEDICA 10/10: ADSOLUSOL presenta salud digital y operativa al 100%." -ForegroundColor Green
+    Write-Host "[PASS] ALTA MÉDICA 10/10: ADSOLUSOL presenta salud digital y operativa al 100%." -ForegroundColor Green
 } else {
-    Write-Host "[FAIL] INTERVENCION REQUERIDA: $($criticalFailures.Count) área(s) presentan observaciones." -ForegroundColor Red
+    Write-Host "[FAIL] INTERVENCIÓN REQUERIDA: $($criticalFailures.Count) área(s) presentan observaciones." -ForegroundColor Red
     $criticalFailures | ForEach-Object { Write-Host "  - $($_.Area) [$($_.Especialista)]" -ForegroundColor Yellow }
 }
 
@@ -493,28 +536,28 @@ if ($criticalFailures.Count -eq 0) {
 $hasGitFlags = $Status -or $Add -or $Commit -or $Push
 if ($hasGitFlags) {
     Write-Host "`n=========================================================" -ForegroundColor Cyan
-    Write-Host "         OPERACIONES GIT / SINCRONIZACION GITHUB         " -ForegroundColor Cyan
+    Write-Host "         OPERACIONES GIT / SINCRONIZACIÓN GITHUB         " -ForegroundColor Cyan
     Write-Host "=========================================================" -ForegroundColor Cyan
     try {
         $gitCmd = Get-Command git -ErrorAction SilentlyContinue
         if (-not $gitCmd) {
             Write-Host "[ERR] 'git' no está disponible en el PATH." -ForegroundColor Red
         } else {
-            if ($Status -or ($Push -and -not $Add -and -not $Commit)) {
-                Write-Host "`n[GIT STATUS] Estado del repositorio:" -ForegroundColor Yellow
-                & git status
-            }
-
-            if ($Add -or ($Push -and -not $Commit)) {
-                Write-Host "`n[GIT ADD] Preparando cambios (git add -A)..." -ForegroundColor Yellow
-                & git add -A
-                & git status --short
-            }
-
-            if ($criticalFailures.Count -gt 0 -and ($Commit -or $Push)) {
-                Write-Host "`n[BLOQUEO DE SEGURIDAD] Commit/Push abortado: existen fallos clínicos activos." -ForegroundColor Red
+            if ($criticalFailures.Count -gt 0 -and ($Add -or $Commit -or $Push)) {
+                Write-Host "`n[BLOQUEO DE SEGURIDAD] Operación Git abortada: existen fallos clínicos activos ($($criticalFailures.Count))." -ForegroundColor Red
                 Write-Host "Aplique '.\junta_medica.ps1 -Fix' para sanear antes de subir a GitHub." -ForegroundColor Yellow
             } else {
+                if ($Status -or ($Push -and -not $Add -and -not $Commit)) {
+                    Write-Host "`n[GIT STATUS] Estado del repositorio:" -ForegroundColor Yellow
+                    & git status
+                }
+
+                if ($Add -or ($Push -and -not $Commit)) {
+                    Write-Host "`n[GIT ADD] Preparando cambios (git add -A)..." -ForegroundColor Yellow
+                    & git add -A
+                    & git status --short
+                }
+
                 if ($Commit -or $Push) {
                     $pending = & git status --porcelain
                     if ($pending) {

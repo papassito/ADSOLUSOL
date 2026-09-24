@@ -18,9 +18,9 @@ public class PlacementRepository : IPlacementRepository
 
     public async Task<Placement?> GetByCodeAsync(string code)
     {
-        var connection = _context.Database.GetDbConnection();
-        var sql = "SELECT * FROM Placements WHERE PlacementCode = @Code;";
-        return await connection.QueryFirstOrDefaultAsync<Placement>(sql, new { Code = code });
+        return await _context.Placements
+            .AsNoTracking()
+            .FirstOrDefaultAsync(p => p.PlacementCode == code);
     }
 
     public async Task<IEnumerable<Campaign>> GetEligibleCampaignsAsync(string tenantId, string placementCode)
@@ -50,8 +50,8 @@ public class PlacementRepository : IPlacementRepository
 
     public async Task<IEnumerable<Placement>> GetAllAsync()
     {
-        var connection = _context.Database.GetDbConnection();
-        var sql = "SELECT * FROM Placements;";
-        return await connection.QueryAsync<Placement>(sql);
+        return await _context.Placements
+            .AsNoTracking()
+            .ToListAsync();
     }
 }

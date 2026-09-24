@@ -16,11 +16,10 @@ public class CampaignRepository : ICampaignRepository
         _context = context;
     }
 
-    public Task CreateAsync(Campaign campaign)
+    public async Task CreateAsync(Campaign campaign)
     {
-        // The UnitOfWork is responsible for calling SaveChangesAsync.
         _context.Campaigns.Add(campaign);
-        return Task.CompletedTask;
+        await _context.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<Campaign>> GetAllAsync(string tenantId, CancellationToken token = default)
@@ -33,12 +32,9 @@ public class CampaignRepository : ICampaignRepository
 
     public async Task<Campaign?> GetByIdAsync(string id)
     {
-        var local = _context.Campaigns.Local.FirstOrDefault(c => c.Id == id);
-        if (local != null)
-        {
-            return local;
-        }
-        return await _context.Campaigns.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
+        return await _context.Campaigns
+            .AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Id == id);
     }
 
     public Task UpdateAsync(Campaign campaign)

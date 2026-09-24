@@ -29,9 +29,7 @@ public class CreativeRepository : ICreativeRepository
 
     public async Task<Creative?> GetByIdAsync(long id)
     {
-        var connection = _context.Database.GetDbConnection();
-        var sql = "SELECT * FROM Creatives WHERE Id = @Id;";
-        return await connection.QueryFirstOrDefaultAsync<Creative>(sql, new { Id = id });
+        return await _context.Creatives.FindAsync(id);
     }
 
     public async Task<long> CreateAsync(Creative creative)

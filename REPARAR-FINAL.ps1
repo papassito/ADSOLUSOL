@@ -48,10 +48,12 @@ foreach ($ef in $emptyFiles) {
 $programCs = Join-Path $Root "src\ADSOLUSOL.Presentation.Api\Program.cs"
 if (Test-Path $programCs) {
     $content = [System.IO.File]::ReadAllText($programCs, [System.Text.Encoding]::UTF8)
-    $updated = $content.Replace('using ADSOLUSOL.Infrastructure.Authentication;', 'using ADSOLUSOL.Infrastructure.Security;')
-    $updated = $updated.Replace('using ADSOLUSOL.Infrastructure.Cryptography;', 'using ADSOLUSOL.Infrastructure.Security;')
-    [System.IO.File]::WriteAllText($programCs, $updated, (New-Object System.Text.UTF8Encoding($false)))
-    Write-Host "[FIX] Namespace corregido en Program.cs." -ForegroundColor Green
+    if ($content -match 'ADSOLUSOL\.Infrastructure\.(Authentication|Cryptography)') {
+        $updated = $content.Replace('using ADSOLUSOL.Infrastructure.Authentication;', 'using ADSOLUSOL.Infrastructure.Security;')
+        $updated = $updated.Replace('using ADSOLUSOL.Infrastructure.Cryptography;', 'using ADSOLUSOL.Infrastructure.Security;')
+        [System.IO.File]::WriteAllText($programCs, $updated, (New-Object System.Text.UTF8Encoding($false)))
+        Write-Host "[FIX] Namespace corregido en Program.cs." -ForegroundColor Green
+    }
 }
 
 # 3. Corregir imports inexistentes en Routes.razor
@@ -59,7 +61,7 @@ $routesRazor = Join-Path $Root "src\ADSOLUSOL.Presentation.Api\Routes.razor"
 if (Test-Path $routesRazor) {
     $content = Get-Content $routesRazor -Raw
     $updated = $content.Replace('@using ADSOLUSOL.Presentation.Shared;', '').Replace('@using ADSOLUSOL.Presentation.Shared', '')
-    Set-Content -Path $routesRazor -Value $updated -Encoding UTF8
+    [System.IO.File]::WriteAllText($routesRazor, $updated, (New-Object System.Text.UTF8Encoding($false)))
     Write-Host "[FIX] Removido namespace inexistente 'Shared' en 'Routes.razor'." -ForegroundColor Green
 }
 
@@ -73,7 +75,7 @@ $importsContent = @(
     '@using Microsoft.AspNetCore.Components.Web.Virtualization',
     '@using Microsoft.JSInterop'
 ) -join "`r`n"
-Set-Content -Path $importsRazor -Value $importsContent -Encoding UTF8
+[System.IO.File]::WriteAllText($importsRazor, $importsContent, (New-Object System.Text.UTF8Encoding($false)))
 Write-Host "[FIX] Actualizado '_Imports.razor' con los namespaces de Blazor requeridos." -ForegroundColor Green
 
 Write-Host ""
@@ -83,4 +85,9 @@ Write-Host "====================================================================
 Write-Host ""
 
 Set-Location $Root
-& ".\BUILD-ADSOLUSOL.ps1"
+$buildScript = Join-Path $Root "BUILD-ADSOLUSOL.ps1"
+if (Test-Path $buildScript) {
+    & $buildScript
+} else {
+    Write-Host "[WARN] No se encontró 'BUILD-ADSOLUSOL.ps1' en la raíz. Omitiendo compilación final." -ForegroundColor Yellow
+}

@@ -1,0 +1,35 @@
+name: ADSOLUSOL CI Quality Gate
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  audit:
+    name: Forensics Audit (junta_medica)
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET 8
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Run Forensic Medical Board Audit
+      shell: pwsh
+      run: |
+        ./junta_medica.ps1 -ErrorAction Stop
+      env:
+        CI: true
+
+    - name: Upload Clinical Record Artifact
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: expediente-clinico-maestro
+        path: docs/EXPEDIENTE_CLINICO_MAESTRO.md
