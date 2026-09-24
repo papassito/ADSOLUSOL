@@ -23,7 +23,6 @@ Set-Location $ScriptRoot
 if ($Reseal) {
     Write-Host "[NOTARÍA] Re-sellando hashes de documentación (SHA-256)..." -ForegroundColor Yellow
     $manifestFiles = @("docs/MANIFEST.md", "MANIFEST.md")
-    $mdFiles = Get-ChildItem -Path @("docs", ".") -Recurse -Filter "*.md" -File -ErrorAction SilentlyContinue |
     $mdFiles = Get-ChildItem -Path $ScriptRoot -Recurse -Filter "*.md" -File -ErrorAction SilentlyContinue |
         Where-Object { 
             $_.FullName -notmatch "[\\/](\.git|bin|obj|BUILD)[\\/]" -and

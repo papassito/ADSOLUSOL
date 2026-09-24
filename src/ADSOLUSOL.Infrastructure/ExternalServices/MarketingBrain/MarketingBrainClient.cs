@@ -27,12 +27,17 @@ public class MarketingBrainClient : IMarketingBrainService
 
     public async Task<bool> IsAvailableAsync(CancellationToken cancellationToken = default)
     {
+        if (_httpClient.BaseAddress == null)
+        {
+            return false;
+        }
+
         try
         {
             var response = await _httpClient.GetAsync("health", cancellationToken);
             return response.IsSuccessStatusCode;
         }
-        catch (HttpRequestException)
+        catch (Exception ex) when (ex is HttpRequestException || ex is OperationCanceledException || ex is InvalidOperationException)
         {
             return false;
         }
@@ -40,6 +45,11 @@ public class MarketingBrainClient : IMarketingBrainService
 
     public async Task EmitTelemetryAsync(string campaignId, string eventType, decimal cost = 0m)
     {
+        if (_httpClient.BaseAddress == null)
+        {
+            return;
+        }
+
         var telemetryEvent = new
         {
             CampaignId = campaignId,
@@ -48,13 +58,12 @@ public class MarketingBrainClient : IMarketingBrainService
             Timestamp = DateTime.UtcNow
         };
 
-        // La ruta del endpoint de telemetría puede variar. Se asume "api/telemetry".
         try
         {
             // Fire-and-forget: no esperamos la respuesta, pero sí controlamos el fallo.
             await _httpClient.PostAsJsonAsync("api/telemetry", telemetryEvent, CancellationToken.None);
         }
-        catch (Exception ex) when (ex is HttpRequestException || ex is TaskCanceledException)
+        catch (Exception ex) when (ex is HttpRequestException || ex is OperationCanceledException || ex is InvalidOperationException)
         {
             // Se absorbe el error para no impactar el flujo principal, cumpliendo con el
             // principio de "Disconnected Tolerant". Se debería registrar en un log.

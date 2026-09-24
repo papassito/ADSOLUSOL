@@ -70,6 +70,16 @@ if ($Fix) {
         Write-Host "  [EXTIRPADO] Archivo vacío (0 bytes): $($ef.FullName.Substring($ScriptRoot.Length))" -ForegroundColor Green
     }
 
+    # B.1 Extirpación de archivos foráneos en la raíz ajenos al dominio publicitario ADS
+    $alienRootFiles = @("AIInferenceAdapter.ts", "AssetBrowserModal.tsx", "printer_bridge.cpp", "ci.yml")
+    foreach ($af in $alienRootFiles) {
+        $afPath = Join-Path $ScriptRoot $af
+        if (Test-Path $afPath) {
+            Remove-Item $afPath -Force -ErrorAction SilentlyContinue
+            Write-Host "  [EXTIRPADO] Archivo foráneo de raíz purgado: $af" -ForegroundColor Green
+        }
+    }
+
     # C. Reubicación/Eliminación de MauiProgram.cs huérfano fuera de Presentation.Desktop
     $strayMauis = Get-ChildItem -Path $ScriptRoot -Recurse -Filter "MauiProgram.cs" -File -ErrorAction SilentlyContinue |
         Where-Object { $_.FullName -notmatch "Presentation\.Desktop" -and $_.FullName -notmatch "[\\/](\.git|bin|obj|BUILD)[\\/]" }
@@ -169,6 +179,13 @@ $MedicalBoard = @(
             if ($rootProjects.Count -gt 0) {
                 foreach ($rp in $rootProjects) {
                     Write-Host "[GANGRENA] Proyecto .csproj huérfano en la raíz: $($rp.Name)" -ForegroundColor Red
+                    $errors++
+                }
+            }
+            $alienFiles = @("AIInferenceAdapter.ts", "AssetBrowserModal.tsx", "printer_bridge.cpp", "ci.yml")
+            foreach ($af in $alienFiles) {
+                if (Test-Path $af) {
+                    Write-Host "[PATOLOGIA] Archivo foráneo ajeno al dominio ADS en la raíz: $af" -ForegroundColor Red
                     $errors++
                 }
             }

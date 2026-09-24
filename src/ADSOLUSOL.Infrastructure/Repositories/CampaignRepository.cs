@@ -57,11 +57,14 @@ public class CampaignRepository : ICampaignRepository
                       AND (COALESCE(CAST(BudgetSpent AS REAL), 0) + @Cost) <= CAST(Budget AS REAL);";
         var rows = await transaction.Connection.ExecuteAsync(sql, new { Cost = (double)cost, CampaignId = campaignId }, transaction);
 
-        var local = _context.Campaigns.Local.FirstOrDefault(c => c.Id == campaignId);
-        if (local != null)
+        if (rows > 0)
         {
-            local.BudgetSpent += cost;
-            _context.Entry(local).Property(c => c.BudgetSpent).IsModified = false;
+            var local = _context.Campaigns.Local.FirstOrDefault(c => c.Id == campaignId);
+            if (local != null)
+            {
+                local.BudgetSpent += cost;
+                _context.Entry(local).Property(c => c.BudgetSpent).IsModified = false;
+            }
         }
 
         return rows;
