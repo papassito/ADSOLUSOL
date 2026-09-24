@@ -43,7 +43,7 @@ public class PlacementRepository : IPlacementRepository
 
     public async Task<long> CreateAsync(Placement placement)
     {
-        await _context.Placements.AddAsync(placement);
+        _context.Placements.Add(placement);
         await _context.SaveChangesAsync();
         return placement.Id;
     }

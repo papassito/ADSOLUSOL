@@ -34,7 +34,7 @@ public class CreativeRepository : ICreativeRepository
 
     public async Task<long> CreateAsync(Creative creative)
     {
-        await _context.Creatives.AddAsync(creative);
+        _context.Creatives.Add(creative);
         await _context.SaveChangesAsync();
         return creative.Id;
     }
