@@ -28,7 +28,7 @@ if (-not $SkipAudit) {
         & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $juntaMedicaScript -Fast
         if ($LASTEXITCODE -ne 0) {
             Write-Host "`n[BLOQUEO DE CALIDAD] Sincronización cancelada: La auditoría forense encontró fallas clínicas." -ForegroundColor Red
-            Write-Host "Ejecute '.\junta_medica.cmd -Fix' para sanear antes de comitear o use -SkipAudit si es justificado." -ForegroundColor Yellow
+            Write-Host "Ejecute '.\release.ps1 -Fix' para sanear antes de comitear o use -SkipAudit si es justificado." -ForegroundColor Yellow
             exit 1
         }
         Write-Host " [OK] Quality Gate superado con éxito (Auditoría limpia)." -ForegroundColor Green
@@ -48,7 +48,7 @@ $detectedGhosts = Get-ChildItem -Path $PSScriptRoot -Recurse -Include $ghostPatt
 if ($detectedGhosts.Count -gt 0) {
     Write-Host "`n[BLOQUEO DE CALIDAD] Se detectaron archivos fantasma o duplicados en el árbol de trabajo:" -ForegroundColor Red
     $detectedGhosts | ForEach-Object { Write-Host "  -> $($_.Name)" -ForegroundColor Red }
-    Write-Host "Ejecute '.\junta_medica.cmd -Fix' para purgarlos antes de sincronizar." -ForegroundColor Yellow
+    Write-Host "Ejecute '.\release.ps1 -Fix' para purgarlos antes de sincronizar." -ForegroundColor Yellow
     exit 1
 }
 
@@ -84,7 +84,7 @@ try {
 
     Write-Host "`n>>> [3/3] Creando commit y enviando a remoto..." -ForegroundColor Yellow
     Write-Host "Mensaje: '$CommitMessage'" -ForegroundColor Gray
-    git commit -m $CommitMessage
+    git commit -m "$CommitMessage"
     Write-Host " [OK] Commit creado." -ForegroundColor Green
 
     Write-Host "Subiendo cambios a origin/$Branch (git push)..." -ForegroundColor Yellow
@@ -92,10 +92,11 @@ try {
     Write-Host " [OK] Push completado." -ForegroundColor Green
 
     Write-Host "`n======================================================================" -ForegroundColor Cyan
-    Write-Host " ✅ SINCRONIZACIÓN COMPLETADA EXITOSAMENTE" -ForegroundColor Green
+    Write-Host " [OK] SINCRONIZACION COMPLETADA EXITOSAMENTE" -ForegroundColor Green
     Write-Host "======================================================================" -ForegroundColor Cyan
 
-} catch {
+}
+catch {
     Write-Host "`n--- ERROR DURANTE LA SINCRONIZACIÓN ---" -ForegroundColor Red
     Write-Host $_.Exception.Message -ForegroundColor Red
     exit 1

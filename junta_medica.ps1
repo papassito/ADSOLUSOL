@@ -1,19 +1,13 @@
 <#
 ================================================================================
-  ADSOLUSOL :: JUNTA MEDICA SUPREMA FORENSE v6.0 (.NET / ONION / CI-CD)
-  "Auditoría Pericial Total: Sintaxis C#, Contención Onion/Clean Architecture,
-   Criptografía Ed25519, UI MAUI Desktop, Blindaje EDR y Compilación de Release"
+  ADSOLUSOL :: JUNTA MEDICA FORENSE (READ-ONLY QUALITY GATE & LINTER)
+  "Auditoría Pericial Pasiva: Sintaxis C#, Contención Onion, Criptografía Ed25519,
+   Ausencia de Secretos EDR, Formato Canónico y Suites de Regresión"
 ================================================================================
 #>
 param(
     [string]$Root = ".",
-    [switch]$Fix,
-    [switch]$Fast,
-    [switch]$Status,
-    [switch]$Add,
-    [switch]$Commit,
-    [switch]$Push,
-    [string]$CommitMessage = "chore(audit): junta medica forense 10/10 pass - expediente clinico actualizado"
+    [switch]$Fast
 )
 
 $ErrorActionPreference = "Stop"
@@ -49,94 +43,7 @@ Write-Host "Ecosistema Detectado: " -NoNewline -ForegroundColor Cyan
 Write-Host ($detectedLanguages -join " | ") -ForegroundColor Green
 Write-Host ""
 
-# 3. Intervención Quirúrgica Preventiva (-Fix)
-if ($Fix) {
-    Write-Host "[CIRUGIA DE EMERGENCIA] Aplicando bisturí higiénico preventivo (-Fix)..." -ForegroundColor Yellow
-
-    # A. Extirpación de archivos residuales, fantasma y duplicados
-    $ghostPatterns = @("* (1).*", "* (2).*", "*.tmp", "*.bak", "*.orig", "*~", "*.swp")
-    $ghosts = Get-ChildItem -Path $ScriptRoot -Recurse -Include $ghostPatterns -File -ErrorAction SilentlyContinue |
-        Where-Object { $_.FullName -notmatch "[\\/]\.git[\\/]" }
-    foreach ($g in $ghosts) {
-        Remove-Item $g.FullName -Force -ErrorAction SilentlyContinue
-        Write-Host "  [EXTIRPADO] Archivo fantasma/duplicado: $($g.Name)" -ForegroundColor Green
-    }
-
-    # B. Extirpación de archivos vacíos (0 bytes) que pudren la compilación
-    $emptyFiles = Get-ChildItem -Path $ScriptRoot -Recurse -Include "*.cs", "*.md", "*.json", "*.ps1" -File -ErrorAction SilentlyContinue |
-        Where-Object { $_.Length -eq 0 -and $_.FullName -notmatch "[\\/](\.git|bin|obj|BUILD)[\\/]" }
-    foreach ($ef in $emptyFiles) {
-        Remove-Item $ef.FullName -Force -ErrorAction SilentlyContinue
-        Write-Host "  [EXTIRPADO] Archivo vacío (0 bytes): $($ef.FullName.Substring($ScriptRoot.Length))" -ForegroundColor Green
-    }
-
-    # B.1 Extirpación de archivos foráneos en la raíz ajenos al dominio publicitario ADS
-    $alienRootFiles = @("AIInferenceAdapter.ts", "AssetBrowserModal.tsx", "printer_bridge.cpp", "ci.yml")
-    foreach ($af in $alienRootFiles) {
-        $afPath = Join-Path $ScriptRoot $af
-        if (Test-Path $afPath) {
-            Remove-Item $afPath -Force -ErrorAction SilentlyContinue
-            Write-Host "  [EXTIRPADO] Archivo foráneo de raíz purgado: $af" -ForegroundColor Green
-        }
-    }
-
-    # C. Reubicación/Eliminación de MauiProgram.cs huérfano fuera de Presentation.Desktop
-    $strayMauis = Get-ChildItem -Path $ScriptRoot -Recurse -Filter "MauiProgram.cs" -File -ErrorAction SilentlyContinue |
-        Where-Object { $_.FullName -notmatch "Presentation\.Desktop" -and $_.FullName -notmatch "[\\/](\.git|bin|obj|BUILD)[\\/]" }
-    foreach ($sm in $strayMauis) {
-        Remove-Item $sm.FullName -Force -ErrorAction SilentlyContinue
-        Write-Host "  [EXTIRPADO] MauiProgram.cs huérfano en: $($sm.FullName.Substring($ScriptRoot.Length))" -ForegroundColor Green
-    }
-
-    # D. Saneamiento de BOM UTF-8, Caracteres de Control y Normalización de Saltos de Línea
-    $bomCount = 0
-    $ctrlCount = 0
-    $validExts = @(".cs", ".csproj", ".json", ".md", ".ps1", ".xaml", ".razor")
-    $textFiles = Get-ChildItem -Path $ScriptRoot -Recurse -File -ErrorAction SilentlyContinue |
-        Where-Object { $validExts -contains $_.Extension -and $_.FullName -notmatch "[\\/](\.git|bin|obj|BUILD)[\\/]" }
-
-    $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
-    foreach ($file in $textFiles) {
-        $rawBytes = [System.IO.File]::ReadAllBytes($file.FullName)
-        if ($rawBytes.Length -ge 3 -and $rawBytes[0] -eq 0xEF -and $rawBytes[1] -eq 0xBB -and $rawBytes[2] -eq 0xBF) {
-            $rawBytes = $rawBytes[3..($rawBytes.Length - 1)]
-            $bomCount++
-        }
-        $text = [System.Text.Encoding]::UTF8.GetString($rawBytes)
-        # Sanitizar caracteres nulos y caracteres de control dañinos (conservando \t, \r, \n)
-        $sanitizedText = [System.Text.RegularExpressions.Regex]::Replace($text, '[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', '')
-        if ($sanitizedText.Length -ne $text.Length) { $ctrlCount++ }
-
-        # Normalizar CRLF
-        $sanitizedText = $sanitizedText -replace "\r?\n", "`r`n"
-        [System.IO.File]::WriteAllText($file.FullName, $sanitizedText, $utf8NoBom)
-    }
-    if ($bomCount -gt 0) { Write-Host "  [SANEADO] $bomCount archivo(s) despojados de marcas BOM UTF-8." -ForegroundColor Green }
-    if ($ctrlCount -gt 0) { Write-Host "  [SANEADO] $ctrlCount archivo(s) purgados de caracteres de control corruptos." -ForegroundColor Green }
-
-    # E. Extirpación de Carpetas Fantasma / Vacías
-    Get-ChildItem -Path $ScriptRoot -Recurse -Directory -ErrorAction SilentlyContinue |
-        Where-Object { $_.FullName -notmatch "[\\/]\.git" } |
-        Sort-Object -Property { $_.FullName.Length } -Descending |
-        ForEach-Object {
-            if ((Get-ChildItem -Path $_.FullName -Force | Measure-Object).Count -eq 0) {
-                Remove-Item -Path $_.FullName -Force -ErrorAction SilentlyContinue
-                Write-Host "  [AMPUTADO] Carpeta vacía eliminada: $($_.FullName.Substring($ScriptRoot.Length))" -ForegroundColor Green
-            }
-        }
-
-    # F. Restauración y Formateo Canónico (.NET Format)
-    $sln = Join-Path $ScriptRoot "ADSOLUSOL.sln"
-    if (Test-Path $sln) {
-        Write-Host "  [SANEANDO] Restaurando dependencias y formateando código..." -ForegroundColor Yellow
-        & dotnet restore $sln -p:WindowsPackageType=None -p:AppxPackage=false -p:GenerateAppxPackageOnBuild=false -p:WindowsAppSDKSelfContained=false --verbosity quiet 2>&1 | Out-Null
-        & dotnet format $sln --no-restore --verbosity quiet 2>&1 | Out-Null
-        Write-Host "  [SANEADO] Formato canónico C# homogeneizado." -ForegroundColor Green
-    }
-    Write-Host ""
-}
-
-# 4. Cuadro Médico Unificado de Especialistas Forenses (26 Patologías Auditadas)
+# 3. Cuadro Médico Unificado de Especialistas Forenses (Auditoría Pasiva)
 $MedicalBoard = @(
     @{
         Area         = "Inmunología de Codificación, BOM y Caracteres de Control"
@@ -218,7 +125,7 @@ $MedicalBoard = @(
             $formatOut = & dotnet format "ADSOLUSOL.sln" --no-restore --verify-no-changes --verbosity minimal 2>&1
             if ($LASTEXITCODE -ne 0) {
                 Write-Host "[DIPLOPIA] El código presenta discrepancias visuales con el estándar dotnet format:`n$formatOut" -ForegroundColor Red
-                Write-Host "[INFO] Ejecute junta_medica con switch -Fix para autoformatear." -ForegroundColor Yellow
+                Write-Host "[INFO] Ejecute .\release.ps1 -Fix (o dotnet format) para autoformatear." -ForegroundColor Yellow
                 exit 1
             }
             Write-Host "[SANO] Agudeza visual 20/20: Todo el código C# cumple con el estándar canónico."
@@ -275,12 +182,12 @@ $MedicalBoard = @(
         Command      = '
             $errors = 0
             $secretPatterns = @(
-                @{ Pattern = "BEGIN\s+(RSA\s+)?PRIVATE\s+KEY"; Label = "Clave privada RSA/PEM expuesta" },
-                @{ Pattern = "Password\s*=\s*`"[^`"]{4,}`""; Label = "Posible contrasena en texto plano" },
-                @{ Pattern = "SecretKey\s*=\s*`"[^`"]{4,}`""; Label = "Posible SecretKey en texto plano" }
+                @{ Pattern = ''BEGIN\s+(RSA\s+)?PRIVATE\s+KEY''; Label = "Clave privada RSA/PEM expuesta" },
+                @{ Pattern = ''Password\s*=\s*"[^"]{4,}"''; Label = "Posible contrasena en texto plano" },
+                @{ Pattern = ''SecretKey\s*=\s*"[^"]{4,}"''; Label = "Posible SecretKey en texto plano" }
             )
             $sourceFiles = Get-ChildItem -Path src -Recurse -Filter "*.cs" -File -ErrorAction SilentlyContinue |
-                Where-Object { $_.FullName -notmatch "\\/[\\/]" }
+                Where-Object { $_.FullName -notmatch "[\\/](\.git|bin|obj|BUILD)[\\/]" }
             foreach ($f in $sourceFiles) {
                 $content = Get-Content $f.FullName -Raw -ErrorAction SilentlyContinue
                 foreach ($p in $secretPatterns) {
@@ -374,34 +281,6 @@ $MedicalBoard = @(
         Descripcion  = "Inspección de cobertura funcional, registros de servicios y cableado de navegación Desktop."
     },
     @{
-        Area         = "Cirugía General y Compilación de Producción CI/CD"
-        Especialista = "Publicación Nativa Desktop (ADSOLUSOL.Presentation.Desktop)"
-        Command      = '
-            $desktopProj = Join-Path $pwd "src\ADSOLUSOL.Presentation.Desktop\ADSOLUSOL.Presentation.Desktop.csproj"
-            if (-not (Test-Path $desktopProj)) {
-                Write-Host "[CRITICO] Falta el proyecto Desktop principal en $desktopProj" -ForegroundColor Red
-                exit 1
-            }
-            $publishDir = Join-Path $pwd "BUILD\ADSOLUSOL"
-            if (Test-Path $publishDir) { Remove-Item $publishDir -Recurse -Force }
-            New-Item -ItemType Directory -Force -Path $publishDir | Out-Null
-            & dotnet restore $desktopProj -f net8.0-windows10.0.19041.0 -r win-x64 -p:WindowsPackageType=None -p:AppxPackage=false -p:GenerateAppxPackageOnBuild=false -p:WindowsAppSDKSelfContained=false --verbosity quiet 2>&1 | Out-Null
-            & dotnet publish $desktopProj -c Release -f net8.0-windows10.0.19041.0 -r win-x64 --no-restore --nologo -p:WindowsPackageType=None -p:AppxPackage=false -p:GenerateAppxPackageOnBuild=false -p:WindowsAppSDKSelfContained=false -p:IgnoreMissingWorkloads=true -o $publishDir
-            if ($LASTEXITCODE -ne 0) {
-                Write-Host "[PATOLOGIA] Fallo en la publicación del artefacto nativo MAUI Desktop." -ForegroundColor Red
-                exit 1
-            }
-            $exe = Get-ChildItem -Path $publishDir -Filter "ADSOLUSOL.Presentation.Desktop.exe" -Recurse | Select-Object -First 1
-            if (-not $exe) {
-                Write-Host "[PATOLOGIA] Binario ejecutable principal no encontrado en el artefacto publicado." -ForegroundColor Red
-                exit 1
-            }
-            $sizeMB = [math]::Round($exe.Length / 1MB, 2)
-            Write-Host "[SANO] Publicación exitosa: $($exe.Name) ($sizeMB MB) listo para distribución en Windows."
-        '
-        Descripcion  = "Validación del pipeline de publicación nativa Windows net8.0 x64."
-    },
-    @{
         Area         = "Endoscopía y Pruebas de Componentes UI (bUnit)"
         Especialista = "Verificación Funcional de Componentes Blazor Aislados"
         Command      = '
@@ -430,11 +309,6 @@ $reportPath = Join-Path $ScriptRoot "docs/EXPEDIENTE_CLINICO_MAESTRO.md"
 $totalConsultas = $MedicalBoard.Count
 
 foreach ($doctor in $MedicalBoard) {
-    if ($Fast -and $doctor.Area -like "*Compilación de Producción*") {
-        Write-Host "`n--- [CONSULTA OMITIDA : $($doctor.Area) (-Fast activo)] ---" -ForegroundColor DarkGray
-        continue
-    }
-
     $index = $medicalRecords.Count + 1
     Write-Host ""
     Write-Host "--- [CONSULTA MEDICA $index/$totalConsultas : $($doctor.Area)] ---" -ForegroundColor Yellow
@@ -549,66 +423,10 @@ if ($criticalFailures.Count -eq 0) {
     $criticalFailures | ForEach-Object { Write-Host "  - $($_.Area) [$($_.Especialista)]" -ForegroundColor Yellow }
 }
 
-# 7. Operaciones de Git y Envío a GitHub
-$hasGitFlags = $Status -or $Add -or $Commit -or $Push
-if ($hasGitFlags) {
-    Write-Host "`n=========================================================" -ForegroundColor Cyan
-    Write-Host "         OPERACIONES GIT / SINCRONIZACIÓN GITHUB         " -ForegroundColor Cyan
-    Write-Host "=========================================================" -ForegroundColor Cyan
-    try {
-        $gitCmd = Get-Command git -ErrorAction SilentlyContinue
-        if (-not $gitCmd) {
-            Write-Host "[ERR] 'git' no está disponible en el PATH." -ForegroundColor Red
-        } else {
-            if ($criticalFailures.Count -gt 0 -and ($Add -or $Commit -or $Push)) {
-                Write-Host "`n[BLOQUEO DE SEGURIDAD] Operación Git abortada: existen fallos clínicos activos ($($criticalFailures.Count))." -ForegroundColor Red
-                Write-Host "Aplique '.\junta_medica.ps1 -Fix' para sanear antes de subir a GitHub." -ForegroundColor Yellow
-            } else {
-                if ($Status -or ($Push -and -not $Add -and -not $Commit)) {
-                    Write-Host "`n[GIT STATUS] Estado del repositorio:" -ForegroundColor Yellow
-                    & git status
-                }
-
-                if ($Add -or ($Push -and -not $Commit)) {
-                    Write-Host "`n[GIT ADD] Preparando cambios (git add -A)..." -ForegroundColor Yellow
-                    & git add -A
-                    & git status --short
-                }
-
-                if ($Commit -or $Push) {
-                    $pending = & git status --porcelain
-                    if ($pending) {
-                        Write-Host "`n[GIT COMMIT] Generando commit certificado..." -ForegroundColor Yellow
-                        & git commit -m $CommitMessage
-                        if ($LASTEXITCODE -eq 0) {
-                            Write-Host "[OK] Commit registrado con éxito." -ForegroundColor Green
-                        }
-                    } else {
-                        Write-Host "[INFO] Repositorio limpio. No hay cambios pendientes." -ForegroundColor Cyan
-                    }
-                }
-
-                if ($Push) {
-                    Write-Host "`n[GIT PUSH] Transmitiendo cambios a GitHub..." -ForegroundColor Yellow
-                    & git push
-                    if ($LASTEXITCODE -eq 0) {
-                        Write-Host "[OK] Sincronización con GitHub completada exitosamente." -ForegroundColor Green
-                    } else {
-                        Write-Host "[WARN] 'git push' finalizó con advertencias (ExitCode: $LASTEXITCODE)." -ForegroundColor Yellow
-                    }
-                }
-            }
-        }
-    } catch {
-        Write-Host "[ERR] Fallo durante la interacción con Git: $($_.Exception.Message)" -ForegroundColor Red
-    }
-}
-
-# 8. Exit Code
+# 6. Exit Code Estricto para Pipelines CI/CD
 if ($env:CI) {
     if ($criticalFailures.Count -gt 0) { exit 1 } else { exit 0 }
 } else {
     $global:LASTEXITCODE = if ($criticalFailures.Count -gt 0) { 1 } else { 0 }
-    Write-Host ""
-    return
+    if ($criticalFailures.Count -gt 0) { exit 1 } else { exit 0 }
 }

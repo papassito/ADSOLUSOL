@@ -107,7 +107,7 @@ Para construir el ejecutable de producción, usa:
 
 Pendientes de cierre técnico:
 - Aislamiento de tenant completo en todas las superficies (en progreso).
-- Integración real o estado `DISCONNECTED` de Marketing Brain/SIC.
+- Blindaje y pruebas de integración para el pipeline de autenticación de firmas y tenant.
 - Estrategia de empaquetado y despliegue para la aplicación MAUI (e.g., MSIX).
 
 La documentación de detalle está indexada en [`docs/LIBRARY.md`](docs/LIBRARY.md).

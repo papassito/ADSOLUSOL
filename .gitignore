@@ -4,6 +4,8 @@ _audit/
 # .NET Core build artifacts
 bin/
 obj/
+.build/
+BUILD/
 
 # SQLite database files
 App_Data/
@@ -17,3 +19,7 @@ coverage/
 # Rider/VS specific
 .idea/
 .vs/
+
+# Certificates and keys
+*.pfx
+*.cer
