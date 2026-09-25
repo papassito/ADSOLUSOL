@@ -69,7 +69,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ExceptionMiddleware>();
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 app.UseMiddleware<SignatureVerificationMiddleware>();
 app.UseAuthorization();
 app.MapControllers();

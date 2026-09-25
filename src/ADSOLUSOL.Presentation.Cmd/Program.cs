@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using ADSOLUSOL.Presentation.Cmd.Commands;
 using ADSOLUSOL.Application.Services;
 using ADSOLUSOL.Domain.Interfaces;
 using ADSOLUSOL.Infrastructure.Security;
@@ -20,4 +21,17 @@ using IHost host = Host.CreateDefaultBuilder(args)
 
 Console.WriteLine("DI Host initialized successfully.");
 
-// La lógica del comando se ejecutaría aquí, resolviendo servicios desde host.Services
+var commandArg = args.Length > 0 ? args[0].ToLowerInvariant() : "help";
+
+switch (commandArg)
+{
+    case "start-engine":
+        await new StartEngineCommand().ExecuteAsync();
+        break;
+    case "sync-campaigns":
+        await new SyncCampaignsCommand().ExecuteAsync();
+        break;
+    default:
+        Console.WriteLine("Comandos disponibles: start-engine, sync-campaigns");
+        break;
+}

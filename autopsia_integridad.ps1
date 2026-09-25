@@ -45,6 +45,53 @@ if ($Reseal) {
         [System.IO.File]::WriteAllText($target, $content, $utf8NoBom)
         Write-Host "  -> Manifiesto actualizado: $mp" -ForegroundColor Green
     }
+
+    # Actualizar DOCUMENTATION_SEAL.json con los hashes de los manifiestos
+    $sealPath = Join-Path $ScriptRoot "DOCUMENTATION_SEAL.json"
+    $rootManifestHash = if (Test-Path (Join-Path $ScriptRoot "MANIFEST.md")) { (Get-FileHash (Join-Path $ScriptRoot "MANIFEST.md") -Algorithm SHA256).Hash.ToLower() } else { $null }
+    $docsManifestHash = if (Test-Path (Join-Path $ScriptRoot "docs/MANIFEST.md")) { (Get-FileHash (Join-Path $ScriptRoot "docs/MANIFEST.md") -Algorithm SHA256).Hash.ToLower() } else { $null }
+
+    $sealObj = [ordered]@{
+        '$schema'              = "https://json-schema.solusol.net/governance/doc-seal-v1.json"
+        project                = "ADSOLUSOL"
+        productName            = "AD SOLUSOL (ADS) — Advertising & Growth Engine"
+        commercialLead         = "KLIK Soft PRO"
+        softwareDirection      = "solusol.net"
+        support                = "CM Soluciones"
+        seal                   = [ordered]@{
+            status                 = "PRE-SELLO"
+            certified              = $false
+            releaseStatus          = "NOT RELEASE-CERTIFIED"
+            revisionDate           = (Get-Date -Format "yyyy-MM-dd")
+            verifiedCommit         = "88505d24a168176c4aa661fa80727d5d45bb71f7"
+            totalMarkdownFiles     = $mdFiles.Count
+            zeroSyntheticCompliant = $true
+        }
+        manifests              = [ordered]@{
+            rootManifest = "MANIFEST.md"
+            docsManifest = "docs/MANIFEST.md"
+        }
+        manifestHashes         = [ordered]@{
+            "MANIFEST.md"      = $rootManifestHash
+            "docs/MANIFEST.md" = $docsManifestHash
+        }
+        runtimeTarget          = [ordered]@{
+            framework    = "net8.0"
+            architecture = "ASP.NET Core + MAUI Blazor + React"
+            database     = "SQLite (adsolusol.db)"
+            cryptography = "Ed25519 (SignatureVerificationMiddleware)"
+        }
+        governancePrinciples   = @(
+            "Zero-Synthetic",
+            "Servidor autoritativo",
+            "Authentication != Authorization",
+            "Tenant isolation",
+            "Recommendation != Execution"
+        )
+    }
+    $sealJson = ($sealObj | ConvertTo-Json -Depth 5) + "`r`n"
+    [System.IO.File]::WriteAllText($sealPath, $sealJson, $utf8NoBom)
+    Write-Host "  -> Sello documental actualizado: DOCUMENTATION_SEAL.json" -ForegroundColor Green
 }
 
 Write-Host "=========================================================" -ForegroundColor Magenta

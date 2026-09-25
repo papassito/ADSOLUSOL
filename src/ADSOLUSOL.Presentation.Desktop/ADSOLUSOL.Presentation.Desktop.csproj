@@ -43,6 +43,7 @@
   </PropertyGroup>
 
   <ItemGroup Condition="'$(IsWindows)' == 'true'">
+    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.12" />
     <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="$(MauiVersion)" />
   </ItemGroup>

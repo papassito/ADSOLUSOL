@@ -44,6 +44,25 @@ foreach ($ef in $emptyFiles) {
     Write-Host "[FIX] Archivo vacio eliminado: $relEmpty" -ForegroundColor Green
 }
 
+# 1.2 Extirpar archivos legados y plantillas vacías
+$legacyMarketingApi = Join-Path $Root "src\ADSOLUSOL.Infrastructure\ExternalServices\MarketingApi"
+if (Test-Path $legacyMarketingApi) {
+    Remove-Item -Path $legacyMarketingApi -Recurse -Force -ErrorAction SilentlyContinue
+    Write-Host "[FIX] Carpeta y cliente legado MarketingApi eliminados." -ForegroundColor Green
+}
+
+$dummyArchTest = Join-Path $Root "tests\ADSOLUSOL.ArchitectureTests\UnitTest1.cs"
+if (Test-Path $dummyArchTest) {
+    Remove-Item -Path $dummyArchTest -Force -ErrorAction SilentlyContinue
+    Write-Host "[FIX] UnitTest1.cs de plantilla eliminado de ArchitectureTests." -ForegroundColor Green
+}
+
+$duplicateApiSeal = Join-Path $Root "src\ADSOLUSOL.Presentation.Api\DOCUMENTATION_SEAL.json"
+if (Test-Path $duplicateApiSeal) {
+    Remove-Item -Path $duplicateApiSeal -Force -ErrorAction SilentlyContinue
+    Write-Host "[FIX] Sello duplicado en Presentation.Api eliminado." -ForegroundColor Green
+}
+
 # 2. Corregir namespace 'Authentication' a 'Security' o 'Cryptography' en Program.cs
 $programCs = Join-Path $Root "src\ADSOLUSOL.Presentation.Api\Program.cs"
 if (Test-Path $programCs) {

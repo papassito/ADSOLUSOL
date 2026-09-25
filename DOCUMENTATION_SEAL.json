@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.solusol.net/governance/doc-seal-v1.json",
+  "project": "ADSOLUSOL",
+  "productName": "AD SOLUSOL (ADS) — Advertising & Growth Engine",
+  "commercialLead": "KLIK Soft PRO",
+  "softwareDirection": "solusol.net",
+  "support": "CM Soluciones",
+  "seal": {
+    "status": "PRE-SELLO",
+    "certified": false,
+    "releaseStatus": "NOT RELEASE-CERTIFIED",
+    "revisionDate": "2026-09-18",
+    "verifiedCommit": "88505d24a168176c4aa661fa80727d5d45bb71f7",
+    "totalMarkdownFiles": 55,
+    "zeroSyntheticCompliant": true
+  },
+  "manifests": {
+    "rootManifest": "MANIFEST.md",
+    "docsManifest": "docs/MANIFEST.md"
+  },
+  "runtimeTarget": {
+    "framework": "net8.0",
+    "architecture": "ASP.NET Core + MAUI Blazor + React",
+    "database": "SQLite (adsolusol.db)",
+    "cryptography": "Ed25519 (SignatureVerificationMiddleware)"
+  },
+  "governancePrinciples": [
+    "Zero-Synthetic",
+    "Servidor autoritativo",
+    "Authentication != Authorization",
+    "Tenant isolation",
+    "Recommendation != Execution"
+  ]
+}

@@ -49,3 +49,22 @@
     *   Se implementó el cliente asíncrono real usando `HttpClient` y `IConfiguration` para enviar telemetría mediante peticiones POST y realizar verificaciones de disponibilidad activas de red.
 *   **Cero Errores de Compilación**:
     *   Se resolvieron de manera integral todos los warnings y dependencias rotas del compilador, alcanzando un estado limpio de compilación (`Exit Code 0`) verificado.
+
+## 2026-09-24 — Estabilización del Frontend Web y Diagnóstico de API/Persistencia
+### 🚀 Mejoras y Optimizaciones
+*   **Configuración del Panel Web React (`ADSOLUSOL.Presentation.Web`)**:
+    *   Se implementó la configuración canónica en `vite.config.ts` integrando el plugin `@vitejs/plugin-react` y resolución ESM nativa mediante `node:url` para el alias `@/`.
+    *   Configuración del proxy inverso para enrutar llamadas `/api` hacia Kestrel (`http://localhost:5000` o configurable por `VITE_API_BASE_URL`).
+    *   Habilitación de `watch.usePolling: true` y `resolve.preserveSymlinks: true` en Vite para soportar ejecución sobre unidades de red o mapeadas (`Y:\` hacia `Q:\`), evitando errores de watcher del sistema de archivos (`errno: -4094`) y discrepancias de rutas absolutas durante la compilación de Rollup.
+
+### 🐞 Corrección de Errores
+*   **Conflicto de Referencias en TypeScript**:
+    *   Se eliminó la referencia a `tsconfig.node.json` con `noEmit` en `tsconfig.json`, resolviendo el error `TS6310: Referenced project may not disable emit` durante `npm run build`.
+*   **Inicialización y Migración del Esquema SQLite**:
+    *   Se diagnosticó el fallo HTTP 500 y estado `database: DOWN` en `/api/health`. Se ejecutó la inicialización en entorno `Development` permitiendo a Entity Framework Core generar las tablas de persistencia (`Campaigns`, `AdEvents`, `Creatives`, `Placements`, `CampaignCreatives`, etc.).
+*   **Liberación de Sockets en Kestrel**:
+    *   Resolución del error `AddressInUseException (SocketException: 10048)` por procesos huérfanos ocupando el puerto 5000.
+
+### 🔧 Alineación de Principios
+*   **Zero-Synthetic en Telemetría y Salud**:
+    *   Se ratifica que el check `sicEngine: DOWN` reporta honestamente la indisponibilidad de la red hacia el motor externo de Marketing Brain, sin simular disponibilidades ficticias en runtime.
