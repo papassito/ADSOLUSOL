@@ -420,7 +420,9 @@ if ($criticalFailures.Count -eq 0) {
     Write-Host "[PASS] ALTA MÉDICA 10/10: ADSOLUSOL presenta salud digital y operativa al 100%." -ForegroundColor Green
 } else {
     Write-Host "[FAIL] INTERVENCIÓN REQUERIDA: $($criticalFailures.Count) área(s) presentan observaciones." -ForegroundColor Red
-    $criticalFailures | ForEach-Object { Write-Host "  - $($_.Area) [$($_.Especialista)]" -ForegroundColor Yellow }
+    foreach ($failure in $criticalFailures) {
+        Write-Host ("  - {0} [{1}]" -f $failure.Area, $failure.Especialista) -ForegroundColor Yellow
+    }
 }
 
 # 6. Exit Code Estricto para Pipelines CI/CD
