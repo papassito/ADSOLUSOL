@@ -4,6 +4,10 @@ param()
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
+try { $null = chcp 65001 } catch {}
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$OutputEncoding = [System.Text.Encoding]::UTF8
+
 # --- Configuration ---
 $baseApiUrl = "http://localhost:5000/api"
 $healthUrl = "http://localhost:5000/api/health"
@@ -17,9 +21,16 @@ if ([string]::IsNullOrWhiteSpace($privateKeyHex)) {
     exit 1
 }
 
+$scriptRoot = if ($PSScriptRoot) { $PSScriptRoot } else { (Get-Location).Path }
+
 # Load NSec for signing from the application's build output directory
-$publishDir = Join-Path $PSScriptRoot "BUILD\ADSOLUSOL"
+$publishDir = Join-Path $scriptRoot "BUILD\ADSOLUSOL"
 $nsecDllPath = Join-Path $publishDir "NSec.Cryptography.dll"
+
+if (-not (Test-Path $nsecDllPath)) {
+    $fallbackDll = Get-ChildItem -Path (Join-Path $scriptRoot ".build") -Filter "NSec.Cryptography.dll" -Recurse -File -ErrorAction SilentlyContinue | Select-Object -First 1
+    if ($fallbackDll) { $nsecDllPath = $fallbackDll.FullName }
+}
 
 if (-not (Test-Path $nsecDllPath)) {
     Write-Error "NSec.Cryptography.dll not found in build output directory '$publishDir'. Please run BUILD-ADSOLUSOL.ps1 first."
