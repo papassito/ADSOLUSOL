@@ -11,40 +11,48 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
+try { $null = chcp 65001 } catch {}
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$OutputEncoding = [System.Text.Encoding]::UTF8
+
+if ([string]::IsNullOrWhiteSpace($Root)) {
+    $Root = (Get-Location).Path
+}
+
 Write-Host "======================================================================" -ForegroundColor Cyan
-Write-Host " REPARACIÓN AUTOMÁTICA DE ADSOLUSOL.Presentation.Api" -ForegroundColor Cyan
+Write-Host " REPARACION AUTOMATICA DE ADSOLUSOL.Presentation.Api" -ForegroundColor Cyan
 Write-Host "======================================================================" -ForegroundColor Cyan
 Write-Host ""
 
-# 1. Eliminar MauiProgram.cs duplicado/erróneo dentro del proyecto API
+# 1. Eliminar MauiProgram.cs duplicado/erroneo dentro del proyecto API
 $strayMauiProgram = Join-Path $Root "src\ADSOLUSOL.Presentation.Api\MauiProgram.cs"
-if (Test-Path $strayMauiProgram) {
-    Remove-Item $strayMauiProgram -Force
+if (Test-Path -LiteralPath $strayMauiProgram) {
+    Remove-Item -LiteralPath $strayMauiProgram -Force
     Write-Host "[FIX] Eliminado 'MauiProgram.cs' fuera de lugar en Presentation.Api." -ForegroundColor Green
 }
 
 $strayMauiProgramInfra = Join-Path $Root "src\ADSOLUSOL.Infrastructure\MauiProgram.cs"
-if (Test-Path $strayMauiProgramInfra) {
-    Remove-Item $strayMauiProgramInfra -Force
+if (Test-Path -LiteralPath $strayMauiProgramInfra) {
+    Remove-Item -LiteralPath $strayMauiProgramInfra -Force
     Write-Host "[FIX] Eliminado 'MauiProgram.cs' fuera de lugar en Infrastructure." -ForegroundColor Green
 }
 
 $strayMauiProgramRepo = Join-Path $Root "src\ADSOLUSOL.Infrastructure\Repositories\MauiProgram.cs"
-if (Test-Path $strayMauiProgramRepo) {
-    Remove-Item $strayMauiProgramRepo -Force
+if (Test-Path -LiteralPath $strayMauiProgramRepo) {
+    Remove-Item -LiteralPath $strayMauiProgramRepo -Force
     Write-Host "[FIX] Eliminado 'MauiProgram.cs' fuera de lugar en Infrastructure/Repositories." -ForegroundColor Green
 }
 
-# 1.1 Extirpar los 5 archivos fuente vacíos (0 bytes) y cualquier esqueleto necrótico
-$emptyFiles = Get-ChildItem -Path (Join-Path $Root "src") -Recurse -Filter "*.cs" -File -ErrorAction SilentlyContinue |
-    Where-Object { $_.Length -eq 0 -and $_.FullName -notmatch '[\\/](\.git|bin|obj|BUILD)[\\/]' }
+# 1.1 Extirpar los archivos fuente vacios (0 bytes) y esqueletos no deseados
+$emptyFiles = Get-ChildItem -Path (Join-Path $Root "src") -Recurse -File -ErrorAction SilentlyContinue |
+    Where-Object { $_.Length -eq 0 -and $_.Name -ne ".gitkeep" -and $_.FullName -notmatch '\\/[\\/]' }
 foreach ($ef in $emptyFiles) {
     Remove-Item -Path $ef.FullName -Force -ErrorAction SilentlyContinue
     $relEmpty = $ef.FullName.Replace($Root, "")
     Write-Host "[FIX] Archivo vacio eliminado: $relEmpty" -ForegroundColor Green
 }
 
-# 1.1b Extirpar archivos markdown vacíos (0 bytes) en docs/
+# 1.1b Extirpar archivos markdown vacios (0 bytes) en docs/
 $emptyDocs = Get-ChildItem -Path (Join-Path $Root "docs") -Recurse -Filter "*.md" -File -ErrorAction SilentlyContinue |
     Where-Object { $_.Length -eq 0 }
 foreach ($ed in $emptyDocs) {
@@ -52,7 +60,7 @@ foreach ($ed in $emptyDocs) {
     Write-Host "[FIX] Archivo markdown vacio eliminado: $($ed.Name)" -ForegroundColor Green
 }
 
-# 1.2 Extirpar archivos legados y plantillas vacías
+# 1.2 Extirpar archivos legados y plantillas vacias
 $legacyMarketingApi = Join-Path $Root "src\ADSOLUSOL.Infrastructure\ExternalServices\MarketingApi"
 if (Test-Path $legacyMarketingApi) {
     Remove-Item -Path $legacyMarketingApi -Recurse -Force -ErrorAction SilentlyContinue
@@ -107,7 +115,7 @@ Write-Host "[FIX] Actualizado '_Imports.razor' con los namespaces de Blazor requ
 
 Write-Host ""
 Write-Host "======================================================================" -ForegroundColor Green
-Write-Host " REPARACIÓN COMPLETADA. Ejecutando BUILD-ADSOLUSOL.ps1..." -ForegroundColor Green
+Write-Host " REPARACION COMPLETADA. Ejecutando BUILD-ADSOLUSOL.ps1..." -ForegroundColor Green
 Write-Host "======================================================================" -ForegroundColor Green
 Write-Host ""
 
@@ -116,5 +124,5 @@ $buildScript = Join-Path $Root "BUILD-ADSOLUSOL.ps1"
 if (Test-Path $buildScript) {
     & $buildScript
 } else {
-    Write-Host "[WARN] No se encontró 'BUILD-ADSOLUSOL.ps1' en la raíz. Omitiendo compilación final." -ForegroundColor Yellow
+    Write-Host "[WARN] No se encontro 'BUILD-ADSOLUSOL.ps1' en la raiz. Omitiendo compilacion final." -ForegroundColor Yellow
 }

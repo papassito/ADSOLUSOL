@@ -1,6 +1,6 @@
 # ============================================================================
 # BUILD-ADSOLUSOL.ps1
-# Compilación Release + Frontend + Publish
+# Compilacion Release + Frontend + Publish
 # ============================================================================
 
 [CmdletBinding()]
@@ -11,6 +11,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
+try { $null = chcp 65001 } catch {}
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
 
@@ -20,10 +21,10 @@ Write-Host " ADSOLUSOL - BUILD RELEASE" -ForegroundColor Cyan
 Write-Host "======================================================================" -ForegroundColor Cyan
 Write-Host ""
 
-# --- VALIDACIÓN DE EJECUCIÓN ---
+# --- VALIDACION DE EJECUCION ---
 if ([string]::IsNullOrWhiteSpace($Root)) {
     $Root = (Get-Location).Path
-    Write-Host "[INFO] `$PSScriptRoot no detectado (ejecución interactiva). Usando directorio actual: $Root" -ForegroundColor Yellow
+    Write-Host "[INFO] `$PSScriptRoot no detectado (ejecucion interactiva). Usando directorio actual: $Root" -ForegroundColor Yellow
 }
 
 # ---------------------------------------------------------------------------
@@ -31,21 +32,15 @@ if ([string]::IsNullOrWhiteSpace($Root)) {
 # ---------------------------------------------------------------------------
 
 $Solution = Join-Path $Root "ADSOLUSOL.sln"
-
-$DesktopProject = Join-Path `
-    $Root `
-    "src\ADSOLUSOL.Presentation.Desktop\ADSOLUSOL.Presentation.Desktop.csproj"
-
-$FinalBuild = Join-Path `
-    $Root `
-    "BUILD\ADSOLUSOL"
+$DesktopProject = Join-Path $Root "src\ADSOLUSOL.Presentation.Desktop\ADSOLUSOL.Presentation.Desktop.csproj"
+$FinalBuild = Join-Path $Root "BUILD\ADSOLUSOL"
 
 # ---------------------------------------------------------------------------
 # 2. VALIDACIONES
 # ---------------------------------------------------------------------------
 
 if (-not (Test-Path $Root)) {
-    Write-Host "[FAIL] No existe la raíz:" -ForegroundColor Red
+    Write-Host "[FAIL] No existe la raiz:" -ForegroundColor Red
     Write-Host $Root -ForegroundColor Red
     exit 1
 }
@@ -60,7 +55,7 @@ if (-not (Test-Path $Solution)) {
 $Dotnet = Get-Command dotnet -ErrorAction SilentlyContinue
 
 if (-not $Dotnet) {
-    Write-Host "[FAIL] dotnet no está disponible." -ForegroundColor Red
+    Write-Host "[FAIL] dotnet no esta disponible." -ForegroundColor Red
     exit 1
 }
 
@@ -86,7 +81,7 @@ $RestoreCode = $LASTEXITCODE
 
 if ($RestoreCode -ne 0) {
     Write-Host ""
-    Write-Host "[FAIL] RESTORE FALLÓ. Exit Code: $RestoreCode" -ForegroundColor Red
+    Write-Host "[FAIL] RESTORE FALLO. Exit Code: $RestoreCode" -ForegroundColor Red
     exit 1
 }
 
@@ -101,22 +96,17 @@ Write-Host "====================================================================
 Write-Host " [2/3] BUILD .NET RELEASE" -ForegroundColor Yellow
 Write-Host "======================================================================" -ForegroundColor Yellow
 
-& dotnet build `
-    $Solution `
-    -c Release `
-    --no-restore `
-    --nologo
-
+& dotnet build $Solution -c Release --no-restore --nologo
 $BuildCode = $LASTEXITCODE
 
 if ($BuildCode -ne 0) {
     Write-Host ""
-    Write-Host "[FAIL] BUILD FALLÓ. Exit Code: $BuildCode" -ForegroundColor Red
+    Write-Host "[FAIL] BUILD FALLO. Exit Code: $BuildCode" -ForegroundColor Red
     exit 1
 }
 
 Write-Host ""
-Write-Host "[PASS] Solución .NET compilada." -ForegroundColor Green
+Write-Host "[PASS] Solucion .NET compilada." -ForegroundColor Green
 
 # ---------------------------------------------------------------------------
 # 7. PUBLISH
@@ -129,18 +119,10 @@ Write-Host "====================================================================
 
 if (Test-Path $FinalBuild) {
     Write-Host "[INFO] Limpiando artefacto anterior..." -ForegroundColor Gray
-
-    Remove-Item `
-        $FinalBuild `
-        -Recurse `
-        -Force
+    Remove-Item $FinalBuild -Recurse -Force
 }
 
-New-Item `
-    -ItemType Directory `
-    -Path $FinalBuild `
-    -Force |
-    Out-Null
+New-Item -ItemType Directory -Path $FinalBuild -Force | Out-Null
 
 $publishArgs = @(
     "publish",
@@ -163,12 +145,12 @@ $PublishCode = $LASTEXITCODE
 
 if ($PublishCode -ne 0) {
     Write-Host ""
-    Write-Host "[FAIL] PUBLISH FALLÓ. Exit Code: $PublishCode" -ForegroundColor Red
+    Write-Host "[FAIL] PUBLISH FALLO. Exit Code: $PublishCode" -ForegroundColor Red
     exit 1
 }
 
 # ---------------------------------------------------------------------------
-# 8. VERIFICACIÓN ARTEFACTO
+# 8. VERIFICACION ARTEFACTO
 # ---------------------------------------------------------------------------
 
 $PublishedExe = Get-ChildItem -Path $FinalBuild -Filter "ADSOLUSOL.Presentation.Desktop.exe" -Recurse |
@@ -180,7 +162,7 @@ if ([string]::IsNullOrWhiteSpace($PublishedExe) -or (-not (Test-Path $PublishedE
         $missingName = Split-Path $PublishedExe -Leaf
     }
     Write-Host ""
-    Write-Host "[FAIL] Publish terminó pero falta el ejecutable principal: $missingName" -ForegroundColor Red
+    Write-Host "[FAIL] Publish termino pero falta el ejecutable principal: $missingName" -ForegroundColor Red
     exit 1
 }
 

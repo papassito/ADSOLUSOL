@@ -79,9 +79,16 @@ $ExcluirDirectorios = @(
     "obj",
     "tmp",
     "temp",
+    ".build",
+    ".repair-backups",
+    "docs",
+    "_audit",
+    "BUILD",
     "custom-code-editor",
     "mi-nuevo-editor"
 )
+
+$ExcluirRegex = "[\\/](?:" + (($ExcluirDirectorios | ForEach-Object { [regex]::Escape($_) }) -join "|") + ")(?:[\\/]|$)"
 
 # ------------------------------------------------------------
 # FUNCIONES
@@ -114,30 +121,24 @@ function Es-Test {
     return $false
 }
 
-function Contar-Lineas {
+function Analizar-CodigoYDeuda {
     param([System.IO.FileInfo[]]$Archivos)
 
-    $total = 0
-
-    foreach ($archivo in $Archivos) {
-        try {
-            $total += (Get-Content -LiteralPath $archivo.FullName -ErrorAction SilentlyContinue).Count
-        }
-        catch {}
+    $deuda = @{
+        TODO            = 0
+        FIXME           = 0
+        HACK            = 0
+        PANIC           = 0
+        PLACEHOLDER     = 0
     }
-    return $total
-}
+    $totalLineas = 0
+    $archivosGrandes = 0
 
-function Buscar-DeudaTecnica {
-    param([System.IO.FileInfo[]]$Archivos)
-
-    $resultado = @{
-        TODO       = 0
-        FIXME      = 0
-        HACK       = 0
-        PANIC      = 0
-        PLACEHOLDER = 0
-    }
+    $rxTodo = [regex]'(?i)\bTODO\b'
+    $rxFixme = [regex]'(?i)\bFIXME\b'
+    $rxHack = [regex]'(?i)\bHACK\b'
+    $rxPanic = [regex]'(?i)\bpanic\s*\('
+    $rxPlaceholder = [regex]'(?i)\b(PLACEHOLDER|NOT IMPLEMENTED|IMPLEMENT ME)\b'
 
     foreach ($archivo in $Archivos) {
         try {
@@ -146,28 +147,29 @@ function Buscar-DeudaTecnica {
             # Evitar falsos positivos en el motor de diagnóstico que inspecciona estas mismas palabras clave
             if ($archivo.Name -match "DiagnosticsEngine|CALIFICADOR") { continue }
 
+            $lineasArchivo = 0
             foreach ($linea in $contenido) {
-                if ($linea -match '(?i)\bTODO\b') {
-                    $resultado.TODO++
-                }
-                if ($linea -match '(?i)\bFIXME\b') {
-                    $resultado.FIXME++
-                }
-                if ($linea -match '(?i)\bHACK\b') {
-                    $resultado.HACK++
-                }
-                if ($linea -match '(?i)\bpanic\s*\(') {
-                    $resultado.PANIC++
-                }
-                if ($linea -match '(?i)PLACEHOLDER|NOT IMPLEMENTED|IMPLEMENT ME') {
-                    $resultado.PLACEHOLDER++
-                }
+                $lineasArchivo++
+                if ($rxTodo.IsMatch($linea))        { $deuda.TODO++ }
+                if ($rxFixme.IsMatch($linea))       { $deuda.FIXME++ }
+                if ($rxHack.IsMatch($linea))        { $deuda.HACK++ }
+                if ($rxPanic.IsMatch($linea))       { $deuda.PANIC++ }
+                if ($rxPlaceholder.IsMatch($linea)) { $deuda.PLACEHOLDER++ }
+            }
+
+            $totalLineas += $lineasArchivo
+            if ($lineasArchivo -gt 800) {
+                $archivosGrandes++
             }
         }
         catch {}
     }
 
-    return $resultado
+    return [PSCustomObject]@{
+        Lineas          = $totalLineas
+        ArchivosGrandes = $archivosGrandes
+        Deuda           = $deuda
+    }
 }
 
 function Calificar-Modulo {
@@ -180,17 +182,7 @@ function Calificar-Modulo {
         -File `
         -Recurse `
         -ErrorAction SilentlyContinue |
-        Where-Object {
-            $ruta = $_.FullName
-            $excluir = $false
-            foreach ($dir in $ExcluirDirectorios) {
-                if ($ruta -match "[\\/]$([regex]::Escape($dir))[\\/]") {
-                    $excluir = $true
-                    break
-                }
-            }
-            -not $excluir
-        }
+        Where-Object { $_.FullName -notmatch $ExcluirRegex }
 
     $codigo = @(
         $archivos |
@@ -204,7 +196,7 @@ function Calificar-Modulo {
 
     $vacios = @(
         $archivos |
-        Where-Object { $_.Length -eq 0 }
+        Where-Object { $_.Length -eq 0 -and $_.Name -ne ".gitkeep" }
     )
 
     $documentacion = @(
@@ -215,19 +207,10 @@ function Calificar-Modulo {
         }
     )
 
-    $lineas = Contar-Lineas $codigo
-    $deuda = Buscar-DeudaTecnica $codigo
-    $archivosGrandes = 0
-
-    foreach ($archivo in $codigo) {
-        try {
-            $cantidad = (Get-Content -LiteralPath $archivo.FullName -ErrorAction SilentlyContinue).Count
-            if ($cantidad -gt 800) {
-                $archivosGrandes++
-            }
-        }
-        catch {}
-    }
+    $analisis = Analizar-CodigoYDeuda $codigo
+    $lineas = $analisis.Lineas
+    $deuda = $analisis.Deuda
+    $archivosGrandes = $analisis.ArchivosGrandes
 
     # ========================================================
     # PUNTUACION
@@ -248,24 +231,30 @@ function Calificar-Modulo {
     }
 
     if ($codigo.Count -gt 0) {
-        if ($tests.Count -eq 0) {
-            $score -= 15
-            $problemas.Add("Sin pruebas detectadas")
-        }
-        else {
+        $tieneSuiteTests = Test-Path (Join-Path $Ruta "tests")
+        $esModuloDeTests = ($Modulo.FullName -match '[\\/]tests[\\/]') -or ($Modulo.Name -match '(?i)Tests?$')
+
+        if ($esModuloDeTests) {
             $ratioTest = $tests.Count / $codigo.Count
-            if ($ratioTest -lt 0.05) {
+            if ($ratioTest -lt 0.50) {
+                $score -= 10
+                $problemas.Add("Pocos archivos de pruebas en modulo de testing")
+            }
+        }
+        elseif (-not $tieneSuiteTests) {
+            if ($tests.Count -eq 0) {
+                $score -= 15
+                $problemas.Add("Sin pruebas detectadas")
+            }
+            elseif (($tests.Count / $codigo.Count) -lt 0.05) {
                 $score -= 10
                 $problemas.Add("Cobertura estructural de tests muy baja")
-            }
-            elseif ($ratioTest -lt 0.10) {
-                $score -= 5
-                $problemas.Add("Pocos archivos de pruebas")
             }
         }
     }
 
-    if ($documentacion.Count -eq 0) {
+    $tieneDocsGlobales = (Test-Path (Join-Path $Ruta "docs")) -or (Test-Path (Join-Path $Ruta "README.md"))
+    if ($documentacion.Count -eq 0 -and -not $tieneDocsGlobales) {
         $score -= 10
         $problemas.Add("Sin documentacion")
     }
@@ -362,15 +351,25 @@ if (-not (Test-Path -LiteralPath $Ruta)) {
 # Buscar modulos principales
 # ------------------------------------------------------------
 
-$modulos = @(
-    Get-ChildItem `
-        -LiteralPath $Ruta `
-        -Directory `
-        -ErrorAction SilentlyContinue |
-    Where-Object {
-        -not (Es-DirectorioExcluido $_.Name)
-    }
-)
+$modulos = @()
+
+if (Test-Path (Join-Path $Ruta "src")) {
+    $modulos += Get-ChildItem -LiteralPath (Join-Path $Ruta "src") -Directory -ErrorAction SilentlyContinue |
+        Where-Object { -not (Es-DirectorioExcluido $_.Name) }
+}
+if (Test-Path (Join-Path $Ruta "tests")) {
+    $modulos += Get-ChildItem -LiteralPath (Join-Path $Ruta "tests") -Directory -ErrorAction SilentlyContinue |
+        Where-Object { -not (Es-DirectorioExcluido $_.Name) }
+}
+
+if ($modulos.Count -eq 0) {
+    $modulos = @(
+        Get-ChildItem -LiteralPath $Ruta -Directory -ErrorAction SilentlyContinue |
+        Where-Object {
+            -not (Es-DirectorioExcluido $_.Name)
+        }
+    )
+}
 
 if ($modulos.Count -eq 0) {
     $modulos = @(Get-Item -LiteralPath $Ruta)
@@ -416,15 +415,11 @@ Format-Table `
 # PROMEDIO GENERAL
 # ============================================================
 
-$promedio = [Math]::Round(
-    (
-        $resultados |
-        Measure-Object `
-            -Property Calificacion `
-            -Average
-    ).Average,
-    2
-)
+$medicion = $resultados | Measure-Object -Property Calificacion -Average
+$promedio = 0.0
+if ($medicion.Count -gt 0 -and $null -ne $medicion.Average) {
+    $promedio = [Math]::Round($medicion.Average, 2)
+}
 
 Write-Host ""
 Write-Host "============================================================" -ForegroundColor Cyan
