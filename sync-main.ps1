@@ -9,14 +9,17 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+try { $null = chcp 65001 } catch {}
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$OutputEncoding = [System.Text.Encoding]::UTF8
 
 Write-Host "======================================================================" -ForegroundColor Cyan
 Write-Host " Sincronizando cambios locales con GitHub (origin/$Branch)" -ForegroundColor Cyan
 Write-Host "======================================================================" -ForegroundColor Cyan
 
 if ($SkipAudit -and [string]::IsNullOrWhiteSpace($SkipReason)) {
-    Write-Host "`n[BLOQUEO DE SEGURIDAD] El uso de -SkipAudit requiere una justificación con -SkipReason." -ForegroundColor Red
-    Write-Host "Ejemplo: -SkipAudit -SkipReason 'Ajuste urgente de documentación que no afecta al código.'" -ForegroundColor Yellow
+    Write-Host "`n[BLOQUEO DE SEGURIDAD] El uso de -SkipAudit requiere una justificacion con -SkipReason." -ForegroundColor Red
+    Write-Host "Ejemplo: -SkipAudit -SkipReason 'Ajuste urgente de documentacion que no afecta al codigo.'" -ForegroundColor Yellow
     exit 1
 }
 
@@ -24,21 +27,21 @@ if ($SkipAudit -and [string]::IsNullOrWhiteSpace($SkipReason)) {
 if (-not $SkipAudit) {
     $juntaMedicaScript = Join-Path $PSScriptRoot "junta_medica.ps1"
     if (Test-Path $juntaMedicaScript) {
-        Write-Host "`n>>> [GATE DE SEGURIDAD] Ejecutando junta médica forense antes de sincronizar..." -ForegroundColor Yellow
+        Write-Host "`n>>> [GATE DE SEGURIDAD] Ejecutando junta medica forense antes de sincronizar..." -ForegroundColor Yellow
         & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $juntaMedicaScript -Fast
         if ($LASTEXITCODE -ne 0) {
-            Write-Host "`n[BLOQUEO DE CALIDAD] Sincronización cancelada: La auditoría forense encontró fallas clínicas." -ForegroundColor Red
+            Write-Host "`n[BLOQUEO DE CALIDAD] Sincronizacion cancelada: La auditoria forense encontro fallas clinicas." -ForegroundColor Red
             Write-Host "Ejecute '.\release.ps1 -Fix' para sanear antes de comitear o use -SkipAudit si es justificado." -ForegroundColor Yellow
             exit 1
         }
-        Write-Host " [OK] Quality Gate superado con éxito (Auditoría limpia)." -ForegroundColor Green
+        Write-Host " [OK] Quality Gate superado con exito (Auditoria limpia)." -ForegroundColor Green
     } else {
-        Write-Host "`n[BLOQUEO DE SEGURIDAD] No se encontró 'junta_medica.ps1'. Cancelando para evitar staging a ciegas." -ForegroundColor Red
+        Write-Host "`n[BLOQUEO DE SEGURIDAD] No se encontro 'junta_medica.ps1'. Cancelando para evitar staging a ciegas." -ForegroundColor Red
         exit 1
     }
 } else {
-    Write-Host "`n[PELIGRO] Se omitió el Quality Gate (-SkipAudit activo)." -ForegroundColor Magenta
-    Write-Host "Justificación registrada: '$SkipReason'" -ForegroundColor DarkYellow
+    Write-Host "`n[PELIGRO] Se omitio el Quality Gate (-SkipAudit activo)." -ForegroundColor Magenta
+    Write-Host "Justificacion registrada: '$SkipReason'" -ForegroundColor DarkYellow
 }
 
 # --- BARRERA CONTRA ARTEFACTOS FANTASMA Y TEMPORALES ---
@@ -67,8 +70,8 @@ try {
     if ($untracked -and -not $IncludeUntracked) {
         Write-Host "`n[ADVERTENCIA] Se detectaron archivos sin rastrear (Untracked):" -ForegroundColor Yellow
         $untracked | ForEach-Object { Write-Host "  $_" -ForegroundColor DarkGray }
-        Write-Host "Para proteger el repositorio de commits accidentales, se indexarán únicamente los archivos rastreados (git add -u)." -ForegroundColor Yellow
-        Write-Host "Si desea incorporar nuevos archivos, agréguelos con git add específico o use el parámetro -IncludeUntracked." -ForegroundColor DarkYellow
+        Write-Host "Para proteger el repositorio de commits accidentales, se indexaran unicamente los archivos rastreados (git add -u)." -ForegroundColor Yellow
+        Write-Host "Si desea incorporar nuevos archivos, agreguelos con git add especifico o use el parametro -IncludeUntracked." -ForegroundColor DarkYellow
     }
 
     Write-Host "`n>>> [2/3] Agregando cambios al staging area..." -ForegroundColor Yellow
@@ -97,7 +100,7 @@ try {
 
 }
 catch {
-    Write-Host "`n--- ERROR DURANTE LA SINCRONIZACIÓN ---" -ForegroundColor Red
+    Write-Host "`n--- ERROR DURANTE LA SINCRONIZACION ---" -ForegroundColor Red
     Write-Host $_.Exception.Message -ForegroundColor Red
     exit 1
 }

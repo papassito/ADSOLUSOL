@@ -26,10 +26,10 @@ var commandArg = args.Length > 0 ? args[0].ToLowerInvariant() : "help";
 switch (commandArg)
 {
     case "start-engine":
-        await new StartEngineCommand().ExecuteAsync();
+        new StartEngineCommand().Execute();
         break;
     case "sync-campaigns":
-        await new SyncCampaignsCommand().ExecuteAsync();
+        new SyncCampaignsCommand().Execute();
         break;
     default:
         Console.WriteLine("Comandos disponibles: start-engine, sync-campaigns");

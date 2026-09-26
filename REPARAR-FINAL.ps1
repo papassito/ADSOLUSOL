@@ -44,6 +44,14 @@ foreach ($ef in $emptyFiles) {
     Write-Host "[FIX] Archivo vacio eliminado: $relEmpty" -ForegroundColor Green
 }
 
+# 1.1b Extirpar archivos markdown vacíos (0 bytes) en docs/
+$emptyDocs = Get-ChildItem -Path (Join-Path $Root "docs") -Recurse -Filter "*.md" -File -ErrorAction SilentlyContinue |
+    Where-Object { $_.Length -eq 0 }
+foreach ($ed in $emptyDocs) {
+    Remove-Item -Path $ed.FullName -Force -ErrorAction SilentlyContinue
+    Write-Host "[FIX] Archivo markdown vacio eliminado: $($ed.Name)" -ForegroundColor Green
+}
+
 # 1.2 Extirpar archivos legados y plantillas vacías
 $legacyMarketingApi = Join-Path $Root "src\ADSOLUSOL.Infrastructure\ExternalServices\MarketingApi"
 if (Test-Path $legacyMarketingApi) {

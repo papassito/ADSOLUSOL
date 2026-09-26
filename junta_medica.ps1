@@ -1,8 +1,8 @@
 <#
 ================================================================================
   ADSOLUSOL :: JUNTA MEDICA FORENSE (READ-ONLY QUALITY GATE & LINTER)
-  "Auditoría Pericial Pasiva: Sintaxis C#, Contención Onion, Criptografía Ed25519,
-   Ausencia de Secretos EDR, Formato Canónico y Suites de Regresión"
+  Auditoria Pericial Pasiva: Sintaxis C#, Contencion Onion, Criptografia Ed25519,
+  Ausencia de Secretos EDR, Formato Canonico y Suites de Regresion
 ================================================================================
 #>
 param(
@@ -15,7 +15,7 @@ try { $null = chcp 65001 } catch {}
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
 
-# 1. Resolución canónica de la ruta raíz
+# 1. Resolucion canonica de la ruta raiz
 $ScriptRoot = (Resolve-Path $Root).Path
 if ((Split-Path -Path $ScriptRoot -Leaf) -eq "scripts") {
     $ScriptRoot = Split-Path -Path $ScriptRoot -Parent
@@ -27,7 +27,7 @@ Write-Host "   ADSOLUSOL :: JUNTA MEDICA Y AUDITORIA FORENSE         " -Foregrou
 Write-Host "=========================================================" -ForegroundColor Cyan
 Write-Host "Directorio del Expediente: $ScriptRoot" -ForegroundColor DarkGray
 
-# 2. Detección Inteligente del Lenguaje y Ecosistema del Proyecto
+# 2. Deteccion Inteligente del Lenguaje y Ecosistema del Proyecto
 $detectedLanguages = @()
 $csCount = (Get-ChildItem -Path $ScriptRoot -Recurse -Filter "*.cs" -File -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch "[\\/](\.git|bin|obj|BUILD)[\\/]" }).Count
 $psCount = (Get-ChildItem -Path $ScriptRoot -Recurse -Filter "*.ps1" -File -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch "[\\/](\.git)[\\/]" }).Count
@@ -43,11 +43,11 @@ Write-Host "Ecosistema Detectado: " -NoNewline -ForegroundColor Cyan
 Write-Host ($detectedLanguages -join " | ") -ForegroundColor Green
 Write-Host ""
 
-# 3. Cuadro Médico Unificado de Especialistas Forenses (Auditoría Pasiva)
+# 3. Cuadro Medico Unificado de Especialistas Forenses (Auditoria Pasiva)
 $MedicalBoard = @(
     @{
-        Area         = "Inmunología de Codificación, BOM y Caracteres de Control"
-        Especialista = "Integridad UTF-8, Ausencia de BOM, Nulos y Caracteres Inválidos"
+        Area         = "Inmunologia de Codificacion, BOM y Caracteres de Control"
+        Especialista = "Integridad UTF-8, Ausencia de BOM, Nulos y Caracteres Invalidos"
         Command      = '
             $validExts = @(".cs", ".csproj", ".json", ".md", ".ps1")
             $files = Get-ChildItem -Path @("src", "tests", "docs") -Recurse -File -ErrorAction SilentlyContinue |
@@ -78,8 +78,8 @@ $MedicalBoard = @(
         Descripcion  = "Auditoría de codificación UTF-8 estricta, ausencia de BOM, caracteres nulos y secuencias corruptas."
     },
     @{
-        Area         = "Traumatología y Segregación Estructural (Clean / Onion)"
-        Especialista = "Higiene de Raíz, Detección de Huérfanos y Contratos de Repositorio"
+        Area         = "Traumatologia y Segregacion Estructural (Clean / Onion)"
+        Especialista = "Higiene de Raiz, Deteccion de Huerfanos y Contratos de Repositorio"
         Command      = '
             $errors = 0
             $rootProjects = Get-ChildItem -Path . -Filter "*.csproj" -File -ErrorAction SilentlyContinue
@@ -118,8 +118,8 @@ $MedicalBoard = @(
         Descripcion  = "Inspección de proyectos huérfanos en raíz, segregación de UI MAUI y contratos tipados en repositorios."
     },
     @{
-        Area         = "Oftalmología y Formato Canónico (.NET Format)"
-        Especialista = "Inspección Visual y Estilo Canónico de Código C#"
+        Area         = "Oftalmologia y Formato Canonico (.NET Format)"
+        Especialista = "Inspeccion Visual y Estilo Canonico de Codigo C#"
         Command      = '
             & dotnet restore "ADSOLUSOL.sln" --verbosity quiet 2>&1 | Out-Null
             $formatOut = & dotnet format "ADSOLUSOL.sln" --no-restore --verify-no-changes --verbosity minimal 2>&1
@@ -133,8 +133,8 @@ $MedicalBoard = @(
         Descripcion  = "Verificación pericial del formato de código mediante dotnet format oficial."
     },
     @{
-        Area         = "Neurología y Análisis Estático (dotnet build & Roslyn)"
-        Especialista = "Diagnóstico de Compilación, Tipado y Diagnósticos Roslyn"
+        Area         = "Neurologia y Analisis Estatico (dotnet build & Roslyn)"
+        Especialista = "Diagnostico de Compilacion, Tipado y Diagnosticos Roslyn"
         Command      = '
             $buildOut = & dotnet build "ADSOLUSOL.sln" -c Release -p:IgnoreMissingWorkloads=true -p:WindowsPackageType=None -p:AppxPackage=false -p:GenerateAppxPackageOnBuild=false -p:WindowsAppSDKSelfContained=false -v:minimal /nologo 2>&1
             if ($LASTEXITCODE -ne 0) {
@@ -152,8 +152,8 @@ $MedicalBoard = @(
         Descripcion  = "Compilación estática de todos los proyectos de la solución en configuración Release."
     },
     @{
-        Area         = "Cardiología Forense (Pruebas Unitarias, Regresión y Smokey)"
-        Especialista = "Verificación de Motores, Débito Presupuestario y Smokey Tests"
+        Area         = "Cardiologia Forense (Pruebas Unitarias, Regresion y Smokey)"
+        Especialista = "Verificacion de Motores, Debito Presupuestario y Smokey Tests"
         Command      = '
             $testProjects = Get-ChildItem -Path tests -Filter "*.csproj" -Recurse -ErrorAction SilentlyContinue
             if (-not $testProjects) {
@@ -177,8 +177,8 @@ $MedicalBoard = @(
         Descripcion  = "Evaluación de suites de regresión, integridad de débito atómico y telemetría de rendimiento."
     },
     @{
-        Area         = "Farmacología, Criptografía y Blindaje Perimetral EDR"
-        Especialista = "Inmunidad a Secretos Expuestos y Heurísticas Antivirus"
+        Area         = "Farmacologia, Criptografia y Blindaje Perimetral EDR"
+        Especialista = "Inmunidad a Secretos Expuestos y Heuristicas Antivirus"
         Command      = '
             $errors = 0
             $secretPatterns = @(
@@ -211,8 +211,8 @@ $MedicalBoard = @(
         Descripcion  = "Inspección perimetral de cadenas sensibles y blindaje contra falsos positivos EDR/Antivirus."
     },
     @{
-        Area         = "Calidad de Código y Olores (Code Smells)"
-        Especialista = "Detección de Excepciones no Implementadas, Capturas Silenciosas y Comentarios TODO/FIXME"
+        Area         = "Calidad de Codigo y Olores (Code Smells)"
+        Especialista = "Deteccion de Excepciones no Implementadas, Capturas Silenciosas y Comentarios TODO/FIXME"
         Command      = '
             $errors = 0
             $sourceFiles = Get-ChildItem -Path "src", "tests" -Recurse -Filter "*.cs" -File -ErrorAction SilentlyContinue |
@@ -235,8 +235,8 @@ $MedicalBoard = @(
         Descripcion  = "Análisis estático para detectar patrones de código problemáticos como NotImplementedException, bloques catch vacíos y comentarios de trabajo pendiente."
     },
     @{
-        Area         = "Gobernanza y Verificación de Integración Externa (SIC)"
-        Especialista = "Análisis de Código Fuente para Conectividad Real (No Mocks)"
+        Area         = "Gobernanza y Verificacion de Integracion Externa (SIC)"
+        Especialista = "Analisis de Codigo Fuente para Conectividad Real (No Mocks)"
         Command      = '
             $errors = 0
             $clientFile = Join-Path $pwd "src/ADSOLUSOL.Infrastructure/ExternalServices/MarketingBrain/MarketingBrainClient.cs"
@@ -258,8 +258,8 @@ $MedicalBoard = @(
         Descripcion  = "Auditoría de código fuente de MarketingBrainClient para asegurar que no es una simulación (mock) y que utiliza HttpClient para comunicación de red."
     },
     @{
-        Area         = "Dermatología y Cobertura Funcional de UI (Sitemap & DI Wiring)"
-        Especialista = "Integridad de Vistas Blazor, Navegación y Contenedor Desktop"
+        Area         = "Dermatologia y Cobertura Funcional de UI (Sitemap & DI Wiring)"
+        Especialista = "Integridad de Vistas Blazor, Navegacion y Contenedor Desktop"
         Command      = '
             $errors = 0
             $desktopMaui = Join-Path $pwd "src/ADSOLUSOL.Presentation.Desktop/MauiProgram.cs"
@@ -281,8 +281,8 @@ $MedicalBoard = @(
         Descripcion  = "Inspección de cobertura funcional, registros de servicios y cableado de navegación Desktop."
     },
     @{
-        Area         = "Endoscopía y Pruebas de Componentes UI (bUnit)"
-        Especialista = "Verificación Funcional de Componentes Blazor Aislados"
+        Area         = "Endoscopia y Pruebas de Componentes UI (bUnit)"
+        Especialista = "Verificacion Funcional de Componentes Blazor Aislados"
         Command      = '
             $uiTestProject = Get-ChildItem -Path "tests" -Filter "*UITests*.csproj" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
             if (-not $uiTestProject) {
@@ -302,7 +302,7 @@ $MedicalBoard = @(
     }
 )
 
-# 5. Ejecución del Dictamen Forense
+# 5. Ejecucion del Dictamen Forense
 $medicalRecords = @()
 if (-not (Test-Path "docs")) { New-Item -ItemType Directory -Force -Path "docs" | Out-Null }
 $reportPath = Join-Path $ScriptRoot "docs/EXPEDIENTE_CLINICO_MAESTRO.md"
@@ -379,7 +379,8 @@ foreach ($doctor in $MedicalBoard) {
     }
 }
 
-Write-Host "`n=========================================================" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "=========================================================" -ForegroundColor Cyan
 Write-Host "   GENERANDO EXPEDIENTE CLINICO MAESTRO                  " -ForegroundColor Cyan
 Write-Host "=========================================================" -ForegroundColor Cyan
 
@@ -412,16 +413,19 @@ Write-Host "[OK] Expediente clínico guardado en: $reportPath" -ForegroundColor 
 
 $criticalFailures = @($medicalRecords | Where-Object { $_.Status -notlike "SANO*" })
 
-Write-Host "`n=========================================================" -ForegroundColor Cyan
-Write-Host "           DICTAMEN MÉDICO FINAL DE ADSOLUSOL            " -ForegroundColor Cyan
+Write-Host ""
+Write-Host "=========================================================" -ForegroundColor Cyan
+Write-Host "           DICTAMEN MEDICO FINAL DE ADSOLUSOL            " -ForegroundColor Cyan
 Write-Host "=========================================================" -ForegroundColor Cyan
 
 if ($criticalFailures.Count -eq 0) {
-    Write-Host "[PASS] ALTA MÉDICA 10/10: ADSOLUSOL presenta salud digital y operativa al 100%." -ForegroundColor Green
+    Write-Host "[PASS] ALTA MEDICA 10/10: ADSOLUSOL presenta salud digital y operativa al 100%." -ForegroundColor Green
 } else {
-    Write-Host "[FAIL] INTERVENCIÓN REQUERIDA: $($criticalFailures.Count) área(s) presentan observaciones." -ForegroundColor Red
+    Write-Host "[FAIL] INTERVENCION REQUERIDA: $($criticalFailures.Count) area(s) presentan observaciones." -ForegroundColor Red
     foreach ($failure in $criticalFailures) {
-        Write-Host ("  - {0} [{1}]" -f $failure.Area, $failure.Especialista) -ForegroundColor Yellow
+        $itemArea = $failure.Area
+        $itemEsp = $failure.Especialista
+        Write-Host "  - $itemArea [$itemEsp]" -ForegroundColor Yellow
     }
 }
 

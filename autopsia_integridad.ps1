@@ -1,8 +1,8 @@
 <#
 ================================================================================
   ADSOLUSOL :: AUTOPSIA DE INTEGRIDAD ESTRUCTURAL v1.0
-  "Analisis Forense de Sellos Documentales, Contencion Arquitectonica Onion
-   y Toxicología de Dependencias de la Cadena de Suministro de Software."
+  Analisis Forense de Sellos Documentales, Contencion Arquitectonica Onion
+  y Toxicologia de Dependencias de la Cadena de Suministro de Software.
 ================================================================================
 #>
 param(
@@ -21,7 +21,7 @@ Set-Location $ScriptRoot
 
 # Rutina de Re-sellado Notarial si se invoca con -Reseal
 if ($Reseal) {
-    Write-Host "[NOTARÍA] Re-sellando hashes de documentación (SHA-256)..." -ForegroundColor Yellow
+    Write-Host "[NOTARIA] Re-sellando hashes de documentacion (SHA-256)..." -ForegroundColor Yellow
     $manifestFiles = @("docs/MANIFEST.md", "MANIFEST.md")
     $mdFiles = Get-ChildItem -Path $ScriptRoot -Recurse -Filter "*.md" -File -ErrorAction SilentlyContinue |
         Where-Object { 
@@ -30,11 +30,13 @@ if ($Reseal) {
         } |
         Sort-Object -Property FullName
 
-    $lines = @("# AD SOLUSOL — Documentation Manifest", "", "**Estado:** SEALED / FROZEN DOCUMENTATION BASELINE", "**Fecha de sellado:** $(Get-Date -Format 'yyyy-MM-dd')", "**Total de archivos Markdown del baseline:** $($mdFiles.Count)", "", "## SHA-256 de documentos sellados", "", "| Archivo | SHA-256 |", "|---|---|")
+    $emDash = [char]0x2014
+    $bt = [char]0x60
+    $lines = @("# AD SOLUSOL $emDash Documentation Manifest", "", "**Estado:** SEALED / FROZEN DOCUMENTATION BASELINE", "**Fecha de sellado:** $(Get-Date -Format 'yyyy-MM-dd')", "**Total de archivos Markdown del baseline:** $($mdFiles.Count)", "", "## SHA-256 de documentos sellados", "", "| Archivo | SHA-256 |", "|---|---|")
     foreach ($f in $mdFiles) {
         $rel = $f.FullName.Substring($ScriptRoot.Length).TrimStart("\", "/").Replace("\", "/")
         $hash = (Get-FileHash $f.FullName -Algorithm SHA256).Hash.ToLower()
-        $lines += "| `$rel` | `$hash` |"
+        $lines += "| $bt$rel$bt | $bt$hash$bt |"
     }
     $content = ($lines -join "`r`n") + "`r`n"
     $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
@@ -54,7 +56,7 @@ if ($Reseal) {
     $sealObj = [ordered]@{
         '$schema'              = "https://json-schema.solusol.net/governance/doc-seal-v1.json"
         project                = "ADSOLUSOL"
-        productName            = "AD SOLUSOL (ADS) — Advertising & Growth Engine"
+        productName            = "AD SOLUSOL (ADS) $emDash Advertising & Growth Engine"
         commercialLead         = "KLIK Soft PRO"
         softwareDirection      = "solusol.net"
         support                = "CM Soluciones"
@@ -111,7 +113,7 @@ $ForensicBoard = @(
                 $manifestPath = "MANIFEST.md"
             }
             if (-not (Test-Path $manifestPath)) {
-                Write-Host "[CRITICO] No se encontró el MANIFEST.md para la verificación de sellos." -ForegroundColor Red
+                Write-Host "[CRITICO] No se encontro el MANIFEST.md para la verificacion de sellos." -ForegroundColor Red
                 exit 1
             }
 
@@ -120,7 +122,7 @@ $ForensicBoard = @(
             $matches = [regex]::Matches($manifestContent, $regex)
 
             if ($matches.Count -eq 0) {
-                Write-Host "[CRITICO] No se pudieron extraer hashes del MANIFEST.md. ¿Formato de tabla incorrecto?" -ForegroundColor Red
+                Write-Host "[CRITICO] No se pudieron extraer hashes del MANIFEST.md. Formato de tabla incorrecto?" -ForegroundColor Red
                 exit 1
             }
 
@@ -154,7 +156,7 @@ $ForensicBoard = @(
     },
     @{
         Area         = "Ingenieria Estructural y Urbanismo de Software"
-        Especialista = "Validación de Dependencias de Arquitectura Onion (NetArchTest)"
+        Especialista = "Validacion de Dependencias de Arquitectura Onion (NetArchTest)"
         Command      = '
             $archTestProject = Get-ChildItem -Path "tests" -Filter "*ArchitectureTests.csproj" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
             if (-not $archTestProject) {

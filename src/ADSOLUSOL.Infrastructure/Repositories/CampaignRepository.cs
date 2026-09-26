@@ -40,7 +40,16 @@ public class CampaignRepository : ICampaignRepository
     public Task UpdateAsync(Campaign campaign)
     {
         // The UnitOfWork is responsible for calling SaveChangesAsync.
-        _context.Campaigns.Update(campaign);
+        var tracked = _context.Campaigns.Local.FirstOrDefault(c => c.Id == campaign.Id);
+        if (tracked is null)
+        {
+            _context.Campaigns.Update(campaign);
+        }
+        else if (!ReferenceEquals(tracked, campaign))
+        {
+            _context.Entry(tracked).CurrentValues.SetValues(campaign);
+        }
+
         return Task.CompletedTask;
     }
 

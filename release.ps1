@@ -1,8 +1,8 @@
 <#
 ================================================================================
   ADSOLUSOL :: RELEASE, DEPLOY & HYGIENE AUTOMATION
-  "Pipeline Operativo: Saneamiento de Archivos (-Fix), Publicación Nativa Windows
-   y Sincronización Segura con Git previa Auditoría Pasiva"
+  Pipeline Operativo: Saneamiento de Archivos (-Fix), Publicación Nativa Windows
+  y Sincronización Segura con Git previa Auditoría Pasiva
 ================================================================================
 #>
 param(

@@ -1,55 +1,22 @@
 # AD SOLUSOL — Documentation Manifest
 
-**Estado:** SEALED / FROZEN DOCUMENTATION BASELINE  
-**Fecha de sellado:** 2026-09-18  
-**Base remota verificada antes del sellado:** `88505d24a168176c4aa661fa80727d5d45bb71f7` (commit `055`)  
-**Total de archivos Markdown del baseline:** 55
-
-## Política de congelamiento
-
-Este baseline documental queda congelado. Cualquier cambio posterior requiere una nueva revisión, un nuevo manifiesto y un nuevo sello. El sello detecta modificaciones mediante SHA-256; no sustituye controles de permisos del repositorio.
-
-## Alcance del manifiesto
-
-Para evitar autorreferencia criptográfica, `MANIFEST.md` y `docs/MANIFEST.md` no incluyen su propio hash dentro de sí mismos. Sus hashes definitivos se registran en `DOCUMENTATION_SEAL.json`, incluido en el paquete sellado.
+**Estado:** SEALED / FROZEN DOCUMENTATION BASELINE
+**Fecha de sellado:** 2026-09-25
+**Total de archivos Markdown del baseline:** 150
 
 ## SHA-256 de documentos sellados
 
 | Archivo | SHA-256 |
 |---|---|
+| `audit_report_adsolusol.md` | `914d1ebc9e4973cbf9b97e14370fd6ba8f24c8fe3023d28aefc582c9f502e819` |
+| `audit_report_master.md` | `8b095f0b1e15c3b2b3854e7591600f1fc327dbedd4c5879c9ce1c145b5817676` |
 | `COMPONENTS.md` | `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
-| `HISTORIAL DE ACTIVIDADES.MD` | `27cb9c96d4bb58fb9282cd20eb073f472fa7b82f63db6397b25953128896102e` |
-| `HISTORIAL_ACTUALIZACIONES.md` | `a37ef048853dc1b6636f412d1f957d4b541d5dee0389c18b022f6ea12e7a773b` |
-| `LIBRARY.md` | `0131efdaeb2e5338cf4f17ecaff345df872cd84df62f76985fcab869191ad83a` |
-| `MAP.md` | `335554a4e9c06d7dbdd52e2aaae55c91d597d255f3eb712531e2170273e43ba4` |
-| `README.md` | `b83d569d2212fc6aaffacb8757375c26ab65ba8be9263908bc9d8eb131dec005` |
-| `REQUIREMENTS.md` | `a6a3ab29e00d3ee2fc66ac45851d3a0c25f6089c8803895a376f3221e871b08a` |
-| `ROADMAP.md` | `43f1003e21557a4790122d8dd466bd4b7a03ed973b7560865296fec14bfe52fa` |
 | `docs/ADSOLUSOL.md` | `fb02445029381c0c3afda633c314426fc09af1ef4bd834d87009508913e0678b` |
-| `docs/AI-AD.md` | `3f645264a85683748d1c88b784d4f91c58ae23daa4f2d7e4c6dead71a17bd7d3` |
 | `docs/AI.md` | `41233c378fccb7e963beed8f9ce5ad41a7a9ca1f56a05ed4d1ee8d80ce65569c` |
-| `docs/CAMPAIGN.md` | `a05c9369bf31910def28d6499c19d99d2844c12339b5de373dfdf73e451fb271` |
-| `docs/COMPONENTS.md` | `6bba1fa93151faa0525b59b518e8f27ebd3b6c3601d6a266f47eb4c00252e4a5` |
-| `docs/CONTRACTS.md` | `5dd6deb350e2c14f547ec4e7f7ba7f30edf31a07101cf651db9b6e05fff6cb78` |
-| `docs/HISTORIAL DE ACTIVIDADES.MD` | `9fbc545ffd94f69349685dbbea831958b189c553f9f384df0671e16c3f1c6113` |
-| `docs/INTEGRITY.md` | `470fadfc038b59730d944d939755406e81e0695a00a16b822a670d1a20ce7c5c` |
-| `docs/LIBRARY.md` | `748e50eab7236a001ad9c770cf11cd7b0b7edd91f00f1be12dbb91b5aa144fd7` |
-| `docs/MAP.md` | `335554a4e9c06d7dbdd52e2aaae55c91d597d255f3eb712531e2170273e43ba4` |
-| `docs/MARKETING-API.md` | `715dc35e2a7ab40def205acef1163f6e1ea48dba8b6c531d904808249548fafb` |
-| `docs/MARKETING-BRAIN.md` | `fda3b6c48c20ac5007ad7c027bf483d45033fb0d546dc39d187cf61270f12f04` |
-| `docs/MARKETING.md` | `f0dd4ea814fa4e6c184400ae1ce4d7701911dedd847219568ca234619285780d` |
-| `docs/MOTOR.md` | `d1aca237f81392987918411c249609e398846de0de651e417089af2788c9f1ba` |
-| `docs/ONION.md` | `f156bd842b4af765f049c8a15fe60b77f2e5d09ff7a35539b912ab96a4eee4c6` |
-| `docs/ORCHESTA.md` | `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
-| `docs/REQUIREMENTS.md` | `a6a3ab29e00d3ee2fc66ac45851d3a0c25f6089c8803895a376f3221e871b08a` |
-| `docs/ROADMAP.md` | `43f1003e21557a4790122d8dd466bd4b7a03ed973b7560865296fec14bfe52fa` |
-| `docs/SEO.md` | `424cc4e9e1eccd3f4fa07b32ab8563428b015a0b2cd0c84ec0c74df348bcaaba` |
-| `docs/SITEMAP.md` | `2e9c8c4b5810fd9f491e4466d485470e25bc255edd15fa61d04a30d11d69c955` |
-| `docs/STRUCTURE.md` | `9369fb7ab5736099340128226e795d12e21493d3e6de1e379477ce000fc4a8c7` |
-| `docs/VALIDATE.md` | `087817be63a455fe7153354e5e4b3fb85d3a8a8aa0a8170c01b6a90eaa52ab31` |
+| `docs/AI-AD.md` | `3f645264a85683748d1c88b784d4f91c58ae23daa4f2d7e4c6dead71a17bd7d3` |
 | `docs/architecture/ADSOLUSOL.md` | `18ebba866405066957748825c106480d390a3de3458f78d44727bdf2e09afa55` |
-| `docs/architecture/AI-AD.md` | `3f645264a85683748d1c88b784d4f91c58ae23daa4f2d7e4c6dead71a17bd7d3` |
 | `docs/architecture/AI.md` | `41233c378fccb7e963beed8f9ce5ad41a7a9ca1f56a05ed4d1ee8d80ce65569c` |
+| `docs/architecture/AI-AD.md` | `3f645264a85683748d1c88b784d4f91c58ae23daa4f2d7e4c6dead71a17bd7d3` |
 | `docs/architecture/COMPONENTS.md` | `6bba1fa93151faa0525b59b518e8f27ebd3b6c3601d6a266f47eb4c00252e4a5` |
 | `docs/architecture/MAP.md` | `335554a4e9c06d7dbdd52e2aaae55c91d597d255f3eb712531e2170273e43ba4` |
 | `docs/architecture/MOTOR.md` | `d1aca237f81392987918411c249609e398846de0de651e417089af2788c9f1ba` |
@@ -59,20 +26,135 @@ Para evitar autorreferencia criptográfica, `MANIFEST.md` y `docs/MANIFEST.md` n
 | `docs/business/CAMPAIGN.md` | `a05c9369bf31910def28d6499c19d99d2844c12339b5de373dfdf73e451fb271` |
 | `docs/business/MARKETING.md` | `428d6b275dab273d5c12c9ce6c464243f8c6dabfa53d566eb43169f4db827bec` |
 | `docs/business/SEO.md` | `953dcb9933288bdde734aac4224ee7e2660b28996de2333fafdb52f8bcbbd637` |
+| `docs/CAMPAIGN.md` | `a05c9369bf31910def28d6499c19d99d2844c12339b5de373dfdf73e451fb271` |
+| `docs/COMPONENTS.md` | `6bba1fa93151faa0525b59b518e8f27ebd3b6c3601d6a266f47eb4c00252e4a5` |
+| `docs/CONTRACTS.md` | `5dd6deb350e2c14f547ec4e7f7ba7f30edf31a07101cf651db9b6e05fff6cb78` |
 | `docs/contracts/CONTRACTS.md` | `5dd6deb350e2c14f547ec4e7f7ba7f30edf31a07101cf651db9b6e05fff6cb78` |
 | `docs/contracts/MARKETING-API.md` | `715dc35e2a7ab40def205acef1163f6e1ea48dba8b6c531d904808249548fafb` |
 | `docs/decisions/ADR-001.md` | `f3377d20ec983d718f90de3efbdf871dc96c41faed829fd8d41d0f5fafde5640` |
 | `docs/decisions/DECISIONS.md` | `8d0730886afff9a98dff6a07382a754c0fdd3688fffddf5b2b72d092eaed56d3` |
-| `docs/evidence/EVIDENCE.md` | `b2f9e603ffb96d931577ea7c4b5ba7f321394f53b35a623aac8c792fa731690d` |
+| `docs/evidence/EVIDENCE.md` | `ba6591b8c2a852485cfd24c5117a341e63814e3342d5ba007daaf746c76c9b86` |
+| `docs/EXPEDIENTE_CLINICO_MAESTRO.md` | `5bdfe4c18c211092bf59b85f67fa0213648d13cbb21b8e4b45f6c86e36049c3f` |
+| `docs/HISTORIAL DE ACTIVIDADES.MD` | `9fbc545ffd94f69349685dbbea831958b189c553f9f384df0671e16c3f1c6113` |
 | `docs/integration/MARKETING-BRAIN.md` | `a083931aa316b17662a592e85aed48f1b21d0f25f3387f0ec7b20475715153a6` |
+| `docs/INTEGRITY.md` | `470fadfc038b59730d944d939755406e81e0695a00a16b822a670d1a20ce7c5c` |
+| `docs/LIBRARY.md` | `748e50eab7236a001ad9c770cf11cd7b0b7edd91f00f1be12dbb91b5aa144fd7` |
+| `docs/MAP.md` | `335554a4e9c06d7dbdd52e2aaae55c91d597d255f3eb712531e2170273e43ba4` |
+| `docs/MARKETING.md` | `f0dd4ea814fa4e6c184400ae1ce4d7701911dedd847219568ca234619285780d` |
+| `docs/MARKETING-API.md` | `715dc35e2a7ab40def205acef1163f6e1ea48dba8b6c531d904808249548fafb` |
+| `docs/MARKETING-BRAIN.md` | `fda3b6c48c20ac5007ad7c027bf483d45033fb0d546dc39d187cf61270f12f04` |
+| `docs/MOTOR.md` | `d1aca237f81392987918411c249609e398846de0de651e417089af2788c9f1ba` |
+| `docs/ONION.md` | `f156bd842b4af765f049c8a15fe60b77f2e5d09ff7a35539b912ab96a4eee4c6` |
 | `docs/operations/VALIDATE.md` | `087817be63a455fe7153354e5e4b3fb85d3a8a8aa0a8170c01b6a90eaa52ab31` |
+| `docs/ORCHESTA.md` | `87fcd1220449ec24e2f2bf1367f732af5381ad38ea463528d22e67eb90c687a6` |
 | `docs/phases/PHASE-1.md` | `d8277b25d4dbad6734a11b2d524a5fb997609625938c1cba07cee5a6de059961` |
 | `docs/phases/PHASE-2.md` | `9bd417d941f416dce44da6d53ef972ad227f0355813af5796f25de00e40a17e2` |
 | `docs/phases/PHASE-3.md` | `7d482431f8b37a034c83f4082a09cc720f40869c42858fbe4310c471ee91cf31` |
+| `docs/REQUIREMENTS.md` | `a6a3ab29e00d3ee2fc66ac45851d3a0c25f6089c8803895a376f3221e871b08a` |
+| `docs/ROADMAP.md` | `43f1003e21557a4790122d8dd466bd4b7a03ed973b7560865296fec14bfe52fa` |
 | `docs/security/INTEGRITY.md` | `4a304d15275f44e75baa219bca7f4decf4402ec1b07c461b25fc2629a7aaefe6` |
-
-## Estado
-
-`DOCUMENTATION_BASELINE = SEALED`
-
-`DOCUMENTATION_CHANGES = FROZEN_UNTIL_NEW_SEAL`
+| `docs/SEO.md` | `424cc4e9e1eccd3f4fa07b32ab8563428b015a0b2cd0c84ec0c74df348bcaaba` |
+| `docs/SITEMAP.md` | `2e9c8c4b5810fd9f491e4466d485470e25bc255edd15fa61d04a30d11d69c955` |
+| `docs/STRUCTURE.md` | `9369fb7ab5736099340128226e795d12e21493d3e6de1e379477ce000fc4a8c7` |
+| `docs/VALIDATE.md` | `087817be63a455fe7153354e5e4b3fb85d3a8a8aa0a8170c01b6a90eaa52ab31` |
+| `HISTORIAL DE ACTIVIDADES.MD` | `27cb9c96d4bb58fb9282cd20eb073f472fa7b82f63db6397b25953128896102e` |
+| `HISTORIAL_ACTUALIZACIONES.md` | `e9bda128c0eb93826b3e643bcb37398506df8755491da5265bcf36d370b77c19` |
+| `LIBRARY.md` | `0131efdaeb2e5338cf4f17ecaff345df872cd84df62f76985fcab869191ad83a` |
+| `MAP.md` | `335554a4e9c06d7dbdd52e2aaae55c91d597d255f3eb712531e2170273e43ba4` |
+| `node_modules/@oxc-project/types/README.md` | `a6d02a8c1016c2305e8cd9eeab91ad1b1d9c614b2b361edef0d0da3816a0775a` |
+| `node_modules/@rolldown/binding-win32-x64-msvc/README.md` | `327b514303b86e589a6d6bb831928bb9720678fb72648f81c8c2cdcb2f7a856f` |
+| `node_modules/@rolldown/pluginutils/README.md` | `4886d9da5238f5d7e44fa2558a3c8d4939e5eb212cc1a3e587472ee2b65fd3fd` |
+| `node_modules/@types/node/README.md` | `05c2b153709fe6e1c8b3e15a3c0e2654e29c5243c29146673857b0bd2e271ca5` |
+| `node_modules/@vitejs/plugin-react/README.md` | `85ac57623202f14e459546a84885c33d8d16eed1e4e9d8bd940bfa19ffb08479` |
+| `node_modules/detect-libc/README.md` | `51a97449c443889155bc872522e6de5a91a5fa73edeffa03d749e186bf0eebca` |
+| `node_modules/fdir/README.md` | `99ba9a269bf78c24621c0eaaee2978fd2deea1680c147ede89eb2f900ea1d562` |
+| `node_modules/lightningcss/README.md` | `5c0c95d29d204230e9bdb1b998b6dc960f88524f4202e2375062b75bba2b957b` |
+| `node_modules/lightningcss-win32-x64-msvc/README.md` | `7a8ce7a98de104127a9414f2ad3d1c36e169609c8c85b0e9c232dc723178bd2c` |
+| `node_modules/nanoid/README.md` | `54449254570e72b9eac5e3fafa9232eccffcc2f1de403a4dae02b2ffabee720f` |
+| `node_modules/picocolors/README.md` | `5027b2836551ea0f91fa27b97335de905e24e1459d590eacfa45c0156962b70c` |
+| `node_modules/picomatch/README.md` | `a69b87120fe2b9cb8f9057eaef6b9f9887f803e02185ca2f431e8162f6312220` |
+| `node_modules/postcss/README.md` | `92b501afb100c2e7f186dc3e45d5064ee47efeed91705c2cbf2f9ffd1fa7c6eb` |
+| `node_modules/rolldown/README.md` | `3d65150aadb440393668579bd47674f9c6d51f32d1f352510e0c1d6ddf549005` |
+| `node_modules/source-map-js/README.md` | `8e1a57daf01cd2fc8969ecd0afeae51d1c05c7c79e9413ea82016a0f65e97646` |
+| `node_modules/tinyglobby/README.md` | `657d808498dddf2ea2049dd44f008cd18c260893ef73920285d7b3e9afcb7072` |
+| `node_modules/undici-types/README.md` | `c8cced6ec588c55b07e35733258cb7d6b63e3426ee7490aa9267aab4bda0fb20` |
+| `node_modules/vite/LICENSE.md` | `387dd7baa307083401a27c58c362c30832f5ba1dba84f10cc22c33401523f45c` |
+| `node_modules/vite/README.md` | `01cebf4365cd21396688c4dcb0dc8d360ccbafb3a36735d3849c5d8efd3cd060` |
+| `README.md` | `3fe41cddf4b16d0cf7680db43d91d0d580da35ea75478a362612fae37c4df2f3` |
+| `REQUIREMENTS.md` | `a6a3ab29e00d3ee2fc66ac45851d3a0c25f6089c8803895a376f3221e871b08a` |
+| `ROADMAP.md` | `43f1003e21557a4790122d8dd466bd4b7a03ed973b7560865296fec14bfe52fa` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@babel/code-frame/README.md` | `c8695ddb503d13b5a671b01f855c8badef445b250105c2d84e7fff502db59c27` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@babel/compat-data/README.md` | `21e051ee3c6f9b83ce6a902b7c39de789f935e684f1cc7412c43d2ce2d3d2492` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@babel/core/README.md` | `b14762ad1c9a0e6fa0e41b2351b1d100985689426100408bc97bf2b9e31f5f60` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@babel/generator/README.md` | `f74b61cf836f8eeb1e63e23fc550257d77d2b6a19da179ab5a2884aaf90d33d6` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@babel/helper-compilation-targets/README.md` | `60de438a23fe704192f61f4ac5a98327b9b74add3b8e12ca73f574049b5bced8` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@babel/helper-globals/README.md` | `33cbd6b571ed8dd06df7eafcd3c011d1b49e4a463a440f39759e5b07f4c26a13` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@babel/helper-module-imports/README.md` | `56bf94a009223cd8ece2d82bfc3d61b9818bdf00a38c3f69356f407cd5b1f9b4` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@babel/helper-module-transforms/README.md` | `f065c40191c7e740a71ed93e4ad921ed0bbef43698c34634e989c388b9448516` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@babel/helper-plugin-utils/README.md` | `0d3555be863eb05b17ca88e01e26f630c25818d2a25e8c3d3453aefca933f15b` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@babel/helpers/README.md` | `421bdc7437f389fba991236e703aa6a2e657983a96673ad314494907c148d1a3` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@babel/helper-string-parser/README.md` | `3de867b681c9c54aae76d6211dd50b2d271d6475ef394954e935f050bb0b2636` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@babel/helper-validator-identifier/README.md` | `42b17e7ea124f5656c2f1bb33dd7c80043a72d3dc061d7ee28bb411ac66f32cb` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@babel/helper-validator-option/README.md` | `e6de0639f2b9ca634e7a3febf2611085c4b6ca1439f9ebed1cad4f1489bdf7c2` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@babel/parser/CHANGELOG.md` | `e7c7856ef0f982e21ae0b650e257ad2907db4ad3d0b3966cbd138289962d492d` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@babel/parser/README.md` | `73c03df678cff2141c7f1949cf171a6b44257f4159ff0783dd61ecee9b1f6e54` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@babel/plugin-transform-react-jsx-self/README.md` | `e4116d60c77b4aa0777440fab4203a97df3877d5be46e15dcdb5116a0c55ba50` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@babel/plugin-transform-react-jsx-source/README.md` | `e03bc6fcce92015299d028a9623fb6a3be1a8604d80fc5d336428533cf81c2dd` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@babel/template/README.md` | `3bceebe9b5031a841340e9067cde5e7045c67b6c9ffcfff928eade35e0d33973` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@babel/traverse/README.md` | `25866c1896d2ac9aecee658c4283becce964b3f07ca82a81f2546c4b6c301cb2` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@babel/types/README.md` | `6bcc4f75267bf106320136bf9c8d60b2bf53a9f230a8c3ce8962c4717b2f0d77` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@esbuild/win32-x64/README.md` | `29cf512fa580b72392176bf694933ae0decaf18116fdeee917511b445411ce16` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@jridgewell/gen-mapping/README.md` | `9cbfc0d691ff46b615214d836ec6be24393d324f14baba23b12f27dc399f436b` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@jridgewell/remapping/README.md` | `48d450ec7cf8c712f2706cb99e96cd5171e02e20a0f90f4403f77bc71747977a` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@jridgewell/resolve-uri/README.md` | `17439eff29e4d28023e6b50554c81e3f565d304eeb7bb19f56041ded2a0f0d21` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@jridgewell/sourcemap-codec/README.md` | `50e5282b46bafe5e2c87a0f224a86876067694f0434c5b27c0ea2d5bbceba5d7` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@jridgewell/trace-mapping/README.md` | `bc4a19f3e6ac9a3faeefa0687570a6d32ea925365a0705523c064b721c47c799` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@rollup/rollup-win32-x64-gnu/README.md` | `bba1939db0bf57b3866e2be5e626a492eebbbd3a33f1dc22e1488ed407cf918f` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@rollup/rollup-win32-x64-msvc/README.md` | `9606170b2fb075c71267ac5463d2d93f9198a6d29fda49f5f342f99e676bc06b` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@types/babel__core/README.md` | `bb3bb2bd57363a033262e6638e3e00c0b67da454147b107f0f54d3e4483da914` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@types/babel__generator/README.md` | `23527da5a4641a832e95652f07257520c2eb0ae41676a7b0fb8db0f924cf9341` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@types/babel__template/README.md` | `7b323c32ccd53d1eea0d850c692d51a1e3bed92612b74abd854e48b76f0ac7e6` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@types/babel__traverse/README.md` | `040af8efb81c27e9c4ba21e4b8eca19ab14e4cf1e5a3c98b86f0957d45de0c93` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@types/estree/README.md` | `284daa8ee1deb294176001d299e950b7af96026497c7147e000f15c00ee6f541` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@types/prop-types/README.md` | `7be8dd925f49d787908a47a4683d7a830d217bbe0b6b16c51d4c7170dd8ab783` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@types/react/README.md` | `45362972262bc0dce6e589a86e97d76f4e61c8c52e8d876cca9e70d5badcd4d8` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@types/react-dom/README.md` | `acc9eabea5b5080c3e4b6a9697b08fbdd1f77f588dbb9b7aab6b9fba92dc16a7` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/@vitejs/plugin-react/README.md` | `9130489513bcd5b0e6d328bba5b89ff70d902433ffa7378c3684371df85a6327` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/baseline-browser-mapping/README.md` | `ce08340f74ffa99ac7405cb83b3788dee2881826394bdd7bcea01daeeef2ee51` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/browserslist/README.md` | `10edaabde1794ec4ba8fc6c7c69b27ed22a379ee110781339f51f319b57065ef` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/caniuse-lite/README.md` | `1b187a29e2e4bcf3f3f9c608389d4f355741b043fa614c3ca0c454d646949310` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/convert-source-map/README.md` | `26c82404ae3f9165980422212c4acd08f49200870477c3ffb35bda111984a195` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/csstype/README.md` | `25ad18f8910493055f30a9429da429c2a92a2d503829ef850c3bf40095fb2339` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/debug/README.md` | `486cb669048bd5014adf9ea117e27a45c4e61b0e668f464c724273beb8170797` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/electron-to-chromium/README.md` | `feeb1f76eff5ad7da2567897a0f3227d1e775dd664316ee3fbda4e83ecebb5e1` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/esbuild/LICENSE.md` | `b40ec5baec7bb34fa5b1c09521fa3cd52d5fad7adafed74932a2010d3612a681` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/esbuild/README.md` | `6d481cd60ec3c679e5e395f547ab4221147f35642894f6b95a8df38fd25c87bd` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/escalade/readme.md` | `de88fe806fe66a944d49b4e86518d5cfee43565654faf76daa67716726359696` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/gensync/README.md` | `099a826a3857b43a116013330d5c0c514f24aa3d72eca88292b19d16a86516a9` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/jsesc/README.md` | `e0411816f6d5f1fd3b8c5522e7929dcbb218407525d1e5ff89f87476e77329c4` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/json5/LICENSE.md` | `53e59feb13058722d977c699eb0407c7bce2f93c949b681bbd2ff31698535927` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/json5/README.md` | `93c950af1dea94ecafb6bd78457e36582048e0380dba3861e94033a59eb0e2c2` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/js-tokens/CHANGELOG.md` | `79291b8c4832938501fb03ef4673fd4d4ff476216605ae412bf21973e69df6e1` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/js-tokens/README.md` | `21ef7d86f3372ba08c924f07b9611a9eca0101f80fc177abe9dbd3e507f2c388` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/loose-envify/README.md` | `aa0fd3195adec32cb17d9b65498bc921eb38398cac07e091a2df097028eacdc9` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/lru-cache/README.md` | `981a9b1f5cffb2d70e9e4f085d98d651ef8b83384b7f6c845a12fa941dd58b43` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/ms/license.md` | `1662fae9b5314d11cf51284e2dcd1f006a354f7343f08712a730fcff9a359801` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/ms/readme.md` | `8bf6c4f414b123ea2a9375b91982882d01d8561ce7d12e3bb4f448c23359f040` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/nanoid/README.md` | `54449254570e72b9eac5e3fafa9232eccffcc2f1de403a4dae02b2ffabee720f` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/node-releases/README.md` | `a7735acae019434571928372a3a002803189999bb3b72b446e1d8092f623b585` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/picocolors/README.md` | `5027b2836551ea0f91fa27b97335de905e24e1459d590eacfa45c0156962b70c` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/postcss/README.md` | `92b501afb100c2e7f186dc3e45d5064ee47efeed91705c2cbf2f9ffd1fa7c6eb` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/react/README.md` | `f69ca37ae48117e455a8ba0ffc48b6af14f87cfb8d787cabf630ee5db1dc07ce` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/react-dom/README.md` | `a88dd5970c1b91776174b1fb365a8d5377dc8219f72b4ce61e8f71e7b7d8d7ac` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/react-refresh/README.md` | `cf53cc269fc383a266e89e1e799815deb6542d9b29501f350a74858715cb0fe0` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/rollup/LICENSE.md` | `fa1bd040c5bdeefe65b3821cebf474f2733ce65df13089bd151dda1778e62fe8` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/rollup/README.md` | `509a34b064a1698f3f1ac659b9630ed9663059ddb6c4d5d033449b0fb2540da9` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/scheduler/README.md` | `e2f3a22fb7e2e18f19e9ba386b925ad23b30db03caa031c3059941367a097225` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/semver/README.md` | `c7d817091c6747e4f4fb7006bf60bd2040fd955ab7c37520f834c2af265876c6` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/source-map-js/README.md` | `8e1a57daf01cd2fc8969ecd0afeae51d1c05c7c79e9413ea82016a0f65e97646` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/typescript/README.md` | `eafaefffc7d0c3c6a58893504561d6f68973ff080960a5b13e764418e45be663` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/typescript/SECURITY.md` | `7b6976eec43edfa68b79a459dd089c56b7a395916dbf1a01bd11e6d86e12128f` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/update-browserslist-db/README.md` | `0a139eedb051fd23f427dae9b1341a6a58663b849d0ea0b08838fac5f8dd11e4` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/vite/LICENSE.md` | `04d9940b3b8b372bff74437c3b153eda8a89642669c4209a4f67135eb3132bc9` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/vite/README.md` | `b5fa3b42dc55ef7ca4e8732af201cf6cf090360af6aae32d19e2643f08b4a26e` |
+| `src/ADSOLUSOL.Presentation.Web/node_modules/yallist/README.md` | `cf293896dc0c704e9ed655ebb43341cc1ac5d0b2214f78377bed4370b7c6dd0f` |
