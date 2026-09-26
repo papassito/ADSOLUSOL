@@ -14,7 +14,8 @@ public class MarketingBrainClient : IMarketingBrainService
         _httpClient = httpClient;
         if (_httpClient.BaseAddress == null)
         {
-            var baseUrl = configuration["MarketingBrain:BaseUrl"];
+            var baseUrl = configuration["MarketingBrain:BaseUrl"]
+                       ?? configuration["SolusolAuthV1:SicBaseUrl"];
             if (!string.IsNullOrWhiteSpace(baseUrl))
             {
                 _httpClient.BaseAddress = new Uri(baseUrl);

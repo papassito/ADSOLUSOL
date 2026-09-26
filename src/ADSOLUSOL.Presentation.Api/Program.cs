@@ -55,15 +55,22 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Consolidación de configuraciones exclusivas de desarrollo
-if (app.Environment.IsDevelopment())
+// Inicialización de esquema SQLite en desarrollo o cuando se solicite por configuración/entorno
+var shouldInitSchema = app.Environment.IsDevelopment()
+    || string.Equals(Environment.GetEnvironmentVariable("INIT_SQLITE_SCHEMA"), "true", StringComparison.OrdinalIgnoreCase)
+    || builder.Configuration.GetValue<bool>("INIT_SQLITE_SCHEMA");
+
+if (shouldInitSchema)
 {
     using (var scope = app.Services.CreateScope())
     {
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         dbContext.Database.EnsureCreated();
     }
+}
 
+if (app.Environment.IsDevelopment())
+{
     app.UseSwagger();
     app.UseSwaggerUI();
 }

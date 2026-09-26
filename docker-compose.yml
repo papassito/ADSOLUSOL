@@ -13,7 +13,9 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_HTTP_PORTS=8080
       - ConnectionStrings__DefaultConnection=Data Source=/app/data/adsolusol.db
-      - SolusolAuthV1__SicBaseUrl=http://solusol-sic:8080
+      - SolusolAuthV1__SicBaseUrl=http://solusol.net:8080
+      - MarketingBrain__BaseUrl=http://solusol.net:8080
+      - INIT_SQLITE_SCHEMA=true
     volumes:
       - sqlite_data:/app/data
     depends_on:

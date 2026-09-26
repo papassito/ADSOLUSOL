@@ -23,12 +23,27 @@ if ($LASTEXITCODE -ne 0) {
 
 Write-Host ">>> Agregando cambios al staging de Git (ADSOLUSOL)..." -ForegroundColor Yellow
 git add .
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "CRÍTICO: Falló git add."
+    exit 1
+}
+
+# Evitar versionar respaldos temporales generados por scripts de reparación
+git reset -- .repair-backups 2>&1 | Out-Null
 
 Write-Host ">>> Ejecutando commit estandarizado..." -ForegroundColor Yellow
 git commit -m "$Message" -m "Build: PASS (0 Errors / 0 Warnings)`nCrypto: Ed25519 (SOLUSOL_AUTH_V1)`nDI: Registered`nTelemetry Bridge: Active (ADS -> SIC)"
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "CRÍTICO: Falló git commit (verifique si no hay cambios pendientes o si el árbol está limpio)."
+    exit 1
+}
 
 Write-Host ">>> Creando Tag anotado: $Version..." -ForegroundColor Yellow
 git tag -a "$Version" -m "ADSOLUSOL Marketing Engine - Fully Integrated with SIC Core ($Version)"
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "CRÍTICO: Falló la creación del tag $Version (verifique si el tag ya existe)."
+    exit 1
+}
 
 Write-Host ""
 Write-Host "✅ [OK] Repositorio ADSOLUSOL sellado exitosamente con el tag $Version" -ForegroundColor Green
