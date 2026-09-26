@@ -59,11 +59,11 @@ public class CampaignRepository : ICampaignRepository
         {
             throw new InvalidOperationException("The transaction does not have an associated connection.");
         }
-        // SQLite almacena tipos decimal como TEXT; se utiliza COALESCE y CAST a REAL para asegurar la suma y comparación numérica
+        // Se redondea a 4 decimales para neutralizar deriva de punto flotante en micro-débitos publicitarios
         var sql = @"UPDATE Campaigns 
-                    SET BudgetSpent = COALESCE(CAST(BudgetSpent AS REAL), 0) + @Cost 
+                    SET BudgetSpent = ROUND(COALESCE(CAST(BudgetSpent AS REAL), 0) + @Cost, 4) 
                     WHERE Id = @CampaignId 
-                      AND (COALESCE(CAST(BudgetSpent AS REAL), 0) + @Cost) <= CAST(Budget AS REAL);";
+                      AND ROUND(COALESCE(CAST(BudgetSpent AS REAL), 0) + @Cost, 4) <= ROUND(CAST(Budget AS REAL), 4);";
         var rows = await transaction.Connection.ExecuteAsync(sql, new { Cost = (double)cost, CampaignId = campaignId }, transaction);
 
         if (rows > 0)
