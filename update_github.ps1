@@ -2,13 +2,47 @@
 param(
     [Parameter(Position = 0)]
     [string]$Message = "",
-    [string]$Branch = ""
+    [string]$Branch = "",
+    [switch]$SkipAudit,
+    [string]$SkipReason = ""
 )
 
 $ErrorActionPreference = "Stop"
 try { $null = chcp 65001 } catch {}
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
+
+# --- QUALITY GATE PREVIO A STAGING ---
+if (-not $SkipAudit) {
+    $juntaScript = Join-Path $PSScriptRoot "Junta_Medica.ps1"
+    if (Test-Path $juntaScript) {
+        Write-Host ">>> [GATE DE SEGURIDAD] Ejecutando Junta Médica preventiva..." -ForegroundColor Yellow
+        & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $juntaScript -Fast
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "`n[BLOQUEO DE CALIDAD] Sincronización cancelada: Se detectaron fallas en la Junta Médica." -ForegroundColor Red
+            Write-Host "Ejecuta '.\release.ps1 -Fix' o resuelve las patologías antes de sincronizar." -ForegroundColor Yellow
+            exit 1
+        }
+        Write-Host "[OK] Quality Gate superado con éxito." -ForegroundColor Green
+    }
+} else {
+    if ([string]::IsNullOrWhiteSpace($SkipReason)) {
+        Write-Host "`n[BLOQUEO DE SEGURIDAD] El uso de -SkipAudit requiere una justificación con -SkipReason." -ForegroundColor Red
+        exit 1
+    }
+    Write-Host "`n[PELIGRO] Se omitió el Quality Gate (-SkipAudit activo): '$SkipReason'" -ForegroundColor Magenta
+}
+
+# --- BARRERA CONTRA ARTEFACTOS FANTASMA Y TEMPORALES ---
+$ghostPatterns = @("* (1).*", "* (2).*", "*.tmp", "*.bak", "*.orig", "*~", "*.swp")
+$detectedGhosts = Get-ChildItem -Path $PSScriptRoot -Recurse -Include $ghostPatterns -File -ErrorAction SilentlyContinue |
+    Where-Object { $_.FullName -notmatch "[\\/]\.git[\\/]" }
+if ($detectedGhosts.Count -gt 0) {
+    Write-Host "`n[BLOQUEO DE CALIDAD] Se detectaron archivos temporales o copias fantasma en el árbol:" -ForegroundColor Red
+    $detectedGhosts | ForEach-Object { Write-Host "  -> $($_.Name)" -ForegroundColor Red }
+    Write-Host "Ejecuta '.\release.ps1 -Fix' para purgarlos antes de sincronizar." -ForegroundColor Yellow
+    exit 1
+}
 
 function Generar-MensajeCommit {
     param([string[]]$ArchivosModificados)
