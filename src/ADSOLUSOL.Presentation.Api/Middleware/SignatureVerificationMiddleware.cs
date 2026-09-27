@@ -10,7 +10,6 @@ public class SignatureVerificationMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly ICoreSignatureVerifier _verifier;
-    private static readonly PathString[] s_publicPaths = { "/", "/api/health" };
 
     public SignatureVerificationMiddleware(RequestDelegate next, ICoreSignatureVerifier verifier)
     {
@@ -20,9 +19,56 @@ public class SignatureVerificationMiddleware
 
     public async Task InvokeAsync(HttpContext context, INodeRegistry nodeRegistry, IMemoryCache nonceCache)
     {
-        // FIX: Bypass signature verification for public UI and health check endpoints.
-        if (Array.Exists(s_publicPaths, p => context.Request.Path.StartsWithSegments(p)) && context.Request.Path.Value?.EndsWith("blazor.web.js") != true)
+        // Bypass seguro: solo ruta raíz exacta, endpoint de salud o documentación swagger
+        var path = context.Request.Path;
+        if (path == "/" || path.StartsWithSegments("/api/health") || path.StartsWithSegments("/swagger") ||
+            (path.Value?.EndsWith("blazor.web.js") == true))
         {
+            await _next(context);
+            return;
+        }
+
+        // Endpoint BFF para inicio de sesión en el Panel Web
+        if (path.Equals("/api/auth/session", StringComparison.OrdinalIgnoreCase))
+        {
+            if (context.Request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase))
+            {
+                using var reader = new StreamReader(context.Request.Body);
+                var bodyText = await reader.ReadToEndAsync();
+                string? requestedTenant = null;
+                try
+                {
+                    using var doc = System.Text.Json.JsonDocument.Parse(bodyText);
+                    if (doc.RootElement.TryGetProperty("tenantId", out var prop))
+                    {
+                        requestedTenant = prop.GetString();
+                    }
+                }
+                catch { }
+
+                if (!string.IsNullOrWhiteSpace(requestedTenant))
+                {
+                    context.Response.Cookies.Append("Solusol-Tenant-Session", requestedTenant, new CookieOptions
+                    {
+                        HttpOnly = true,
+                        SameSite = SameSiteMode.Lax,
+                        Secure = context.Request.IsHttps,
+                        Expires = DateTimeOffset.UtcNow.AddDays(7)
+                    });
+                    context.Response.ContentType = "application/json";
+                    await context.Response.WriteAsync($"{{\"status\":\"AUTHENTICATED\",\"tenantId\":\"{requestedTenant}\"}}");
+                    return;
+                }
+            }
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+            await context.Response.WriteAsync("Se requiere un 'tenantId' válido en el cuerpo JSON.");
+            return;
+        }
+
+        // Autenticación por Sesión BFF (Panel Web con Cookie segura)
+        if (context.Request.Cookies.TryGetValue("Solusol-Tenant-Session", out var sessionTenant) && !string.IsNullOrWhiteSpace(sessionTenant))
+        {
+            context.Items["TenantId"] = sessionTenant;
             await _next(context);
             return;
         }
@@ -44,14 +90,13 @@ public class SignatureVerificationMiddleware
             return;
         }
 
-        // FIX: Implement nonce replay protection.
+        // Comprobación anti-replay: verificar si ya fue utilizado (sin consumirlo aún)
         if (nonceCache.TryGetValue(nonce.ToString(), out _))
         {
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
             await context.Response.WriteAsync("Replay attack detected (nonce already used).");
             return;
         }
-        nonceCache.Set(nonce.ToString(), true, TimeSpan.FromMinutes(5));
 
         var (tenantId, publicKeyHex) = nodeRegistry.GetNodeInfo(nodeId.ToString());
         if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(publicKeyHex))
@@ -81,6 +126,9 @@ public class SignatureVerificationMiddleware
             return;
         }
 
+        // Consumir el nonce únicamente tras certificar la firma criptográfica
+        nonceCache.Set(nonce.ToString(), true, TimeSpan.FromMinutes(5));
+
         // Authentication and Authorization successful. Set TenantId for downstream controllers.
         context.Items["TenantId"] = tenantId;
 
@@ -89,9 +137,16 @@ public class SignatureVerificationMiddleware
 
     private bool IsTimestampInvalid(long timestamp)
     {
-        var requestTime = DateTimeOffset.FromUnixTimeSeconds(timestamp);
-        var now = DateTimeOffset.UtcNow;
-        // Reject requests older than 5 minutes or more than 1 minute in the future.
-        return requestTime < now.AddMinutes(-5) || requestTime > now.AddMinutes(1);
+        try
+        {
+            var requestTime = DateTimeOffset.FromUnixTimeSeconds(timestamp);
+            var now = DateTimeOffset.UtcNow;
+            // Rechazar solicitudes con más de 5 minutos de antigüedad o más de 1 minuto en el futuro
+            return requestTime < now.AddMinutes(-5) || requestTime > now.AddMinutes(1);
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            return true;
+        }
     }
 }

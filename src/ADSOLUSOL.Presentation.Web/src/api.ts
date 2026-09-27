@@ -14,6 +14,18 @@ const configuredBase =
 
 const API_BASE = configuredBase.replace(/\/$/, "");
 
+export type SignatureProvider = (context: {
+  method: string;
+  path: string;
+  body: string;
+}) => Promise<Record<string, string>> | Record<string, string>;
+
+let customSignatureProvider: SignatureProvider | null = null;
+
+export function setSignatureProvider(provider: SignatureProvider | null): void {
+  customSignatureProvider = provider;
+}
+
 function url(path: string): string {
   return `${API_BASE}${path}`;
 }
@@ -48,6 +60,19 @@ async function request<T>(
       "Content-Type",
       "application/json; charset=utf-8"
     );
+  }
+
+  if (customSignatureProvider) {
+    const method = init.method ?? "GET";
+    const bodyStr = typeof init.body === "string" ? init.body : "";
+    const sigHeaders = await customSignatureProvider({
+      method,
+      path,
+      body: bodyStr
+    });
+    for (const [k, v] of Object.entries(sigHeaders)) {
+      headers.set(k, v);
+    }
   }
 
   const response = await fetch(url(path), {
@@ -110,6 +135,8 @@ async function request<T>(
  * Cuando eso ocurra solamente se modifica este bloque.
  */
 const routes = {
+  authSession: "/api/auth/session",
+
   health: "/api/health",
 
   campaigns: "/api/Campaigns",
@@ -135,6 +162,13 @@ export const apiConfig = {
 };
 
 export const api = {
+  setTenantSession(tenantId: string): Promise<{ status: string; tenantId: string }> {
+    return request<{ status: string; tenantId: string }>(routes.authSession, {
+      method: "POST",
+      body: JSON.stringify({ tenantId })
+    });
+  },
+
   getHealth(): Promise<HealthResponse> {
     return request<HealthResponse>(
       routes.health

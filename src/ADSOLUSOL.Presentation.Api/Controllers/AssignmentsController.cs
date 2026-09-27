@@ -12,12 +12,21 @@ public class AssignmentsController : ControllerBase
     private string? TenantId => HttpContext.Items["TenantId"] as string;
     private readonly IAssignmentRepository _assignmentRepository;
     private readonly ICampaignRepository _campaignRepository;
+    private readonly IPlacementRepository _placementRepository;
+    private readonly ICreativeRepository _creativeRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public AssignmentsController(IAssignmentRepository assignmentRepository, ICampaignRepository campaignRepository, IUnitOfWork unitOfWork)
+    public AssignmentsController(
+        IAssignmentRepository assignmentRepository,
+        ICampaignRepository campaignRepository,
+        IPlacementRepository placementRepository,
+        ICreativeRepository creativeRepository,
+        IUnitOfWork unitOfWork)
     {
         _assignmentRepository = assignmentRepository;
         _campaignRepository = campaignRepository;
+        _placementRepository = placementRepository;
+        _creativeRepository = creativeRepository;
         _unitOfWork = unitOfWork;
     }
 
@@ -33,6 +42,12 @@ public class AssignmentsController : ControllerBase
         if (campaign is null || campaign.TenantId != TenantId)
         {
             return NotFound();
+        }
+
+        var creative = await _creativeRepository.GetByIdAsync(request.EntityId);
+        if (creative is null)
+        {
+            return NotFound(new { message = $"El creativo con ID {request.EntityId} no existe." });
         }
 
         await _unitOfWork.BeginTransactionAsync();
@@ -61,6 +76,13 @@ public class AssignmentsController : ControllerBase
         if (campaign is null || campaign.TenantId != TenantId)
         {
             return NotFound();
+        }
+
+        var allPlacements = await _placementRepository.GetAllAsync();
+        var placement = allPlacements.FirstOrDefault(p => p.Id == request.EntityId);
+        if (placement is null)
+        {
+            return NotFound(new { message = $"El placement con ID {request.EntityId} no existe." });
         }
 
         await _unitOfWork.BeginTransactionAsync();

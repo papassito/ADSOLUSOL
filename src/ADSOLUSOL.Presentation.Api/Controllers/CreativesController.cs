@@ -8,6 +8,7 @@ namespace ADSOLUSOL.Presentation.Api.Controllers;
 [Route("api/[controller]")]
 public class CreativesController : ControllerBase
 {
+    private string? TenantId => HttpContext.Items["TenantId"] as string;
     private readonly ICreativeRepository _creativeRepository;
 
     public CreativesController(ICreativeRepository creativeRepository)
@@ -18,6 +19,11 @@ public class CreativesController : ControllerBase
     [HttpGet("{id:long}")]
     public async Task<IActionResult> GetById(long id)
     {
+        if (string.IsNullOrWhiteSpace(TenantId))
+        {
+            return Forbid();
+        }
+
         var creative = await _creativeRepository.GetByIdAsync(id);
         if (creative is null)
         {
@@ -29,6 +35,11 @@ public class CreativesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateCreative([FromBody] Creative creative)
     {
+        if (string.IsNullOrWhiteSpace(TenantId))
+        {
+            return Forbid();
+        }
+
         creative.CreatedAt = DateTime.UtcNow;
         creative.UpdatedAt = DateTime.UtcNow;
         var id = await _creativeRepository.CreateAsync(creative);

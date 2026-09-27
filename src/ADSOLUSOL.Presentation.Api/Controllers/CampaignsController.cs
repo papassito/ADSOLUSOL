@@ -95,7 +95,7 @@ public class CampaignsController : ControllerBase
             return BadRequest(new { message = $"Estado inválido: '{request.Status}'. Estados permitidos: ACTIVE, PAUSED, SCHEDULED, COMPLETED." });
         }
 
-        var updatedCampaign = await _campaignService.UpdateStatusAsync(TenantId, id, request.Status);
+        var updatedCampaign = await _campaignService.UpdateStatusAsync(TenantId, id, normalizedStatus);
         if (updatedCampaign is null)
         {
             return NotFound();

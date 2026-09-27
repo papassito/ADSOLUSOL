@@ -8,6 +8,7 @@ namespace ADSOLUSOL.Presentation.Api.Controllers;
 [Route("api/[controller]")]
 public class PlacementsController : ControllerBase
 {
+    private string? TenantId => HttpContext.Items["TenantId"] as string;
     private readonly IPlacementRepository _placementRepository;
 
     public PlacementsController(IPlacementRepository placementRepository)
@@ -18,6 +19,11 @@ public class PlacementsController : ControllerBase
     [HttpGet("{code}")]
     public async Task<IActionResult> GetByCode(string code)
     {
+        if (string.IsNullOrWhiteSpace(TenantId))
+        {
+            return Forbid();
+        }
+
         var placement = await _placementRepository.GetByCodeAsync(code);
         if (placement is null)
         {
@@ -29,6 +35,11 @@ public class PlacementsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
+        if (string.IsNullOrWhiteSpace(TenantId))
+        {
+            return Forbid();
+        }
+
         var placements = await _placementRepository.GetAllAsync();
         return Ok(placements);
     }
@@ -36,6 +47,11 @@ public class PlacementsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreatePlacement([FromBody] Placement placement)
     {
+        if (string.IsNullOrWhiteSpace(TenantId))
+        {
+            return Forbid();
+        }
+
         placement.CreatedAt = DateTime.UtcNow;
         placement.UpdatedAt = DateTime.UtcNow;
         var id = await _placementRepository.CreateAsync(placement);

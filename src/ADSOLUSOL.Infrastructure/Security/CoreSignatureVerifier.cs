@@ -10,7 +10,7 @@ public class CoreSignatureVerifier : ICoreSignatureVerifier
 {
     private readonly ConcurrentDictionary<string, DateTime> _nonceCache;
     private readonly IConfiguration _configuration;
-    private const int MaxTimestampSkewSeconds = 5;
+    private const int MaxTimestampSkewSeconds = 300;
     private const int NonceLifetimeMinutes = 5;
 
     public CoreSignatureVerifier(ConcurrentDictionary<string, DateTime> nonceCache, IConfiguration configuration)

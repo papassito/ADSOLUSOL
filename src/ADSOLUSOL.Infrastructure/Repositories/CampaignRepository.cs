@@ -59,11 +59,11 @@ public class CampaignRepository : ICampaignRepository
         {
             throw new InvalidOperationException("The transaction does not have an associated connection.");
         }
-        // Se redondea a 4 decimales para neutralizar deriva de punto flotante en micro-débitos publicitarios
+        // Se redondea a 6 decimales para admitir micro-débitos por impresión (CPM) sin pérdida contable
         var sql = @"UPDATE Campaigns 
-                    SET BudgetSpent = ROUND(COALESCE(CAST(BudgetSpent AS REAL), 0) + @Cost, 4) 
+                    SET BudgetSpent = ROUND(COALESCE(CAST(BudgetSpent AS REAL), 0) + @Cost, 6) 
                     WHERE Id = @CampaignId 
-                      AND ROUND(COALESCE(CAST(BudgetSpent AS REAL), 0) + @Cost, 4) <= ROUND(CAST(Budget AS REAL), 4);";
+                      AND ROUND(COALESCE(CAST(BudgetSpent AS REAL), 0) + @Cost, 6) <= ROUND(CAST(Budget AS REAL), 6);";
         var rows = await transaction.Connection.ExecuteAsync(sql, new { Cost = (double)cost, CampaignId = campaignId }, transaction);
 
         if (rows > 0)
