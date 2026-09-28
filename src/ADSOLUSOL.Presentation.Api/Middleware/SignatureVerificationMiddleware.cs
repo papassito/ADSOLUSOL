@@ -44,7 +44,11 @@ public class SignatureVerificationMiddleware
                         requestedTenant = prop.GetString();
                     }
                 }
-                catch { }
+                catch (System.Text.Json.JsonException ex)
+                {
+                    // Formato JSON inválido para la sesión: fail-closed manteniendo requestedTenant nulo
+                    System.Diagnostics.Trace.TraceWarning($"[SECURITY] Error deserializando sesión BFF: {ex.Message}");
+                }
 
                 if (!string.IsNullOrWhiteSpace(requestedTenant))
                 {
