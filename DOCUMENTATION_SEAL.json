@@ -11,7 +11,7 @@
                  "releaseStatus":  "NOT RELEASE-CERTIFIED",
                  "revisionDate":  "2026-09-28",
                  "verifiedCommit":  "88505d24a168176c4aa661fa80727d5d45bb71f7",
-                 "totalMarkdownFiles":  56,
+                 "totalMarkdownFiles":  55,
                  "zeroSyntheticCompliant":  true
              },
     "manifests":  {
@@ -19,8 +19,8 @@
                       "docsManifest":  "docs/MANIFEST.md"
                   },
     "manifestHashes":  {
-                           "MANIFEST.md":  "4d751b8d6a8f14ba39e79ce3fd8120adc2d5ec824c9865011aaad5fadba71df5",
-                           "docs/MANIFEST.md":  "4d751b8d6a8f14ba39e79ce3fd8120adc2d5ec824c9865011aaad5fadba71df5"
+                           "MANIFEST.md":  "e72ba8e6ced230e079a45fe65404b665714de653f3f780a6fe11531da915f602",
+                           "docs/MANIFEST.md":  "e72ba8e6ced230e079a45fe65404b665714de653f3f780a6fe11531da915f602"
                        },
     "runtimeTarget":  {
                           "framework":  "net8.0",

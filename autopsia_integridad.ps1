@@ -26,7 +26,8 @@ if ($Reseal) {
     $mdFiles = Get-ChildItem -Path $ScriptRoot -Recurse -Filter "*.md" -File -ErrorAction SilentlyContinue |
         Where-Object { 
             $_.FullName -notmatch "[\\/](\.git|bin|obj|BUILD|node_modules)[\\/]" -and
-            $_.Name -ne "MANIFEST.md"
+            $_.Name -ne "MANIFEST.md" -and
+            $_.Name -ne "EXPEDIENTE_CLINICO_MAESTRO.md"
         } |
         Sort-Object -Property FullName
 
@@ -130,6 +131,15 @@ $ForensicBoard = @(
             foreach ($match in $matches) {
                 $filePath = $match.Groups[1].Value.Trim()
                 $expectedHash = $match.Groups[2].Value.Trim()
+
+                # Omitir validación de hash estático en reportes dinámicos de ejecución médica
+                if ($filePath -match "EXPEDIENTE_CLINICO_MAESTRO\.md") {
+                    if (-not (Test-Path $filePath)) {
+                        Write-Host "[SELLO ROTO] El archivo documentado $filePath no existe." -ForegroundColor Red
+                        $errors++
+                    }
+                    continue
+                }
 
                 if (Test-Path $filePath) {
                     $actualHash = (Get-FileHash -Path $filePath -Algorithm SHA256).Hash.ToLower()

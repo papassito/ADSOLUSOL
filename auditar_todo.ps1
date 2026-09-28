@@ -62,7 +62,7 @@ $auditors = @(
         Args   = @()
     },
     @{
-        Name   = "7. Junta Médica Suprema Forense (11/11)"
+        Name   = "7. Junta Médica Suprema Forense (10/10)"
         Script = "junta_medica.ps1"
         Args   = @(if ($Fix) { "-Fix" }; if ($Fast) { "-Fast" })
     }
@@ -86,9 +86,12 @@ foreach ($item in $auditors) {
     Write-Host "==========================================================================" -ForegroundColor Yellow
 
     $startStep = [System.Diagnostics.Stopwatch]::StartNew()
-    $callArgs = @($item.Args)
-    & $scriptPath @callArgs
-    $exitCode = $LASTEXITCODE
+    $callArgs = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", $scriptPath) + @($item.Args)
+    $proc = Start-Process -FilePath "powershell.exe" -ArgumentList $callArgs -NoNewWindow -Wait -PassThru
+    $exitCode = $proc.ExitCode
+    if ($null -eq $exitCode) {
+        $exitCode = 1
+    }
     $startStep.Stop()
     $duration = [math]::Round($startStep.Elapsed.TotalSeconds, 2)
 
@@ -98,7 +101,7 @@ foreach ($item in $auditors) {
     }
 
     $results += [PSCustomObject]@{
-        Auditor   = $item.Name
+        Auditor   = $item.Name.PadRight(42).Substring(0, 42)
         Script    = $item.Script
         Resultado = if ($passed) { "PASS" } else { "FAIL" }
         TiempoSeg = $duration
@@ -112,7 +115,16 @@ Write-Host "`n==================================================================
 Write-Host "            TABLERO RESUMEN DE AUDITORIAS (TOTAL: ${totalElapsed}s)" -ForegroundColor Cyan
 Write-Host "==========================================================================" -ForegroundColor Cyan
 
-$results | Format-Table Auditor, Script, Resultado, TiempoSeg -AutoSize
+Write-Host ("{0,-42} {1,-26} {2,-10} {3,10}" -f "Auditor", "Script", "Resultado", "Tiempo (s)") -ForegroundColor DarkGray
+Write-Host ("{0,-42} {1,-26} {2,-10} {3,10}" -f ("-" * 42), ("-" * 26), ("-" * 10), ("-" * 10)) -ForegroundColor DarkGray
+
+foreach ($r in $results) {
+    $color = if ($r.Resultado -eq "PASS") { "Green" } else { "Red" }
+    Write-Host ("{0,-42} {1,-26} " -f $r.Auditor, $r.Script) -NoNewline
+    Write-Host ("{0,-10}" -f $r.Resultado) -ForegroundColor $color -NoNewline
+    Write-Host ("{0,10}" -f $r.TiempoSeg)
+}
+Write-Host ""
 
 if ($hasGlobalFailures) {
     Write-Host "--------------------------------------------------------------------------" -ForegroundColor Red

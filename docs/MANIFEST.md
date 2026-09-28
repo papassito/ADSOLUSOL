@@ -2,7 +2,7 @@
 
 **Estado:** SEALED / FROZEN DOCUMENTATION BASELINE
 **Fecha de sellado:** 2026-09-28
-**Total de archivos Markdown del baseline:** 56
+**Total de archivos Markdown del baseline:** 55
 
 ## SHA-256 de documentos sellados
 
@@ -34,7 +34,6 @@
 | `docs/decisions/ADR-001.md` | `f3377d20ec983d718f90de3efbdf871dc96c41faed829fd8d41d0f5fafde5640` |
 | `docs/decisions/DECISIONS.md` | `8d0730886afff9a98dff6a07382a754c0fdd3688fffddf5b2b72d092eaed56d3` |
 | `docs/evidence/EVIDENCE.md` | `ba6591b8c2a852485cfd24c5117a341e63814e3342d5ba007daaf746c76c9b86` |
-| `docs/EXPEDIENTE_CLINICO_MAESTRO.md` | `4dbdf6bcf8e8256da7706e5a0de84a41ee63afed37c54f4094993c5da32e20ce` |
 | `docs/HISTORIAL DE ACTIVIDADES.MD` | `9fbc545ffd94f69349685dbbea831958b189c553f9f384df0671e16c3f1c6113` |
 | `docs/integration/MARKETING-BRAIN.md` | `a083931aa316b17662a592e85aed48f1b21d0f25f3387f0ec7b20475715153a6` |
 | `docs/INTEGRITY.md` | `470fadfc038b59730d944d939755406e81e0695a00a16b822a670d1a20ce7c5c` |
