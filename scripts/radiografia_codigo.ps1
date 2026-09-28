@@ -9,8 +9,10 @@ try { $null = chcp 65001 } catch {}
 $OutputEncoding = [System.Text.Encoding]::UTF8
 
 $resolved = if ($PSScriptRoot) { (Resolve-Path $PSScriptRoot).Path } else { (Resolve-Path ".").Path }
-if ((Test-Path (Join-Path $resolved "..\cmd")) -and -not (Test-Path (Join-Path $resolved "cmd"))) {
-    $RepoRoot = (Resolve-Path (Join-Path $resolved "..")).Path
+if (Test-Path (Join-Path $resolved "ADSOLUSOL.sln")) {
+    $RepoRoot = $resolved
+} elseif (Test-Path (Join-Path (Split-Path $resolved -Parent) "ADSOLUSOL.sln")) {
+    $RepoRoot = (Split-Path $resolved -Parent)
 } else {
     $RepoRoot = $resolved
 }
@@ -72,102 +74,71 @@ foreach ($file in $csFiles) {
         Report-Critical "String literal con backticks (`) sin cerrar en: $relPath"
     }
 
-    # Declaraciones fuera de función (ej. 'if' sueltos)
-    if ($content -match '(?m)^if\s+') {
+    # Declaraciones fuera de función (en C# top-level statements son canónicas solo en Program.cs)
+    if ($file.Name -notmatch "Program\.cs$" -and $content -match '(?m)^if\s+') {
         Report-Critical "Instruccion 'if' fuera de cuerpo de funcion en: $relPath"
     }
-}
 
-# ------------------------------------------------------------------------------
-# 2. COLISIONES DE PAQUETES Y ARCHIVOS RESIDUALES
-# ------------------------------------------------------------------------------
-Write-Host "`n--- 2. ESTRUCTURA Y PAQUETES ---" -ForegroundColor Cyan
-
-# Main en internal/
-$internalMains = Get-ChildItem -Path ".\internal" -Recurse -Filter "*.go" | Where-Object { 
-    (Get-Content $_.FullName -Raw) -match 'package main' 
-}
-if ($internalMains) {
-    foreach ($item in $internalMains) {
-        Report-Critical "Colision: 'package main' dentro de internal/: $($item.FullName.Replace($RepoRoot, '.'))"
+    if ($content.Contains([char]0xFFFD)) {
+        Report-Critical "Secuencia UTF-8 corrupta (\uFFFD) en: $relPath"
     }
+}
+Report-Ok "$($csFiles.Count) archivos C# examinados a nivel de caracteres y sintaxis."
+
+# ------------------------------------------------------------------------------
+# 2. ESTRUCTURA Y ONION ARCHITECTURE
+# ------------------------------------------------------------------------------
+Write-Host "`n--- 2. ESTRUCTURA Y ONION ARCHITECTURE ---" -ForegroundColor Cyan
+
+$strayCsproj = Get-ChildItem -Path $RepoRoot -Filter "*.csproj" -File -ErrorAction SilentlyContinue
+if ($strayCsproj.Count -gt 0) {
+    Report-Critical "Proyectos .csproj huerfanos en la raiz del repositorio."
 } else {
-    Report-Ok "Estructura de paquetes en internal/ correcta."
-}
-
-# Duplicados en internal/models (AuditEvent redeclarado)
-$modelFiles = Get-ChildItem -Path ".\internal\models" -Filter "*.go" -ErrorAction SilentlyContinue
-$auditEventDeclarations = 0
-foreach ($mf in $modelFiles) {
-    if ((Get-Content $mf.FullName -Raw) -match 'type\s+AuditEvent\s+struct') {
-        $auditEventDeclarations++
-    }
-}
-if ($auditEventDeclarations -gt 1) {
-    Report-Critical "Redeclaracion: 'AuditEvent' struct definido multiples veces en internal/models/"
-} elseif ($auditEventDeclarations -eq 1) {
-    Report-Ok "Definicion unica de AuditEvent en modelos."
+    Report-Ok "Raiz inmaculada: Todo el codigo reside dentro de src/ y tests/."
 }
 
 # ------------------------------------------------------------------------------
-# 3. SEGURIDAD Y CONTRATOS DE NEGOCIO
+# 3. SEGURIDAD Y CALIDAD DE CODIGO
 # ------------------------------------------------------------------------------
-Write-Host "`n--- 3. SEGURIDAD Y REQUISITOS ---" -ForegroundColor Cyan
+Write-Host "`n--- 3. SEGURIDAD Y CALIDAD DE CODIGO ---" -ForegroundColor Cyan
 
-# Verificación de MaxBytesReader en handlers HTTP
-$cmdMains = Get-ChildItem -Path ".\cmd" -Filter "main.go" -Recurse
-foreach ($cm in $cmdMains) {
-    $code = Get-Content $cm.FullName -Raw
-    $rel = $cm.FullName.Replace($RepoRoot, ".")
-    if ($code -notmatch 'http\.MaxBytesReader' -and $code -match 'r\.Body') {
-        Report-Warn "Sin limite DoS (http.MaxBytesReader) en: $rel"
-    }
+$emptyCatches = $csFiles | Select-String -Pattern "catch\s*(\([^\)]*\))?\s*\{\s*\}"
+if ($emptyCatches) {
+    Report-Critical "Bloques catch silenciosos que ocultan excepciones."
+} else {
+    Report-Ok "Cero capturas silenciosas en bloques catch."
 }
 
-# Verificación de Disclaimer en Reader
-$readerMain = ".\cmd\reader\main.go"
-if (Test-Path $readerMain) {
-    $rCode = Get-Content $readerMain -Raw
-    if ($rCode -notmatch 'MandatoryLegalDisclaimer') {
-        Report-Critical "cmd/reader/main.go no incluye MandatoryLegalDisclaimer en su respuesta."
-    } else {
-        Report-Ok "Aviso legal obligatorio presente en rx-reader."
-    }
+$notImplemented = $csFiles | Select-String -Pattern "NotImplementedException"
+if ($notImplemented) {
+    Report-Critical "Metodos con NotImplementedException detectados."
+} else {
+    Report-Ok "Cero NotImplementedException en codigo productivo."
 }
 
 # ------------------------------------------------------------------------------
-# 4. PRUEBA DE FUEGO CON EL COMPILADOR DE GO
+# 4. PRUEBA DE FUEGO (COMPILADOR Y PRUEBAS .NET 8)
 # ------------------------------------------------------------------------------
-Write-Host "`n--- 4. PRUEBA DE FUEGO (COMPILADOR GO) ---" -ForegroundColor Cyan
+Write-Host "`n--- 4. PRUEBA DE FUEGO (COMPILADOR Y PRUEBAS .NET 8) ---" -ForegroundColor Cyan
 
-Write-Host " Ejecutando 'go build ./...'..." -NoNewline
-$buildOut = & go build ./... 2>&1
+Write-Host " Compilando solucion con 'dotnet build'..." -NoNewline
+$buildOut = & dotnet build (Join-Path $RepoRoot "ADSOLUSOL.sln") -c Release -p:IgnoreMissingWorkloads=true -p:WindowsPackageType=None -p:AppxPackage=false -p:GenerateAppxPackageOnBuild=false -p:WindowsAppSDKSelfContained=false -v:quiet --nologo 2>&1
 if ($LASTEXITCODE -ne 0) {
     Write-Host " [FAIL]" -ForegroundColor Red
-    Report-Critical "El proyecto NO COMPILA. Errores:`n$buildOut"
+    Report-Critical "La solucion NO COMPILA. Errores:`n$buildOut"
 } else {
     Write-Host " [OK]" -ForegroundColor Green
-    Report-Ok "go build ./... paso sin errores."
+    Report-Ok "dotnet build paso sin errores (Release)."
 }
 
-Write-Host " Ejecutando 'go test ./... -count=1'..." -NoNewline
-$testOut = & go test ./... -count=1 2>&1
+Write-Host " Ejecutando suites de regresion con 'dotnet test'..." -NoNewline
+$testOut = & dotnet test (Join-Path $RepoRoot "ADSOLUSOL.sln") -c Release --no-build -v:quiet --nologo 2>&1
 if ($LASTEXITCODE -ne 0) {
     Write-Host " [FAIL]" -ForegroundColor Red
     Report-Critical "Las PRUEBAS FALLARON. Errores:`n$testOut"
 } else {
     Write-Host " [OK]" -ForegroundColor Green
-    Report-Ok "go test ./... paso sin errores."
-}
-
-Write-Host " Ejecutando 'go vet ./...'..." -NoNewline
-$vetOut = & go vet ./... 2>&1
-if ($LASTEXITCODE -ne 0) {
-    Write-Host " [FAIL]" -ForegroundColor Red
-    Report-Critical "go vet encontro inconsistencias:`n$vetOut"
-} else {
-    Write-Host " [OK]" -ForegroundColor Green
-    Report-Ok "go vet ./... paso sin observaciones."
+    Report-Ok "dotnet test paso sin errores (100% pruebas aprobadas)."
 }
 
 # ------------------------------------------------------------------------------
