@@ -127,7 +127,7 @@ Invoke-AuditStep -Name "Suites de Pruebas y Regresion (dotnet test)" -Action {
 if ($Fast) {
     Write-Host "`n[INFO] Parametro -Fast activo: Se omite la publicacion del artefacto API." -ForegroundColor Cyan
 } else {
-    $publishDir = "BUILD/ADSOLUSOL"
+    $publishDir = "BUILD/Api"
     if (-not (Test-Path $publishDir)) { New-Item -ItemType Directory -Force -Path $publishDir | Out-Null }
     Invoke-AuditStep -Name "Publicacion de Produccion API (dotnet publish)" -Action {
         & dotnet publish src/ADSOLUSOL.Presentation.Api/ADSOLUSOL.Presentation.Api.csproj `

@@ -15,7 +15,7 @@ return await RegressionSuiteRunner.RunAsync(args);
 public class RegressionTestFacts
 {
     [Xunit.Fact]
-    public async Task BusinessRules_19Verifications_AllPass()
+    public async Task BusinessRules_20Verifications_AllPass()
     {
         int exitCode = await RegressionSuiteRunner.RunAsync(Array.Empty<string>(), rethrowException: true);
         Xunit.Assert.Equal(0, exitCode);
@@ -238,9 +238,45 @@ public static class RegressionSuiteRunner
                 Assert(metrics?.BudgetSpent == (1.5m / 1000) + 0.25m, "[19.3] Financial ledger invariant preserved against duplicate event bursts.");
             });
 
+            await LogTest("[20] Stress & High-Throughput Burst: Preservación del techo presupuestario ante ráfaga masiva", async () =>
+            {
+                var stressCampaign = await campaignService.CreateAsync("tenant-A", "Stress Test Campaign", 5.0m, 1.0m, 0.50m, null, null);
+                await campaignService.UpdateStatusAsync("tenant-A", stressCampaign.Id, "ACTIVE");
+                await assignmentRepo.AssignPlacementToCampaignAsync(stressCampaign.Id, placementId);
+                await assignmentRepo.AssignCreativeToCampaignAsync(stressCampaign.Id, creativeId);
+                await dbContext.SaveChangesAsync();
+
+                const int burstCount = 100;
+                int acceptedCount = 0;
+                int rejectedCount = 0;
+
+                for (int i = 0; i < burstCount; i++)
+                {
+                    var burstEvt = new AdEvent
+                    {
+                        EventId = $"evt_stress_{i}",
+                        CampaignId = stressCampaign.Id,
+                        CreativeId = creativeId.ToString(),
+                        PlacementCode = "P1",
+                        EventType = "Click",
+                        TenantId = "tenant-A"
+                    };
+
+                    var res = await eventProcessingService.ProcessEvent(burstEvt);
+                    if (res == EventProcessingStatus.Accepted) acceptedCount++;
+                    else if (res == EventProcessingStatus.Rejected) rejectedCount++;
+                }
+
+                dbContext.ChangeTracker.Clear();
+                var stressMetrics = await metricsService.GetMetricsForCampaign(stressCampaign.Id);
+                Assert(acceptedCount == 10, $"Exact budget limit respected under burst (Expected: 10, Actual: {acceptedCount}).");
+                Assert(rejectedCount == 90, $"Exceeded budget events rejected cleanly (Expected: 90, Actual: {rejectedCount}).");
+                Assert(stressMetrics?.BudgetSpent == 5.0m, $"Budget spent capped exactly at ceiling (Expected: 5.0, Actual: {stressMetrics?.BudgetSpent}).");
+            });
+
             Console.WriteLine("\n------------------------------------------------------------------------------");
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("✅ All regression tests passed successfully (19/19 checks).");
+            Console.WriteLine("✅ All regression tests passed successfully (20/20 checks).");
             Console.ResetColor();
             return 0;
         }

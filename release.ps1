@@ -123,6 +123,16 @@ if ($Publish) {
         Write-Host "[ERROR] Falló la publicación de la aplicación MAUI Desktop." -ForegroundColor Red
         exit 1
     }
+
+    # Asegurar la presencia de Microsoft.WindowsAppRuntime.Bootstrap.dll en la raíz
+    $bootstrapDll = Join-Path $publishDir "Microsoft.WindowsAppRuntime.Bootstrap.dll"
+    if (-not (Test-Path $bootstrapDll)) {
+        $foundBootstrap = Get-ChildItem -Path "$env:USERPROFILE\.nuget\packages\microsoft.windowsappsdk" -Filter "Microsoft.WindowsAppRuntime.Bootstrap.dll" -Recurse -File -ErrorAction SilentlyContinue |
+            Where-Object { $_.FullName -match "x64" } | Select-Object -First 1
+        if ($foundBootstrap) {
+            Copy-Item -Path $foundBootstrap.FullName -Destination $publishDir -Force
+        }
+    }
     Write-Host "[OK] Artefacto compilado exitosamente en $publishDir." -ForegroundColor Green
 }
 

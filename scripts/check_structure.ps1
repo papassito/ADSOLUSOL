@@ -24,7 +24,11 @@ if ($rootProjects.Count -gt 0) {
     }
 }
 
-$allowedRootDocs = @('README.md', 'REQUIREMENTS.md', 'MAP.md', 'ROADMAP.md', 'LIBRARY.md', 'COMPONENTS.md', 'HISTORIAL_ACTUALIZACIONES.md', 'HISTORIAL DE ACTIVIDADES.MD', 'MANIFEST.md')
+$allowedRootDocs = @(
+    'README.md', 'REQUIREMENTS.md', 'MAP.md', 'ROADMAP.md', 'LIBRARY.md',
+    'COMPONENTS.md', 'HISTORIAL_ACTUALIZACIONES.md', 'HISTORIAL DE ACTIVIDADES.MD',
+    'MANIFEST.md', 'audit_report_adsolusol.md', 'audit_report_master.md'
+)
 foreach ($file in $files) {
     if ($file.Extension -eq '.md' -and $file.DirectoryName -eq $root -and $file.Name -notin $allowedRootDocs) { 
         $problems += "Place project documentation in docs/: $($file.Name)" 

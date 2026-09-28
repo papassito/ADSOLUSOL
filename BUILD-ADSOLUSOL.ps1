@@ -149,6 +149,17 @@ if ($PublishCode -ne 0) {
     exit 1
 }
 
+# Asegurar la presencia de Microsoft.WindowsAppRuntime.Bootstrap.dll en la raíz
+$bootstrapDll = Join-Path $FinalBuild "Microsoft.WindowsAppRuntime.Bootstrap.dll"
+if (-not (Test-Path $bootstrapDll)) {
+    $foundBootstrap = Get-ChildItem -Path "$env:USERPROFILE\.nuget\packages\microsoft.windowsappsdk" -Filter "Microsoft.WindowsAppRuntime.Bootstrap.dll" -Recurse -File -ErrorAction SilentlyContinue |
+        Where-Object { $_.FullName -match "x64" } | Select-Object -First 1
+    if ($foundBootstrap) {
+        Copy-Item -Path $foundBootstrap.FullName -Destination $FinalBuild -Force
+        Write-Host "[OK] Inyectado nativo Microsoft.WindowsAppRuntime.Bootstrap.dll en $FinalBuild" -ForegroundColor Green
+    }
+}
+
 # ---------------------------------------------------------------------------
 # 8. VERIFICACION ARTEFACTO
 # ---------------------------------------------------------------------------

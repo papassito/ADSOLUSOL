@@ -1,10 +1,14 @@
 <#
 ================================================================================
-  RX DISPATCH - DIAGNOSTICO PROFUNDO: RADIOGRAFIA DE CODIGO v4.2
+  ADSOLUSOL - DIAGNOSTICO PROFUNDO: RADIOGRAFIA DE CODIGO (.NET 8 / C#)
 ================================================================================
 #>
 
-$resolved = (Resolve-Path ".").Path
+try { $null = chcp 65001 } catch {}
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$OutputEncoding = [System.Text.Encoding]::UTF8
+
+$resolved = if ($PSScriptRoot) { (Resolve-Path $PSScriptRoot).Path } else { (Resolve-Path ".").Path }
 if ((Test-Path (Join-Path $resolved "..\cmd")) -and -not (Test-Path (Join-Path $resolved "cmd"))) {
     $RepoRoot = (Resolve-Path (Join-Path $resolved "..")).Path
 } else {
@@ -12,15 +16,10 @@ if ((Test-Path (Join-Path $resolved "..\cmd")) -and -not (Test-Path (Join-Path $
 }
 Set-Location $RepoRoot
 
-$localTmp = Join-Path $RepoRoot ".tmp_build"
-if (-not (Test-Path $localTmp)) {
-    New-Item -ItemType Directory -Path $localTmp -Force | Out-Null
-}
-$env:GOTMPDIR = $localTmp
 Clear-Host
 
 Write-Host "==========================================================================" -ForegroundColor Cyan
-Write-Host " [RADAR] RADIOGRAFIA INTEGRAL DE CODIGO - LIMPIO O ZURRADO?" -ForegroundColor Cyan
+Write-Host " [RADAR] RADIOGRAFIA INTEGRAL DE CODIGO - ADSOLUSOL (.NET 8 / C#)" -ForegroundColor Cyan
 Write-Host "==========================================================================" -ForegroundColor Cyan
 Write-Host "Repositorio: $RepoRoot`n" -ForegroundColor Gray
 
@@ -48,9 +47,10 @@ function Report-Ok ($msg) {
 # ------------------------------------------------------------------------------
 Write-Host "--- 1. ESCANEO DE SINTAXIS Y CORRUPCION ---" -ForegroundColor Cyan
 
-$goFiles = Get-ChildItem -Path . -Recurse -Filter "*.go" | Where-Object { $_.FullName -notmatch '\\vendor\\' }
+$csFiles = Get-ChildItem -Path @("src", "tests") -Recurse -Filter "*.cs" -File -ErrorAction SilentlyContinue |
+    Where-Object { $_.FullName -notmatch '\\/[\\/]' }
 
-foreach ($file in $goFiles) {
+foreach ($file in $csFiles) {
     $relPath = $file.FullName.Replace($RepoRoot, ".")
     
     # Archivos de 0 bytes

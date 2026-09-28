@@ -19,8 +19,8 @@
                       "docsManifest":  "docs/MANIFEST.md"
                   },
     "manifestHashes":  {
-                           "MANIFEST.md":  "507bbaff04ffb08b80fc50037f19501e11210b72f8b41a490ccb2b359418b05a",
-                           "docs/MANIFEST.md":  "507bbaff04ffb08b80fc50037f19501e11210b72f8b41a490ccb2b359418b05a"
+                           "MANIFEST.md":  "4d751b8d6a8f14ba39e79ce3fd8120adc2d5ec824c9865011aaad5fadba71df5",
+                           "docs/MANIFEST.md":  "4d751b8d6a8f14ba39e79ce3fd8120adc2d5ec824c9865011aaad5fadba71df5"
                        },
     "runtimeTarget":  {
                           "framework":  "net8.0",
