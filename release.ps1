@@ -37,12 +37,22 @@ if ($Fix) {
     Write-Host "`n[SANEAMIENTO] Aplicando correcciones en el árbol de trabajo (-Fix)..." -ForegroundColor Yellow
 
     # A. Extirpación de archivos fantasma y duplicados
-    $ghostPatterns = @("* (1).*", "* (2).*", "*.tmp", "*.bak", "*.orig", "*~", "*.swp")
+    $ghostPatterns = @("* (1).*", "* (2).*", "*.tmp", "*.bak", "*.orig", "*~", "*.swp", "desktop.ini", "Thumbs.db", ".DS_Store")
     $ghosts = Get-ChildItem -Path $ScriptRoot -Recurse -Include $ghostPatterns -File -ErrorAction SilentlyContinue |
         Where-Object { $_.FullName -notmatch "[\\/]\.git[\\/]" }
     foreach ($g in $ghosts) {
         Remove-Item $g.FullName -Force -ErrorAction SilentlyContinue
         Write-Host "  [EXTIRPADO] Archivo fantasma: $($g.Name)" -ForegroundColor Green
+    }
+
+    # A.1 Extirpación de directorios temporales residuales
+    $junkFolders = @(".tmp_build", "TestResults")
+    foreach ($jf in $junkFolders) {
+        $folderPath = Join-Path $ScriptRoot $jf
+        if (Test-Path $folderPath) {
+            Remove-Item $folderPath -Recurse -Force -ErrorAction SilentlyContinue
+            Write-Host "  [EXTIRPADO] Directorio temporal: $jf" -ForegroundColor Green
+        }
     }
 
     # B. Extirpación de archivos vacíos (0 bytes)

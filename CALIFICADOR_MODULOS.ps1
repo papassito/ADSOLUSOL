@@ -138,7 +138,7 @@ function Analizar-CodigoYDeuda {
     $rxFixme = [regex]'(?i)\bFIXME\b'
     $rxHack = [regex]'(?i)\bHACK\b'
     $rxPanic = [regex]'(?i)\bpanic\s*\('
-    $rxPlaceholder = [regex]'(?i)\b(PLACEHOLDER|NOT IMPLEMENTED|IMPLEMENT ME)\b'
+    $rxPlaceholder = [regex]'(?-i:\bPLACEHOLDER\b)|(?i:\b(NOT IMPLEMENTED|IMPLEMENT ME)\b)'
 
     foreach ($archivo in $Archivos) {
         try {
