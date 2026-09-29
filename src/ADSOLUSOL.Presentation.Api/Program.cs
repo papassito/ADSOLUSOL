@@ -55,8 +55,9 @@ builder.Services.AddAuthentication("PanelCookie")
         {
             var tenantId = context.Principal?.FindFirstValue("tenant_id");
             var configuration = context.HttpContext.RequestServices.GetRequiredService<IConfiguration>();
+            var configurationTenantId = tenantId?.Replace('-', '_');
             if (string.IsNullOrWhiteSpace(tenantId) ||
-                string.IsNullOrWhiteSpace(configuration[$"PanelAuth:Tenants:{tenantId}"]))
+                string.IsNullOrWhiteSpace(configuration[$"PanelAuth:Tenants:{configurationTenantId}"]))
             {
                 context.RejectPrincipal();
             }
