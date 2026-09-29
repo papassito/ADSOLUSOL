@@ -559,7 +559,7 @@ function LoginView(props: { onLogin: (tenantId: string) => void }) {
         {error && <ErrorPanel message={error} />}
         <form className="form-grid" onSubmit={submit}>
           <label className="field field-wide">
-            <span>Tenant ID</span>
+            <span>Correo electrónico o Tenant ID</span>
             <input required autoComplete="username" value={tenantId}
               onChange={event => setTenantId(event.target.value)} />
           </label>
