@@ -7,6 +7,7 @@ using ADSOLUSOL.Presentation.Api.Middleware;
 using ADSOLUSOL.Infrastructure.Persistence;
 using ADSOLUSOL.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.HttpOverrides;
 using System.Collections.Concurrent;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -53,6 +54,27 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// --- CONFIGURACIÓN PARA PRODUCCIÓN ---
+// 1. Política CORS para permitir peticiones desde el frontend web
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("ProductionCorsPolicy", policy =>
+    {
+        policy.WithOrigins("https://adsolusol.solusol.net")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+// 2. Configuración para operar detrás de un reverse proxy (Nginx, IIS, etc.)
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    // Limpiar redes y proxies por defecto para permitir cabeceras forwarded desde el proxy inverso
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
 var app = builder.Build();
 
 // Inicialización de esquema SQLite en desarrollo o cuando se solicite por configuración/entorno
@@ -69,17 +91,30 @@ if (shouldInitSchema)
     }
 }
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// El middleware de ForwardedHeaders debe ir antes de redirecciones o autenticación
+app.UseForwardedHeaders();
 
-app.UseMiddleware<ExceptionMiddleware>();
+app.UseSwagger();
+app.UseSwaggerUI();
+
 if (!app.Environment.IsDevelopment())
 {
-    app.UseHttpsRedirection();
+    app.UseCors("ProductionCorsPolicy");
 }
+
+// Health check abierto antes del middleware de firma
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.Equals("/health", StringComparison.OrdinalIgnoreCase))
+    {
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsJsonAsync(new { status = "Healthy", timestamp = DateTime.UtcNow });
+        return;
+    }
+    await next();
+});
+
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<SignatureVerificationMiddleware>();
 app.UseAuthorization();
 app.MapControllers();
