@@ -151,7 +151,9 @@ const routes = {
   assignmentsCreative:
     "/api/assignments/creative",
 
-  serve: "/api/Serve"
+  serve: "/api/Serve",
+
+  settings: "/api/Settings"
 };
 
 export const apiConfig = {
@@ -175,6 +177,17 @@ export const api = {
 
   logout(): Promise<void> {
     return request<void>(routes.authSession, { method: "DELETE" });
+  },
+
+  getSettings(): Promise<{ tenantId: string; settings: Record<string, string>; lastUpdatedAtUtc: string }> {
+    return request(routes.settings);
+  },
+
+  updateSettings(settings: Record<string, string>): Promise<{ tenantId: string; settings: Record<string, string>; lastUpdatedAtUtc: string }> {
+    return request(routes.settings, {
+      method: "PUT",
+      body: JSON.stringify({ settings })
+    });
   },
 
   getHealth(): Promise<HealthResponse> {

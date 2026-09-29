@@ -30,7 +30,8 @@ type View =
   | "creatives"
   | "assignments"
   | "serve"
-  | "system";
+  | "system"
+  | "settings";
 
 const navigation: Array<{
   id: View;
@@ -71,6 +72,11 @@ const navigation: Array<{
     id: "system",
     label: "Sistema",
     description: "API / SQLite / SIC"
+  },
+  {
+    id: "settings",
+    label: "ConfiguraciÃ³n",
+    description: "ParÃ¡metros del tenant"
   }
 ];
 
@@ -405,6 +411,9 @@ export default function App() {
             onRefresh={refresh}
           />
         );
+
+      case "settings":
+        return <SettingsView />;
     }
   };
 
@@ -453,16 +462,6 @@ export default function App() {
           ))}
         </nav>
 
-        <div className="sidebar-footer">
-          <span>
-            KLIK Soft PRO
-          </span>
-          <small>
-            Software Direction
-            <br />
-            solusol.net
-          </small>
-        </div>
       </aside>
 
       <main className="main-area">
@@ -2276,6 +2275,93 @@ function ServeView() {
             </dl>
           </div>
         )}
+      </Card>
+    </div>
+  );
+}
+
+function SettingsView() {
+  const [settings, setSettings] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const result = await api.getSettings();
+      setSettings(result.settings ?? {});
+    } catch (cause) {
+      setError(errorMessage(cause));
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { void load(); }, [load]);
+
+  function setValue(key: string, value: string) {
+    setSettings(current => ({ ...current, [key]: value }));
+  }
+
+  async function save(event: FormEvent) {
+    event.preventDefault();
+    setSaving(true);
+    setMessage(null);
+    setError(null);
+    try {
+      await api.updateSettings(settings);
+      setMessage("ConfiguraciÃ³n guardada correctamente.");
+    } catch (cause) {
+      setError(errorMessage(cause));
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  const fields = [
+    ["tenant.name", "Nombre comercial", "Nombre mostrado en reportes"],
+    ["tenant.timezone", "Zona horaria", "Ej. America/Hermosillo"],
+    ["campaign.defaultBudget", "Presupuesto predeterminado", "Monto inicial sugerido"],
+    ["campaign.defaultDurationDays", "DuraciÃ³n predeterminada (dÃ­as)", "DuraciÃ³n sugerida de campaÃ±as"],
+    ["reporting.email", "Correo de informes", "Destino de los informes periÃ³dicos"]
+  ];
+
+  return (
+    <div className="two-column">
+      <Card>
+        <div className="card-header">
+          <div><span className="eyebrow">Tenant</span><h2>Configurador</h2></div>
+          <button type="button" className="button button-secondary button-small" onClick={() => void load()}>Recargar</button>
+        </div>
+        {loading ? <p className="muted">Cargando configuraciÃ³n...</p> : (
+          <form className="form-grid" onSubmit={save}>
+            {fields.map(([key, label, hint]) => (
+              <label className="field field-wide" key={key}>
+                <span>{label}</span>
+                <input value={settings[key] ?? ""} placeholder={hint} onChange={event => setValue(key, event.target.value)} />
+                <small className="muted">{hint}</small>
+              </label>
+            ))}
+            {error && <ErrorPanel message={error} />}
+            {message && <p className="success-message">{message}</p>}
+            <button className="button button-primary" disabled={saving} type="submit">
+              {saving ? "Guardando..." : "Guardar configuraciÃ³n"}
+            </button>
+          </form>
+        )}
+      </Card>
+
+      <Card>
+        <div className="card-header"><div><span className="eyebrow">Avanzado</span><h2>Claves personalizadas</h2></div></div>
+        <p className="muted">Las claves adicionales existentes se conservan al guardar. Las credenciales y claves privadas nunca se muestran aquÃ­.</p>
+        <div className="definition-list">
+          {Object.entries(settings).filter(([key]) => !fields.some(field => field[0] === key)).map(([key, value]) => (
+            <div key={key}><span>{key}</span><strong>{value || "(vacÃ­o)"}</strong></div>
+          ))}
+        </div>
       </Card>
     </div>
   );

@@ -247,11 +247,15 @@ public static class RegressionSuiteRunner
                 await dbContext.SaveChangesAsync();
 
                 const int burstCount = 100;
-                int acceptedCount = 0;
-                int rejectedCount = 0;
+                var acceptedCount = 0;
+                var rejectedCount = 0;
+                using var gate = new SemaphoreSlim(1, 1);
 
-                for (int i = 0; i < burstCount; i++)
+                await Parallel.ForEachAsync(Enumerable.Range(0, burstCount), new ParallelOptions { MaxDegreeOfParallelism = 10 }, async (i, _) =>
                 {
+                    using var iterationScope = host.Services.CreateScope();
+                    var scopedEventService = iterationScope.ServiceProvider.GetRequiredService<EventProcessingService>();
+
                     var burstEvt = new AdEvent
                     {
                         EventId = $"evt_stress_{i}",
@@ -262,10 +266,19 @@ public static class RegressionSuiteRunner
                         TenantId = "tenant-A"
                     };
 
-                    var res = await eventProcessingService.ProcessEvent(burstEvt);
-                    if (res == EventProcessingStatus.Accepted) acceptedCount++;
-                    else if (res == EventProcessingStatus.Rejected) rejectedCount++;
-                }
+                    await gate.WaitAsync();
+                    EventProcessingStatus res;
+                    try
+                    {
+                        res = await scopedEventService.ProcessEvent(burstEvt);
+                    }
+                    finally
+                    {
+                        gate.Release();
+                    }
+                    if (res == EventProcessingStatus.Accepted) Interlocked.Increment(ref acceptedCount);
+                    else if (res == EventProcessingStatus.Rejected) Interlocked.Increment(ref rejectedCount);
+                });
 
                 dbContext.ChangeTracker.Clear();
                 var stressMetrics = await metricsService.GetMetricsForCampaign(stressCampaign.Id);

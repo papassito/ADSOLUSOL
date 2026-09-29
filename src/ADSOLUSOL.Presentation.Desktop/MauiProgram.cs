@@ -42,6 +42,7 @@ public static class MauiProgram
         builder.Services.AddScoped<ICreativeRepository, CreativeRepository>();
         builder.Services.AddScoped<IAdEventRepository, AdEventRepository>();
         builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
+        builder.Services.AddScoped<ITenantSettingsRepository, TenantSettingsRepository>();
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         // Clientes HTTP y telemetría SIC / Marketing Brain
@@ -54,6 +55,7 @@ public static class MauiProgram
         builder.Services.AddScoped<BudgetService>();
         builder.Services.AddScoped<MetricsService>();
         builder.Services.AddScoped<AdServingService>();
+        builder.Services.AddScoped<ITenantSettingsService, TenantSettingsService>();
 
         return builder.Build();
     }

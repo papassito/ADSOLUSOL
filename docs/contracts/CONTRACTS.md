@@ -96,6 +96,15 @@ EntityId   long
 
 Se utiliza tanto para asociación de placement como de creative.
 
+## TenantSetting
+
+```text
+TenantId     string (PK compuesta)
+Key          string (PK compuesta)
+Value        string
+UpdatedAtUtc DateTime
+```
+
 ## Dinero
 
 Presupuesto, gasto, CPM, CPC y costo del evento usan `decimal` en el dominio actual.

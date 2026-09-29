@@ -1,8 +1,8 @@
 # AD SOLUSOL — Documentation Manifest
 
 **Estado:** SEALED / FROZEN DOCUMENTATION BASELINE
-**Fecha de sellado:** 2026-09-28
-**Total de archivos Markdown del baseline:** 55
+**Fecha de sellado:** 2026-09-29
+**Total de archivos Markdown del baseline:** 56
 
 ## SHA-256 de documentos sellados
 
@@ -29,10 +29,11 @@
 | `docs/CAMPAIGN.md` | `a05c9369bf31910def28d6499c19d99d2844c12339b5de373dfdf73e451fb271` |
 | `docs/COMPONENTS.md` | `6bba1fa93151faa0525b59b518e8f27ebd3b6c3601d6a266f47eb4c00252e4a5` |
 | `docs/CONTRACTS.md` | `5dd6deb350e2c14f547ec4e7f7ba7f30edf31a07101cf651db9b6e05fff6cb78` |
-| `docs/contracts/CONTRACTS.md` | `5dd6deb350e2c14f547ec4e7f7ba7f30edf31a07101cf651db9b6e05fff6cb78` |
+| `docs/contracts/CONTRACTS.md` | `38479e288d0b481a5381a7085f3ba9647266fe447e05a57c8308eeffcb3a8f94` |
 | `docs/contracts/MARKETING-API.md` | `715dc35e2a7ab40def205acef1163f6e1ea48dba8b6c531d904808249548fafb` |
 | `docs/decisions/ADR-001.md` | `f3377d20ec983d718f90de3efbdf871dc96c41faed829fd8d41d0f5fafde5640` |
 | `docs/decisions/DECISIONS.md` | `8d0730886afff9a98dff6a07382a754c0fdd3688fffddf5b2b72d092eaed56d3` |
+| `docs/DEPLOYMENT_PLESK_ADSOLUSOL.md` | `14449e5c0c3fd72438e081f4d80dbcbb25afb2ca1a4cd3c55f008bdc90251a79` |
 | `docs/evidence/EVIDENCE.md` | `ba6591b8c2a852485cfd24c5117a341e63814e3342d5ba007daaf746c76c9b86` |
 | `docs/HISTORIAL DE ACTIVIDADES.MD` | `9fbc545ffd94f69349685dbbea831958b189c553f9f384df0671e16c3f1c6113` |
 | `docs/integration/MARKETING-BRAIN.md` | `a083931aa316b17662a592e85aed48f1b21d0f25f3387f0ec7b20475715153a6` |

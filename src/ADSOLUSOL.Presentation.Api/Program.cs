@@ -55,16 +55,13 @@ builder.Services.AddAuthentication("PanelCookie")
         {
             var tenantId = context.Principal?.FindFirstValue("tenant_id");
             var configuration = context.HttpContext.RequestServices.GetRequiredService<IConfiguration>();
-            var configurationTenantId = tenantId?.Replace('-', '_');
             if (string.IsNullOrWhiteSpace(tenantId) ||
-                string.IsNullOrWhiteSpace(configuration[$"PanelAuth:Tenants:{configurationTenantId}"]))
-            {
+                string.IsNullOrWhiteSpace(PanelAuthConfiguration.GetPasswordHash(configuration, tenantId)))
                 context.RejectPrincipal();
-            }
             return Task.CompletedTask;
         };
     });
-
+builder.Services.AddAuthorization();
 builder.Services.AddRateLimiter(options =>
 {
     options.AddPolicy("panel-login", context =>
@@ -72,9 +69,7 @@ builder.Services.AddRateLimiter(options =>
             context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
             _ => new FixedWindowRateLimiterOptions
             {
-                PermitLimit = 5,
-                Window = TimeSpan.FromMinutes(15),
-                QueueLimit = 0,
+                PermitLimit = 5, Window = TimeSpan.FromMinutes(15), QueueLimit = 0,
                 AutoReplenishment = true
             }));
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
@@ -90,6 +85,7 @@ builder.Services.AddScoped<IPlacementRepository, PlacementRepository>();
 builder.Services.AddScoped<ICreativeRepository, CreativeRepository>();
 builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
 builder.Services.AddScoped<IAdEventRepository, AdEventRepository>();
+builder.Services.AddScoped<ITenantSettingsRepository, TenantSettingsRepository>();
 builder.Services.AddSingleton<ICoreSignatureVerifier, CoreSignatureVerifier>();
 builder.Services.AddSingleton(new ConcurrentDictionary<string, DateTime>());
 builder.Services.AddSingleton<INodeRegistry, NodeRegistry>();
@@ -101,6 +97,7 @@ builder.Services.AddScoped<AdServingService>();
 builder.Services.AddScoped<BudgetService>();
 builder.Services.AddScoped<EventProcessingService>();
 builder.Services.AddScoped<MetricsService>();
+builder.Services.AddScoped<ITenantSettingsService, TenantSettingsService>();
 
 // Integración con Marketing Brain
 builder.Services.AddScoped<IMarketingBrainService, MarketingBrainClient>();
@@ -164,9 +161,14 @@ if (!app.Environment.IsDevelopment())
     app.UseCors("ProductionCorsPolicy");
 }
 
-// Health check abierto antes del middleware de firma
+// Liveness check básico previo al middleware de firma
 app.Use(async (context, next) =>
 {
+    if (context.Request.Path.Equals("/api/health", StringComparison.OrdinalIgnoreCase))
+    {
+        await next();
+        return;
+    }
     if (context.Request.Path.Equals("/health", StringComparison.OrdinalIgnoreCase))
     {
         context.Response.ContentType = "application/json";
@@ -176,45 +178,31 @@ app.Use(async (context, next) =>
     await next();
 });
 
+// Redirigir la raíz a Swagger o mostrar información básica de la API
+app.MapGet("/", () => Results.Redirect("/swagger"));
+
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<SignatureVerificationMiddleware>();
 app.UseAuthorization();
 
 app.MapPost("/api/auth/session", async (HttpContext context, IConfiguration configuration) =>
 {
-    if (!string.Equals(context.Request.Headers.Origin.ToString(),
-        "https://adsolusol.solusol.net", StringComparison.OrdinalIgnoreCase) &&
-        !app.Environment.IsDevelopment())
-    {
+    if (!app.Environment.IsDevelopment() &&
+        !string.Equals(context.Request.Headers.Origin.ToString(), "https://adsolusol.solusol.net", StringComparison.OrdinalIgnoreCase))
         return Results.StatusCode(StatusCodes.Status403Forbidden);
-    }
 
     PanelLoginRequest? login;
-    try
-    {
-        login = await context.Request.ReadFromJsonAsync<PanelLoginRequest>();
-    }
-    catch (JsonException)
-    {
-        return Results.BadRequest(new { error = "Invalid JSON." });
-    }
+    try { login = await context.Request.ReadFromJsonAsync<PanelLoginRequest>(); }
+    catch (JsonException) { return Results.BadRequest(new { error = "Invalid JSON." }); }
 
-    var loginId = login?.TenantId?.Trim();
-    var tenantId = string.IsNullOrWhiteSpace(loginId)
-        ? null
-        : string.Equals(loginId, "info@solusol.net", StringComparison.OrdinalIgnoreCase)
-            ? "tenant-02"
-            : loginId;
-    var configurationTenantId = tenantId?.Replace('-', '_');
+    var suppliedTenant = login?.TenantId?.Trim();
+    var tenantId = suppliedTenant?.Equals("info@solusol.net", StringComparison.OrdinalIgnoreCase) == true
+        ? "tenant-02" : suppliedTenant;
     if (tenantId is null || !Regex.IsMatch(tenantId, "^[A-Za-z0-9_-]{1,64}$") ||
-        !PanelPasswordVerifier.Verify(configuration[$"PanelAuth:Tenants:{configurationTenantId}"], login?.Password))
-    {
+        !PanelPasswordVerifier.Verify(PanelAuthConfiguration.GetPasswordHash(configuration, tenantId), login?.Password))
         return Results.Unauthorized();
-    }
 
-    var identity = new ClaimsIdentity(
-        new[] { new Claim("tenant_id", tenantId) }, "PanelCookie");
-    context.Response.Cookies.Delete("Solusol-Tenant-Session");
+    var identity = new ClaimsIdentity(new[] { new Claim("tenant_id", tenantId) }, "PanelCookie");
     await context.SignInAsync("PanelCookie", new ClaimsPrincipal(identity));
     return Results.Ok(new { status = "AUTHENTICATED", tenantId });
 }).RequireRateLimiting("panel-login");
@@ -223,24 +211,14 @@ app.MapGet("/api/auth/session", (HttpContext context) =>
 {
     var tenantId = context.User.FindFirstValue("tenant_id");
     return context.User.Identity?.IsAuthenticated == true && !string.IsNullOrWhiteSpace(tenantId)
-        ? Results.Ok(new { status = "AUTHENTICATED", tenantId })
-        : Results.Unauthorized();
+        ? Results.Ok(new { status = "AUTHENTICATED", tenantId }) : Results.Unauthorized();
 });
 
 app.MapDelete("/api/auth/session", async (HttpContext context) =>
 {
-    if (!string.Equals(context.Request.Headers.Origin.ToString(),
-        "https://adsolusol.solusol.net", StringComparison.OrdinalIgnoreCase) &&
-        !app.Environment.IsDevelopment())
-    {
-        return Results.StatusCode(StatusCodes.Status403Forbidden);
-    }
-
     await context.SignOutAsync("PanelCookie");
-    context.Response.Cookies.Delete("Solusol-Tenant-Session");
     return Results.NoContent();
 });
-
 app.MapControllers();
 
 app.Run();

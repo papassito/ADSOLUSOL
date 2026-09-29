@@ -9,9 +9,9 @@
                  "status":  "PRE-SELLO",
                  "certified":  false,
                  "releaseStatus":  "NOT RELEASE-CERTIFIED",
-                 "revisionDate":  "2026-09-28",
+                 "revisionDate":  "2026-09-29",
                  "verifiedCommit":  "88505d24a168176c4aa661fa80727d5d45bb71f7",
-                 "totalMarkdownFiles":  55,
+                 "totalMarkdownFiles":  56,
                  "zeroSyntheticCompliant":  true
              },
     "manifests":  {
@@ -19,8 +19,8 @@
                       "docsManifest":  "docs/MANIFEST.md"
                   },
     "manifestHashes":  {
-                           "MANIFEST.md":  "e72ba8e6ced230e079a45fe65404b665714de653f3f780a6fe11531da915f602",
-                           "docs/MANIFEST.md":  "e72ba8e6ced230e079a45fe65404b665714de653f3f780a6fe11531da915f602"
+                           "MANIFEST.md":  "450eace4d03454ba131de6a129baedb204331c447ed254f79bc5ee097e913c31",
+                           "docs/MANIFEST.md":  "450eace4d03454ba131de6a129baedb204331c447ed254f79bc5ee097e913c31"
                        },
     "runtimeTarget":  {
                           "framework":  "net8.0",
