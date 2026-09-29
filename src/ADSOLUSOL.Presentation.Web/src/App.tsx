@@ -231,6 +231,14 @@ function StatCard(props: {
 }
 
 export default function App() {
+  const [session, setSession] = useState<string | null | undefined>(undefined);
+
+  useEffect(() => {
+    void api.getSession()
+      .then(result => setSession(result.tenantId))
+      .catch(() => setSession(null));
+  }, []);
+
   const [
     view,
     setView
@@ -275,13 +283,10 @@ export default function App() {
     useCallback(async () => {
       setRefreshing(true);
 
-      const [
-        healthResult,
-        campaignResult
-      ] =
+      const [healthResult, campaignResult] =
         await Promise.allSettled([
           api.getHealth(),
-          api.listCampaigns()
+          session ? api.listCampaigns() : Promise.resolve(null)
         ]);
 
       if (
@@ -301,25 +306,30 @@ export default function App() {
         );
       }
 
-      if (
-        campaignResult.status ===
-        "fulfilled"
-      ) {
+      if (campaignResult.status === "fulfilled" && campaignResult.value) {
         setCampaigns(
           campaignResult.value
         );
         setCampaignsError(null);
+      } else if (!session) {
+        setCampaigns(null);
+        setCampaignsError(null);
       } else {
         setCampaigns(null);
         setCampaignsError(
-          errorMessage(
-            campaignResult.reason
-          )
+          campaignResult.status === "rejected"
+            ? errorMessage(campaignResult.reason)
+            : "No se pudieron cargar campañas."
         );
+        if (campaignResult.status === "rejected" &&
+            campaignResult.reason instanceof ApiError &&
+            campaignResult.reason.status === 401) {
+          setSession(null);
+        }
       }
 
       setRefreshing(false);
-    }, []);
+    }, [session]);
 
   useEffect(() => {
     void refresh();
@@ -422,6 +432,7 @@ export default function App() {
             <button
               key={item.id}
               type="button"
+              disabled={!session}
               className={
                 item.id === view
                   ? "nav-item active"
@@ -468,6 +479,20 @@ export default function App() {
           </div>
 
           <div className="topbar-actions">
+            {session && (
+              <>
+                <span className="muted">Tenant {session}</span>
+                <button
+                  type="button"
+                  className="button button-secondary"
+                  onClick={() => {
+                    void api.logout().then(() => setSession(null));
+                  }}
+                >
+                  Salir
+                </button>
+              </>
+            )}
             <ConnectionIndicator
               health={health}
               error={
@@ -491,9 +516,63 @@ export default function App() {
         </header>
 
         <div className="content">
-          {renderView()}
+          {session === undefined ? (
+            <p className="muted">Verificando acceso...</p>
+          ) : session === null ? (
+            <LoginView onLogin={setSession} />
+          ) : renderView()}
         </div>
       </main>
+    </div>
+  );
+}
+
+function LoginView(props: { onLogin: (tenantId: string) => void }) {
+  const [tenantId, setTenantId] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  async function submit(event: FormEvent) {
+    event.preventDefault();
+    setSubmitting(true);
+    setError(null);
+    try {
+      const result = await api.login(tenantId.trim(), password);
+      setPassword("");
+      props.onLogin(result.tenantId);
+    } catch (cause) {
+      setError(cause instanceof ApiError && cause.status === 401
+        ? "Tenant o contraseña incorrectos."
+        : errorMessage(cause));
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <div className="login-layout">
+      <Card className="login-card">
+        <span className="eyebrow">Acceso protegido</span>
+        <h2>Ingresar a ADSOLUSOL</h2>
+        <p className="muted">Las campañas y presupuestos solo se muestran después de autenticar el tenant.</p>
+        {error && <ErrorPanel message={error} />}
+        <form className="form-grid" onSubmit={submit}>
+          <label className="field field-wide">
+            <span>Tenant ID</span>
+            <input required autoComplete="username" value={tenantId}
+              onChange={event => setTenantId(event.target.value)} />
+          </label>
+          <label className="field field-wide">
+            <span>Contraseña</span>
+            <input required type="password" autoComplete="current-password" value={password}
+              onChange={event => setPassword(event.target.value)} />
+          </label>
+          <button className="button button-primary" disabled={submitting} type="submit">
+            {submitting ? "Verificando..." : "Ingresar"}
+          </button>
+        </form>
+      </Card>
     </div>
   );
 }

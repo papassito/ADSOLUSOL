@@ -3,6 +3,7 @@ using System.Text;
 using ADSOLUSOL.Domain.Interfaces;
 using NSec.Cryptography;
 using Microsoft.Extensions.Caching.Memory;
+using System.Security.Claims;
 
 namespace ADSOLUSOL.Presentation.Api.Middleware;
 
@@ -28,50 +29,27 @@ public class SignatureVerificationMiddleware
             return;
         }
 
-        // Endpoint BFF para inicio de sesión en el Panel Web
+        // Login/logout/session are handled by ASP.NET Core cookie authentication.
         if (path.Equals("/api/auth/session", StringComparison.OrdinalIgnoreCase))
         {
-            if (context.Request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase))
-            {
-                using var reader = new StreamReader(context.Request.Body);
-                var bodyText = await reader.ReadToEndAsync();
-                string? requestedTenant = null;
-                try
-                {
-                    using var doc = System.Text.Json.JsonDocument.Parse(bodyText);
-                    if (doc.RootElement.TryGetProperty("tenantId", out var prop))
-                    {
-                        requestedTenant = prop.GetString();
-                    }
-                }
-                catch (System.Text.Json.JsonException ex)
-                {
-                    // Formato JSON inválido para la sesión: fail-closed manteniendo requestedTenant nulo
-                    System.Diagnostics.Trace.TraceWarning($"[SECURITY] Error deserializando sesión BFF: {ex.Message}");
-                }
-
-                if (!string.IsNullOrWhiteSpace(requestedTenant))
-                {
-                    context.Response.Cookies.Append("Solusol-Tenant-Session", requestedTenant, new CookieOptions
-                    {
-                        HttpOnly = true,
-                        SameSite = SameSiteMode.Lax,
-                        Secure = context.Request.IsHttps,
-                        Expires = DateTimeOffset.UtcNow.AddDays(7)
-                    });
-                    context.Response.ContentType = "application/json";
-                    await context.Response.WriteAsync($"{{\"status\":\"AUTHENTICATED\",\"tenantId\":\"{requestedTenant}\"}}");
-                    return;
-                }
-            }
-            context.Response.StatusCode = StatusCodes.Status400BadRequest;
-            await context.Response.WriteAsync("Se requiere un 'tenantId' válido en el cuerpo JSON.");
+            await _next(context);
             return;
         }
 
-        // Autenticación por Sesión BFF (Panel Web con Cookie segura)
-        if (context.Request.Cookies.TryGetValue("Solusol-Tenant-Session", out var sessionTenant) && !string.IsNullOrWhiteSpace(sessionTenant))
+        // Only a framework-validated, tamper-proof authentication ticket may grant panel access.
+        var sessionTenant = context.User.FindFirstValue("tenant_id");
+        if (context.User.Identity?.IsAuthenticated == true && !string.IsNullOrWhiteSpace(sessionTenant))
         {
+            if (!HttpMethods.IsGet(context.Request.Method) && !HttpMethods.IsHead(context.Request.Method) &&
+                !HttpMethods.IsOptions(context.Request.Method) &&
+                !string.Equals(context.Request.Headers.Origin.ToString(),
+                    "https://adsolusol.solusol.net", StringComparison.OrdinalIgnoreCase))
+            {
+                context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                await context.Response.WriteAsync("Invalid request origin.");
+                return;
+            }
+
             context.Items["TenantId"] = sessionTenant;
             await _next(context);
             return;

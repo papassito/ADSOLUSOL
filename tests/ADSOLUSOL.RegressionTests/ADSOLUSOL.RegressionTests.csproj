@@ -11,6 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\ADSOLUSOL.Application\ADSOLUSOL.Application.csproj" />
     <ProjectReference Include="..\..\src\ADSOLUSOL.Infrastructure\ADSOLUSOL.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\ADSOLUSOL.Presentation.Api\ADSOLUSOL.Presentation.Api.csproj" />
   </ItemGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />

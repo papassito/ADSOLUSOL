@@ -8,6 +8,15 @@ using ADSOLUSOL.Infrastructure.Persistence;
 using ADSOLUSOL.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.RateLimiting;
+using ADSOLUSOL.Presentation.Api.Security;
+using System.Security.Claims;
+using System.Text.Json;
+using System.Text.RegularExpressions;
+using System.Threading.RateLimiting;
 using System.Collections.Concurrent;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +29,55 @@ if (!Directory.Exists(appDataDir))
 {
     Directory.CreateDirectory(appDataDir);
 }
+
+var dataProtectionDir = Path.Combine(appDataDir, "keys");
+Directory.CreateDirectory(dataProtectionDir);
+builder.Services.AddDataProtection()
+    .SetApplicationName("ADSOLUSOL.Panel")
+    .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionDir));
+
+builder.Services.AddAuthentication("PanelCookie")
+    .AddCookie("PanelCookie", options =>
+    {
+        options.Cookie.Name = "ADSOLUSOL.Panel";
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.SameSite = SameSiteMode.Strict;
+        options.Cookie.Path = "/api";
+        options.ExpireTimeSpan = TimeSpan.FromHours(8);
+        options.SlidingExpiration = false;
+        options.Events.OnRedirectToLogin = context =>
+        {
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            return Task.CompletedTask;
+        };
+        options.Events.OnValidatePrincipal = context =>
+        {
+            var tenantId = context.Principal?.FindFirstValue("tenant_id");
+            var configuration = context.HttpContext.RequestServices.GetRequiredService<IConfiguration>();
+            if (string.IsNullOrWhiteSpace(tenantId) ||
+                string.IsNullOrWhiteSpace(configuration[$"PanelAuth:Tenants:{tenantId}"]))
+            {
+                context.RejectPrincipal();
+            }
+            return Task.CompletedTask;
+        };
+    });
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddPolicy("panel-login", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(15),
+                QueueLimit = 0,
+                AutoReplenishment = true
+            }));
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+});
 
 // Configuración de la base de datos de la API
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -93,6 +151,9 @@ if (shouldInitSchema)
 
 // El middleware de ForwardedHeaders debe ir antes de redirecciones o autenticación
 app.UseForwardedHeaders();
+app.UseRouting();
+app.UseRateLimiter();
+app.UseAuthentication();
 
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -117,6 +178,64 @@ app.Use(async (context, next) =>
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<SignatureVerificationMiddleware>();
 app.UseAuthorization();
+
+app.MapPost("/api/auth/session", async (HttpContext context, IConfiguration configuration) =>
+{
+    if (!string.Equals(context.Request.Headers.Origin.ToString(),
+        "https://adsolusol.solusol.net", StringComparison.OrdinalIgnoreCase) &&
+        !app.Environment.IsDevelopment())
+    {
+        return Results.StatusCode(StatusCodes.Status403Forbidden);
+    }
+
+    PanelLoginRequest? login;
+    try
+    {
+        login = await context.Request.ReadFromJsonAsync<PanelLoginRequest>();
+    }
+    catch (JsonException)
+    {
+        return Results.BadRequest(new { error = "Invalid JSON." });
+    }
+
+    var tenantId = login?.TenantId?.Trim();
+    if (tenantId is null || !Regex.IsMatch(tenantId, "^[A-Za-z0-9_-]{1,64}$") ||
+        !PanelPasswordVerifier.Verify(configuration[$"PanelAuth:Tenants:{tenantId}"], login?.Password))
+    {
+        return Results.Unauthorized();
+    }
+
+    var identity = new ClaimsIdentity(
+        new[] { new Claim("tenant_id", tenantId) }, "PanelCookie");
+    context.Response.Cookies.Delete("Solusol-Tenant-Session");
+    await context.SignInAsync("PanelCookie", new ClaimsPrincipal(identity));
+    return Results.Ok(new { status = "AUTHENTICATED", tenantId });
+}).RequireRateLimiting("panel-login");
+
+app.MapGet("/api/auth/session", (HttpContext context) =>
+{
+    var tenantId = context.User.FindFirstValue("tenant_id");
+    return context.User.Identity?.IsAuthenticated == true && !string.IsNullOrWhiteSpace(tenantId)
+        ? Results.Ok(new { status = "AUTHENTICATED", tenantId })
+        : Results.Unauthorized();
+});
+
+app.MapDelete("/api/auth/session", async (HttpContext context) =>
+{
+    if (!string.Equals(context.Request.Headers.Origin.ToString(),
+        "https://adsolusol.solusol.net", StringComparison.OrdinalIgnoreCase) &&
+        !app.Environment.IsDevelopment())
+    {
+        return Results.StatusCode(StatusCodes.Status403Forbidden);
+    }
+
+    await context.SignOutAsync("PanelCookie");
+    context.Response.Cookies.Delete("Solusol-Tenant-Session");
+    return Results.NoContent();
+});
+
 app.MapControllers();
 
 app.Run();
+
+public sealed record PanelLoginRequest(string? TenantId, string? Password);

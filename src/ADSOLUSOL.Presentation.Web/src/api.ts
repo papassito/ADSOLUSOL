@@ -156,17 +156,25 @@ const routes = {
 
 export const apiConfig = {
   baseUrl:
-    API_BASE || "same-origin / Vite proxy",
+    API_BASE || "same-origin",
 
   routes
 };
 
 export const api = {
-  setTenantSession(tenantId: string): Promise<{ status: string; tenantId: string }> {
+  login(tenantId: string, password: string): Promise<{ status: string; tenantId: string }> {
     return request<{ status: string; tenantId: string }>(routes.authSession, {
       method: "POST",
-      body: JSON.stringify({ tenantId })
+      body: JSON.stringify({ tenantId, password })
     });
+  },
+
+  getSession(): Promise<{ status: string; tenantId: string }> {
+    return request<{ status: string; tenantId: string }>(routes.authSession);
+  },
+
+  logout(): Promise<void> {
+    return request<void>(routes.authSession, { method: "DELETE" });
   },
 
   getHealth(): Promise<HealthResponse> {

@@ -81,6 +81,18 @@ button:disabled {
   grid-template-columns: 252px minmax(0, 1fr);
 }
 
+.login-layout {
+  min-height: 65vh;
+  display: grid;
+  place-items: center;
+}
+
+.login-card {
+  width: min(100%, 460px);
+  display: grid;
+  gap: 18px;
+}
+
 .sidebar {
   position: sticky;
   top: 0;
