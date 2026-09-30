@@ -75,7 +75,7 @@ const navigation: Array<{
   },
   {
     id: "settings",
-    label: "ConfiguraciÃ³n",
+    label: "Configuraci\u00f3n",
     description: "ParÃ¡metros del tenant"
   }
 ];
@@ -2313,7 +2313,7 @@ function SettingsView() {
     setError(null);
     try {
       await api.updateSettings(settings);
-      setMessage("ConfiguraciÃ³n guardada correctamente.");
+      setMessage("Configuraci\u00f3n guardada correctamente.");
     } catch (cause) {
       setError(errorMessage(cause));
     } finally {
@@ -2325,8 +2325,8 @@ function SettingsView() {
     ["tenant.name", "Nombre comercial", "Nombre mostrado en reportes"],
     ["tenant.timezone", "Zona horaria", "Ej. America/Hermosillo"],
     ["campaign.defaultBudget", "Presupuesto predeterminado", "Monto inicial sugerido"],
-    ["campaign.defaultDurationDays", "DuraciÃ³n predeterminada (dÃ­as)", "DuraciÃ³n sugerida de campaÃ±as"],
-    ["reporting.email", "Correo de informes", "Destino de los informes periÃ³dicos"]
+    ["campaign.defaultDurationDays", "Duraci\u00f3n predeterminada (d\u00edas)", "Duraci\u00f3n sugerida de campa\u00f1as"],
+    ["reporting.email", "Correo de informes", "Destino de los informes peri\u00f3dicos"]
   ];
 
   return (
@@ -2356,7 +2356,7 @@ function SettingsView() {
 
       <Card>
         <div className="card-header"><div><span className="eyebrow">Avanzado</span><h2>Claves personalizadas</h2></div></div>
-        <p className="muted">Las claves adicionales existentes se conservan al guardar. Las credenciales y claves privadas nunca se muestran aquÃ­.</p>
+        <p className="muted">Las claves adicionales existentes se conservan al guardar. Las credenciales y claves privadas nunca se muestran aqu\u00ed.</p>
         <div className="definition-list">
           {Object.entries(settings).filter(([key]) => !fields.some(field => field[0] === key)).map(([key, value]) => (
             <div key={key}><span>{key}</span><strong>{value || "(vacÃ­o)"}</strong></div>

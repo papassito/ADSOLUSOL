@@ -13,6 +13,7 @@ public class AppDbContext : DbContext
     public DbSet<AdEvent> AdEvents { get; set; }
     public DbSet<CampaignPlacement> CampaignPlacements { get; set; }
     public DbSet<CampaignCreative> CampaignCreatives { get; set; }
+    public DbSet<TenantSetting> TenantSettings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -27,5 +28,8 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<CampaignPlacement>().HasKey(cp => new { cp.CampaignId, cp.PlacementId });
         modelBuilder.Entity<CampaignCreative>().HasKey(cc => new { cc.CampaignId, cc.CreativeId });
+
+        modelBuilder.Entity<TenantSetting>().HasKey(s => new { s.TenantId, s.Key });
+        modelBuilder.Entity<TenantSetting>().Property(s => s.Value).IsRequired();
     }
 }
