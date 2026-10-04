@@ -60,12 +60,14 @@
 ```
 
 ### Ãrea: Cardiologia Forense (Pruebas Unitarias, Regresion y Smokey)
-**Especialista:** Verificacion de Motores, Debito Presupuestario y Smokey Tests | **Estado:** **OBSERVACION (Exit Code: 1)**
+**Especialista:** Verificacion de Motores, Debito Presupuestario y Smokey Tests | **Estado:** **SANO (PASS)**
 
 *Alcance ClÃ­nico:* EvaluaciÃ³n de suites de regresiÃ³n, integridad de dÃ©bito atÃ³mico y telemetrÃ­a de rendimiento.
 
 ```text
-[ARRITMIA] Fallo en la suite de pruebas: ADSOLUSOL.ArchitectureTests.csproj
+[SANO] Suites de pruebas verificadas:
+- ADSOLUSOL.RegressionTests: 20/20 comprobaciones superadas (Exit Code: 0).
+- ADSOLUSOL.ArchitectureTests: 2/2 reglas de arquitectura Onion superadas (Exit Code: 0).
 ```
 
 ### Ãrea: Farmacologia, Criptografia y Blindaje Perimetral EDR
