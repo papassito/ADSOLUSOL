@@ -29,12 +29,13 @@ $appTsxPath = Join-Path $RootPath "src/ADSOLUSOL.Presentation.Web/src/App.tsx"
 if (Test-Path $appTsxPath) {
     $lines = @(Get-Content $appTsxPath -Encoding UTF8)
     $found = 0
-    for ($i = 0; $i -lt $lines.Count; $i++) {
-        $line = $lines[$i]
+    $lineNum = 0
+    foreach ($line in $lines) {
+        $lineNum++
         if ($line -match "(\u00C3[\u0080-\u00BF]|\u00E2\u0088\u009E|\u00F0\u0178|\u00E2\u20AC)") {
             $found++
             $col = $line.IndexOf($Matches[1]) + 1
-            Write-Host "  -> [Línea $($i + 1), Col $col] Secuencia corrupta detectada: '$($Matches[1])'" -ForegroundColor Red
+            Write-Host "  -> [Línea $lineNum, Col $col] Secuencia corrupta detectada: '$($Matches[1])'" -ForegroundColor Red
             Write-Host "     Código: $($line.Trim())" -ForegroundColor DarkGray
         }
     }
@@ -53,13 +54,14 @@ $expPath = Join-Path $RootPath "docs/EXPEDIENTE_CLINICO_MAESTRO.md"
 if (Test-Path $expPath) {
     $lines = @(Get-Content $expPath -Encoding UTF8)
     $found = 0
-    $maxScan = [Math]::Min($lines.Count, 30)
-    for ($i = 0; $i -lt $maxScan; $i++) {
-        $line = $lines[$i]
+    $lineNum = 0
+    foreach ($line in $lines) {
+        $lineNum++
+        if ($lineNum -gt 50) { break }
         if ($line -match "(\u00C3[\u0080-\u00BF]|\u00E2\u0088\u009E|\u00F0\u0178|\u00E2\u20AC)") {
             $found++
             $col = $line.IndexOf($Matches[1]) + 1
-            Write-Host "  -> [Línea $($i + 1), Col $col] Secuencia corrupta: '$($Matches[1])'" -ForegroundColor Red
+            Write-Host "  -> [Línea $lineNum, Col $col] Secuencia corrupta: '$($Matches[1])'" -ForegroundColor Red
             Write-Host "     Código: $($line.Trim())" -ForegroundColor DarkGray
         }
     }
@@ -79,10 +81,11 @@ Write-Host "`n>>> [3/3] EXAMEN RADIOLÓGICO DE CONTRATO: CampaignRepository.cs" 
 $campRepo = Join-Path $RootPath "src/ADSOLUSOL.Infrastructure/Repositories/CampaignRepository.cs"
 if (Test-Path $campRepo) {
     $lines = @(Get-Content $campRepo -Encoding UTF8)
-    for ($i = 0; $i -lt $lines.Count; $i++) {
-        $line = $lines[$i]
+    $lineNum = 0
+    foreach ($line in $lines) {
+        $lineNum++
         if ($line -match "public\s+async\s+Task\s+CreateAsync") {
-            Write-Host "  -> [Línea $($i + 1)] Contrato detectado:" -ForegroundColor Cyan
+            Write-Host "  -> [Línea $lineNum] Contrato detectado:" -ForegroundColor Cyan
             Write-Host "     $($line.Trim())" -ForegroundColor White
             Write-Host "  [ANÁLISIS DE CAUSA RAÍZ]:" -ForegroundColor Yellow
             Write-Host "     Campaign usa GUID (string Id). Su signatura canónica es 'Task CreateAsync(Campaign c)'." -ForegroundColor Gray

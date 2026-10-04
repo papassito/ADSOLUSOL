@@ -1,12 +1,12 @@
-# Expediente ClÃ­nico Maestro - ADSOLUSOL (Ads & Growth Engine)
+# Expediente Clínico Maestro - ADSOLUSOL (Ads & Growth Engine)
 
 **Fecha y Hora del Chequeo Forense:** 2026-10-04 00:41:54
 
 **Ecosistema Auditado:** C# / .NET 8 (73 archivos) | PowerShell (36 scripts) | Markdown Docs (60 archivos) | JSON / Config (14 archivos)
 
-## Dictamen Resumido de la Junta MÃ©dica Forense
+## Dictamen Resumido de la Junta Médica Forense
 
-| Ãrea MÃ©dica | Especialista / Peritaje Forense | DiagnÃ³stico ClÃ­nico |
+| Área Médica | Especialista / Peritaje Forense | Diagnóstico Clínico |
 |---|---|---|
 | **Inmunologia de Codificacion, BOM y Caracteres de Control** | Integridad UTF-8, Ausencia de BOM, Nulos y Caracteres Invalidos | **SANO (PASS)** |
 | **Traumatologia y Segregacion Estructural (Clean / Onion)** | Higiene de Raiz, Deteccion de Huerfanos y Contratos de Repositorio | **SANO (PASS)** |
@@ -21,15 +21,15 @@
 
 ---
 
-## Detalle de Observaciones QuirÃºrgicas y Laboratorio
+## Detalle de Observaciones Quirúrgicas y Laboratorio
 
-### Ãrea: Inmunologia de Codificacion, BOM y Caracteres de Control
+### Área: Inmunologia de Codificacion, BOM y Caracteres de Control
 **Especialista:** Integridad UTF-8, Ausencia de BOM, Nulos y Caracteres Invalidos | **Estado:** **SANO (PASS)**
 
-*Alcance ClÃ­nico:* AuditorÃ­a de codificaciÃ³n UTF-8 estricta, ausencia de BOM, caracteres nulos y secuencias corruptas.
+*Alcance Clínico:* Auditoría de codificación UTF-8 estricta, ausencia de BOM, caracteres nulos y secuencias corruptas.
 
 ```text
-[SANO] 134 archivos analizados sin BOM, caracteres nulos ni corrupciÃ³n UTF-8.
+[SANO] 134 archivos analizados sin BOM, caracteres nulos ni corrupción UTF-8.
 ```
 
 ### Ãrea: Traumatologia y Segregacion Estructural (Clean / Onion)
@@ -112,4 +112,3 @@
 ```text
 [INFO] No se localizaron proyectos de pruebas de UI (bUnit) en tests/.
 ```
-
