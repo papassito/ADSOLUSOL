@@ -45,7 +45,7 @@ function Show-TreeInternal {
         
         $lastMarker = "$([char]0x2514)$([char]0x2500)$([char]0x2500) "  # "└── "
         $midMarker  = "$([char]0x251C)$([char]0x2500)$([char]0x2500) "  # "├── "
-        $linePrefix = $Prefix + (if ($isLast) { $lastMarker } else { $midMarker })
+        $linePrefix = $Prefix + $(if ($isLast) { $lastMarker } else { $midMarker })
         
         $color = if ($item.PSIsContainer) { "Cyan" } else { "Gray" }
         Write-Host "$linePrefix" -NoNewline
@@ -54,7 +54,7 @@ function Show-TreeInternal {
         if ($item.PSIsContainer) {
             $continueMarker = "$([char]0x2502)   " # "│   "
             $emptyMarker    = "    "
-            $newPrefix = $Prefix + (if ($isLast) { $emptyMarker } else { $continueMarker })
+            $newPrefix = $Prefix + $(if ($isLast) { $emptyMarker } else { $continueMarker })
             Show-TreeInternal -Path $item.FullName -MaxDepth $MaxDepth -CurrentExclude $CurrentExclude -CurrentDepth ($CurrentDepth + 1) -Prefix $newPrefix
         }
     }
@@ -83,14 +83,14 @@ function Get-TreeLines {
         
         $lastMarker = "$([char]0x2514)$([char]0x2500)$([char]0x2500) "  # "└── "
         $midMarker  = "$([char]0x251C)$([char]0x2500)$([char]0x2500) "  # "├── "
-        $linePrefix = $Prefix + (if ($isLast) { $lastMarker } else { $midMarker })
+        $linePrefix = $Prefix + $(if ($isLast) { $lastMarker } else { $midMarker })
         
         $lines.Add("$linePrefix$($item.Name)")
 
         if ($item.PSIsContainer) {
             $continueMarker = "$([char]0x2502)   " # "│   "
             $emptyMarker    = "    "
-            $newPrefix = $Prefix + (if ($isLast) { $emptyMarker } else { $continueMarker })
+            $newPrefix = $Prefix + $(if ($isLast) { $emptyMarker } else { $continueMarker })
             $lines.AddRange((Get-TreeLines -Path $item.FullName -MaxDepth $MaxDepth -CurrentExclude $CurrentExclude -CurrentDepth ($CurrentDepth + 1) -Prefix $newPrefix))
         }
     }
@@ -108,7 +108,8 @@ if ($PSBoundParameters.ContainsKey('OutFile')) {
     $header = '```text' + [System.Environment]::NewLine
     $footer = [System.Environment]::NewLine + '```'
     $fileContent = $header + ($outputLines -join [System.Environment]::NewLine) + $footer
-    Set-Content -Path $OutFile -Value $fileContent -Encoding UTF8
+    $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+    [System.IO.File]::WriteAllText($OutFile, $fileContent, $utf8NoBom)
     Write-Host ('[SUCCESS] La estructura del proyecto ha sido exportada a: {0}' -f $OutFile) -ForegroundColor Green
 } else {
     Show-TreeInternal -Path $Root -MaxDepth $Depth -CurrentExclude $Exclude

@@ -22,9 +22,42 @@ try { $null = chcp 65001 } catch {}
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
 
-$ScriptRoot = (Resolve-Path $Root).Path
-if ((Split-Path -Path $ScriptRoot -Leaf) -eq "scripts") {
-    $ScriptRoot = Split-Path -Path $ScriptRoot -Parent
+# --- Helper Functions ---
+function Get-RepositoryRoot {
+    param([string]$StartPath)
+    $current = $StartPath
+    while ($current -and (Test-Path $current -PathType Container)) {
+        if (Test-Path (Join-Path $current "ADSOLUSOL.sln") -PathType Leaf) {
+            return $current
+        }
+        $parent = Split-Path -Parent $current
+        if ($parent -eq $current) { return $null } # Reached drive root
+        $current = $parent
+    }
+    return $null
+}
+
+function Invoke-SubScript {
+    param(
+        [string]$FilePath,
+        [string[]]$Arguments
+    )
+    $pwshCmd = Get-Command pwsh -ErrorAction SilentlyContinue
+    $psExe = if ($pwshCmd) { $pwshCmd.Source } else { "powershell.exe" }
+    
+    $allArgs = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", $FilePath) + $Arguments
+    & $psExe $allArgs
+    if ($LASTEXITCODE -ne 0) {
+        throw "El sub-script '$FilePath' falló con código de salida $LASTEXITCODE."
+    }
+}
+
+# Determine script root robustly by finding ADSOLUSOL.sln
+$startPath = if ($PSScriptRoot) { $PSScriptRoot } else { (Get-Location).Path }
+$ScriptRoot = Get-RepositoryRoot -StartPath (Resolve-Path $startPath).Path
+
+if (-not $ScriptRoot) {
+    throw "No se pudo encontrar la raíz del proyecto (ADSOLUSOL.sln). Ejecute el script desde dentro del repositorio."
 }
 Set-Location $ScriptRoot
 
@@ -54,7 +87,7 @@ if ($Consolidate) {
     $integrityScript = Join-Path $ScriptRoot "scripts/audit/autopsia_integridad.ps1"
     if (Test-Path $integrityScript) {
         Write-Host "  [CONSOLIDACIÓN] Re-sellando manifiesto documental..." -ForegroundColor DarkCyan
-        & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $integrityScript -Reseal
+        Invoke-SubScript -FilePath $integrityScript -Arguments "-Reseal"
     } else {
         Write-Host "  [INFO] autopsia_integridad.ps1 no encontrado, omitiendo re-sellado." -ForegroundColor Gray
     }
@@ -63,7 +96,7 @@ if ($Consolidate) {
     $treeScript = Join-Path $ScriptRoot "Show-ProjectTree.ps1"
     if (Test-Path $treeScript) {
         Write-Host "  [CONSOLIDACIÓN] Actualizando documentación de estructura (docs/STRUCTURE.md)..." -ForegroundColor DarkCyan
-        & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $treeScript -OutFile "docs/STRUCTURE.md" -Depth 4
+        Invoke-SubScript -FilePath $treeScript -Arguments @("-OutFile", "docs/STRUCTURE.md", "-Depth", "4")
     }
 
     Write-Host "`n[OK] Consolidación completada. Se recomienda hacer commit de los cambios." -ForegroundColor Green
@@ -137,7 +170,7 @@ if (-not (Test-Path $auditScript)) {
     $auditScript = Join-Path $ScriptRoot "junta_medica.ps1"
 }
 if (Test-Path $auditScript) {
-    & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $auditScript -Fast
+    Invoke-SubScript -FilePath $auditScript -Arguments "-Fast"
     if ($LASTEXITCODE -ne 0) {
         Write-Host "`n[BLOQUEO] Quality Gate reprobado. Se abortan tareas de release y git." -ForegroundColor Red
         exit 1
@@ -189,18 +222,24 @@ if ($hasGitFlags) {
         exit 1
     }
 
-    if ($Status -or ($Push -and -not $Add -and -not $Commit)) {
+    # Lógica de Git simplificada: -Push implica -Commit, que a su vez implica -Add.
+    if ($Push) { $Commit = $true }
+    if ($Commit) { $Add = $true }
+
+    if ($Status) {
         Write-Host "`n[GIT STATUS]" -ForegroundColor Yellow
         & git status
     }
 
-    if ($Add -or ($Push -and -not $Commit)) {
-        Write-Host "`n[GIT ADD] Indexando cambios..." -ForegroundColor Yellow
+    if ($Add) {
+        Write-Host "`n[GIT ADD] Indexando todos los cambios..." -ForegroundColor Yellow
         & git add -A
+        Write-Host "[INFO] Cambios indexados:" -ForegroundColor DarkGray
         & git status --short
     }
 
-    if ($Commit -or $Push) {
+    if ($Commit) {
+        # Solo intentar hacer commit si hay algo preparado para ello
         $pending = & git status --porcelain
         if ($pending) {
             Write-Host "`n[GIT COMMIT] Creando commit..." -ForegroundColor Yellow
@@ -211,17 +250,17 @@ if ($hasGitFlags) {
             }
             Write-Host "[OK] Commit creado." -ForegroundColor Green
         } else {
-            Write-Host "[INFO] Árbol de trabajo limpio. Sin cambios pendientes." -ForegroundColor Cyan
+            Write-Host "[INFO] Árbol de trabajo limpio. No hay nada para hacer commit." -ForegroundColor Cyan
         }
     }
 
     if ($Push) {
         Write-Host "`n[GIT PUSH] Enviando cambios al repositorio remoto..." -ForegroundColor Yellow
         & git push
-        if ($LASTEXITCODE -eq 0) {
-            Write-Host "[OK] Push completado exitosamente." -ForegroundColor Green
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "[WARN] git push devolvió advertencias o falló." -ForegroundColor Yellow
         } else {
-            Write-Host "[WARN] git push devolvió advertencias." -ForegroundColor Yellow
+            Write-Host "[OK] Push completado exitosamente." -ForegroundColor Green
         }
     }
 }

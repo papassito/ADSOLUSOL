@@ -1,4 +1,4 @@
-﻿```text
+```text
 .build
 .github
 .repair-backups
