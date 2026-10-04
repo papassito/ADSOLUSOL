@@ -30,11 +30,13 @@ public class CampaignRepository : ICampaignRepository
             .ToListAsync(token);
     }
 
-    public async Task<Campaign?> GetByIdAsync(string id)
+    public Task<Campaign?> GetByIdAsync(string id) => GetByIdAsync(id, CancellationToken.None);
+
+    public async Task<Campaign?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
         return await _context.Campaigns
             .AsNoTracking()
-            .FirstOrDefaultAsync(c => c.Id == id);
+            .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
     }
 
     public Task UpdateAsync(Campaign campaign)
@@ -59,19 +61,26 @@ public class CampaignRepository : ICampaignRepository
         {
             throw new InvalidOperationException("The transaction does not have an associated connection.");
         }
-        // Se redondea a 6 decimales para admitir micro-débitos por impresión (CPM) sin pérdida contable
+        if (cost < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(cost), "El costo del débito no puede ser negativo.");
+        }
+
+        // Se normaliza a un máximo de 6 decimales para coherencia con ROUND(..., 6) en SQLite y micro-débitos CPM
+        var normalizedCost = Math.Round(cost, 6, MidpointRounding.AwayFromZero);
+
         var sql = @"UPDATE Campaigns 
                     SET BudgetSpent = ROUND(COALESCE(CAST(BudgetSpent AS REAL), 0) + @Cost, 6) 
                     WHERE Id = @CampaignId 
                       AND ROUND(COALESCE(CAST(BudgetSpent AS REAL), 0) + @Cost, 6) <= ROUND(CAST(Budget AS REAL), 6);";
-        var rows = await transaction.Connection.ExecuteAsync(sql, new { Cost = (double)cost, CampaignId = campaignId }, transaction);
+        var rows = await transaction.Connection.ExecuteAsync(sql, new { Cost = (double)normalizedCost, CampaignId = campaignId }, transaction);
 
         if (rows > 0)
         {
             var local = _context.Campaigns.Local.FirstOrDefault(c => c.Id == campaignId);
             if (local != null)
             {
-                local.BudgetSpent += cost;
+                local.BudgetSpent += normalizedCost;
                 _context.Entry(local).Property(c => c.BudgetSpent).IsModified = false;
             }
         }
@@ -79,15 +88,21 @@ public class CampaignRepository : ICampaignRepository
         return rows;
     }
 
-    public async Task<bool> IsPlacementAssociatedAsync(string campaignId, long placementId)
+    public Task<bool> IsPlacementAssociatedAsync(string campaignId, long placementId) =>
+        IsPlacementAssociatedAsync(campaignId, placementId, CancellationToken.None);
+
+    public async Task<bool> IsPlacementAssociatedAsync(string campaignId, long placementId, CancellationToken cancellationToken = default)
     {
         return await _context.CampaignPlacements
-            .AnyAsync(cp => cp.CampaignId == campaignId && cp.PlacementId == placementId);
+            .AnyAsync(cp => cp.CampaignId == campaignId && cp.PlacementId == placementId, cancellationToken);
     }
 
-    public async Task<bool> IsCreativeAssociatedAsync(string campaignId, long creativeId)
+    public Task<bool> IsCreativeAssociatedAsync(string campaignId, long creativeId) =>
+        IsCreativeAssociatedAsync(campaignId, creativeId, CancellationToken.None);
+
+    public async Task<bool> IsCreativeAssociatedAsync(string campaignId, long creativeId, CancellationToken cancellationToken = default)
     {
         return await _context.CampaignCreatives
-            .AnyAsync(cc => cc.CampaignId == campaignId && cc.CreativeId == creativeId);
+            .AnyAsync(cc => cc.CampaignId == campaignId && cc.CreativeId == creativeId, cancellationToken);
     }
 }
