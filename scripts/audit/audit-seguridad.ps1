@@ -114,7 +114,7 @@ if (Test-Path $programFile) {
     if ($progText -match "RateLimiter" -or $progText -match "UseRateLimiter") {
         Write-Host "  [PASS] [DOS-DEFENSE] Rate Limiting registrado en pipeline HTTP." -ForegroundColor Green
     } else {
-        Write-Host "  [WARN] [DOS-DEFENSE] Rate Limiting no detectado explícitamente en Program.cs." -ForegroundColor Yellow
+        Write-Host "  [WARN] [DOS-DEFENSE] Rate Limiting no detectado explicitamente en Program.cs." -ForegroundColor Yellow
     }
 }
 
@@ -125,9 +125,13 @@ Write-Host " Infracciones de Seguridad : $securityErrors" -ForegroundColor $(if 
 Write-Host "==========================================================================" -ForegroundColor Cyan
 
 if ($securityErrors -gt 0) {
-    Write-Host "`n[FAIL] Se detectaron vulnerabilidades o fallos de autenticidad criptografica.`n" -ForegroundColor Red
+    Write-Host ""
+    Write-Host "[FAIL] Se detectaron vulnerabilidades o fallos de autenticidad criptografica." -ForegroundColor Red
+    Write-Host ""
     exit 1
 } else {
-    Write-Host "`n[PASS] Blindaje perimetral, criptografia Ed25519 y controles Anti-Replay SÓLIDOS.`n" -ForegroundColor Green
+    Write-Host ""
+    Write-Host "[PASS] Blindaje perimetral, criptografia Ed25519 y controles Anti-Replay SOLIDOS." -ForegroundColor Green
+    Write-Host ""
     exit 0
 }

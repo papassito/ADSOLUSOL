@@ -94,7 +94,7 @@ foreach ($cs in $allCsFiles) {
     }
 }
 if ($largeClasses -eq 0) {
-    Report-Pass "SRP-SIZE" "Todas las clases respetan limites canónicos de tamano de archivo."
+    Report-Pass "SRP-SIZE" "Todas las clases respetan limites canonicos de tamano de archivo."
 }
 
 # 4. Verificacion de contratos de Repositorio (Ausencia de retornos sync en interfaces)

@@ -97,7 +97,7 @@ powershell -File .\scripts\audit\audit-live.ps1
 ```
 Para construir el ejecutable de producción, usa:
 ```powershell
-.\BUILD-ADSOLUSOL.ps1
+powershell -File .\scripts\build\release.ps1 -Publish
 ```
 
 ## Estado antes de release

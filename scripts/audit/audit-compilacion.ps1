@@ -88,9 +88,10 @@ if ($LASTEXITCODE -eq 0) {
 
 # 5. Validacion de proyectos ejecutables
 Write-Host "`n[5/4] Verificando artefactos de salida esenciales..." -ForegroundColor Yellow
-$apiDll = Join-Path $ScriptRoot "src/ADSOLUSOL.Presentation.Api/bin/Release/net8.0/ADSOLUSOL.Presentation.Api.dll"
-if (Test-Path $apiDll) {
-    $sizeKb = [math]::Round((Get-Item $apiDll).Length / 1KB, 2)
+$apiBinDir = Join-Path $ScriptRoot "src/ADSOLUSOL.Presentation.Api/bin/Release/net8.0"
+$apiArtifact = Get-ChildItem -Path $apiBinDir -Filter "ADSOLUSOL.Presentation.Api.*" -File -ErrorAction SilentlyContinue | Where-Object { $_.Extension -in @(".dll", ".exe") } | Select-Object -First 1
+if ($apiArtifact) {
+    $sizeKb = [math]::Round($apiArtifact.Length / 1KB, 2)
     Write-Host "  [PASS] [OUTPUT] Ensamblado API generado: $sizeKb KB" -ForegroundColor Green
 } else {
     Write-Host "  [WARN] [OUTPUT] Ensamblado de API no encontrado en bin/Release/net8.0." -ForegroundColor Yellow

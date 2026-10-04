@@ -36,7 +36,6 @@ while ($ScriptRoot -and -not (Test-Path (Join-Path $ScriptRoot "ADSOLUSOL.sln"))
 Set-Location $ScriptRoot
 
 Write-Host "==========================================================================" -ForegroundColor Cyan
-Write-Host " ðŸ” ADSOLUSOL :: AUDITORIA FORENSE DE MOJIBAKE                            " -ForegroundColor Cyan
 Write-Host " [MOJIBAKE] ADSOLUSOL :: AUDITORIA FORENSE DE MOJIBAKE                   " -ForegroundColor Cyan
 Write-Host "==========================================================================" -ForegroundColor Cyan
 Write-Host "Directorio Base: $ScriptRoot`n" -ForegroundColor DarkGray
@@ -47,7 +46,7 @@ if (-not [string]::IsNullOrWhiteSpace($Path)) {
 } else {
     $Extensiones = @("*.cs", "*.razor", "*.md", "*.json", "*.ps1", "*.ts", "*.tsx", "*.html")
     $ArchivosObjetivo = Get-ChildItem -Path $ScriptRoot -Recurse -Include $Extensiones -File -ErrorAction SilentlyContinue |
-        Where-Object { $_.FullName -notmatch '[\\/](\.git|bin|obj|node_modules|dist|BUILD)[\\/]' }
+        Where-Object { $_.FullName -notmatch '[\\/](\.git|bin|obj|node_modules|dist|BUILD|\.repair-backups|_audit)[\\/]' }
 }
 
 $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
