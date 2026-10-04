@@ -121,50 +121,40 @@ if (Get-Command "git" -ErrorAction SilentlyContinue) {
 }
 
 # ==============================================================================
-# FASE 1: DESENTIERRO DE ARCHIVOS FANTASMA, DUPES Y BASURA (EL MITOTE)
+# FASE 1: DESENTIERRO DE ARCHIVOS FANTASMA, DUPES Y BASURA
 # ==============================================================================
 Log-Step "FASE 1" "Iniciando escaneo de basura, archivos duplicados y carpetas anidadas..." "INFO"
 
-# 1.1 Verificar subcarpeta anidada ratera
-if (Test-Path (Join-Path $RootPath "rx-dispatch")) {
-    Log-Step "ESTRUCTURA" "DETECTADO: Carpeta duplicada ./rx-dispatch/ entorpeciendo la raíz!" "FAIL"
-    Add-Mitote "RXD-ERR-002" "GHOST_FOLDER" "Directorio anidado ./rx-dispatch/ detectado. Violación estructural de MAP.md." "CRITICAL"
-}
-
-# 1.2 Buscar archivos prohibidos/basura
+# 1.1 Buscar archivos prohibidos/basura
 foreach ($Pattern in $BannedFilesOrFolders) {
     $Junk = Get-ChildItem -Path $RootPath -Recurse -Filter $Pattern -ErrorAction SilentlyContinue
     foreach ($Item in $Junk) {
         Log-Step "BASURA" "Archivo/Carpeta fuera de norma hallado: $($Item.FullName)" "CHISME"
-        Add-Mitote "MITOTE-JUNK-001" "UNAUTHORIZED_FILE" "Archivo o basura detectada: $($Item.Name)" "LOW"
+        Add-Chisme "ADS-JUNK-001" "UNAUTHORIZED_FILE" "Archivo o basura detectada: $($Item.Name)" "LOW"
     }
 }
 
-# 1.3 Verificar los 6 Markdown Sagrados
+# 1.2 Verificar los Documentos Sagrados
 foreach ($Doc in $NormativeDocs) {
-    if ($Doc -eq "README.md") {
-        $DocPath = Join-Path -Path $RootPath -ChildPath $Doc
-    } else {
-        $DocPath = Join-Path -Path $RootPath -ChildPath (Join-Path "docs" $Doc)
-    }
+    $DocPath = Join-Path -Path $RootPath -ChildPath $Doc
     if (Test-Path $DocPath) {
         Log-Step "NORMATIVA" "Documento baseline presente: $Doc" "OK"
         $AuditResults.Metrics.PassedChecks++
     } else {
         Log-Step "NORMATIVA" "Falta el documento sagrado: $Doc" "FAIL"
-        Add-Mitote "RXD-ERR-001" "MISSING_DOC" "Documento normativo ausente en raíz: $Doc" "CRITICAL"
+        Add-Chisme "ADS-ERR-001" "MISSING_DOC" "Documento normativo ausente: $Doc" "CRITICAL"
     }
 }
 
-# 1.4 Verificar los 9 Microservicios (Entrypoints)
-foreach ($Svc in $AuthoritativeServices) {
-    $SvcPath = Join-Path -Path $RootPath -ChildPath (Join-Path $Svc "main.go")
-    if (Test-Path $SvcPath) {
-        Log-Step "ARQUITECTURA" "Entrypoint confirmado: $Svc/main.go" "OK"
+# 1.3 Verificar Proyectos Autorizados (.NET y Web)
+foreach ($Proj in $AuthoritativeProjects) {
+    $ProjPath = Join-Path -Path $RootPath -ChildPath $Proj
+    if (Test-Path $ProjPath) {
+        Log-Step "ARQUITECTURA" "Capa arquitectónica confirmada: $Proj" "OK"
         $AuditResults.Metrics.PassedChecks++
     } else {
-        Log-Step "ARQUITECTURA" "Microservicio extraviado o no creado: $Svc/main.go" "FAIL"
-        Add-Mitote "RXD-ERR-003" "MISSING_SERVICE" "Punto de entrada de dominio ausente: $Svc/main.go" "HIGH"
+        Log-Step "ARQUITECTURA" "Capa arquitectónica ausente: $Proj" "FAIL"
+        Add-Chisme "ADS-ERR-002" "MISSING_PROJECT" "Proyecto arquitectónico ausente: $Proj" "HIGH"
     }
 }
 
@@ -180,112 +170,77 @@ foreach ($File in $AllFiles) {
     # Archivos de 0 Bytes
     if ($File.Length -eq 0) {
         Log-Step "FORENSE" "Archivo fantasma de 0 Bytes detectado: $($File.Name)" "CHISME"
-        Add-Mitote "MITOTE-EMPTY-001" "ZERO_BYTE_FILE" "El archivo $($File.FullName) está totalmente vacío." "MEDIUM"
+        Add-Chisme "ADS-EMPTY-001" "ZERO_BYTE_FILE" "El archivo $($File.FullName) está totalmente vacío." "MEDIUM"
         continue
     }
 
     # Detección de BOM
-    $Bytes = Get-Content -Path $File.FullName -Encoding Byte -TotalCount 3 -ErrorAction SilentlyContinue
-    if ($Bytes.Count -ge 3 -and $Bytes[0] -eq 0xEF -and $Bytes[1] -eq 0xBB -and $Bytes[2] -eq 0xBF) {
-        Log-Step "ENCODING" "BOM (Byte Order Mark) detectado en: $($File.Name)" "WARN"
-        Add-Mitote "RXD-WARN-001" "BOM_DETECTED" "El archivo $($File.Name) tiene BOM UTF-8. Se requiere UTF-8 plano." "MEDIUM"
-    }
+    try {
+        $b = [System.IO.File]::ReadAllBytes($File.FullName)
+        if ($b.Length -ge 3 -and $b[0] -eq 0xEF -and $b[1] -eq 0xBB -and $b[2] -eq 0xBF) {
+            Log-Step "ENCODING" "BOM detectado en: $($File.Name)" "WARN"
+            Add-Chisme "ADS-WARN-001" "BOM_DETECTED" "El archivo $($File.Name) tiene BOM UTF-8." "MEDIUM"
+        }
+    } catch {}
 
-    # Conteo de líneas de código si es .go
-    if ($File.Extension -eq ".go") {
+    # Conteo de líneas de código si es .cs o .tsx
+    if ($File.Extension -in @(".cs", ".tsx", ".ts")) {
         $Lines = (Get-Content -Path $File.FullName).Count
         $AuditResults.Metrics.TotalLinesOfCode += $Lines
     }
 }
 
 # ==============================================================================
-# FASE 3: INSPECCIÓN DE CÓDIGO GO (PUERTOS, SHA-256, DICOM Y CONTRATOS)
+# FASE 3: INSPECCIÓN DE CÓDIGO C# (MIDDLEWARE, CRYPTO Y TELEMETRÍA)
 # ==============================================================================
-Log-Step "FASE 3" "Escrutando el código Go por contratos duros (127.0.0.1, SHA-256, DICOM)..." "INFO"
+Log-Step "FASE 3" "Escrutando el código C# por contratos duros (.NET 8, Ed25519, Telemetría)..." "INFO"
 
-$GoFiles = Get-ChildItem -Path $RootPath -Recurse -Filter "*.go" -Exclude bin
-
-if ($GoFiles) {
-    $CombinedCode = Get-Content -Path $GoFiles.FullName -Raw -ErrorAction SilentlyContinue
-
-    # Auditoría de Puertos / Binding (Loopback check)
-    if ($CombinedCode -match '0\.0\.0\.0:808[1-8]') {
-        Log-Step "SEGURIDAD" "Peligro: Microservicio interno escuchando en 0.0.0.0 en vez de 127.0.0.1!" "FAIL"
-        Add-Mitote "RXD-SEC-001" "INSECURE_BINDING" "Se detectó binding a 0.0.0.0 en puertos internos 8081-8088." "HIGH"
-    } else {
-        Log-Step "SEGURIDAD" "Binding de puertos internos seguro/verificado." "OK"
-        $AuditResults.Metrics.PassedChecks++
-    }
-
-    # Uso Criptográfico SHA-256
-    if ($CombinedCode -match 'crypto/sha256' -or $CombinedCode -match 'sha256\.New') {
-        Log-Step "CRIPTO" "Implementación de hash SHA-256 localizada en código." "OK"
-        $AuditResults.Metrics.PassedChecks++
-    } else {
-        Log-Step "CRIPTO" "No se detecta import de crypto/sha256 en ningún archivo Go." "WARN"
-        Add-Mitote "RXD-WARN-005" "NO_SHA256" "Falta evidencia de implementación de SHA-256 en código fuente." "MEDIUM"
-    }
-
-    # Verificación del comando A-ASSOCIATE-RJ de DICOM
-    if ($CombinedCode -match 'A-ASSOCIATE-RJ' -or $CombinedCode -match 'RejectAssociation') {
-        Log-Step "DICOM" "Control protocolario A-ASSOCIATE-RJ localizado." "OK"
-        $AuditResults.Metrics.PassedChecks++
-    } else {
-        Log-Step "DICOM" "No se encontró referencia explícita al rechazo A-ASSOCIATE-RJ." "WARN"
-        Add-Mitote "RXD-WARN-006" "NO_DICOM_REJECT" "Código no demuestra el manejo de rechazo protocolario A-ASSOCIATE-RJ." "MEDIUM"
-    }
-} else {
-    Log-Step "CÓDIGO" "No hay archivos .go para auditar en el proyecto actual!" "FAIL"
-    Add-Mitote "RXD-ERR-005" "NO_GO_FILES" "Código fuente Go inexistente en el árbol." "CRITICAL"
-}
-
-# ==============================================================================
-# FASE 4: AUDITORÍA DE CAMPOS DE AUDIT TRAIL / ePHI
-# ==============================================================================
-Log-Step "FASE 4" "Verificando los 14 campos obligatorios de la bitácora ePHI..." "INFO"
-
-$ModelsPath = Join-Path -Path $RootPath -ChildPath "internal/models"
-$ModelFiles = Get-ChildItem -Path $ModelsPath -Filter "*.go" -Recurse -ErrorAction SilentlyContinue
-
-if ($ModelFiles) {
-    $ModelCode = Get-Content -Path $ModelFiles.FullName -Raw
-    foreach ($Field in $MandatoryAuditTrailFields) {
-        if ($ModelCode -match $Field) {
-            Log-Step "EPHI_FIELD" "Campo ePHI de auditoría verificado: $Field" "OK"
+$MwFile = Join-Path $RootPath "src/ADSOLUSOL.Presentation.Api/Middleware/SignatureVerificationMiddleware.cs"
+if (Test-Path $MwFile) {
+    $mwCode = Get-Content -Path $MwFile -Raw
+    foreach ($hdr in $MandatorySecurityHeaders) {
+        if ($mwCode -match $hdr) {
+            Log-Step "SEGURIDAD" "Encabezado Ed25519 verificado en pipeline: $hdr" "OK"
             $AuditResults.Metrics.PassedChecks++
         } else {
-            Log-Step "EPHI_FIELD" "Campo ePHI ausente en modelos: $Field" "WARN"
-            Add-Mitote "RXD-EPHI-001" "MISSING_EPHI_FIELD" "El modelo Go no declara el campo obligatorio: $Field" "MEDIUM"
+            Log-Step "SEGURIDAD" "Falta encabezado obligatorio en middleware: $hdr" "FAIL"
+            Add-Chisme "ADS-SEC-001" "MISSING_HEADER" "Header Ed25519 faltante: $hdr" "HIGH"
         }
     }
 } else {
-    Log-Step "EPHI_FIELD" "Directorio internal/models/ ausente o vacío." "WARN"
-    Add-Mitote "RXD-EPHI-002" "NO_MODELS" "Sin acceso a los modelos de datos en internal/models/." "HIGH"
+    Log-Step "SEGURIDAD" "SignatureVerificationMiddleware.cs no encontrado." "FAIL"
+    Add-Chisme "ADS-SEC-002" "NO_SIGNATURE_MW" "Middleware de firma Ed25519 ausente." "CRITICAL"
 }
 
 # ==============================================================================
-# FASE 5: COMPILACIÓN Y TOOLCHAIN DE GO
+# FASE 4: AUDITORÍA DE PERSISTENCIA Y SUITE DE REGRESIÓN
 # ==============================================================================
-Log-Step "FASE 5" "Corriendo la navaja de afeitar de Go (go vet y go.mod)..." "INFO"
+Log-Step "FASE 4" "Verificando suites de pruebas y regresiones de negocio..." "INFO"
 
-if (Get-Command "go" -ErrorAction SilentlyContinue) {
-    if (Test-Path (Join-Path $RootPath "go.mod")) {
-        Push-Location $RootPath
-        $VetResult = go vet ./... 2>&1
-        if ($LASTEXITCODE -eq 0) {
-            Log-Step "COMPILADOR" "go vet pasó sin un solo chisme de sintaxis!" "OK"
-            $AuditResults.Metrics.PassedChecks++
-        } else {
-            Log-Step "COMPILADOR" "go vet encontró broncas de sintaxis!" "FAIL"
-            Add-Mitote "RXD-ERR-006" "GO_VET_FAIL" "Errores de sintaxis detectados: $VetResult" "HIGH"
-        }
-        Pop-Location
-    } else {
-        Log-Step "COMPILADOR" "Falta el go.mod en la raíz del proyecto." "FAIL"
-        Add-Mitote "RXD-ERR-007" "NO_GOMOD" "Sin go.mod en la raíz." "CRITICAL"
-    }
+$RegTestProj = Join-Path $RootPath "tests/ADSOLUSOL.RegressionTests/ADSOLUSOL.RegressionTests.csproj"
+if (Test-Path $RegTestProj) {
+    Log-Step "REGRESION" "Proyecto de pruebas de regresión localizado: ADSOLUSOL.RegressionTests" "OK"
+    $AuditResults.Metrics.PassedChecks++
 } else {
-    Log-Step "COMPILADOR" "Go no está instalado en este sistema." "WARN"
+    Log-Step "REGRESION" "Proyecto de regresión ausente." "FAIL"
+    Add-Chisme "ADS-TEST-001" "MISSING_TEST_PROJECT" "Falta ADSOLUSOL.RegressionTests" "CRITICAL"
+}
+
+# ==============================================================================
+# FASE 5: COMPILACIÓN Y TOOLCHAIN DE .NET 8
+# ==============================================================================
+Log-Step "FASE 5" "Verificando compilación con dotnet build (Release)..." "INFO"
+
+$SlnFile = Join-Path $RootPath "ADSOLUSOL.sln"
+if (Test-Path $SlnFile) {
+    & dotnet build $SlnFile -c Release --no-restore -p:IgnoreMissingWorkloads=true -p:WindowsPackageType=None -p:AppxPackage=false -p:GenerateAppxPackageOnBuild=false -p:WindowsAppSDKSelfContained=false -v:quiet /nologo 2>&1 | Out-Null
+    if ($LASTEXITCODE -eq 0) {
+        Log-Step "COMPILADOR" "Compilación .NET 8 limpia en Release!" "OK"
+        $AuditResults.Metrics.PassedChecks++
+    } else {
+        Log-Step "COMPILADOR" "Fallo en compilación dotnet build!" "FAIL"
+        Add-Chisme "ADS-ERR-003" "BUILD_FAIL" "La solución ADSOLUSOL.sln no compila limpiamente." "CRITICAL"
+    }
 }
 
 # ==============================================================================

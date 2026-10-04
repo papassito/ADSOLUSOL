@@ -76,7 +76,7 @@ const navigation: Array<{
   {
     id: "settings",
     label: "Configuraci\u00f3n",
-    description: "ParÃ¡metros del tenant"
+    description: "Parámetros del tenant"
   }
 ];
 
@@ -2336,7 +2336,7 @@ function SettingsView() {
           <div><span className="eyebrow">Tenant</span><h2>Configurador</h2></div>
           <button type="button" className="button button-secondary button-small" onClick={() => void load()}>Recargar</button>
         </div>
-        {loading ? <p className="muted">Cargando configuraciÃ³n...</p> : (
+        {loading ? <p className="muted">Cargando configuración...</p> : (
           <form className="form-grid" onSubmit={save}>
             {fields.map(([key, label, hint]) => (
               <label className="field field-wide" key={key}>
@@ -2348,7 +2348,7 @@ function SettingsView() {
             {error && <ErrorPanel message={error} />}
             {message && <p className="success-message">{message}</p>}
             <button className="button button-primary" disabled={saving} type="submit">
-              {saving ? "Guardando..." : "Guardar configuraciÃ³n"}
+              {saving ? "Guardando..." : "Guardar configuración"}
             </button>
           </form>
         )}
@@ -2359,7 +2359,7 @@ function SettingsView() {
         <p className="muted">Las claves adicionales existentes se conservan al guardar. Las credenciales y claves privadas nunca se muestran aqu\u00ed.</p>
         <div className="definition-list">
           {Object.entries(settings).filter(([key]) => !fields.some(field => field[0] === key)).map(([key, value]) => (
-            <div key={key}><span>{key}</span><strong>{value || "(vacÃ­o)"}</strong></div>
+            <div key={key}><span>{key}</span><strong>{value || "(vacío)"}</strong></div>
           ))}
         </div>
       </Card>

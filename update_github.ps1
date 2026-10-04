@@ -10,6 +10,8 @@ try { $null = chcp 65001 } catch {}
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
 
+$env:GIT_PAGER = "cat"
+
 function Generar-MensajeCommit {
     param([string[]]$ArchivosModificados)
 
@@ -90,9 +92,9 @@ Write-Host ">>> Analizando y agregando cambios en rama '$Branch'..." -Foreground
 & git add -A
 
 # Higiene de arbol: desindexar respaldos y datos locales temporales (conservando scripts .ps1)
-if (Test-Path ".repair-backups") { & git reset -- .repair-backups 2>$null }
-& git reset -- App_Data/*.db 2>$null
-& git reset -- *.tmp 2>$null
+if (Test-Path ".repair-backups") { & git reset -- .repair-backups 2>$null | Out-Null }
+& git reset -- App_Data/*.db 2>$null | Out-Null
+& git reset -- *.tmp 2>$null | Out-Null
 
 $staged = @(& git diff --cached --name-status 2>$null)
 if (-not $staged -or $staged.Count -eq 0) {

@@ -1,16 +1,15 @@
 # AD SOLUSOL — Documentation Manifest
 
 **Estado:** SEALED / FROZEN DOCUMENTATION BASELINE
-**Fecha de sellado:** 2026-09-29
-**Total de archivos Markdown del baseline:** 56
+**Fecha de sellado:** 2026-10-04
+**Total de archivos Markdown del baseline:** 55
 
 ## SHA-256 de documentos sellados
 
 | Archivo | SHA-256 |
 |---|---|
 | `audit_report_adsolusol.md` | `914d1ebc9e4973cbf9b97e14370fd6ba8f24c8fe3023d28aefc582c9f502e819` |
-| `audit_report_master.md` | `8b095f0b1e15c3b2b3854e7591600f1fc327dbedd4c5879c9ce1c145b5817676` |
-| `COMPONENTS.md` | `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `audit_report_master.md` | `457d3e9f5ab948bfc8a80f803c2c0517e281f38affd43fbc0b091c62cfbd0065` |
 | `docs/ADSOLUSOL.md` | `fb02445029381c0c3afda633c314426fc09af1ef4bd834d87009508913e0678b` |
 | `docs/AI.md` | `41233c378fccb7e963beed8f9ce5ad41a7a9ca1f56a05ed4d1ee8d80ce65569c` |
 | `docs/AI-AD.md` | `3f645264a85683748d1c88b784d4f91c58ae23daa4f2d7e4c6dead71a17bd7d3` |
@@ -27,14 +26,14 @@
 | `docs/business/MARKETING.md` | `428d6b275dab273d5c12c9ce6c464243f8c6dabfa53d566eb43169f4db827bec` |
 | `docs/business/SEO.md` | `953dcb9933288bdde734aac4224ee7e2660b28996de2333fafdb52f8bcbbd637` |
 | `docs/CAMPAIGN.md` | `a05c9369bf31910def28d6499c19d99d2844c12339b5de373dfdf73e451fb271` |
-| `docs/COMPONENTS.md` | `6bba1fa93151faa0525b59b518e8f27ebd3b6c3601d6a266f47eb4c00252e4a5` |
+| `docs/COMPONENTS.md` | `1fd1873e8e38eda5a7d62f139b168c23d37ea5ca14e591fc3c37eb420348f56c` |
 | `docs/CONTRACTS.md` | `5dd6deb350e2c14f547ec4e7f7ba7f30edf31a07101cf651db9b6e05fff6cb78` |
 | `docs/contracts/CONTRACTS.md` | `38479e288d0b481a5381a7085f3ba9647266fe447e05a57c8308eeffcb3a8f94` |
 | `docs/contracts/MARKETING-API.md` | `715dc35e2a7ab40def205acef1163f6e1ea48dba8b6c531d904808249548fafb` |
 | `docs/decisions/ADR-001.md` | `f3377d20ec983d718f90de3efbdf871dc96c41faed829fd8d41d0f5fafde5640` |
 | `docs/decisions/DECISIONS.md` | `8d0730886afff9a98dff6a07382a754c0fdd3688fffddf5b2b72d092eaed56d3` |
-| `docs/DEPLOYMENT_PLESK_ADSOLUSOL.md` | `14449e5c0c3fd72438e081f4d80dbcbb25afb2ca1a4cd3c55f008bdc90251a79` |
-| `docs/evidence/EVIDENCE.md` | `ba6591b8c2a852485cfd24c5117a341e63814e3342d5ba007daaf746c76c9b86` |
+| `docs/DEPLOYMENT_PLESK_ADSOLUSOL.md` | `55b182c3c5552ed895c5f73e0d297faa689395047a5cdadaeb40a5057a2e5479` |
+| `docs/evidence/EVIDENCE.md` | `e74b448beafceb6d4c9d466744ce5c9aec28fc707622d327f0ecff60840ab8df` |
 | `docs/HISTORIAL DE ACTIVIDADES.MD` | `9fbc545ffd94f69349685dbbea831958b189c553f9f384df0671e16c3f1c6113` |
 | `docs/integration/MARKETING-BRAIN.md` | `a083931aa316b17662a592e85aed48f1b21d0f25f3387f0ec7b20475715153a6` |
 | `docs/INTEGRITY.md` | `470fadfc038b59730d944d939755406e81e0695a00a16b822a670d1a20ce7c5c` |
@@ -61,6 +60,6 @@
 | `HISTORIAL_ACTUALIZACIONES.md` | `e9bda128c0eb93826b3e643bcb37398506df8755491da5265bcf36d370b77c19` |
 | `LIBRARY.md` | `0131efdaeb2e5338cf4f17ecaff345df872cd84df62f76985fcab869191ad83a` |
 | `MAP.md` | `335554a4e9c06d7dbdd52e2aaae55c91d597d255f3eb712531e2170273e43ba4` |
-| `README.md` | `3fe41cddf4b16d0cf7680db43d91d0d580da35ea75478a362612fae37c4df2f3` |
+| `README.md` | `c2ecd84a6e0824fc54ac6834565b55350066f47ba67d89a9fc4d2e262d94a856` |
 | `REQUIREMENTS.md` | `a6a3ab29e00d3ee2fc66ac45851d3a0c25f6089c8803895a376f3221e871b08a` |
 | `ROADMAP.md` | `43f1003e21557a4790122d8dd466bd4b7a03ed973b7560865296fec14bfe52fa` |

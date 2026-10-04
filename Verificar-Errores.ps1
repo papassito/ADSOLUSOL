@@ -1,7 +1,7 @@
 <#
 ================================================================================
-  KLIK DIAGNOSTIC SUITE :: VERIFICADOR INTEGRAL DE ERRORES Y SALUD DIGITAL
-  Ejecucion directa sin bloqueo:
+  ADSOLUSOL DIAGNOSTIC SUITE :: VERIFICADOR FORENSE Y AUDITOR DE SALUD DIGITAL
+  Ejecución directa sin bloqueo:
   powershell -ExecutionPolicy Bypass -File .\Verificar-Errores.ps1
 ================================================================================
 #>
@@ -19,7 +19,7 @@ Set-Location $RootPath
 
 Write-Host ""
 Write-Host "==================================================================" -ForegroundColor Cyan
-Write-Host "   ORQUESTA BY KLIK :: ESCANER INTEGRAL FORENSE Y DE ERRORES     " -ForegroundColor Cyan
+Write-Host "   ADSOLUSOL (ADS) :: ESCANER INTEGRAL FORENSE Y DE ERRORES      " -ForegroundColor Cyan
 Write-Host "==================================================================" -ForegroundColor Cyan
 Write-Host "Directorio objetivo: $RootPath`n" -ForegroundColor DarkGray
 
@@ -50,13 +50,13 @@ function Registrar-Falla {
 # -----------------------------------------------------------------------------
 Write-Host "[1/6] Analizando Codificacion, BOM y Caracteres Corruptos (Mojibake)..." -ForegroundColor Yellow
 
-$ArchivosTexto = Get-ChildItem -Path $RootPath -Recurse -File | Where-Object {
-    $_.Extension.ToLower() -in @('.ts', '.tsx', '.go', '.cpp', '.hpp', '.json', '.md') -and
-    $_.FullName -notmatch '[\\/](\.git|node_modules|build|dist|out)[\\/]'
+$ArchivosTexto = Get-ChildItem -Path @("src", "tests", "docs") -Recurse -File -ErrorAction SilentlyContinue | Where-Object {
+    $_.Extension.ToLower() -in @('.cs', '.csproj', '.ts', '.tsx', '.json', '.md', '.ps1') -and
+    $_.FullName -notmatch '\\/[\\/]'
 }
 
 foreach ($f in $ArchivosTexto) {
-    $rel = $f.FullName.Replace($RootPath, "").TrimStart('\', '/')
+    $rel = $f.FullName.Replace($RootPath, "").TrimStart('\', '/').Replace('\', '/')
     try {
         $bytes = [System.IO.File]::ReadAllBytes($f.FullName)
         if ($bytes.Length -ge 3 -and $bytes[0] -eq 0xEF -and $bytes[1] -eq 0xBB -and $bytes[2] -eq 0xBF) {
@@ -92,131 +92,90 @@ foreach ($f in $ArchivosTexto) {
 }
 
 # -----------------------------------------------------------------------------
-# 2. DIAGNOSTICO FRONTEND & REACT (TypeScript / TSX)
+# 2. DIAGNOSTICO DE ARQUITECTURA ONION Y PERSISTENCIA (.NET 8)
 # -----------------------------------------------------------------------------
-Write-Host "[2/6] Analizando Frontend, Audio Worker y Sintaxis TSX..." -ForegroundColor Yellow
+Write-Host "[2/6] Analizando Arquitectura Onion, Contratos y Persistencia..." -ForegroundColor Yellow
 
-$AppTsx = Join-Path $RootPath "src\App.tsx"
-if (Test-Path $AppTsx) {
-    $appContent = Get-Content $AppTsx -Raw -Encoding UTF8
-
-    if ($appContent -match 'const\s+recognizedNotes\s*=\s*await\s+engine\.processOMRImage' -and 
-        $appContent -match 'finally[\s\S]*?recognizedNotes\.length') {
-        Registrar-Falla "TSX_SCOPE" "src/App.tsx" "Variable 'recognizedNotes' usada en bloque 'finally' fuera de su ambito lexico (Scope Error)"
+$proyectosRequeridos = @(
+    "src/ADSOLUSOL.Domain/ADSOLUSOL.Domain.csproj",
+    "src/ADSOLUSOL.Application/ADSOLUSOL.Application.csproj",
+    "src/ADSOLUSOL.Infrastructure/ADSOLUSOL.Infrastructure.csproj",
+    "src/ADSOLUSOL.Presentation.Api/ADSOLUSOL.Presentation.Api.csproj",
+    "src/ADSOLUSOL.Presentation.Desktop/ADSOLUSOL.Presentation.Desktop.csproj"
+)
+foreach ($pr in $proyectosRequeridos) {
+    if (-not (Test-Path (Join-Path $RootPath $pr))) {
+        Registrar-Falla "ONION_CORE" $pr "Proyecto arquitectonico ausente"
     }
+}
 
-    # Antipatron class= en TSX
-    if ($appContent -match '\bclass="') {
-        Registrar-Falla "REACT_SYNTAX" "src/App.tsx" "Uso del atributo HTML 'class' en lugar de 'className'"
+$repositorios = Get-ChildItem -Path (Join-Path $RootPath "src/ADSOLUSOL.Infrastructure/Repositories") -Filter "*.cs" -File -ErrorAction SilentlyContinue |
+    Where-Object { $_.Name -in @("CreativeRepository.cs", "PlacementRepository.cs") }
+foreach ($repo in $repositorios) {
+    $content = Get-Content $repo.FullName -Raw -Encoding UTF8
+    if ($content -match "public\s+async\s+Task\s+CreateAsync") {
+        Registrar-Falla "REPO_CONTRACT" $repo.Name "Contrato asincrono invalido: debe devolver Task<long> en vez de Task"
+    }
+}
+
+# -----------------------------------------------------------------------------
+# 3. DIAGNOSTICO CRIPTOGRAFICO Y BLINDAJE ED25519 (SOLUSOL_AUTH_V1)
+# -----------------------------------------------------------------------------
+Write-Host "[3/6] Analizando Blindaje Criptografico, Middleware y Firmas Ed25519..." -ForegroundColor Yellow
+
+$middleware = Join-Path $RootPath "src/ADSOLUSOL.Presentation.Api/Middleware/SignatureVerificationMiddleware.cs"
+if (Test-Path $middleware) {
+    $mwContent = Get-Content $middleware -Raw -Encoding UTF8
+    $requiredHeaders = @("X-Solusol-Node-Id", "X-Solusol-Timestamp", "X-Solusol-Nonce", "X-Solusol-Signature")
+    foreach ($h in $requiredHeaders) {
+        if ($mwContent -notmatch $h) {
+            Registrar-Falla "CRYPTO_AUTH" "SignatureVerificationMiddleware.cs" "Falta validacion del encabezado canonico $h"
+        }
     }
 } else {
-    Registrar-Falla "ESTRUCTURA" "src/App.tsx" "Archivo principal de vista no encontrado"
-}
-
-$Bridge = Join-Path $RootPath "EngineBridge.ts"
-if (Test-Path $Bridge) {
-    $bridgeContent = Get-Content $Bridge -Raw -Encoding UTF8
-    if ($bridgeContent -match "new SharedArrayBuffer" -and $bridgeContent -notmatch "crossOriginIsolated") {
-        Registrar-Falla "CONCURRENCIA" "EngineBridge.ts" "SharedArrayBuffer instanciado sin comprobacion de crossOriginIsolated"
-    }
+    Registrar-Falla "ESTRUCTURA" "SignatureVerificationMiddleware.cs" "Middleware de seguridad ausente"
 }
 
 # -----------------------------------------------------------------------------
-# 3. DIAGNOSTICO BUNKER NATIVO C++ & SEGURIDAD DE HARDWARE
+# 4. DIAGNOSTICO FRONTEND WEB (React 18 + Vite) & MAUI DESKTOP
 # -----------------------------------------------------------------------------
-Write-Host "[3/6] Analizando Bunker Nativo C++, SMBIOS, TPM y Anti-Tamper..." -ForegroundColor Yellow
+Write-Host "[4/6] Analizando Frontend Web React y Contenedor MAUI Blazor..." -ForegroundColor Yellow
 
-$HwidFile = Join-Path $RootPath "hwid_extractor.cpp"
-if (Test-Path $HwidFile) {
-    $hwContent = Get-Content $HwidFile -Raw -Encoding UTF8
-
-    $smbiosValido = ($hwContent -match "RSMB") -or ($hwContent -match "Win32_BaseBoard")
-    if (-not $smbiosValido) {
-        Registrar-Falla "BUNKER_HWID" "hwid_extractor.cpp" "Falta amarre a tabla SMBIOS (identificador 'RSMB' o 'Win32_BaseBoard')"
-    }
-
-    if ($hwContent -notmatch "HMAC") {
-        Registrar-Falla "BUNKER_HWID" "hwid_extractor.cpp" "Falta firma o calculo HMAC en generacion de HWID"
-    }
-
-    if ($hwContent -match "\b(strcpy|strcat|sprintf|gets)\b") {
-        Registrar-Falla "SEGURIDAD_C" "hwid_extractor.cpp" "Uso de funcion C insegura de manipulacion de memoria: $($Matches[1])"
+$WebPkg = Join-Path $RootPath "src/ADSOLUSOL.Presentation.Web/package.json"
+if (Test-Path $WebPkg) {
+    $pkgContent = Get-Content $WebPkg -Raw -Encoding UTF8
+    if ($pkgContent -notmatch '"react":\s*"18\.') {
+        Registrar-Falla "WEB_STACK" "package.json" "Version de React divergente (se requiere React 18)"
     }
 } else {
-    Registrar-Falla "ESTRUCTURA" "hwid_extractor.cpp" "Extractor nativo de HWID ausente"
+    Registrar-Falla "ESTRUCTURA" "src/ADSOLUSOL.Presentation.Web/package.json" "Panel Web no encontrado"
 }
 
-$AntiTamperFile = Join-Path $RootPath "anti_tamper.cpp"
-if (Test-Path $AntiTamperFile) {
-    $atContent = Get-Content $AntiTamperFile -Raw -Encoding UTF8
-    if ($atContent -notmatch "0x40000000") {
-        Registrar-Falla "ANTI_TAMPER" "anti_tamper.cpp" "Falta comprobacion de hipervisor (firma 0x40000000)"
+$MauiProgram = Join-Path $RootPath "src/ADSOLUSOL.Presentation.Desktop/MauiProgram.cs"
+if (Test-Path $MauiProgram) {
+    $mauiContent = Get-Content $MauiProgram -Raw -Encoding UTF8
+    if ($mauiContent -notmatch "AddMauiBlazorWebView") {
+        Registrar-Falla "MAUI_CONTAINER" "MauiProgram.cs" "Falta inicializacion de Blazor WebView"
     }
-}
-
-$CMakeFile = Join-Path $RootPath "CMakeLists.txt"
-if (Test-Path $CMakeFile) {
-    $cmakeContent = Get-Content $CMakeFile -Raw -Encoding UTF8
-    if ($cmakeContent -match "add_executable\s*\(\s*\w+[^)]*hwid_extractor\.cpp[^)]*anti_tamper\.cpp") {
-        Registrar-Falla "CMAKE" "CMakeLists.txt" "hwid_extractor y anti_tamper agrupados en el mismo ejecutable (colision de main)"
-    }
-}
-
-# -----------------------------------------------------------------------------
-# 4. DIAGNOSTICO DE INTEGRIDAD EN EL NUCLEO GO (core/)
-# -----------------------------------------------------------------------------
-Write-Host "[4/6] Analizando Nucleo Go (core/): Sintaxis, Aislamiento y DSP..." -ForegroundColor Yellow
-
-$CoreDir = Join-Path $RootPath "core"
-if (-not (Test-Path $CoreDir)) {
-    Registrar-Falla "ESTRUCTURA" "core/" "Directorio del nucleo Go no existe"
 } else {
-    $GoFiles = Get-ChildItem -Path $CoreDir -Recurse -Filter "*.go" | Where-Object { $_.FullName -notmatch '[\\/]vendor[\\/]' }
-    foreach ($gf in $GoFiles) {
-        $relGf = $gf.FullName.Replace($RootPath, "").TrimStart('\', '/')
-        $c = Get-Content $gf.FullName -Raw -Encoding UTF8 -ErrorAction SilentlyContinue
-        if ($gf.Length -eq 0) {
-            Registrar-Falla "GO_SYNTAX" $relGf "Archivo Go vacío (0 bytes)"
-        }
-        if ($c -match "\btif\b") {
-            Registrar-Falla "GO_SYNTAX" $relGf "Token corrupto 'tif' detectado"
-        }
-        $backticks = ($c.ToCharArray() | Where-Object { $_ -eq [char]96 }).Count
-        if ($backticks % 2 -ne 0) {
-            Registrar-Falla "GO_SYNTAX" $relGf "Cantidad impar de backticks (sin cerrar)"
-        }
-    }
-
-    # Validar constantes fundamentales
-    $PitchFile = Join-Path $CoreDir "domain\pitch.go"
-    if (Test-Path $PitchFile) {
-        $pContent = Get-Content $PitchFile -Raw -Encoding UTF8
-        if ($pContent -notmatch "440\.0" -or $pContent -notmatch "A4MIDINote\s*=\s*69") {
-            Registrar-Falla "DSP_PITCH" "core/domain/pitch.go" "Desviacion de afinacion ISO 16 (se requiere A4 = 440 Hz, MIDI 69)"
-        }
-    }
-
-    $NoteFile = Join-Path $CoreDir "domain\note.go"
-    if (Test-Path $NoteFile) {
-        $nContent = Get-Content $NoteFile -Raw -Encoding UTF8
-        if ($nContent -notmatch "PPQN\s*int64\s*=\s*960") {
-            Registrar-Falla "DSP_TIME" "core/domain/note.go" "Base temporal corrupta (se exige resolucion indivisible de 960 PPQN)"
-        }
-    }
-
-    $ContainerFile = Join-Path $CoreDir "infrastructure\container.go"
-    if (Test-Path $ContainerFile) {
-        $contContent = Get-Content $ContainerFile -Raw -Encoding UTF8
-        if ($contContent -notmatch "KLIKORQ1" -or $contContent -notmatch "cipher\.NewGCM" -or $contContent -notmatch "ed25519\.Sign") {
-            Registrar-Falla "SEGURIDAD_VAULT" "core/infrastructure/container.go" "Especificacion criptografica incompleta en contenedor .orquesta"
-        }
-    }
+    Registrar-Falla "ESTRUCTURA" "MauiProgram.cs" "Punto de entrada de escritorio MAUI no localizado"
 }
 
 # -----------------------------------------------------------------------------
-# 5. ARCHIVOS HUERFANOS Y NECROSIS
+# 5. CALIDAD DE CODIGO Y ZERO-SYNTHETIC (C#)
 # -----------------------------------------------------------------------------
-Write-Host "[5/6] Buscando Archivos Temporales, Huerfanos o Necrosis..." -ForegroundColor Yellow
+Write-Host "[5/6] Analizando Olores de Codigo, Zero-Synthetic y Bloques Catch..." -ForegroundColor Yellow
+
+$csFiles = Get-ChildItem -Path @("src", "tests") -Filter "*.cs" -Recurse -File -ErrorAction SilentlyContinue |
+    Where-Object { $_.FullName -notmatch '\\/[\\/]' }
+
+foreach ($cs in $csFiles) {
+    $relCs = $cs.FullName.Replace($RootPath, "").TrimStart('\', '/').Replace('\', '/')
+    $content = Get-Content $cs.FullName -Raw -Encoding UTF8 -ErrorAction SilentlyContinue
+    if ($content -match "NotImplementedException") {
+        Registrar-Falla "CODE_SMELL" $relCs "NotImplementedException presente en el codigo"
+    }
+}
 
 $Necroticos = Get-ChildItem -Path $RootPath -Recurse -File -Include "*.tmp","*.bak","*.orig","*~","*.swp" -ErrorAction SilentlyContinue | Where-Object {
     $_.FullName -notmatch '[\\/](\.git|node_modules|build|dist|out)[\\/]'

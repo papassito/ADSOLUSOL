@@ -12,6 +12,7 @@ App_Data/
 
 # Common ignores
 node_modules/
+dist/
 artifacts/
 testresults/
 coverage/
@@ -25,4 +26,6 @@ coverage/
 *.cer
 .repair-backups/
 App_Data/*.db
-
+*.tmp
+*.bak
+TestResults/
