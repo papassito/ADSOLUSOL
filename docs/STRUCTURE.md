@@ -1,71 +1,55 @@
-# Estructura de ADSOLUSOL
-
-**Estado:** CURRENT REPOSITORY STRUCTURE / PRE-SELLO
-
-```text
-ADSOLUSOL/
-├── ADSOLUSOL.sln
-├── README.md
-├── REQUIREMENTS.md
-├── ROADMAP.md
-├── MAP.md
-├── COMPONENTS.md
-├── docs/
-│   ├── architecture/
-│   ├── business/
-│   ├── contracts/
-│   ├── decisions/
-│   ├── evidence/
-│   ├── integration/
-│   ├── operations/
-│   ├── phases/
-│   └── security/
-├── src/
-│   ├── ADSOLUSOL.Domain/
-│   ├── ADSOLUSOL.Application/
-│   ├── ADSOLUSOL.Infrastructure/
-│   ├── ADSOLUSOL.Motor/
-│   ├── ADSOLUSOL.Orchestrator/
-│   ├── ADSOLUSOL.Presentation.Api/
-│   ├── ADSOLUSOL.Presentation.Cmd/
-│   └── ADSOLUSOL.Presentation.Web/
-├── tests/
-│   └── ADSOLUSOL.RegressionTests/
-└── _audit/
+﻿```text
+.build
+.github
+.repair-backups
+docs
+scripts
+src
+tests
+_audit
+.gitignore
+ADSOLUSOL.sln
+ADSOLUSOL_DevTest.pfx
+ADSOLUSOL_DOCS_SEALED_FROZEN_2026-09-18.zip.sha256
+audit_report_adsolusol.json
+audit_report_adsolusol.md
+audit_report_master.json
+audit_report_master.md
+audit_ultra-mitotero.ps1
+autopsia_integridad.cmd
+CALIFICADOR_MODULOS.ps1
+Calificar-Proyecto.ps1
+chismoso.ps1
+clean-encodings.ps1
+cleanup-project.ps1
+Directory.Build.props
+docker-compose.yml
+DOCUMENTATION_SEAL.json
+fix-structure-and-scripts.ps1
+HISTORIAL DE ACTIVIDADES.MD
+HISTORIAL_ACTUALIZACIONES.md
+installer.iss
+LIBRARY.md
+MANIFEST.md
+MAP.md
+NuGet.Config
+organize-scripts.ps1
+push.ps1
+radiografia_codigo.ps1
+README.md
+reparar-adsolusol.ps1
+REPARAR-FINAL.ps1
+REQUIREMENTS.md
+ROADMAP.md
+seal_adsolusol_release.ps1
+Show-ProjectTree.ps1
+Start-Dev.ps1
+stress_test.ps1
+sync-main.ps1
+TREE.txt
+ui-actual.html
+update_github.ps1
+Verificar-Errores.ps1
+_REVISION_PRESELLO.json
+_SCAN_REFERENCIAS.txt
 ```
-
-## Observaciones
-
-- `ADSOLUSOL.Presentation.Web` contiene React 18 + TypeScript + Vite.
-- La UI todavía no está integrada a `wwwroot`/publish en el código observado.
-- `src/ADSOLUSOL.sln` existe vacío y no es la solución canónica; la solución válida está en la raíz.
-- `tests/ADSOLUSOL.RegressionTests/.env.example` permanece como artefacto heredado y debe revisarse antes del sellado final.
-- existen varios `.gitkeep` y archivos stub/vacíos; su mera existencia no equivale a componente implementado.
-
-## Base de datos
-
-Development configura:
-
-```text
-Data Source=App_Data/adsolusol.db
-```
-
-`Program.cs` usa `EnsureCreated()`. Production todavía no define `DefaultConnection` en `appsettings.json` y no existe estrategia cerrada de migraciones/upgrades.
-
-## Regresiones
-
-La suite ejecutable contiene 17 comprobaciones numeradas de negocio. Estado correcto en documentación:
-
-```text
-17 TESTS DEFINED
-```
-
-Solo una ejecución reciente con exit code 0 autoriza:
-
-```text
-17/17 VERIFIED PASS
-```
-
-## Documentación duplicada
-
-El repositorio conserva copias idénticas en raíz, `docs/` y subcarpetas temáticas. Para el sellado se permite mantenerlas únicamente si permanecen sincronizadas byte a byte o se define una ruta canónica y las otras se convierten en referencias. No se deben mantener duplicados divergentes.

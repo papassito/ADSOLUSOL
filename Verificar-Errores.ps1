@@ -67,25 +67,32 @@ foreach ($f in $ArchivosTexto) {
                 Registrar-Falla "ENCODING" $rel "Contiene UTF-8 BOM (puede provocar errores de parseo)"
             }
         }
-    } catch {}
+    } catch {
+        Registrar-Falla "ENCODING_READ" $rel "No se pudo leer el archivo para analizarlo: $($_.Exception.Message)"
+    }
 
     $contenido = Get-Content $f.FullName -Raw -Encoding UTF8 -ErrorAction SilentlyContinue
-    if ($contenido) {
-        if ($Fix -and $contenido -match "(\u00C3[\u0080-\u00BF]|\u00E2\u0088\u009E|\u00F0\u0178|\u00E2\u20AC)") {
+    # Patrón de Mojibake mejorado:
+    # \u00C3[\u0080-\u00BF] -> Detecta secuencias de 2 bytes (ej. Ã¡ para á).
+    # \u00E2[\u0080-\u00BF]{2} -> Detecta secuencias de 3 bytes que empiezan con â (ej. â‚¬ para €, â”” para └).
+    if ($contenido -and $contenido -match "(\u00C3[\u0080-\u00BF]|\u00E2[\u0080-\u00BF]{2})") {
+        if ($Fix) {
             try {
-                $enc1252 = [System.Text.Encoding]::GetEncoding(1252)
-                $encUtf8 = New-Object System.Text.UTF8Encoding($false, $true)
-                $bytesFixed = $enc1252.GetBytes($contenido)
-                $fixedContenido = $encUtf8.GetString($bytesFixed)
-                $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
-                [System.IO.File]::WriteAllText($f.FullName, $fixedContenido, $utf8NoBom)
-                $contenido = $fixedContenido
-                Write-Host " [REPARADO] [MOJIBAKE] $rel -> Caracteres restaurados a UTF-8" -ForegroundColor Green
-            } catch {}
-        }
+                # This logic handles a specific "double encoding" error where UTF-8 bytes
+                # were misinterpreted as a single-byte encoding (like Windows-1252) and then
+                # saved back into a UTF-8 file.
+                $bytesFromBrokenString = [System.Text.Encoding]::GetEncoding(1252).GetBytes($contenido)
+                $repairedContent = [System.Text.Encoding]::UTF8.GetString($bytesFromBrokenString)
 
-        # Patrones de mojibake expresados en secuencias Unicode ASCII puras
-        if ($contenido -match "(\u00C3[\u0080-\u00BF]|\u00E2\u0088\u009E|\u00F0\u0178)") {
+                $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+                [System.IO.File]::WriteAllText($f.FullName, $repairedContent, $utf8NoBom)
+                
+                $contenido = $repairedContent # Update content to prevent re-reporting
+                Write-Host " [REPARADO] [MOJIBAKE] $rel -> Caracteres restaurados a UTF-8" -ForegroundColor Green
+            } catch {
+                Registrar-Falla "MOJIBAKE_FIX" $rel "Falló el intento de reparación automática de codificación: $($_.Exception.Message)"
+            }
+        } else {
             Registrar-Falla "MOJIBAKE" $rel "Caracteres con codificacion corrupta detectados (tildes/simbolos deformados)" "ALERTA"
         }
     }

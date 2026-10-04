@@ -8,6 +8,7 @@
 param(
     [string]$Root = ".",
     [switch]$Fix,
+    [switch]$Consolidate,
     [switch]$Publish,
     [switch]$Status,
     [switch]$Add,
@@ -31,13 +32,51 @@ Write-Host "=========================================================" -Foregrou
 Write-Host "   ADSOLUSOL :: PIPELINE DE RELEASE Y OPERACIONES        " -ForegroundColor Cyan
 Write-Host "=========================================================" -ForegroundColor Cyan
 Write-Host "Directorio de Trabajo: $ScriptRoot" -ForegroundColor DarkGray
+# 0. Consolidación del Repositorio (-Consolidate)
+if ($Consolidate) {
+    Write-Host "`n[CONSOLIDACIÓN] Ejecutando limpieza y organización maestra..." -ForegroundColor Yellow
+
+    $organizeScripts = Join-Path $ScriptRoot "organize-scripts.ps1"
+    if (Test-Path $organizeScripts) {
+        & $organizeScripts
+    } else {
+        Write-Host "  [INFO] organize-scripts.ps1 no encontrado, omitiendo." -ForegroundColor Gray
+    }
+
+    $generateDocs = Join-Path $ScriptRoot "generate_docs.ps1"
+    if (Test-Path $generateDocs) {
+        & $generateDocs
+    } else {
+        Write-Host "  [INFO] generate_docs.ps1 no encontrado, omitiendo." -ForegroundColor Gray
+    }
+
+    # La ruta del script de integridad ahora estará dentro de /scripts/audit/
+    $integrityScript = Join-Path $ScriptRoot "scripts/audit/autopsia_integridad.ps1"
+    if (Test-Path $integrityScript) {
+        Write-Host "  [CONSOLIDACIÓN] Re-sellando manifiesto documental..." -ForegroundColor DarkCyan
+        & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $integrityScript -Reseal
+    } else {
+        Write-Host "  [INFO] autopsia_integridad.ps1 no encontrado, omitiendo re-sellado." -ForegroundColor Gray
+    }
+
+    # Actualizar el árbol estructural del proyecto
+    $treeScript = Join-Path $ScriptRoot "Show-ProjectTree.ps1"
+    if (Test-Path $treeScript) {
+        Write-Host "  [CONSOLIDACIÓN] Actualizando documentación de estructura (docs/STRUCTURE.md)..." -ForegroundColor DarkCyan
+        & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $treeScript -OutFile "docs/STRUCTURE.md" -Depth 4
+    }
+
+    Write-Host "`n[OK] Consolidación completada. Se recomienda hacer commit de los cambios." -ForegroundColor Green
+    Write-Host 'Ejemplo: git add .; git commit -m "chore: apply automated repository consolidation"' -ForegroundColor DarkGray
+    exit 0
+}
 
 # 1. Saneamiento Quirúrgico Activo (-Fix)
 if ($Fix) {
     Write-Host "`n[SANEAMIENTO] Aplicando correcciones en el árbol de trabajo (-Fix)..." -ForegroundColor Yellow
 
     # A. Extirpación de archivos fantasma y duplicados
-    $ghostPatterns = @("* (1).*", "* (2).*", "*.tmp", "*.bak", "*.orig", "*~", "*.swp", "desktop.ini", "Thumbs.db", ".DS_Store")
+    $ghostPatterns = @('* (1).*', '* (2).*', '*.tmp', '*.bak', '*.orig', '*~', '*.swp', 'desktop.ini', 'Thumbs.db', '.DS_Store')
     $ghosts = Get-ChildItem -Path $ScriptRoot -Recurse -Include $ghostPatterns -File -ErrorAction SilentlyContinue |
         Where-Object { $_.FullName -notmatch "[\\/]\.git[\\/]" }
     foreach ($g in $ghosts) {
@@ -57,16 +96,16 @@ if ($Fix) {
 
     # B. Extirpación de archivos vacíos (0 bytes)
     $emptyFiles = Get-ChildItem -Path $ScriptRoot -Recurse -Include "*.cs", "*.md", "*.json", "*.ps1" -File -ErrorAction SilentlyContinue |
-        Where-Object { $_.Length -eq 0 -and $_.FullName -notmatch "[\\/](\.git|bin|obj|BUILD)[\\/]" }
+        Where-Object { $_.Length -eq 0 -and $_.FullName -notmatch '[\\/](\.git|bin|obj|BUILD)[\\/]' }
     foreach ($ef in $emptyFiles) {
         Remove-Item $ef.FullName -Force -ErrorAction SilentlyContinue
-        Write-Host "  [EXTIRPADO] Archivo vacío (0 bytes): $($ef.FullName.Substring($ScriptRoot.Length))" -ForegroundColor Green
+        Write-Host ('  [EXTIRPADO] Archivo vacío (0 bytes): ' + $ef.FullName.Substring($ScriptRoot.Length)) -ForegroundColor Green
     }
 
     # C. Saneamiento de BOM UTF-8 y caracteres de control
     $validExts = @(".cs", ".csproj", ".json", ".md", ".ps1", ".xaml", ".razor")
     $textFiles = Get-ChildItem -Path $ScriptRoot -Recurse -File -ErrorAction SilentlyContinue |
-        Where-Object { $validExts -contains $_.Extension -and $_.FullName -notmatch "[\\/](\.git|bin|obj|BUILD)[\\/]" }
+        Where-Object { $validExts -contains $_.Extension -and $_.FullName -notmatch '[\\/](\.git|bin|obj|BUILD)[\\/]' }
 
     $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
     foreach ($file in $textFiles) {
@@ -92,7 +131,11 @@ if ($Fix) {
 
 # 2. Quality Gate de Solo Lectura (junta_medica.ps1)
 Write-Host "`n>>> Ejecutando Quality Gate forense (junta_medica.ps1)..." -ForegroundColor Yellow
-$auditScript = Join-Path $ScriptRoot "junta_medica.ps1"
+$auditScript = Join-Path $ScriptRoot "scripts/audit/junta_medica.ps1"
+if (-not (Test-Path $auditScript)) {
+    # Fallback a la raíz para compatibilidad durante la transición
+    $auditScript = Join-Path $ScriptRoot "junta_medica.ps1"
+}
 if (Test-Path $auditScript) {
     & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $auditScript -Fast
     if ($LASTEXITCODE -ne 0) {
@@ -183,6 +226,6 @@ if ($hasGitFlags) {
     }
 }
 
-Write-Host "`n=========================================================" -ForegroundColor Cyan
-Write-Host "   PIPELINE DE RELEASE FINALIZADO CON ÉXITO              " -ForegroundColor Cyan
-Write-Host "=========================================================" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "   PIPELINE FINALIZADO CON EXITO                         " -ForegroundColor Green
+Write-Host "=========================================================" -ForegroundColor Green
