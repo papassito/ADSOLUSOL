@@ -69,7 +69,6 @@ function Generar-MensajeCommit {
 
 if ([string]::IsNullOrWhiteSpace($Branch)) {
 
-    $Branch = (git branch --show-current).Trim()
     $currentBranch = (git branch --show-current 2>$null)
     $Branch = if ($currentBranch) { $currentBranch.Trim() } else { "main" }
 

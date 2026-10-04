@@ -165,50 +165,38 @@ namespace ADSOLUSOL.Benchmarking
         public static HttpStressResult Run(string url, int totalRequests, int concurrency, int timeoutSec)
         {
             var result = new HttpStressResult();
-            using (var handler = new HttpClientHandler())
+            using (var handler = new HttpClientHandler { MaxConnectionsPerServer = concurrency * 2 })
             {
                 using (var client = new HttpClient(handler))
                 {
                     client.Timeout = TimeSpan.FromSeconds(timeoutSec);
-                    using (var gate = new SemaphoreSlim(concurrency, concurrency))
+                    var sw = Stopwatch.StartNew();
+                    long totalLatencyTicks = 0;
+
+                    var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = concurrency };
+                    Parallel.For(0, totalRequests, parallelOptions, i =>
                     {
-                        var sw = Stopwatch.StartNew();
-                        var tasks = new Task[totalRequests];
-                        long totalLatencyTicks = 0;
-
-                        for (int i = 0; i < totalRequests; i++)
+                        var reqSw = Stopwatch.StartNew();
+                        try
                         {
-                            tasks[i] = Task.Run(async () =>
+                            using (var resp = client.GetAsync(url).GetAwaiter().GetResult())
                             {
-                                await gate.WaitAsync();
-                                var reqSw = Stopwatch.StartNew();
-                                try
-                                {
-                                    using (var resp = await client.GetAsync(url))
-                                    {
-                                        reqSw.Stop();
-                                        Interlocked.Add(ref totalLatencyTicks, reqSw.ElapsedTicks);
-                                        int sc = (int)resp.StatusCode;
-                                        if (sc >= 200 && sc < 300) Interlocked.Increment(ref result.Status2xx);
-                                        else if (sc >= 400 && sc < 500) Interlocked.Increment(ref result.Status4xx);
-                                        else Interlocked.Increment(ref result.Status5xx);
-                                    }
-                                }
-                                catch
-                                {
-                                    reqSw.Stop();
-                                    Interlocked.Increment(ref result.NetworkErrors);
-                                }
-                                finally
-                                {
-                                    gate.Release();
-                                }
-                            });
+                                reqSw.Stop();
+                                Interlocked.Add(ref totalLatencyTicks, reqSw.ElapsedTicks);
+                                int sc = (int)resp.StatusCode;
+                                if (sc >= 200 && sc < 300) Interlocked.Increment(ref result.Status2xx);
+                                else if (sc >= 400 && sc < 500) Interlocked.Increment(ref result.Status4xx);
+                                else Interlocked.Increment(ref result.Status5xx);
+                            }
                         }
+                        catch
+                        {
+                            reqSw.Stop();
+                            Interlocked.Increment(ref result.NetworkErrors);
+                        }
+                    });
 
-                        Task.WaitAll(tasks);
-                        sw.Stop();
-
+                    sw.Stop();
                         result.ElapsedSeconds = Math.Round(sw.Elapsed.TotalSeconds, 2);
                         int executed = result.Status2xx + result.Status4xx + result.Status5xx + result.NetworkErrors;
                         if (executed > 0)
