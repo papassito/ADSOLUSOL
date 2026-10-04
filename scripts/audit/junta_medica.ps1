@@ -253,9 +253,9 @@ $MedicalBoard = @(
                 Write-Host "[PATOLOGIA] MarketingBrainClient.cs no parece utilizar HttpClient para conectividad real." -ForegroundColor Red
                 $errors++
             }
-            if ($errors -gt 0) { exit 1 } else { Write-Host "[SANO] Verificación de código fuente confirma integración real de MarketingBrainClient (uso de HttpClient)." }
+            if ($errors -gt 0) { exit 1 } else { Write-Host "[OBSERVACION] MarketingBrainClient implementa HttpClient, pero conectividad con SIC permanece como: NO VERIFICADA EN RED." ; exit 2 }
         '
-        Descripcion  = "Auditoría de código fuente de MarketingBrainClient para asegurar que no es una simulación (mock) y que utiliza HttpClient para comunicación de red."
+        Descripcion  = "Auditoría de conectividad real hacia SIC (distingue implementación de verificación activa de red)."
     },
     @{
         Area         = "Dermatologia y Cobertura Funcional de UI (Sitemap & DI Wiring)"
@@ -286,8 +286,8 @@ $MedicalBoard = @(
         Command      = '
             $uiTestProject = Get-ChildItem -Path "tests" -Filter "*UITests*.csproj" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
             if (-not $uiTestProject) {
-                Write-Host "[INFO] No se localizaron proyectos de pruebas de UI (bUnit) en tests/." -ForegroundColor Yellow
-                exit 0
+                Write-Host "[NO VERIFICADO] No se localizaron proyectos de pruebas de UI (bUnit) en tests/. Suite ausente." -ForegroundColor Yellow
+                exit 2
             }
             Write-Host "Ejecutando pruebas de componentes UI para: $($uiTestProject.Name)" -ForegroundColor Cyan
             $testOut = & dotnet test $uiTestProject.FullName --no-build -c Release -v:q --nologo 2>&1
@@ -354,6 +354,9 @@ foreach ($doctor in $MedicalBoard) {
             if ($process.ExitCode -eq 0) {
                 $consultaStatus = "SANO (PASS)"
                 Write-Host "[OK] Evaluación pericial aprobada sin anomalías." -ForegroundColor Green
+            } elseif ($process.ExitCode -eq 2) {
+                $consultaStatus = "NO VERIFICADO / OBSERVACION"
+                Write-Host "[INFO] Especialidad no verificada o pendiente de entorno/tests." -ForegroundColor Yellow
             } else {
                 $consultaStatus = "OBSERVACION (Exit Code: $($process.ExitCode))"
                 Write-Host "[FAIL] Se hallaron anomalías clínicas durante el diagnóstico." -ForegroundColor Red

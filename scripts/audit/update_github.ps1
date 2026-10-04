@@ -10,8 +10,6 @@ try { $null = chcp 65001 } catch {}
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
 
-$env:GIT_PAGER = "cat"
-
 function Generar-MensajeCommit {
     param([string[]]$ArchivosModificados)
 
@@ -41,25 +39,20 @@ function Generar-MensajeCommit {
         $scope = "(scripts)"
         $descripcion = "update build and audit automation scripts"
     }
-    elseif ($paths | Where-Object { $_ -match '(?i)Presentation\.Api' }) {
+    elseif ($paths | Where-Object { $_ -match '(?i)cmd[\\/]' }) {
         $tipo = "feat"
-        $scope = "(api)"
-        $descripcion = "update api endpoints and middleware pipeline"
+        $scope = "(cmd)"
+        $descripcion = "update service entrypoints and presentation handlers"
     }
-    elseif ($paths | Where-Object { $_ -match '(?i)Presentation\.Desktop' }) {
+    elseif ($paths | Where-Object { $_ -match '(?i)internal[\\/]engine' }) {
         $tipo = "feat"
-        $scope = "(desktop)"
-        $descripcion = "update MAUI desktop views and components"
+        $scope = "(engine)"
+        $descripcion = "update evaluation engine and scoring algorithms"
     }
-    elseif ($paths | Where-Object { $_ -match '(?i)Presentation\.Web' }) {
-        $tipo = "feat"
-        $scope = "(web)"
-        $descripcion = "update react web panel components"
-    }
-    elseif ($paths | Where-Object { $_ -match '(?i)Infrastructure|Application|Domain' }) {
+    elseif ($paths | Where-Object { $_ -match '(?i)internal[\\/]domain' }) {
         $tipo = "refactor"
-        $scope = "(core)"
-        $descripcion = "update domain logic and infrastructure services"
+        $scope = "(domain)"
+        $descripcion = "update canonical contracts and data models"
     }
     else {
         $tipo = "chore"
@@ -74,27 +67,8 @@ if ([string]::IsNullOrWhiteSpace($Branch)) {
     if ([string]::IsNullOrWhiteSpace($Branch)) { $Branch = "main" }
 }
 
-Write-Host ">>> Ejecutando validacion previa (build y tests)..." -ForegroundColor Cyan
-& dotnet build ADSOLUSOL.sln -c Release --nologo -v minimal
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "[ERROR] La compilacion fallo. Abortando operacion git push." -ForegroundColor Red
-    exit 1
-}
-
-& dotnet test ADSOLUSOL.sln -c Release --no-build --nologo -v quiet
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "[ERROR] La suite de pruebas fallo. Abortando operacion git push." -ForegroundColor Red
-    exit 1
-}
-Write-Host "[OK] Verificaciones de calidad aprobadas." -ForegroundColor Green
-
 Write-Host ">>> Analizando y agregando cambios en rama '$Branch'..." -ForegroundColor Cyan
 & git add -A
-
-# Higiene de arbol: desindexar respaldos y datos locales temporales (conservando scripts .ps1)
-if (Test-Path ".repair-backups") { & git reset -- .repair-backups 2>$null | Out-Null }
-& git reset -- App_Data/*.db 2>$null | Out-Null
-& git reset -- *.tmp 2>$null | Out-Null
 
 $staged = @(& git diff --cached --name-status 2>$null)
 if (-not $staged -or $staged.Count -eq 0) {

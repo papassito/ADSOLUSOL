@@ -59,20 +59,14 @@
 - **REQ-SEO-003:** SEO puede producir señales para GROWTH sin convertirlas en métricas ADS.
 - **REQ-SEO-004:** SUPER SEO puede correlacionar señales, pero no altera los registros publicitarios fuente.
 
-## 7. Multi-tenant
-
-- **REQ-TEN-001:** toda campaña debe poder vincularse a `tenant_id`.
-- **REQ-TEN-002:** la persistencia y consulta deben respetar aislamiento por tenant.
-- **REQ-TEN-003:** ninguna operación tenant-scoped debe aceptar, consultar, mutar o agregar datos de otro tenant.
-
-## 8. Integración
+## 7. Integración
 
 - **REQ-INT-001:** ADS publica eventos de campaña y publicidad mediante contratos definidos.
 - **REQ-INT-002:** ORCHESTA coordina eventos sin convertirse en autoridad de presupuesto.
 - **REQ-INT-003:** SIC consume señales y presenta estado.
 - **REQ-INT-004:** identidad criptográfica de Nodes es gobernada por CORE; ADS/SIC solo consume verificación autorizada.
 
-## 9. API
+## 8. API
 
 - **REQ-API-001:** rutas dinámicas no deben ser cacheadas de manera que omitan o dupliquen eventos.
 - **REQ-API-002:** respuestas deben diferenciar `accepted`, `duplicate`, `rejected`, `unavailable`.

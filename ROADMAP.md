@@ -21,7 +21,6 @@
 - Consolidar `AdCampaign`.
 - Definir ciclo de vida `SCHEDULED / ACTIVE / PAUSED / COMPLETED`.
 - Definir advertiser, placement, vigencia, presupuesto y pricing.
-- Incorporar `tenant_id` al contrato objetivo.
 - Validar transiciones de estado.
 
 ## Fase 2 — Persistence
@@ -29,7 +28,6 @@
 - Migrar campañas volátiles en memoria a persistencia durable.
 - Preservar precisión monetaria.
 - Preservar `NULL` cuando un dato no exista.
-- Incorporar aislamiento por tenant.
 - Incorporar historial de cambios de campaña.
 
 ## Fase 3 — Placement & Creative Delivery
@@ -93,7 +91,6 @@
 - Consolidar impression.
 - Incorporar autenticación y autorización.
 - Incorporar rate limiting.
-- Incorporar aislamiento multi-tenant.
 - Consolidar `/api/health`.
 
 ## Fase 10 — SEO / SUPER SEO Boundary
@@ -166,7 +163,6 @@
 - CPC.
 - CTR sin denominador.
 - Presupuesto concurrente.
-- Tenant isolation.
 - CSP/XSS.
 - Rate limiting.
 - API auth.

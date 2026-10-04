@@ -13,7 +13,8 @@ param(
     [string[]]$Exclude = @(
         ".git", "bin", "obj", ".vs", ".idea", "node_modules",
         "BUILD", "dist", "artifacts", "testresults", "TestResults",
-        "coverage", ".tmp_build", "__pycache__"
+        "coverage", ".tmp_build", "__pycache__", ".repair-backups",
+        "_audit"
     )
 )
 

@@ -1,8 +1,8 @@
 # AD SOLUSOL — Marketing Brain & Telemetría SIC
 
 **Estado de diseño:** TARGET CAPABILITY  
-**Estado runtime actual:** IMPLEMENTED / ASYNCHRONOUS_RESILIENT  
-**Modo Operativo:** Decoupled HTTP / Disconnected Tolerant
+**Estado runtime actual:** HTTP IMPLEMENTADO / ENTREGA NO GARANTIZADA  
+**Modo Operativo:** Decoupled HTTP / Sin Outbox Persistente
 
 ## Propósito autorizado
 
@@ -14,15 +14,15 @@ Puede producir recomendaciones sobre presupuesto, rendimiento, placements y camp
 
 El cliente `MarketingBrainClient` consume el endpoint central de SIC de manera asíncrona y no bloqueante sobre el ciclo de vida del débito y serving:
 
-* **`CONNECTED`:** Telemetría de eventos publicitarios (`Click`, `Impression`) transmitida en tiempo real vía peticiones POST autorizadas.
-* **`DEGRADED / DISCONNECTED`:** Ante latencia elevada, timeout o errores de red/5xx, el fallo se absorbe de forma controlada sin comprometer el serving ni la persistencia local. Los eventos y métricas se consolidan localmente en `AdEvent` (SQLite), garantizando consistencia y cero impacto en el rendimiento publicitario local (`NO_DATA != ZERO PERFORMANCE`).
+* **`CONNECTED`:** Telemetría de eventos publicitarios (`Click`, `Impression`) transmitida en tiempo real vía peticiones POST.
+* **`DEGRADED / DISCONNECTED`:** Ante latencia elevada o fallo de red, el fallo se absorbe sin interrumpir el serving. Sin embargo, no existe garantía de entrega ni reintento (sin Outbox persistente).
 
 ## Invariantes de Seguridad y Negocio
 
 ```text
 Recommendation != Authorized Mutation
 Recommendation != Execution
-Authentication != Authorization
+DISCONNECTED != AVAILABLE
 ```
 
 Las señales emitidas o recibidas actúan exclusivamente como recomendaciones no vinculantes. Toda mutación de campañas, presupuestos o débitos requiere autorización, política y evidencia independientes en el runtime local del Tenant.

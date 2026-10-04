@@ -90,8 +90,7 @@ var creative = await dbContext.Creatives.FindAsync(creativeId);
 if (creative == null || !creative.IsEnabled) return null;
 ```
 
-### 3. Autorización Multi-Tenant Completa y Rate Limiting
-- **Aislamiento Multi-Tenant:** Cada controlador valida el Tenant resuelto en `HttpContext.Items["TenantId"]` contra la entidad consultada. No se permite lectura ni modificación cruzada de recursos.
+### 3. Rate Limiting Operativo
 - **Rate Limiting:** Implementado mediante `Microsoft.AspNetCore.RateLimiting` limitando las peticiones a endpoints críticos como `/status` y registro de eventos `/click` o `/impression` para mitigar ataques DoS.
 
 ### 4. Seguridad de URLs y Antifraude de Tráfico

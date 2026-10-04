@@ -17,7 +17,6 @@
 | SQLite Persistence | IMPLEMENTED / DEV-CONFIGURED | `AppDbContext`, repositorios, `EnsureCreated()` |
 | Ed25519 Verifier | IMPLEMENTED COMPONENT | `CoreSignatureVerifier` |
 | Signature Middleware | CONNECTED | Conectado activamente mediante `app.UseMiddleware<SignatureVerificationMiddleware>()` |
-| Tenant Resolver / Auth | IMPLEMENTED | Resolución autorizada e inyectada en `HttpContext.Items["TenantId"]` |
 | Marketing Brain Client | IMPLEMENTED | `MarketingBrainClient` con llamadas HTTP reales e inyección de HttpClient |
 | MAUI Blazor UI | IMPLEMENTED | `ADSOLUSOL.Presentation.Desktop` |
 | React/Vite UI | IMPLEMENTED SOURCE / NOT PACKAGED | `ADSOLUSOL.Presentation.Web` |

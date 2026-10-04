@@ -1,7 +1,7 @@
 # AD SOLUSOL — Marketing Brain
 
 **Estado de diseño:** TARGET CAPABILITY  
-**Estado runtime actual:** NOT_IMPLEMENTED / UNVERIFIED
+**Estado runtime actual:** HTTP IMPLEMENTADO / ENTREGA NO GARANTIZADA / CONECTIVIDAD NO VERIFICADA
 
 ## Propósito autorizado
 
@@ -11,15 +11,11 @@ Puede producir recomendaciones sobre presupuesto, rendimiento, placements y camp
 
 ## Estado del código actual
 
-`MarketingBrainClient` implementa `IMarketingBrainService`, pero actualmente:
+`MarketingBrainClient` implementa `IMarketingBrainService` utilizando `HttpClient` real hacia el endpoint configurado de SIC.
 
-```text
-PingAsync()        => true
-IsAvailableAsync() => true
-EmitTelemetryAsync => no-op
-```
+**Brecha real (P0):** Ante caídas de red o timeouts en `EmitTelemetryAsync`, los errores son absorbidos sin reintentos garantizados ni cola Outbox persistente. La entrega de telemetría publicitaria hacia SIC no está garantizada hasta implementar buffer y resiliencia activa.
 
-No existe I/O que demuestre conexión con SIC o con un Marketing Brain real. Estos retornos no deben presentarse como disponibilidad verificada.
+Conectividad con backend SIC externo permanece sin verificar en tests de integración en vivo (`DISCONNECTED != ZERO ACTIVITY`).
 
 ## Invariante
 

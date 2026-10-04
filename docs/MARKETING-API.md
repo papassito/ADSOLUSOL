@@ -94,35 +94,19 @@ SIGNATURE MIDDLEWARE = IMPLEMENTED_AND_WIRED
 
 No existe protección `X-Api-Key` activa en el pipeline actual.
 
-## Tenant y autorización
-
-`CampaignsController` y `ServeController` leen:
-
-```text
-HttpContext.Items["TenantId"]
-```
-
-El middleware de firma resuelve el NodeId contra `INodeRegistry` e inyecta el TenantId en el contexto HTTP:
-
-```text
-TENANT RESOLUTION = IMPLEMENTED_AND_WIRED
-AUTHENTICATION != AUTHORIZATION
-```
-
-El aislamiento tenant no debe considerarse cerrado. La consulta/listado/actualización de campañas y serving contienen filtros de tenant en parte del flujo, pero métricas, asociaciones, placements y creatives no tienen una garantía integral de tenant en sus superficies actuales.
-
 ## Idempotencia y eventos
 
 `AdEvent.EventId` tiene índice único. `EventProcessingService` comprueba duplicidad antes de procesar y realiza evento + débito dentro de una transacción. Esto no sustituye una prueba de concurrencia del runtime final.
 
 ## Estado de SIC / Marketing Brain
 
-`HealthController` sí intenta consultar SIC. En cambio, `MarketingBrainClient` actual no verifica una dependencia externa: devuelve `true` en `PingAsync`/`IsAvailableAsync` y `EmitTelemetryAsync` no realiza I/O.
+`HealthController` consulta `{SolusolAuthV1:SicBaseUrl}/health`.
+`MarketingBrainClient` implementa llamadas asíncronas reales vía `HttpClient` hacia el endpoint de SIC. La resiliencia con cola de reintentos persistente ante caídas prolongadas de red permanece como trabajo futuro.
 
 Por Zero-Synthetic:
 
 ```text
-MARKETING BRAIN CONNECTIVITY = UNVERIFIED / NOT IMPLEMENTED
+MARKETING BRAIN RUNTIME CONNECTIVITY = UNVERIFIED IN LIVE NETWORK
 ```
 
 ## Rutas históricas que NO representan el runtime actual

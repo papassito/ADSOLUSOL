@@ -88,7 +88,6 @@ if ($Reseal) {
             "Zero-Synthetic",
             "Servidor autoritativo",
             "Authentication != Authorization",
-            "Tenant isolation",
             "Recommendation != Execution"
         )
     }

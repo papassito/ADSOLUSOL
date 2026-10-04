@@ -1,5 +1,6 @@
-# 📋 Reporte de Auditoría: ADSOLUSOL
+# 📋 Reporte de Auditoría Histórico: ADSOLUSOL
 
+> **AVISO:** ARCHIVO HISTÓRICO / SUPERSEDED / NO REPRESENTA EL ESTADO ACTUAL DE CERTIFICACIÓN
 *   **Fecha:** 09/22/2026 10:00:00
 *   **Resultado General:** **PASS**
 

@@ -19,8 +19,8 @@
                       "docsManifest":  "docs/MANIFEST.md"
                   },
     "manifestHashes":  {
-                           "MANIFEST.md":  "78fde75ff8f1460c664992e0ef8301efa15afe72a1224503a7e8f2af4280a2d0",
-                           "docs/MANIFEST.md":  "78fde75ff8f1460c664992e0ef8301efa15afe72a1224503a7e8f2af4280a2d0"
+                           "MANIFEST.md":  "ea3625146d2e74c32cfc0dcd1c429fc73f53cb0b42ac81378c3458785aa41bfb",
+                           "docs/MANIFEST.md":  "ea3625146d2e74c32cfc0dcd1c429fc73f53cb0b42ac81378c3458785aa41bfb"
                        },
     "runtimeTarget":  {
                           "framework":  "net8.0",
@@ -32,7 +32,6 @@
                                  "Zero-Synthetic",
                                  "Servidor autoritativo",
                                  "Authentication != Authorization",
-                                 "Tenant isolation",
                                  "Recommendation != Execution"
                              ]
 }

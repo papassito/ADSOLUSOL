@@ -18,7 +18,6 @@ ADS mantiene separación estricta respecto de SEO/SUPER SEO, CORE, ORCHESTA y SI
 - **Zero-Synthetic:** no inventar clics, impresiones, gasto, disponibilidad ni telemetría.
 - **Servidor autoritativo:** gasto y eventos aceptados se determinan en backend.
 - **Authentication != Authorization:** una firma válida no equivale a permiso.
-- **Tenant isolation:** toda operación multi-tenant debe resolver y aplicar un tenant autorizado.
 - **Recommendation != Execution:** una recomendación de inteligencia no ejecuta mutaciones por sí sola.
 
 ## Stack observado
@@ -55,13 +54,12 @@ GET    /api/marketing/adsolusol/ping
 
 `MarketingController` declara la ruta base `/api/marketing/adsolusol` exponiendo comprobaciones `/status` y `/ping`.
 
-## Autenticación y Tenant
+## Autenticación
 
 El sistema utiliza un `SignatureVerificationMiddleware` para proteger los endpoints de la API.
 
 - **Estado:** `IMPLEMENTED_AND_WIRED`. El middleware está conectado en `Program.cs`.
 - **Mecanismo:** Verificación de firmas Ed25519, timestamp y protección anti-reenvío con nonce.
-- **Resolución de Tenant:** El middleware resuelve el `NodeId` a un `TenantId` autorizado y lo inyecta en `HttpContext.Items["TenantId"]`.
 - **Rutas Públicas:** La UI de Blazor y el endpoint `/api/health` son accesibles sin firma.
 
 ## SQLite
@@ -89,13 +87,13 @@ La integración con **Marketing Brain (SIC) es real y está activa**. El cliente
 
 ## Regresiones
 
-`tests/ADSOLUSOL.RegressionTests/Program.cs` contiene **20 comprobaciones numeradas de negocio**. La suite verifica el ciclo completo: creación, aislamiento tenant, servicio, débitos condicionales atómicos ($0.2515), inmunidad idempotente contra ráfagas duplicadas, algoritmo de pacing ponderado por presupuesto y resistencia a ráfagas de alta concurrencia.
+`tests/ADSOLUSOL.RegressionTests/Program.cs` contiene **20 comprobaciones numeradas de negocio**. La suite verifica el ciclo completo: creación, persistencia, servicio, débitos condicionales atómicos ($0.2515), inmunidad idempotente contra ráfagas duplicadas, algoritmo de pacing ponderado por presupuesto y resistencia a ráfagas de alta concurrencia.
 
-## Desarrollo
+## Operación y Auditoría
 
-Para iniciar la aplicación de escritorio en modo de desarrollo con hot-reload, ejecuta:
+Para auditar el estado del repositorio en tiempo real:
 ```powershell
-.\Start-Dev.ps1
+powershell -File .\scripts\audit\audit-live.ps1
 ```
 Para construir el ejecutable de producción, usa:
 ```powershell
@@ -105,7 +103,6 @@ Para construir el ejecutable de producción, usa:
 ## Estado antes de release
 
 Pendientes de cierre técnico:
-- Aislamiento de tenant completo en todas las superficies (en progreso).
 - Blindaje y pruebas de integración para el pipeline de autenticación de firmas y tenant.
 - Estrategia de empaquetado y despliegue para la aplicación MAUI (e.g., MSIX).
 

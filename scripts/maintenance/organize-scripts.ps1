@@ -33,6 +33,9 @@ $scriptMap = @{
     "junta_medica.ps1"          = "audit"
     "radiologico_forense.ps1"   = "audit"
     "smoke-test.ps1"            = "audit"
+    "audit-live.ps1"            = "audit"
+    "radiografia_codigo.ps1"    = "audit"
+    "Verificar-Errores.ps1"     = "audit"
 
     # Build & Release
     "BUILD-ADSOLUSOL.ps1"       = "build"
@@ -40,6 +43,7 @@ $scriptMap = @{
 
     # Maintenance & Tooling
     "generate_docs.ps1"         = "maintenance"
+    "Show-ProjectTree.ps1"      = "maintenance"
 }
 
 $rootScripts = Get-ChildItem -Path $Root -Filter "*.ps1" -File | Where-Object { $_.Name -ne "organize-scripts.ps1" }
@@ -63,17 +67,39 @@ foreach ($script in $rootScripts) {
 }
 
 Write-Host ""
-Write-Host "--- EMPTY SCRIPT CLEANUP ---" -ForegroundColor Yellow
-$emptyScripts = @("Health-Check.ps1", "Run-Master-Audit.ps1", "update_manifest.ps1")
+Write-Host "--- ELIMINANDO SCRIPTS OBSOLETOS E INSERVIBLES ---" -ForegroundColor Yellow
+$obsoleteScripts = @(
+    "clean-encodings.ps1",
+    "cleanup-project.ps1",
+    "fix-structure-and-scripts.ps1",
+    "reparar-adsolusol.ps1",
+    "REPARAR-FINAL.ps1",
+    "seal_adsolusol_release.ps1",
+    "chismoso.ps1",
+    "audit_ultra-mitotero.ps1",
+    "CALIFICADOR_MODULOS.ps1",
+    "Calificar-Proyecto.ps1",
+    "push.ps1",
+    "Start-Dev.ps1",
+    "stress_test.ps1",
+    "sync-main.ps1",
+    "update_github.ps1",
+    "autopsia_integridad.cmd",
+    "scripts\chismoso.ps1",
+    "scripts\audit_chismoso.ps1",
+    "scripts\audit_ultra-mitotero.ps1",
+    "scripts\check_structure.ps1",
+    "scripts\radiografia_codigo.ps1",
+    "Health-Check.ps1",
+    "Run-Master-Audit.ps1",
+    "update_manifest.ps1"
+)
 
-foreach ($es in $emptyScripts) {
-    $path = Join-Path $Root $es
+foreach ($obs in $obsoleteScripts) {
+    $path = Join-Path $Root $obs
     if (Test-Path $path) {
-        $fileInfo = Get-Item $path
-        if ($fileInfo.Length -eq 0) {
-            Remove-Item $path -Force -ErrorAction SilentlyContinue
-            Write-Host "[DELETED] Removed 0-byte script: $es" -ForegroundColor Green
-        }
+        Remove-Item $path -Force -ErrorAction SilentlyContinue
+        Write-Host "[ELIMINADO] Script obsoleto/duplicado: $obs" -ForegroundColor Green
     }
 }
 
