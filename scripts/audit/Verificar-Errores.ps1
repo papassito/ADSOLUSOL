@@ -1,7 +1,7 @@
 <#
 ================================================================================
   ADSOLUSOL DIAGNOSTIC SUITE :: VERIFICADOR FORENSE Y AUDITOR DE SALUD DIGITAL
-  Ejecución directa sin bloqueo:
+  Ejecucin directa sin bloqueo:
   powershell -ExecutionPolicy Bypass -File .\Verificar-Errores.ps1
 ================================================================================
 #>
@@ -72,9 +72,9 @@ foreach ($f in $ArchivosTexto) {
     }
 
     $contenido = Get-Content $f.FullName -Raw -Encoding UTF8 -ErrorAction SilentlyContinue
-    # Patrón de Mojibake mejorado:
-    # \u00C3[\u0080-\u00BF] -> Detecta secuencias de 2 bytes (ej. Ã¡ para á).
-    # \u00E2[\u0080-\u00BF]{2} -> Detecta secuencias de 3 bytes que empiezan con â (ej. â‚¬ para €, â”” para └).
+    # Patrn de Mojibake mejorado:
+    # \u00C3[\u0080-\u00BF] -> Detecta secuencias de 2 bytes (ej. á para ).
+    # \u00E2[\u0080-\u00BF]{2} -> Detecta secuencias de 3 bytes que empiezan con  (ej. € para , └ para +).
     if ($contenido -and $contenido -match "(\u00C3[\u0080-\u00BF]|\u00E2[\u0080-\u00BF]{2})") {
         if ($Fix) {
             try {
@@ -90,7 +90,7 @@ foreach ($f in $ArchivosTexto) {
                 $contenido = $repairedContent # Update content to prevent re-reporting
                 Write-Host " [REPARADO] [MOJIBAKE] $rel -> Caracteres restaurados a UTF-8" -ForegroundColor Green
             } catch {
-                Registrar-Falla "MOJIBAKE_FIX" $rel "Falló el intento de reparación automática de codificación: $($_.Exception.Message)"
+                Registrar-Falla "MOJIBAKE_FIX" $rel "Fall el intento de reparacin automtica de codificacin: $($_.Exception.Message)"
             }
         } else {
             Registrar-Falla "MOJIBAKE" $rel "Caracteres con codificacion corrupta detectados (tildes/simbolos deformados)" "ALERTA"
@@ -198,7 +198,7 @@ foreach ($n in $Necroticos) {
 }
 
 # -----------------------------------------------------------------------------
-# 6. RESUMEN DIAGNÓSTICO FINAL
+# 6. RESUMEN DIAGNSTICO FINAL
 # -----------------------------------------------------------------------------
 Write-Host ""
 Write-Host "[6/6] Consolidando Dictamen..." -ForegroundColor Yellow
