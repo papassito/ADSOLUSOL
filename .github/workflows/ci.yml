@@ -6,6 +6,13 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   audit:
     name: Forensics Audit (junta_medica)
@@ -20,6 +27,32 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
+    - name: Setup Node.js (Web Panel Quality Gate)
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Verify Web Presentation Build
+      shell: pwsh
+      run: |
+        if (Test-Path "src/ADSOLUSOL.Presentation.Web/package.json") {
+          cd src/ADSOLUSOL.Presentation.Web; npm ci; npm run build; cd ../..
+        }
+
+    - name: Restore Dependencies
+      shell: pwsh
+      run: dotnet restore ADSOLUSOL.sln
+
+    - name: Compile Solution (Release)
+      shell: pwsh
+      run: |
+        dotnet build ADSOLUSOL.sln -c Release --no-restore -p:IgnoreMissingWorkloads=true -p:WindowsPackageType=None -p:AppxPackage=false -p:GenerateAppxPackageOnBuild=false -p:WindowsAppSDKSelfContained=false -v:minimal /nologo
+
+    - name: Execute Regression & Unit Tests
+      shell: pwsh
+      run: |
+        dotnet test ADSOLUSOL.sln -c Release --no-build -v:minimal --nologo
+
     - name: Run Forensic Medical Board Audit
       shell: pwsh
       run: |
@@ -33,3 +66,4 @@ jobs:
       with:
         name: expediente-clinico-maestro
         path: docs/EXPEDIENTE_CLINICO_MAESTRO.md
+        if-no-files-found: warn

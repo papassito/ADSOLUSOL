@@ -89,6 +89,11 @@ Write-Host "[OK] Verificaciones de calidad aprobadas." -ForegroundColor Green
 Write-Host ">>> Analizando y agregando cambios en rama '$Branch'..." -ForegroundColor Cyan
 & git add -A
 
+# Higiene de arbol: desindexar respaldos y datos locales temporales (conservando scripts .ps1)
+if (Test-Path ".repair-backups") { & git reset -- .repair-backups 2>$null }
+& git reset -- App_Data/*.db 2>$null
+& git reset -- *.tmp 2>$null
+
 $staged = @(& git diff --cached --name-status 2>$null)
 if (-not $staged -or $staged.Count -eq 0) {
     Write-Host "[OK] No hay cambios pendientes para confirmar ni subir." -ForegroundColor Yellow

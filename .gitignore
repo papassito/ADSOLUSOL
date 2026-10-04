@@ -23,3 +23,6 @@ coverage/
 # Certificates and keys
 *.pfx
 *.cer
+.repair-backups/
+App_Data/*.db
+

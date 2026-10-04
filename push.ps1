@@ -15,6 +15,8 @@ try { $null = chcp 65001 } catch {}
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
 
+$env:GIT_PAGER = "cat"
+
 function Show-Section {
     param([string]$Text)
     Write-Host ""
@@ -45,7 +47,7 @@ function Limpiar-BasuraGit {
 
     Get-ChildItem -Path . -Recurse -Include $junkPatterns -Force -ErrorAction SilentlyContinue |
         Where-Object {
-            $_.FullName -notmatch '[\\/]\.git[\\/]'
+            $_.FullName -notmatch '[\\/](\.git|node_modules|bin|obj|\.repair-backups)[\\/]'
         } |
         ForEach-Object {
             Remove-Item $_.FullName -Force -ErrorAction SilentlyContinue
@@ -69,7 +71,8 @@ function Generar-MensajeCommit {
 
 if ([string]::IsNullOrWhiteSpace($Branch)) {
 
-    $Branch = (git branch --show-current).Trim()
+    $Branch = (git branch --show-current 2>$null)
+    if ($Branch) { $Branch = $Branch.Trim() }
 
     if ([string]::IsNullOrWhiteSpace($Branch)) {
         $Branch = "main"
@@ -82,7 +85,11 @@ Limpiar-BasuraGit
 
 git add -A
 
-$staged = @(git diff --cached --name-status)
+if (Test-Path ".repair-backups") { & git reset -- .repair-backups 2>$null | Out-Null }
+& git reset -- App_Data/*.db 2>$null | Out-Null
+& git reset -- *.tmp 2>$null | Out-Null
+
+$staged = @(git --no-pager diff --cached --name-status)
 
 if ($staged.Count -eq 0) {
 
@@ -98,7 +105,7 @@ $staged | ForEach-Object {
 }
 
 Write-Host ""
-git diff --cached --stat
+git --no-pager diff --cached --stat
 
 if ([string]::IsNullOrWhiteSpace($Message)) {
 
@@ -119,7 +126,9 @@ git commit -m "$Message"
 
 Show-Section "PUSH"
 
-git push origin $Branch
+$pushArgs = @("push", "origin", $Branch)
+if ($Force) { $pushArgs += "--force" }
+& git @pushArgs
 
 Write-Host ""
 Write-Host "[OK] Sincronización completada correctamente." -ForegroundColor Green
