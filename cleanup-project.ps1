@@ -58,18 +58,6 @@ Remove-ObsoleteFile -RelativePath "src\ADSOLUSOL.Presentation.Api\MainPage.xaml"
 Remove-ObsoleteFile -RelativePath "src\ADSOLUSOL.Presentation.Api\Routes.razor" -Reason "Obsolete UI artifact."
 Remove-ObsoleteFile -RelativePath "src\ADSOLUSOL.Presentation.Api\_Imports.razor" -Reason "Obsolete UI artifact."
 
-# --- 4. Redundant Diagnostic Scripts ---
-Write-Host "`n--- Consolidating audit scripts..." -f Magenta
-Remove-ObsoleteFile -RelativePath "CHISMOSA_BUILD_DIAGNOSTIC.ps1" -Reason "Redundant. Use 'audit_adsolusol_milimetrico.ps1'."
-Remove-ObsoleteFile -RelativePath "AUDIT-SOPA-COMPLETA.ps1" -Reason "Redundant. Use 'audit_adsolusol_milimetrico.ps1'."
-Remove-ObsoleteFile -RelativePath "AUDIT-ADSOLUSOL-ULTRA-SUPERCHISMOSO.ps1" -Reason "Redundant. Use 'audit_adsolusol_milimetrico.ps1'."
-Remove-ObsoleteFile -RelativePath "Readonly-Check.ps1" -Reason "Functionality is covered by other scripts."
-
-# --- 5. Obsolete Documentation ---
-Write-Host "`n--- Removing obsolete documentation..." -f Magenta
-Remove-ObsoleteFile -RelativePath "MANIFEST.md" -Reason "Manifest from a very old version of the project."
-Remove-ObsoleteFile -RelativePath "HISTORIAL_ACTUALIZACIONES.md" -Reason "Outdated update history."
-
 Write-Host ""
 Write-Host "==================================================" -ForegroundColor Cyan
 Write-Host "      CLEANUP COMPLETE     " -ForegroundColor Cyan

@@ -72,6 +72,20 @@ if ([string]::IsNullOrWhiteSpace($Branch)) {
     if ([string]::IsNullOrWhiteSpace($Branch)) { $Branch = "main" }
 }
 
+Write-Host ">>> Ejecutando validacion previa (build y tests)..." -ForegroundColor Cyan
+& dotnet build ADSOLUSOL.sln -c Release --nologo -v minimal
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "[ERROR] La compilacion fallo. Abortando operacion git push." -ForegroundColor Red
+    exit 1
+}
+
+& dotnet test ADSOLUSOL.sln -c Release --no-build --nologo -v quiet
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "[ERROR] La suite de pruebas fallo. Abortando operacion git push." -ForegroundColor Red
+    exit 1
+}
+Write-Host "[OK] Verificaciones de calidad aprobadas." -ForegroundColor Green
+
 Write-Host ">>> Analizando y agregando cambios en rama '$Branch'..." -ForegroundColor Cyan
 & git add -A
 

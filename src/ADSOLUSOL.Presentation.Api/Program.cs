@@ -69,7 +69,9 @@ builder.Services.AddRateLimiter(options =>
             context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
             _ => new FixedWindowRateLimiterOptions
             {
-                PermitLimit = 5, Window = TimeSpan.FromMinutes(15), QueueLimit = 0,
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(15),
+                QueueLimit = 0,
                 AutoReplenishment = true
             }));
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
@@ -149,6 +151,7 @@ if (shouldInitSchema)
 
 // El middleware de ForwardedHeaders debe ir antes de redirecciones o autenticación
 app.UseForwardedHeaders();
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseRouting();
 app.UseRateLimiter();
 app.UseAuthentication();
@@ -181,7 +184,6 @@ app.Use(async (context, next) =>
 // Redirigir la raíz a Swagger o mostrar información básica de la API
 app.MapGet("/", () => Results.Redirect("/swagger"));
 
-app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<SignatureVerificationMiddleware>();
 app.UseAuthorization();
 
