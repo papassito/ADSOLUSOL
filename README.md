@@ -25,7 +25,6 @@ ADS mantiene separación estricta respecto de SEO/SUPER SEO, CORE, ORCHESTA y SI
 
 - .NET 8 / ASP.NET Core
 - .NET MAUI Blazor (Aplicación de escritorio nativa de Windows)
-- UI compartida en una Librería de Clases Razor (RCL)
 - SQLite
 - EF Core para contexto/esquema y Dapper en repositorios específicos
 
@@ -76,7 +75,7 @@ El proyecto cuenta con dos interfaces de usuario:
 
 ### 1. Aplicación de Escritorio (MAUI Blazor)
 
-La interfaz de usuario principal es una aplicación de escritorio nativa de Windows construida con **.NET MAUI Blazor**. Los componentes de la UI residen en el proyecto `src/ADSOLUSOL.Presentation.Shared` y son consumidos por el proyecto de escritorio `src/ADSOLUSOL.Presentation.Desktop`.
+La interfaz de usuario principal es una aplicación de escritorio nativa de Windows construida con **.NET MAUI Blazor**. Los componentes de la UI residen en el proyecto de escritorio `src/ADSOLUSOL.Presentation.Desktop`.
 
 ### 2. Panel Web (React)
 

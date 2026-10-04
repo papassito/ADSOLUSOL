@@ -36,4 +36,4 @@ el sistema publicitario completo ni una integración externa todavía inexistent
 
 ## Nota de estado actual
 
-La suite actual del repositorio contiene **17 comprobaciones numeradas de negocio**. Este dato no reemplaza ni altera las 34 comprobaciones históricas registradas arriba. Para una certificación actual deben ejecutarse build, regresiones, smoke/E2E y auditoría sobre el código vigente.
+La suite actual del repositorio contiene **20 comprobaciones numeradas de negocio**. Este dato no reemplaza ni altera las 34 comprobaciones históricas registradas arriba. Para una certificación actual deben ejecutarse build, regresiones, smoke/E2E y auditoría sobre el código vigente.

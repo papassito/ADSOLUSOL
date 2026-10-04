@@ -198,8 +198,7 @@ app.MapPost("/api/auth/session", async (HttpContext context, IConfiguration conf
     catch (JsonException) { return Results.BadRequest(new { error = "Invalid JSON." }); }
 
     var suppliedTenant = login?.TenantId?.Trim();
-    var tenantId = suppliedTenant?.Equals("info@solusol.net", StringComparison.OrdinalIgnoreCase) == true
-        ? "tenant-02" : suppliedTenant;
+    var tenantId = configuration[$"PanelAuth:Aliases:{suppliedTenant}"] ?? suppliedTenant;
     if (tenantId is null || !Regex.IsMatch(tenantId, "^[A-Za-z0-9_-]{1,64}$") ||
         !PanelPasswordVerifier.Verify(PanelAuthConfiguration.GetPasswordHash(configuration, tenantId), login?.Password))
         return Results.Unauthorized();
