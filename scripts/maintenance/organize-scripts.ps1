@@ -77,17 +77,13 @@ $obsoleteScripts = @(
     "REPARAR-FINAL.ps1",
     "seal_adsolusol_release.ps1",
     "chismoso.ps1",
+    "audit-live.ps1",
+    "radiografia_codigo.ps1",
+    "Verificar-Errores.ps1",
     "CALIFICADOR_MODULOS.ps1",
     "Calificar-Proyecto.ps1",
     "Show-ProjectTree.ps1",
     "release.ps1",
-    "audit-live.ps1",
-    "radiografia_codigo.ps1",
-    "Verificar-Errores.ps1",
-    "push.ps1",
-    "stress_test.ps1",
-    "audit_ultra-mitotero.ps1",
-    "CALIFICADOR_MODULOS.ps1",
     "Calificar-Proyecto.ps1",
     "push.ps1",
     "Start-Dev.ps1",
@@ -110,6 +106,35 @@ foreach ($obs in $obsoleteScripts) {
     if (Test-Path $path) {
         Remove-Item $path -Force -ErrorAction SilentlyContinue
         Write-Host "[ELIMINADO] Script obsoleto/duplicado: $obs" -ForegroundColor Green
+    }
+}
+
+Write-Host ""
+Write-Host "--- ELIMINANDO DOCUMENTOS ESPEJO EN DOCS/ ---" -ForegroundColor Yellow
+$mirrorDocs = @(
+    "docs\ADSOLUSOL.md",
+    "docs\AI-AD.md",
+    "docs\AI.md",
+    "docs\CAMPAIGN.md",
+    "docs\COMPONENTS.md",
+    "docs\CONTRACTS.md",
+    "docs\INTEGRITY.md",
+    "docs\MAP.md",
+    "docs\MARKETING-API.md",
+    "docs\MARKETING-BRAIN.md",
+    "docs\MARKETING.md",
+    "docs\MOTOR.md",
+    "docs\ONION.md",
+    "docs\ORCHESTA.md",
+    "docs\SEO.md",
+    "docs\SITEMAP.md",
+    "docs\VALIDATE.md"
+)
+foreach ($doc in $mirrorDocs) {
+    $p = Join-Path $Root $doc
+    if (Test-Path $p) {
+        Remove-Item $p -Force -ErrorAction SilentlyContinue
+        Write-Host "[ELIMINADO] Documento espejo: $doc" -ForegroundColor Green
     }
 }
 

@@ -133,8 +133,7 @@ if ($mirrorDuplicates -eq 0) {
 
 # 5. Sanidad de Scripts
 Write-Host "`n[5/5] Verificando organizacion de scripts en scripts/..." -ForegroundColor Yellow
-$scriptsInRoot = Get-ChildItem -Path $ScriptRoot -Filter "*.ps1" -File -ErrorAction SilentlyContinue |
-    Where-Object { $_.Name -notin @("Show-ProjectTree.ps1", "release.ps1", "organize-scripts.ps1") }
+$scriptsInRoot = Get-ChildItem -Path $ScriptRoot -Filter "*.ps1" -File -ErrorAction SilentlyContinue
 
 if ($scriptsInRoot.Count -gt 0) {
     foreach ($s in $scriptsInRoot) {

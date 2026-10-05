@@ -25,7 +25,7 @@ if ($Reseal) {
     $manifestFiles = @("docs/MANIFEST.md", "MANIFEST.md")
     $mdFiles = Get-ChildItem -Path $ScriptRoot -Recurse -Filter "*.md" -File -ErrorAction SilentlyContinue |
         Where-Object { 
-            $_.FullName -notmatch "[\\/](\.git|bin|obj|BUILD|node_modules)[\\/]" -and
+            $_.FullName -notmatch "[\\/](\.git|bin|obj|BUILD|node_modules|\.repair-backups|_audit)[\\/]" -and
             $_.Name -ne "MANIFEST.md" -and
             $_.Name -ne "EXPEDIENTE_CLINICO_MAESTRO.md"
         } |

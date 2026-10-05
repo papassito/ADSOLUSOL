@@ -35,31 +35,12 @@ docs
 │   │   └── PHASE-3.md
 │   ├── security
 │   │   └── INTEGRITY.md
-│   ├── ADSOLUSOL.md
-│   ├── AI-AD.md
-│   ├── AI.md
-│   ├── CAMPAIGN.md
-│   ├── COMPONENTS.md
-│   ├── CONTRACTS.md
 │   ├── DEPLOYMENT_PLESK_ADSOLUSOL.md
 │   ├── EXPEDIENTE_CLINICO_MAESTRO.md
 │   ├── HISTORIAL DE ACTIVIDADES.MD
-│   ├── INTEGRITY.md
 │   ├── LIBRARY.md
 │   ├── MANIFEST.md
-│   ├── MAP.md
-│   ├── MARKETING-API.md
-│   ├── MARKETING-BRAIN.md
-│   ├── MARKETING.md
-│   ├── MOTOR.md
-│   ├── ONION.md
-│   ├── ORCHESTA.md
-│   ├── REQUIREMENTS.md
-│   ├── ROADMAP.md
-│   ├── SEO.md
-│   ├── SITEMAP.md
-│   ├── STRUCTURE.md
-│   └── VALIDATE.md
+│   └── STRUCTURE.md
 scripts
 │   ├── audit
 │   │   ├── audit-compilacion.ps1
