@@ -98,6 +98,7 @@ foreach ($file in $textFiles) {
     $rawText = Get-Content $file.FullName -Raw -Encoding UTF8 -ErrorAction SilentlyContinue
     if ($rawText -and $rawText -match "(\u00C3[\u0080-\u00BF]|\u00E2[\u0080-\u00BF]{2})") {
         Report-Check "MOJIBAKE" $rel "Secuencias corruptas detectadas (tildes/símbolos Windows-1252)." "WARN"
+        Report-Check "MOJIBAKE" $rel "Secuencias corruptas detectadas (tildes/simbolos Windows-1252)." "WARN"
     }
     if ($rawText -and $rawText.Contains([char]0xFFFD)) {
         Report-Check "UNICODE" $rel "Caracter de reemplazo corrupto (\uFFFD) detectado." "FAIL"
@@ -163,13 +164,17 @@ if ($LASTEXITCODE -eq 0) {
 
 # ------------------------------------------------------------------------------
 # FASE 6: SUITES DE PRUEBAS DE REGRESIÓN
+# FASE 6: SUITES DE PRUEBAS DE REGRESION
 # ------------------------------------------------------------------------------
 Write-Host "`n[6/7] Ejecutando pruebas de regresión de negocio (20 comprobaciones)..." -ForegroundColor Yellow
+Write-Host "`n[6/7] Ejecutando pruebas de regresion de negocio (20 comprobaciones)..." -ForegroundColor Yellow
 $testOut = & dotnet test ADSOLUSOL.sln -c Release --no-build --nologo -v:q 2>&1
 if ($LASTEXITCODE -eq 0) {
     Report-Check "TESTS" "RegressionTests" "Todas las pruebas de regresión pasaron con éxito." "OK"
+    Report-Check "TESTS" "RegressionTests" "Todas las pruebas de regresion pasaron con exito." "OK"
 } else {
     Report-Check "TESTS" "RegressionTests" "Fallo en la suite de pruebas de regresión." "FAIL"
+    Report-Check "TESTS" "RegressionTests" "Fallo en la suite de pruebas de regresion." "FAIL"
 }
 
 # ------------------------------------------------------------------------------
