@@ -1,6 +1,7 @@
 using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 using ADSOLUSOL.Domain.Enums;
+using Microsoft.Extensions.Logging;
 
 namespace ADSOLUSOL.Application.Services;
 
@@ -13,8 +14,17 @@ public class EventProcessingService
     private readonly BudgetService _budgetService;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMarketingBrainService _marketingBrainService;
+    private readonly ILogger<EventProcessingService> _logger;
 
-    public EventProcessingService(IAdEventRepository eventRepository, ICampaignRepository campaignRepository, IPlacementRepository placementRepository, ICreativeRepository creativeRepository, BudgetService budgetService, IUnitOfWork unitOfWork, IMarketingBrainService marketingBrainService)
+    public EventProcessingService(
+        IAdEventRepository eventRepository,
+        ICampaignRepository campaignRepository,
+        IPlacementRepository placementRepository,
+        ICreativeRepository creativeRepository,
+        BudgetService budgetService,
+        IUnitOfWork unitOfWork,
+        IMarketingBrainService marketingBrainService,
+        ILogger<EventProcessingService> logger)
     {
         _eventRepository = eventRepository;
         _campaignRepository = campaignRepository;
@@ -23,6 +33,7 @@ public class EventProcessingService
         _budgetService = budgetService;
         _unitOfWork = unitOfWork;
         _marketingBrainService = marketingBrainService;
+        _logger = logger;
     }
 
     public async Task<EventProcessingStatus> ProcessEvent(AdEvent adEvent)
@@ -106,10 +117,13 @@ public class EventProcessingService
             {
                 await _marketingBrainService.EmitTelemetryAsync(adEvent.CampaignId, $"ADS_{eventTypeEnum.ToString().ToUpper()}", adEvent.Cost);
             }
-            catch
+            catch (Exception ex)
             {
-                // Resiliencia perimetral: La falla o timeout del servicio externo de telemetria
-                // no invalida un evento publicitario cuyo debito y persistencia ya son autoritativos.
+                _logger.LogWarning(
+                    ex,
+                    "Fallo en telemetria externa hacia SIC para campana {CampaignId} evento {EventType}. Evento persistido localmente.",
+                    adEvent.CampaignId,
+                    eventTypeEnum);
             }
 
             return EventProcessingStatus.Accepted;

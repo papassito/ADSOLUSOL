@@ -16,12 +16,17 @@ public class AdServingService
 
     public async Task<Creative?> SelectAdForPlacement(string tenantId, string placementCode)
     {
+        if (string.IsNullOrWhiteSpace(tenantId) || string.IsNullOrWhiteSpace(placementCode))
+        {
+            return null;
+        }
+
         var placement = await _placementRepository.GetByCodeAsync(placementCode);
         if (placement == null || !placement.IsEnabled) return null;
 
         var eligibleCampaigns = await _placementRepository.GetEligibleCampaignsAsync(tenantId, placementCode);
 
-        // The repository now returns campaigns in a random order. Iterate directly to save memory.
+        // Iterar sobre las campañas ordenadas por mayor presupuesto remanente para seleccionar el primer creativo elegible.
         foreach (var campaign in eligibleCampaigns)
         {
             var creative = await _creativeRepository.GetEligibleCreativeForCampaignAsync(campaign.Id);
