@@ -7,6 +7,7 @@
   Uso:
     .\scripts\audit\audit_all_project.ps1
     .\scripts\audit\audit_all_project.ps1 -StopOnFail
+    .\scripts\audit\audit_all_project.ps1 -Compact
     .\scripts\audit\audit_all_project.ps1 -Fast
 ================================================================================
 #>
@@ -14,7 +15,8 @@
 param(
     [string]$Root = $PSScriptRoot,
     [switch]$StopOnFail,
-    [switch]$Fast
+    [switch]$Fast,
+    [switch]$Compact
 )
 
 $ErrorActionPreference = "Continue"
@@ -144,7 +146,11 @@ foreach ($item in $AuditorPipeline) {
 
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
     $callArgs = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", $path) + $item.Args
-    & $psExe $callArgs
+    if ($Compact) {
+        $subOut = & $psExe $callArgs 2>&1
+    } else {
+        & $psExe $callArgs
+    }
     $exit = $LASTEXITCODE
     $sw.Stop()
 
@@ -154,6 +160,10 @@ foreach ($item in $AuditorPipeline) {
     if ($dictamen -eq "WARN") { $Warns++ }
 
     $Results.Add([PSCustomObject]@{ Fase = $item.Fase; Auditor = $name; ExitCode = $exit; Dictamen = $dictamen; Duracion = $dur })
+    
+    if ($Compact) {
+        Write-Host "   -> Resultado: [$dictamen] ($dur)" -ForegroundColor $(if ($dictamen -eq "PASS") { "Green" } elseif ($dictamen -eq "WARN") { "Yellow" } else { "Red" })
+    }
 
     if ($dictamen -eq "FAIL" -and $StopOnFail) {
         Write-Host "`n[INTERRUPCION] Deteniendo suite anticipadamente por fallo (-StopOnFail)." -ForegroundColor Red

@@ -474,8 +474,6 @@ function Calificar-Modulo {
 # INICIO
 # ============================================================
 
-Clear-Host
-
 Write-Host ""
 Write-Host "============================================================" -ForegroundColor Cyan
 Write-Host "     AUDITOR NUMERICO DE MODULOS (.NET 8 / C#)" -ForegroundColor Cyan
