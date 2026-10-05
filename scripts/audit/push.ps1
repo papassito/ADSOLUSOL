@@ -124,7 +124,7 @@ Show-Section "PUSH"
 git push origin $Branch
 
 Write-Host ""
-Write-Host "[OK] Sincronización completada correctamente." -ForegroundColor Green
+Write-Host "[OK] Sincronizacion completada correctamente." -ForegroundColor Green
 Write-Host ""
 Write-Host "Siguiente paso:" -ForegroundColor Cyan
 Write-Host "Plesk -> Pull ahora -> Desplegar ahora" -ForegroundColor Yellow

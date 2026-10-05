@@ -62,7 +62,24 @@ public class CampaignService
             return null;
         }
 
-        campaign.Status = status;
+        var targetStatus = status.Trim().ToUpperInvariant();
+
+        // Validación de máquina de estados y control de transición
+        var isAllowedTransition = campaign.Status switch
+        {
+            "SCHEDULED" => targetStatus is "ACTIVE" or "PAUSED" or "COMPLETED",
+            "ACTIVE"    => targetStatus is "PAUSED" or "COMPLETED",
+            "PAUSED"    => targetStatus is "ACTIVE" or "COMPLETED",
+            "COMPLETED" => false, // Estado terminal
+            _           => true
+        };
+
+        if (!isAllowedTransition && campaign.Status != targetStatus)
+        {
+            return null;
+        }
+
+        campaign.Status = targetStatus;
         await _campaignRepository.UpdateAsync(campaign);
         await _unitOfWork.SaveChangesAsync();
         return campaign;

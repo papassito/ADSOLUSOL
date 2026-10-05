@@ -16,6 +16,13 @@ public class AssignmentRepository : IAssignmentRepository
 
     public async Task AssignPlacementToCampaignAsync(string campaignId, long placementId)
     {
+        // Verificar existencia y aislamiento por TenantId
+        var campaign = await _context.Campaigns.FirstOrDefaultAsync(c => c.Id == campaignId);
+        if (campaign == null || string.IsNullOrWhiteSpace(campaign.TenantId))
+        {
+            return;
+        }
+
         var exists = await _context.CampaignPlacements.AnyAsync(cp => cp.CampaignId == campaignId && cp.PlacementId == placementId);
         if (!exists)
         {
@@ -26,6 +33,13 @@ public class AssignmentRepository : IAssignmentRepository
 
     public async Task AssignCreativeToCampaignAsync(string campaignId, long creativeId)
     {
+        // Verificar existencia y aislamiento por TenantId
+        var campaign = await _context.Campaigns.FirstOrDefaultAsync(c => c.Id == campaignId);
+        if (campaign == null || string.IsNullOrWhiteSpace(campaign.TenantId))
+        {
+            return;
+        }
+
         var exists = await _context.CampaignCreatives.AnyAsync(cc => cc.CampaignId == campaignId && cc.CreativeId == creativeId);
         if (!exists)
         {

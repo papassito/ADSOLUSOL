@@ -17,7 +17,7 @@ public class AdServingService
     public async Task<Creative?> SelectAdForPlacement(string tenantId, string placementCode)
     {
         var placement = await _placementRepository.GetByCodeAsync(placementCode);
-        if (placement == null) return null;
+        if (placement == null || !placement.IsEnabled) return null;
 
         var eligibleCampaigns = await _placementRepository.GetEligibleCampaignsAsync(tenantId, placementCode);
 

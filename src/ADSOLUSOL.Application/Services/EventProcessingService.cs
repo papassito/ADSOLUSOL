@@ -40,7 +40,12 @@ public class EventProcessingService
         // Assign the real PlacementId
         adEvent.PlacementId = placement.Id.ToString();
 
-        var creative = await _creativeRepository.GetByIdAsync(long.Parse(adEvent.CreativeId));
+        if (!long.TryParse(adEvent.CreativeId, out var creativeId))
+        {
+            return EventProcessingStatus.Rejected;
+        }
+
+        var creative = await _creativeRepository.GetByIdAsync(creativeId);
         if (creative is null || !creative.IsEnabled)
         {
             return EventProcessingStatus.Rejected;
