@@ -101,8 +101,16 @@ public class EventProcessingService
 
             await _unitOfWork.CommitAsync();
 
-            // The cost is now correctly reported to the telemetry service.
-            await _marketingBrainService.EmitTelemetryAsync(adEvent.CampaignId, $"ADS_{eventTypeEnum.ToString().ToUpper()}", adEvent.Cost);
+            // Telemetria hacia SIC / Marketing Brain con proteccion perimetral
+            try
+            {
+                await _marketingBrainService.EmitTelemetryAsync(adEvent.CampaignId, $"ADS_{eventTypeEnum.ToString().ToUpper()}", adEvent.Cost);
+            }
+            catch
+            {
+                // Resiliencia perimetral: La falla o timeout del servicio externo de telemetria
+                // no invalida un evento publicitario cuyo debito y persistencia ya son autoritativos.
+            }
 
             return EventProcessingStatus.Accepted;
         }
