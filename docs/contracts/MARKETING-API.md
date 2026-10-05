@@ -117,12 +117,13 @@ El aislamiento tenant no debe considerarse cerrado. La consulta/listado/actualiz
 
 ## Estado de SIC / Marketing Brain
 
-`HealthController` sí intenta consultar SIC. En cambio, `MarketingBrainClient` actual no verifica una dependencia externa: devuelve `true` en `PingAsync`/`IsAvailableAsync` y `EmitTelemetryAsync` no realiza I/O.
+`HealthController` consulta `{SolusolAuthV1:SicBaseUrl}/health`.
+`MarketingBrainClient` implementa llamadas asíncronas reales vía `HttpClient` hacia el endpoint de SIC. La resiliencia con cola de reintentos persistente ante caídas prolongadas de red permanece como trabajo futuro.
 
 Por Zero-Synthetic:
 
 ```text
-MARKETING BRAIN CONNECTIVITY = UNVERIFIED / NOT IMPLEMENTED
+MARKETING BRAIN RUNTIME CONNECTIVITY = UNVERIFIED IN LIVE NETWORK
 ```
 
 ## Rutas históricas que NO representan el runtime actual

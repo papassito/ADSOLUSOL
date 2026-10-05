@@ -1,12 +1,12 @@
-# Expediente ClÃ­nico Maestro - ADSOLUSOL (Ads & Growth Engine)
+# Expediente Clínico Maestro - ADSOLUSOL (Ads & Growth Engine)
 
 **Fecha y Hora del Chequeo Forense:** 2026-10-04 22:06:04
 
 **Ecosistema Auditado:** C# / .NET 8 (73 archivos) | PowerShell (35 scripts) | Markdown Docs (60 archivos) | JSON / Config (14 archivos)
 
-## Dictamen Resumido de la Junta MÃ©dica Forense
+## Dictamen Resumido de la Junta Médica Forense
 
-| Ãrea MÃ©dica | Especialista / Peritaje Forense | DiagnÃ³stico ClÃ­nico |
+| Área Médica | Especialista / Peritaje Forense | Diagnóstico Clínico |
 |---|---|---|
 | **Inmunologia de Codificacion, BOM y Caracteres de Control** | Integridad UTF-8, Ausencia de BOM, Nulos y Caracteres Invalidos | **SANO (PASS)** |
 | **Traumatologia y Segregacion Estructural (Clean / Onion)** | Higiene de Raiz, Deteccion de Huerfanos y Contratos de Repositorio | **SANO (PASS)** |
@@ -21,51 +21,51 @@
 
 ---
 
-## Detalle de Observaciones QuirÃºrgicas y Laboratorio
+## Detalle de Observaciones Quirúrgicas y Laboratorio
 
-### Ãrea: Inmunologia de Codificacion, BOM y Caracteres de Control
+### Área: Inmunologia de Codificacion, BOM y Caracteres de Control
 **Especialista:** Integridad UTF-8, Ausencia de BOM, Nulos y Caracteres Invalidos | **Estado:** **SANO (PASS)**
 
-*Alcance ClÃ­nico:* AuditorÃ­a de codificaciÃ³n UTF-8 estricta, ausencia de BOM, caracteres nulos y secuencias corruptas.
+*Alcance Clínico:* Auditoría de codificación UTF-8 estricta, ausencia de BOM, caracteres nulos y secuencias corruptas.
 
 ```text
-[SANO] 134 archivos analizados sin BOM, caracteres nulos ni corrupciÃ³n UTF-8.
+[SANO] 134 archivos analizados sin BOM, caracteres nulos ni corrupción UTF-8.
 ```
 
-### Ãrea: Traumatologia y Segregacion Estructural (Clean / Onion)
+### Área: Traumatologia y Segregacion Estructural (Clean / Onion)
 **Especialista:** Higiene de Raiz, Deteccion de Huerfanos y Contratos de Repositorio | **Estado:** **SANO (PASS)**
 
-*Alcance ClÃ­nico:* InspecciÃ³n de proyectos huÃ©rfanos en raÃ­z, segregaciÃ³n de UI MAUI y contratos tipados en repositorios.
+*Alcance Clínico:* Inspección de proyectos huérfanos en raíz, segregación de UI MAUI y contratos tipados en repositorios.
 
 ```text
-[SANO] TopologÃ­a Onion inmaculada: cero fuentes huÃ©rfanas y contratos asÃ­ncronos vÃ¡lidos.
+[SANO] Topología Onion inmaculada: cero fuentes huérfanas y contratos asíncronos válidos.
 ```
 
-### Ãrea: Oftalmologia y Formato Canonico (.NET Format)
+### Área: Oftalmologia y Formato Canonico (.NET Format)
 **Especialista:** Inspeccion Visual y Estilo Canonico de Codigo C# | **Estado:** **SANO (PASS)**
 
-*Alcance ClÃ­nico:* VerificaciÃ³n pericial del formato de cÃ³digo mediante dotnet format oficial.
+*Alcance Clínico:* Verificación pericial del formato de código mediante dotnet format oficial.
 
 ```text
-[SANO] Agudeza visual 20/20: Todo el cÃ³digo C# cumple con el estÃ¡ndar canÃ³nico.
+[SANO] Agudeza visual 20/20: Todo el código C# cumple con el estándar canónico.
 ```
 
-### Ãrea: Neurologia y Analisis Estatico (dotnet build & Roslyn)
+### Área: Neurologia y Analisis Estatico (dotnet build & Roslyn)
 **Especialista:** Diagnostico de Compilacion, Tipado y Diagnosticos Roslyn | **Estado:** **SANO (PASS)**
 
-*Alcance ClÃ­nico:* CompilaciÃ³n estÃ¡tica de todos los proyectos de la soluciÃ³n en configuraciÃ³n Release.
+*Alcance Clínico:* Compilación estática de todos los proyectos de la solución en configuración Release.
 
 ```text
-[SANO] CompilaciÃ³n diagnÃ³stica 100% limpia: Cero errores CS, MSB o NuGet.
+[SANO] Compilación diagnóstica 100% limpia: Cero errores CS, MSB o NuGet.
 ```
 
-### Ãrea: Cardiologia Forense (Pruebas Unitarias, Regresion y Smokey)
+### Área: Cardiologia Forense (Pruebas Unitarias, Regresion y Smokey)
 **Especialista:** Verificacion de Motores, Debito Presupuestario y Smokey Tests | **Estado:** **SANO (PASS)**
 
-*Alcance ClÃ­nico:* EvaluaciÃ³n de suites de regresiÃ³n, integridad de dÃ©bito atÃ³mico y telemetrÃ­a de rendimiento.
+*Alcance Clínico:* Evaluación de suites de regresión, integridad de débito atómico y telemetría de rendimiento.
 
 ```text
-[SANO] Pulso cardÃ­aco regular: 100% pruebas de regresiÃ³n aprobadas en 4.88s (rendimiento Ã³ptimo).
+[SANO] Pulso cardíaco regular: 100% pruebas de regresión aprobadas en 4.88s (rendimiento óptimo).
 ```
 
 ### Ãrea: Farmacologia, Criptografia y Blindaje Perimetral EDR
@@ -112,4 +112,3 @@
 ```text
 [NO VERIFICADO] No se localizaron proyectos de pruebas de UI (bUnit) en tests/. Suite ausente.
 ```
-

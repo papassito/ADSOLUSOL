@@ -76,8 +76,8 @@ foreach ($f in $ArchivosTexto) {
 
     $contenido = Get-Content $f.FullName -Raw -Encoding UTF8 -ErrorAction SilentlyContinue
     # Patrón de Mojibake mejorado:
-    # \u00C3[\u0080-\u00BF] -> Detecta secuencias de 2 bytes (ej. Ã¡ para á).
-    # \u00E2[\u0080-\u00BF]{2} -> Detecta secuencias de 3 bytes que empiezan con â (ej. â‚¬ para €, â”” para └).
+    # \u00C3[\u0080-\u00BF] -> Detecta secuencias corruptas de 2 bytes (ej. doble byte para tildes).
+    # \u00E2[\u0080-\u00BF]{2} -> Detecta secuencias de 3 bytes (ej. simbolos deformados).
     if ($contenido -and $contenido -match "(\u00C3[\u0080-\u00BF]|\u00E2[\u0080-\u00BF]{2})") {
         if ($Fix) {
             try {
