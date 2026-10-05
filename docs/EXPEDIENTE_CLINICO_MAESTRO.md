@@ -1,16 +1,16 @@
-# Expediente Clínico Maestro - ADSOLUSOL (Ads & Growth Engine)
+# Expediente ClÃ­nico Maestro - ADSOLUSOL (Ads & Growth Engine)
 
-**Fecha y Hora del Chequeo Forense:** 2026-10-05 08:20:36
+**Fecha y Hora del Chequeo Forense:** 2026-10-05 12:17:54
 
-**Ecosistema Auditado:** C# / .NET 8 (69 archivos) | PowerShell (29 scripts) | Markdown Docs (135 archivos) | JSON / Config (137 archivos)
+**Ecosistema Auditado:** C# / .NET 8 (71 archivos) | PowerShell (39 scripts) | Markdown Docs (136 archivos) | JSON / Config (137 archivos)
 
-## Dictamen Resumido de la Junta Médica Forense
+## Dictamen Resumido de la Junta MÃ©dica Forense
 
-| Área Médica | Especialista / Peritaje Forense | Diagnóstico Clínico |
+| Ãrea MÃ©dica | Especialista / Peritaje Forense | DiagnÃ³stico ClÃ­nico |
 |---|---|---|
 | **Inmunologia de Codificacion, BOM y Caracteres de Control** | Integridad UTF-8, Ausencia de BOM, Nulos y Caracteres Invalidos | **SANO (PASS)** |
 | **Traumatologia y Segregacion Estructural (Clean / Onion)** | Higiene de Raiz, Deteccion de Huerfanos y Contratos de Repositorio | **SANO (PASS)** |
-| **Oftalmologia y Formato Canonico (.NET Format)** | Inspeccion Visual y Estilo Canonico de Codigo C# | **SANO (PASS)** |
+| **Oftalmologia y Formato Canonico (.NET Format)** | Inspeccion Visual y Estilo Canonico de Codigo C# | **OBSERVACION (Exit Code: 1)** |
 | **Neurologia y Analisis Estatico (dotnet build & Roslyn)** | Diagnostico de Compilacion, Tipado y Diagnosticos Roslyn | **SANO (PASS)** |
 | **Cardiologia Forense (Pruebas Unitarias, Regresion y Smokey)** | Verificacion de Motores, Debito Presupuestario y Smokey Tests | **SANO (PASS)** |
 | **Farmacologia, Criptografia y Blindaje Perimetral EDR** | Inmunidad a Secretos Expuestos y Heuristicas Antivirus | **SANO (PASS)** |
@@ -21,94 +21,97 @@
 
 ---
 
-## Detalle de Observaciones Quirúrgicas y Laboratorio
+## Detalle de Observaciones QuirÃºrgicas y Laboratorio
 
-### Área: Inmunologia de Codificacion, BOM y Caracteres de Control
+### Ãrea: Inmunologia de Codificacion, BOM y Caracteres de Control
 **Especialista:** Integridad UTF-8, Ausencia de BOM, Nulos y Caracteres Invalidos | **Estado:** **SANO (PASS)**
 
-*Alcance Clínico:* Auditoría de codificación UTF-8 estricta, ausencia de BOM, caracteres nulos y secuencias corruptas.
+*Alcance ClÃ­nico:* AuditorÃ­a de codificaciÃ³n UTF-8 estricta, ausencia de BOM, caracteres nulos y secuencias corruptas.
 
 ```text
-[SANO] 294 archivos analizados sin BOM, caracteres nulos ni corrupción UTF-8.
+[SANO] 296 archivos analizados sin BOM, caracteres nulos ni corrupciÃ³n UTF-8.
 ```
 
-### Área: Traumatologia y Segregacion Estructural (Clean / Onion)
+### Ãrea: Traumatologia y Segregacion Estructural (Clean / Onion)
 **Especialista:** Higiene de Raiz, Deteccion de Huerfanos y Contratos de Repositorio | **Estado:** **SANO (PASS)**
 
-*Alcance Clínico:* Inspección de proyectos huérfanos en raíz, segregación de UI MAUI y contratos tipados en repositorios.
+*Alcance ClÃ­nico:* InspecciÃ³n de proyectos huÃ©rfanos en raÃ­z, segregaciÃ³n de UI MAUI y contratos tipados en repositorios.
 
 ```text
-[SANO] Topología Onion inmaculada: cero fuentes huérfanas y contratos asíncronos válidos.
+[SANO] TopologÃ­a Onion inmaculada: cero fuentes huÃ©rfanas y contratos asÃ­ncronos vÃ¡lidos.
 ```
 
-### Área: Oftalmologia y Formato Canonico (.NET Format)
-**Especialista:** Inspeccion Visual y Estilo Canonico de Codigo C# | **Estado:** **SANO (PASS)**
+### Ãrea: Oftalmologia y Formato Canonico (.NET Format)
+**Especialista:** Inspeccion Visual y Estilo Canonico de Codigo C# | **Estado:** **OBSERVACION (Exit Code: 1)**
 
-*Alcance Clínico:* Verificación pericial del formato de código mediante dotnet format oficial.
+*Alcance ClÃ­nico:* VerificaciÃ³n pericial del formato de cÃ³digo mediante dotnet format oficial.
 
 ```text
-[SANO] Agudeza visual 20/20: Todo el código C# cumple con el estándar canónico.
+[DIPLOPIA] El cÃ³digo presenta discrepancias visuales con el estÃ¡ndar dotnet format:
+Y:\Documentos\GitHub\ADSOLUSOL\src\ADSOLUSOL.Application\Services\CampaignService.cs(71,22): error WHITESPACE: Corrija el formato de espacio en blanco. Delete 3 characters. [Y:\Documentos\GitHub\ADSOLUSOL\src\ADSOLUSOL.Application\ADSOLUSOL.Application.csproj] Y:\Documentos\GitHub\ADSOLUSOL\src\ADSOLUSOL.Application\Services\CampaignService.cs(72,22): error WHITESPACE: Corrija el formato de espacio en blanco. Delete 3 characters. [Y:\Documentos\GitHub\ADSOLUSOL\src\ADSOLUSOL.Application\ADSOLUSOL.Application.csproj] Y:\Documentos\GitHub\ADSOLUSOL\src\ADSOLUSOL.Application\Services\CampaignService.cs(74,15): error WHITESPACE: Corrija el formato de espacio en blanco. Delete 10 characters. [Y:\Documentos\GitHub\ADSOLUSOL\src\ADSOLUSOL.Application\ADSOLUSOL.Application.csproj]
+[INFO] Ejecute .\release.ps1 -Fix (o dotnet format) para autoformatear.
 ```
 
-### Área: Neurologia y Analisis Estatico (dotnet build & Roslyn)
+### Ãrea: Neurologia y Analisis Estatico (dotnet build & Roslyn)
 **Especialista:** Diagnostico de Compilacion, Tipado y Diagnosticos Roslyn | **Estado:** **SANO (PASS)**
 
-*Alcance Clínico:* Compilación estática de todos los proyectos de la solución en configuración Release.
+*Alcance ClÃ­nico:* CompilaciÃ³n estÃ¡tica de todos los proyectos de la soluciÃ³n en configuraciÃ³n Release.
 
 ```text
-[SANO] Compilación diagnóstica 100% limpia: Cero errores CS, MSB o NuGet.
+[SANO] CompilaciÃ³n diagnÃ³stica 100% limpia: Cero errores CS, MSB o NuGet.
 ```
 
-### Área: Cardiologia Forense (Pruebas Unitarias, Regresion y Smokey)
+### Ãrea: Cardiologia Forense (Pruebas Unitarias, Regresion y Smokey)
 **Especialista:** Verificacion de Motores, Debito Presupuestario y Smokey Tests | **Estado:** **SANO (PASS)**
 
-*Alcance Clínico:* Evaluación de suites de regresión, integridad de débito atómico y telemetría de rendimiento.
+*Alcance ClÃ­nico:* EvaluaciÃ³n de suites de regresiÃ³n, integridad de dÃ©bito atÃ³mico y telemetrÃ­a de rendimiento.
 
 ```text
-[SANO] Pulso cardíaco regular: 100% pruebas de regresión aprobadas en 4.54s (rendimiento óptimo).
+[SANO] Pulso cardÃ­aco regular: 100% pruebas de regresiÃ³n aprobadas en 4.69s (rendimiento Ã³ptimo).
 ```
 
-### Área: Farmacologia, Criptografia y Blindaje Perimetral EDR
+### Ãrea: Farmacologia, Criptografia y Blindaje Perimetral EDR
 **Especialista:** Inmunidad a Secretos Expuestos y Heuristicas Antivirus | **Estado:** **SANO (PASS)**
 
-*Alcance Clínico:* Inspección perimetral de cadenas sensibles y blindaje contra falsos positivos EDR/Antivirus.
+*Alcance ClÃ­nico:* InspecciÃ³n perimetral de cadenas sensibles y blindaje contra falsos positivos EDR/Antivirus.
 
 ```text
-[SANO] Inmunidad EDR: Cero secretos expuestos y scripts libres de heurísticas maliciosas.
+[SANO] Inmunidad EDR: Cero secretos expuestos y scripts libres de heurÃ­sticas maliciosas.
 ```
 
-### Área: Calidad de Codigo y Olores (Code Smells)
+### Ãrea: Calidad de Codigo y Olores (Code Smells)
 **Especialista:** Deteccion de Excepciones no Implementadas, Capturas Silenciosas y Comentarios TODO/FIXME | **Estado:** **SANO (PASS)**
 
-*Alcance Clínico:* Análisis estático para detectar patrones de código problemáticos como NotImplementedException, bloques catch vacíos y comentarios de trabajo pendiente.
+*Alcance ClÃ­nico:* AnÃ¡lisis estÃ¡tico para detectar patrones de cÃ³digo problemÃ¡ticos como NotImplementedException, bloques catch vacÃ­os y comentarios de trabajo pendiente.
 
 ```text
-[SANO] Código libre de olores críticos (excepciones no implementadas, capturas silenciosas).
+[SANO] CÃ³digo libre de olores crÃ­ticos (excepciones no implementadas, capturas silenciosas).
 ```
 
-### Área: Gobernanza y Verificacion de Integracion Externa (SIC)
+### Ãrea: Gobernanza y Verificacion de Integracion Externa (SIC)
 **Especialista:** Analisis de Codigo Fuente para Conectividad Real (No Mocks) | **Estado:** **NO VERIFICADO / OBSERVACION**
 
-*Alcance Clínico:* Auditoría de conectividad real hacia SIC (distingue implementación de verificación activa de red).
+*Alcance ClÃ­nico:* AuditorÃ­a de conectividad real hacia SIC (distingue implementaciÃ³n de verificaciÃ³n activa de red).
 
 ```text
 [OBSERVACION] MarketingBrainClient implementa HttpClient, pero conectividad con SIC permanece como: NO VERIFICADA EN RED.
 ```
 
-### Área: Dermatologia y Cobertura Funcional de UI (Sitemap & DI Wiring)
+### Ãrea: Dermatologia y Cobertura Funcional de UI (Sitemap & DI Wiring)
 **Especialista:** Integridad de Vistas Blazor, Navegacion y Contenedor Desktop | **Estado:** **SANO (PASS)**
 
-*Alcance Clínico:* Inspección de cobertura funcional, registros de servicios y cableado de navegación Desktop.
+*Alcance ClÃ­nico:* InspecciÃ³n de cobertura funcional, registros de servicios y cableado de navegaciÃ³n Desktop.
 
 ```text
 [SANO] Cobertura funcional de UI y contenedor DI al 100% verificado.
 ```
 
-### Área: Endoscopia y Pruebas de Componentes UI (bUnit)
+### Ãrea: Endoscopia y Pruebas de Componentes UI (bUnit)
 **Especialista:** Verificacion Funcional de Componentes Blazor Aislados | **Estado:** **NO VERIFICADO / OBSERVACION**
 
-*Alcance Clínico:* Ejecuta la suite de pruebas de componentes de UI (bUnit) para validar la lógica y el renderizado de los componentes Razor de forma aislada.
+*Alcance ClÃ­nico:* Ejecuta la suite de pruebas de componentes de UI (bUnit) para validar la lÃ³gica y el renderizado de los componentes Razor de forma aislada.
 
 ```text
 [NO VERIFICADO] No se localizaron proyectos de pruebas de UI (bUnit) en tests/. Suite ausente.
 ```
+

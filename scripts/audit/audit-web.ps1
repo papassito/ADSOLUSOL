@@ -8,6 +8,7 @@ param([string]$Root = $PSScriptRoot)
 
 $ErrorActionPreference = 'Continue'
 [Console]::OutputEncoding = [Text.Encoding]::UTF8
+if ([string]::IsNullOrWhiteSpace($Root)) { $Root = (Get-Location).Path }
 $base = (Resolve-Path $Root).Path
 while ($base -and -not (Test-Path (Join-Path $base 'ADSOLUSOL.sln'))) {
     $parent = Split-Path $base -Parent
@@ -34,7 +35,11 @@ if (Test-Path $viteConfig) { Pass 'WEB-CONFIG' 'vite.config.ts esta presente.' }
 if (Test-Path $src) { Pass 'WEB-SRC' 'Directorio src esta presente.' } else { Fail 'WEB-SRC' 'Falta el directorio src.' }
 
 # 2. Inventario e higiene forense de archivos
-$code = @(Get-ChildItem $src -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.Extension -in '.ts','.tsx','.js','.jsx','.css' })
+$code = @(Get-ChildItem $src -Recurse -File -ErrorAction SilentlyContinue |
+    Where-Object {
+        $_.Extension -in '.ts','.tsx','.js','.jsx','.css' -and
+        $_.FullName -notmatch '\\(node_modules|dist|build|coverage|bin|obj)\\'
+    })
 if ($code.Count -eq 0) { Fail 'WEB-CODE' 'No se detectaron archivos de frontend.' } else { Pass 'WEB-CODE' "Se inspeccionaron $($code.Count) archivos de frontend." }
 
 # 3. Inspeccion de BOM UTF-8, Mojibake y caracteres nulos

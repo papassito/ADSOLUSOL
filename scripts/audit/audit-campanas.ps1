@@ -3,6 +3,7 @@ param([string]$Root = $PSScriptRoot)
 
 $ErrorActionPreference = 'Continue'
 [Console]::OutputEncoding = [Text.Encoding]::UTF8
+if ([string]::IsNullOrWhiteSpace($Root)) { $Root = (Get-Location).Path }
 $base = (Resolve-Path $Root).Path
 while ($base -and -not (Test-Path (Join-Path $base 'ADSOLUSOL.sln'))) {
     $parent = Split-Path $base -Parent

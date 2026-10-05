@@ -117,7 +117,7 @@ public class CampaignsController : ControllerBase
         {
             return NotFound(); // Do not reveal the existence of a campaign belonging to another tenant.
         }
-        var metrics = await _metricsService.GetMetricsForCampaign(id);
+        var metrics = await _metricsService.GetMetricsForCampaign(TenantId, id);
         return metrics is null ? NotFound() : Ok(metrics);
     }
 

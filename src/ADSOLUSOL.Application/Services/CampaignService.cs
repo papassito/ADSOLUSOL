@@ -68,10 +68,10 @@ public class CampaignService
         var isAllowedTransition = campaign.Status switch
         {
             "SCHEDULED" => targetStatus is "ACTIVE" or "PAUSED" or "COMPLETED",
-            "ACTIVE"    => targetStatus is "PAUSED" or "COMPLETED",
-            "PAUSED"    => targetStatus is "ACTIVE" or "COMPLETED",
+            "ACTIVE" => targetStatus is "PAUSED" or "COMPLETED",
+            "PAUSED" => targetStatus is "ACTIVE" or "COMPLETED",
             "COMPLETED" => false, // Estado terminal
-            _           => true
+            _ => true
         };
 
         if (!isAllowedTransition && campaign.Status != targetStatus)

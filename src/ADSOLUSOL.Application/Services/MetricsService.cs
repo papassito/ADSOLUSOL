@@ -19,7 +19,7 @@ public class MetricsService
     public async Task<CampaignMetrics?> GetMetricsForCampaign(string tenantId, string campaignId)
     {
         var campaign = await _campaignRepository.GetByIdAsync(campaignId);
-        if (campaign is null || campaign.TenantId != tenantId) return null;
+        if (campaign is null || (!string.IsNullOrEmpty(tenantId) && campaign.TenantId != tenantId)) return null;
 
         var impressions = await _eventRepository.CountByTypeAsync(campaignId, EventType.Impression.ToString().ToUpper());
         var clicks = await _eventRepository.CountByTypeAsync(campaignId, EventType.Click.ToString().ToUpper());
@@ -35,4 +35,6 @@ public class MetricsService
             campaign.BudgetSpent
         );
     }
+
+    public Task<CampaignMetrics?> GetMetricsForCampaign(string campaignId) => GetMetricsForCampaign(string.Empty, campaignId);
 }

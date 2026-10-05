@@ -16,7 +16,8 @@ param(
     [string]$Root = $PSScriptRoot,
     [switch]$StopOnFail,
     [switch]$Fast,
-    [switch]$Compact
+    [switch]$Compact,
+    [string]$ReportPath = ""
 )
 
 $ErrorActionPreference = "Continue"
@@ -33,6 +34,27 @@ while ($ScriptRoot -and -not (Test-Path (Join-Path $ScriptRoot "ADSOLUSOL.sln"))
 }
 Set-Location $ScriptRoot
 
+if ([string]::IsNullOrWhiteSpace($ReportPath)) {
+    $reportDir = Join-Path $ScriptRoot "_audit"
+    if (-not (Test-Path $reportDir)) {
+        New-Item -ItemType Directory -Path $reportDir -Force | Out-Null
+    }
+    $ReportPath = Join-Path $reportDir ("audit_master_{0}.txt" -f (Get-Date -Format "yyyyMMdd_HHmmss"))
+} else {
+    $reportParent = Split-Path -Parent $ReportPath
+    if ($reportParent -and -not (Test-Path $reportParent)) {
+        New-Item -ItemType Directory -Path $reportParent -Force | Out-Null
+    }
+}
+
+$transcriptStarted = $false
+try {
+    Start-Transcript -Path $ReportPath -Force | Out-Null
+    $transcriptStarted = $true
+} catch {
+    Write-Host "[WARN] No se pudo iniciar el informe TXT: $($_.Exception.Message)" -ForegroundColor Yellow
+}
+
 Write-Host "==========================================================================" -ForegroundColor Cyan
 Write-Host " [SUITE MASTER] ADSOLUSOL :: AUDITORIA INTEGRAL DE TODO EL PROYECTO       " -ForegroundColor Cyan
 Write-Host "==========================================================================" -ForegroundColor Cyan
@@ -48,6 +70,11 @@ $AuditorPipeline = @(
     @{
         Fase = "Fase 1: Codificacion y Formato"
         Script = "scripts\audit\audit-mojibake.ps1"
+        Args = @()
+    },
+    @{
+        Fase = "Fase 1: Codificacion y Formato"
+        Script = "scripts\audit\audit-formato.ps1"
         Args = @()
     },
     @{
@@ -72,7 +99,32 @@ $AuditorPipeline = @(
     },
     @{
         Fase = "Fase 2: Arquitectura y Dominio"
+        Script = "scripts\audit\audit-campanas.ps1"
+        Args = @()
+    },
+    @{
+        Fase = "Fase 2: Arquitectura y Dominio"
         Script = "scripts\audit\audit-contratos.ps1"
+        Args = @()
+    },
+    @{
+        Fase = "Fase 2: Arquitectura y Dominio"
+        Script = "scripts\audit\audit-finanzas.ps1"
+        Args = @()
+    },
+    @{
+        Fase = "Fase 2: Arquitectura y Dominio"
+        Script = "scripts\audit\audit-logica.ps1"
+        Args = @()
+    },
+    @{
+        Fase = "Fase 2: Arquitectura y Dominio"
+        Script = "scripts\audit\audit-funcionalidad.ps1"
+        Args = @()
+    },
+    @{
+        Fase = "Fase 2: Arquitectura y Dominio"
+        Script = "scripts\audit\audit-basededatos.ps1"
         Args = @()
     },
     @{
@@ -96,8 +148,28 @@ $AuditorPipeline = @(
         Args = @()
     },
     @{
+        Fase = "Fase 3: Seguridad y Notaria"
+        Script = "scripts\audit\audit-telemetria.ps1"
+        Args = @()
+    },
+    @{
+        Fase = "Fase 4: Compilacion y Carga"
+        Script = "scripts\audit\audit-tecnologia.ps1"
+        Args = @()
+    },
+    @{
         Fase = "Fase 4: Compilacion y Carga"
         Script = "scripts\audit\audit-compilacion.ps1"
+        Args = @()
+    },
+    @{
+        Fase = "Fase 4: Compilacion y Carga"
+        Script = "scripts\audit\audit-motor.ps1"
+        Args = @()
+    },
+    @{
+        Fase = "Fase 4: Compilacion y Carga"
+        Script = "scripts\audit\audit-orquestador.ps1"
         Args = @()
     },
     @{
@@ -124,8 +196,27 @@ $AuditorPipeline = @(
         Fase = "Fase 5: Quality Gate Integral"
         Script = "scripts\audit\audit-live.ps1"
         Args = @()
+    },
+    @{
+        Fase = "Fase 5: Quality Gate Integral"
+        Script = "scripts\audit\audit-web.ps1"
+        Args = @()
     }
 )
+
+# Inventario dinámico: ningún auditor con prefijo audit- puede quedar fuera.
+$registeredAuditors = @($AuditorPipeline | ForEach-Object { Split-Path -Leaf $_.Script })
+$discoveredAuditors = @(Get-ChildItem (Join-Path $ScriptRoot "scripts\audit") -File -Filter "audit-*.ps1" -ErrorAction SilentlyContinue |
+    Where-Object { $_.Name -ne "audit_all_project.ps1" })
+$unregisteredAuditors = @($discoveredAuditors | Where-Object { $_.Name -notin $registeredAuditors })
+foreach ($orphan in $unregisteredAuditors) {
+    Write-Host "[INVENTARIO] Auditor nuevo detectado y agregado automáticamente: $($orphan.Name)" -ForegroundColor Yellow
+    $AuditorPipeline += @{
+        Fase = "Fase 0: Auditoria pendiente de clasificacion"
+        Script = "scripts\audit\$($orphan.Name)"
+        Args = @()
+    }
+}
 
 $pwshCmd = Get-Command pwsh -ErrorAction SilentlyContinue
 $psExe = if ($pwshCmd) { $pwshCmd.Source } else { "powershell.exe" }
@@ -151,12 +242,19 @@ foreach ($item in $AuditorPipeline) {
 
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
     $callArgs = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", $path) + $item.Args
-    if ($Compact) {
-        $subOut = & $psExe $callArgs 2>&1
-    } else {
-        & $psExe $callArgs
+    try {
+        if ($Compact) {
+            $subOut = & $psExe $callArgs 2>&1
+            if ($subOut) { $subOut | Out-String | Write-Verbose }
+        } else {
+            & $psExe $callArgs
+        }
+        $exit = if ($null -eq $LASTEXITCODE) { 0 } else { [int]$LASTEXITCODE }
     }
-    $exit = $LASTEXITCODE
+    catch {
+        Write-Host "  [FAIL] Error al ejecutar ${name}: $($_.Exception.Message)" -ForegroundColor Red
+        $exit = 1
+    }
     $sw.Stop()
 
     $dur = "$([math]::Round($sw.Elapsed.TotalSeconds, 2))s"
@@ -191,4 +289,9 @@ Write-Host " Auditores en FAIL          : $Fails" -ForegroundColor $(if ($Fails 
 Write-Host " Tiempo Total Invertido     : $([math]::Round($TotalTimer.Elapsed.TotalSeconds, 2)) s" -ForegroundColor DarkCyan
 Write-Host "==========================================================================" -ForegroundColor Cyan
 
+Write-Host " Informe TXT                : $ReportPath" -ForegroundColor DarkGray
+Write-Host "=========================================================================" -ForegroundColor Cyan
+if ($transcriptStarted) {
+    try { Stop-Transcript | Out-Null } catch {}
+}
 if ($Fails -gt 0) { exit 1 } else { exit 0 }
