@@ -1,166 +1,81 @@
-<#[
-================================================================================
-  ADSOLUSOL :: AUDITORIA DE CREACION Y ADMINISTRACION DE CAMPANAS
-  MODO SOLO LECTURA: no modifica archivos, no compila y no instala dependencias.
-================================================================================
-]#>
 [CmdletBinding()]
-param(
-    [string]$Root = $PSScriptRoot
-)
+param([string]$Root = $PSScriptRoot)
 
 $ErrorActionPreference = 'Continue'
-try { $null = chcp 65001 } catch {}
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-$OutputEncoding = [System.Text.Encoding]::UTF8
-
-if ([string]::IsNullOrWhiteSpace($Root)) { $Root = (Get-Location).Path }
-$ScriptRoot = (Resolve-Path $Root).Path
-while ($ScriptRoot -and -not (Test-Path (Join-Path $ScriptRoot 'ADSOLUSOL.sln'))) {
-    $parent = Split-Path -Parent $ScriptRoot
-    if ($parent -eq $ScriptRoot) { break }
-    $ScriptRoot = $parent
+[Console]::OutputEncoding = [Text.Encoding]::UTF8
+$base = (Resolve-Path $Root).Path
+while ($base -and -not (Test-Path (Join-Path $base 'ADSOLUSOL.sln'))) {
+    $parent = Split-Path $base -Parent
+    if ($parent -eq $base) { break }
+    $base = $parent
 }
-Set-Location $ScriptRoot
-
-$failures = 0
-$warnings = 0
-
-function Report-Pass([string]$Code, [string]$Message) {
-    Write-Host "  [PASS] [$Code] $Message" -ForegroundColor Green
+$fail = 0; $warn = 0
+function Pass($c,$m) { Write-Host "  [PASS] [$c] $m" -ForegroundColor Green }
+function Fail($c,$m) { Write-Host "  [FAIL] [$c] $m" -ForegroundColor Red; $script:fail++ }
+function Warn($c,$m) { Write-Host "  [WARN] [$c] $m" -ForegroundColor Yellow; $script:warn++ }
+function Text($p) { if (Test-Path $p) { return [IO.File]::ReadAllText($p,[Text.Encoding]::UTF8) }; return '' }
+function Check($t,$r,$c,$ok,$bad,[switch]$Warning) {
+    if ($t -match $r) { Pass $c $ok } elseif ($Warning) { Warn $c $bad } else { Fail $c $bad }
 }
 
-function Report-Fail([string]$Code, [string]$Message) {
-    Write-Host "  [FAIL] [$Code] $Message" -ForegroundColor Red
-    $script:failures++
-}
-
-function Report-Warn([string]$Code, [string]$Message) {
-    Write-Host "  [WARN] [$Code] $Message" -ForegroundColor Yellow
-    $script:warnings++
-}
-
-function Read-Text([string]$Path) {
-    if (Test-Path -LiteralPath $Path) {
-        return [System.IO.File]::ReadAllText($Path, [System.Text.Encoding]::UTF8)
-    }
-    return ''
-}
-
-function Test-Pattern {
-    param(
-        [string]$Text,
-        [string]$Pattern,
-        [string]$Code,
-        [string]$PassMessage,
-        [string]$FailMessage,
-        [switch]$Warning
-    )
-
-    if ($Text -match $Pattern) {
-        Report-Pass $Code $PassMessage
-    } elseif ($Warning) {
-        Report-Warn $Code $FailMessage
-    } else {
-        Report-Fail $Code $FailMessage
-    }
-}
-
-Write-Host '==========================================================================' -ForegroundColor Cyan
+Write-Host '===========================================================================' -ForegroundColor Cyan
 Write-Host ' [CAMPANAS] AUDITORIA DE CREACION Y ADMINISTRACION' -ForegroundColor Cyan
-Write-Host '==========================================================================' -ForegroundColor Cyan
-Write-Host "Directorio Base: $ScriptRoot`n" -ForegroundColor DarkGray
+Write-Host "Directorio Base: $base`n" -ForegroundColor DarkGray
 
-$controllerPath = Join-Path $ScriptRoot 'src\ADSOLUSOL.Presentation.Api\Controllers\CampaignsController.cs'
-$servicePath = Join-Path $ScriptRoot 'src\ADSOLUSOL.Application\Services\CampaignService.cs'
-$entityPath = Join-Path $ScriptRoot 'src\ADSOLUSOL.Domain\Entities\Campaign.cs'
-$budgetPath = Join-Path $ScriptRoot 'src\ADSOLUSOL.Application\Services\BudgetService.cs'
-$eventPath = Join-Path $ScriptRoot 'src\ADSOLUSOL.Application\Services\EventProcessingService.cs'
-$metricsPath = Join-Path $ScriptRoot 'src\ADSOLUSOL.Application\Services\MetricsService.cs'
-$assignmentPath = Join-Path $ScriptRoot 'src\ADSOLUSOL.Infrastructure\Repositories\AssignmentRepository.cs'
-$repositoryPath = Join-Path $ScriptRoot 'src\ADSOLUSOL.Infrastructure\Repositories\CampaignRepository.cs'
-$testRoot = Join-Path $ScriptRoot 'tests'
+$controller = Text (Join-Path $base 'src\ADSOLUSOL.Presentation.Api\Controllers\CampaignsController.cs')
+$service = Text (Join-Path $base 'src\ADSOLUSOL.Application\Services\CampaignService.cs')
+$entity = Text (Join-Path $base 'src\ADSOLUSOL.Domain\Entities\Campaign.cs')
+$budget = Text (Join-Path $base 'src\ADSOLUSOL.Application\Services\BudgetService.cs')
+$events = Text (Join-Path $base 'src\ADSOLUSOL.Application\Services\EventProcessingService.cs')
+$metrics = Text (Join-Path $base 'src\ADSOLUSOL.Application\Services\MetricsService.cs')
+$assign = Text (Join-Path $base 'src\ADSOLUSOL.Infrastructure\Repositories\AssignmentRepository.cs')
+$repo = Text (Join-Path $base 'src\ADSOLUSOL.Infrastructure\Repositories\CampaignRepository.cs')
+$tests = ((Get-ChildItem (Join-Path $base 'tests') -Recurse -File -Filter '*.cs' -ErrorAction SilentlyContinue | ForEach-Object { Text $_.FullName }) -join "`n")
 
-$controller = Read-Text $controllerPath
-$service = Read-Text $servicePath
-$entity = Read-Text $entityPath
-$budget = Read-Text $budgetPath
-$event = Read-Text $eventPath
-$metrics = Read-Text $metricsPath
-$assignment = Read-Text $assignmentPath
-$repository = Read-Text $repositoryPath
+Write-Host '[1/7] Creacion y persistencia' -ForegroundColor Yellow
+Check $controller 'HttpPost\]' 'CAMPAIGN-CREATE' 'Existe POST de campanas.' 'No existe POST de campanas.'
+Check $controller 'Budget\s*<=\s*0' 'CAMPAIGN-BUDGET-INPUT' 'Valida presupuesto positivo.' 'No valida presupuesto positivo.'
+Check $controller 'CostPerMille\s*<\s*0|CostPerClick\s*<\s*0' 'CAMPAIGN-COST-INPUT' 'Rechaza costos negativos.' 'No rechaza costos negativos.'
+Check $controller 'EndDateUtc.*StartDateUtc|StartDateUtc.*EndDateUtc' 'CAMPAIGN-DATES' 'Valida rango de fechas.' 'No valida rango de fechas.'
+Check $service 'Guid\.NewGuid\(\)' 'CAMPAIGN-ID' 'Genera identificador nuevo.' 'No genera identificador explícito.'
+Check $service 'SaveChangesAsync' 'CAMPAIGN-SAVE' 'Confirma persistencia.' 'No confirma persistencia.'
 
-Write-Host '[1/8] Verificando archivos canónicos del flujo...' -ForegroundColor Yellow
-foreach ($item in @(
-    @{ Code = 'CAMPAIGN-CONTROLLER'; Path = $controllerPath; Name = 'CampaignsController.cs' },
-    @{ Code = 'CAMPAIGN-SERVICE'; Path = $servicePath; Name = 'CampaignService.cs' },
-    @{ Code = 'CAMPAIGN-ENTITY'; Path = $entityPath; Name = 'Campaign.cs' },
-    @{ Code = 'CAMPAIGN-REPOSITORY'; Path = $repositoryPath; Name = 'CampaignRepository.cs' }
-)) {
-    if (Test-Path -LiteralPath $item.Path) { Report-Pass $item.Code "$($item.Name) esta presente." }
-    else { Report-Fail $item.Code "No se localizo $($item.Name)." }
-}
+Write-Host '[2/7] Ciclo de vida' -ForegroundColor Yellow
+Check $controller 'UpdateStatus|/status' 'CAMPAIGN-STATUS-API' 'Tiene API de cambio de estado.' 'No tiene API de cambio de estado.'
+Check $controller 'ACTIVE.*PAUSED.*SCHEDULED.*COMPLETED|ACTIVE.*PAUSED' 'CAMPAIGN-STATUS-VALUES' 'Limita estados permitidos.' 'No limita estados permitidos.'
+if ($service -match 'campaign\.Status\s*=\s*status' -and $service -notmatch 'switch|transition|allowedStatuses') { Warn 'CAMPAIGN-TRANSITIONS' 'El servicio no valida transiciones desde el estado anterior.' } else { Pass 'CAMPAIGN-TRANSITIONS' 'Se detecta validacion de transiciones.' }
 
-Write-Host "`n[2/8] Auditando creación y validación de campañas..." -ForegroundColor Yellow
-Test-Pattern $controller 'HttpPost\]' 'CAMPAIGN-CREATE-ENDPOINT' 'Existe endpoint POST para crear campañas.' 'No se detecto endpoint POST de creación.'
-Test-Pattern $controller 'request\.Budget\s*<=\s*0' 'CAMPAIGN-BUDGET-INPUT' 'El controlador rechaza presupuestos menores o iguales a cero.' 'No se detecto validación de presupuesto positivo.'
-Test-Pattern $controller 'CostPerMille\s*<\s*0|CostPerClick\s*<\s*0' 'CAMPAIGN-COST-INPUT' 'El controlador rechaza costos negativos.' 'No se detecto validación de costos negativos.'
-Test-Pattern $controller 'EndDateUtc.*StartDateUtc|StartDateUtc.*EndDateUtc' 'CAMPAIGN-DATE-INPUT' 'Existe validación de coherencia entre fechas.' 'No se detecto validación suficiente de fechas.'
-Test-Pattern $service 'Status\s*=\s*initialStatus|initialStatus\s*=' 'CAMPAIGN-INITIAL-STATUS' 'El servicio asigna estado inicial según la fecha de inicio.' 'No se detecto asignación explícita del estado inicial.'
-Test-Pattern $service 'Guid\.NewGuid\(\)' 'CAMPAIGN-IDENTITY' 'La creación genera identificador nuevo.' 'No se detecto generación explícita de identificador único.'
-Test-Pattern $service 'SaveChangesAsync' 'CAMPAIGN-PERSISTENCE' 'La creación confirma cambios mediante Unit of Work.' 'No se detecto confirmación de persistencia.'
+Write-Host '[3/7] Tenant y autorizacion' -ForegroundColor Yellow
+Check $controller 'HttpContext\.Items\[.TenantId.\]' 'CAMPAIGN-TENANT-CONTEXT' 'Obtiene tenant del contexto.' 'No obtiene tenant del contexto.'
+Check $service 'TenantId\s*==\s*tenantId' 'CAMPAIGN-TENANT-SERVICE' 'Comprueba pertenencia al tenant.' 'No comprueba pertenencia al tenant.'
+Check $service 'GetAllAsync\(tenantId' 'CAMPAIGN-TENANT-LIST' 'Lista por tenant.' 'No lista explícitamente por tenant.'
+if ($assign -match 'campaignId' -and $assign -notmatch 'TenantId|tenantId') { Warn 'CAMPAIGN-ASSIGNMENT-TENANT' 'Las asociaciones no muestran comprobacion explícita de tenant.' } else { Pass 'CAMPAIGN-ASSIGNMENT-TENANT' 'Las asociaciones muestran control de tenant.' }
 
-Write-Host "`n[3/8] Auditando administración del ciclo de vida..." -ForegroundColor Yellow
-Test-Pattern $controller 'UpdateStatus|/status' 'CAMPAIGN-STATUS-ENDPOINT' 'Existe endpoint para cambiar el estado.' 'No se detecto endpoint de administración de estado.'
-Test-Pattern $controller 'ACTIVE.*PAUSED.*SCHEDULED.*COMPLETED|ACTIVE.*PAUSED' 'CAMPAIGN-STATUS-VALUES' 'El controlador limita los valores de estado.' 'No se detecto lista de estados permitidos.'
-if ($service -match 'campaign\.Status\s*=\s*status' -and $service -notmatch 'Status.*switch|switch.*Status|allowedStatuses|transition') {
-    Report-Warn 'CAMPAIGN-TRANSITIONS' 'El servicio asigna estados sin validar transiciones desde el estado anterior.'
-} else {
-    Report-Pass 'CAMPAIGN-TRANSITIONS' 'Se detecta lógica explícita de validación de transiciones.'
-}
-Test-Pattern $entity 'COMPLETED' 'CAMPAIGN-STATUS-MODEL' 'La entidad documenta el estado COMPLETED.' 'La entidad no documenta el ciclo de estados.' -Warning
+Write-Host '[4/7] Presupuesto y metricas' -ForegroundColor Yellow
+Check $entity 'BudgetSpent|RemainingBudget' 'CAMPAIGN-BUDGET-MODEL' 'Modela gasto y saldo.' 'No modela gasto y saldo.'
+Check $budget 'BudgetSpent|UpdateBudgetAsync' 'CAMPAIGN-BUDGET-DEBIT' 'Tiene debito de presupuesto.' 'No tiene debito de presupuesto.'
+Check ($budget + $repo) 'BudgetSpent.*Budget|Budget.*BudgetSpent' 'CAMPAIGN-BUDGET-LIMIT' 'Compara gasto contra presupuesto.' 'No muestra limite presupuestario.'
+Check $metrics 'BudgetSpent|CampaignMetrics' 'CAMPAIGN-METRICS' 'Calcula metricas de campaña.' 'No calcula metricas de campaña.'
 
-Write-Host "`n[4/8] Auditando aislamiento por tenant..." -ForegroundColor Yellow
-Test-Pattern $controller 'HttpContext\.Items\[.TenantId.\]' 'CAMPAIGN-TENANT-CONTEXT' 'El controlador obtiene TenantId del contexto autenticado.' 'No se detecto resolución de TenantId desde el contexto.'
-Test-Pattern $service 'campaign\.TenantId\s*==\s*tenantId' 'CAMPAIGN-TENANT-SERVICE' 'El servicio comprueba pertenencia de la campaña al tenant.' 'No se detecto comprobación de tenant en el servicio.'
-Test-Pattern $service 'GetAllAsync\(tenantId' 'CAMPAIGN-TENANT-LIST' 'El listado recibe tenantId.' 'El listado no muestra filtro explícito por tenant.'
-Test-Pattern $controller 'GetMetrics|GetMetricsForCampaign' 'CAMPAIGN-METRICS-AUTH' 'La superficie de métricas existe y requiere campaña autorizada.' 'No se detecto protección de métricas.'
-if ($assignment -match 'campaignId' -and $assignment -notmatch 'TenantId|tenantId') {
-    Report-Warn 'CAMPAIGN-ASSIGNMENT-TENANT' 'AssignmentRepository no muestra comprobación explícita de tenant en sus métodos.'
-} else {
-    Report-Pass 'CAMPAIGN-ASSIGNMENT-TENANT' 'Las asociaciones muestran control de tenant.'
-}
+Write-Host '[5/7] Eventos e idempotencia' -ForegroundColor Yellow
+Check $events 'Duplicate|duplicate|EventId' 'CAMPAIGN-IDEMPOTENCY' 'Controla eventos duplicados.' 'No controla duplicados.'
+Check $events 'ACTIVE|Budget|CampaignId' 'CAMPAIGN-EVENT-GUARDS' 'Aplica controles de estado, campaña y presupuesto.' 'No muestra controles de eventos.'
+Check $controller 'RegisterClick|RegisterImpression' 'CAMPAIGN-EVENT-API' 'Expone click e impresion.' 'No expone eventos de campaña.'
 
-Write-Host "`n[5/8] Auditando presupuesto y métricas..." -ForegroundColor Yellow
-Test-Pattern $entity 'BudgetSpent|RemainingBudget' 'CAMPAIGN-BUDGET-MODEL' 'La entidad mantiene presupuesto gastado y saldo derivado.' 'La entidad no expone el modelo completo de presupuesto.'
-Test-Pattern $budget 'BudgetSpent|UpdateBudgetAsync' 'CAMPAIGN-BUDGET-DEBIT' 'Existe servicio de débito o actualización de presupuesto.' 'No se detecto débito explícito de presupuesto.'
-Test-Pattern $budget 'BudgetSpent.*Budget|Budget.*BudgetSpent' 'CAMPAIGN-BUDGET-CEILING' 'El débito compara gasto contra presupuesto.' 'No se detecto protección explícita del límite presupuestario.'
-Test-Pattern $event 'Duplicate|duplicate|EventId' 'CAMPAIGN-IDEMPOTENCY' 'El procesamiento contempla eventos duplicados.' 'No se detecto control explícito de duplicidad.'
-Test-Pattern $metrics 'BudgetSpent|CampaignMetrics' 'CAMPAIGN-METRICS' 'Existe servicio de métricas asociado a la campaña.' 'No se detecto cálculo de métricas de campaña.'
+Write-Host '[6/7] Placements y creativos' -ForegroundColor Yellow
+Check $assign 'AssignPlacementToCampaignAsync' 'CAMPAIGN-PLACEMENT' 'Asocia placements.' 'No asocia placements.'
+Check $assign 'AssignCreativeToCampaignAsync' 'CAMPAIGN-CREATIVE' 'Asocia creativos.' 'No asocia creativos.'
+Check $assign 'AnyAsync' 'CAMPAIGN-ASSIGNMENT-DUPLICATES' 'Evita asociaciones duplicadas.' 'No evita asociaciones duplicadas.'
 
-Write-Host "`n[6/8] Auditando asociaciones de campaña..." -ForegroundColor Yellow
-Test-Pattern $assignment 'AssignPlacementToCampaignAsync' 'CAMPAIGN-PLACEMENT' 'Existe asociación campaña-placement.' 'No se detecto asociación con placements.'
-Test-Pattern $assignment 'AssignCreativeToCampaignAsync' 'CAMPAIGN-CREATIVE' 'Existe asociación campaña-creative.' 'No se detecto asociación con creativos.'
-Test-Pattern $assignment 'AnyAsync' 'CAMPAIGN-ASSIGNMENT-IDEMPOTENCY' 'Las asociaciones comprueban duplicados antes de insertar.' 'No se detecto protección contra asociaciones duplicadas.'
-
-Write-Host "`n[7/8] Auditando eventos y serving..." -ForegroundColor Yellow
-Test-Pattern $controller 'RegisterClick|RegisterImpression' 'CAMPAIGN-EVENT-ENDPOINTS' 'Existen endpoints de click e impresión.' 'No se detectaron endpoints de eventos publicitarios.'
-Test-Pattern $event 'ACTIVE|Budget|CampaignId' 'CAMPAIGN-SERVING-GUARDS' 'El procesamiento aplica controles de estado, campaña y presupuesto.' 'No se detectaron controles completos de serving.'
-
-Write-Host "`n[8/8] Buscando pruebas de regresión de campañas..." -ForegroundColor Yellow
-$testFiles = @(Get-ChildItem $testRoot -Recurse -File -Include '*.cs' -ErrorAction SilentlyContinue)
-$testText = ($testFiles | ForEach-Object { Read-Text $_.FullName }) -join "`n"
-Test-Pattern $testText 'Campaign creation|CreateAsync' 'CAMPAIGN-TEST-CREATE' 'Hay pruebas de creación de campañas.' 'No se detectaron pruebas de creación.' -Warning
-Test-Pattern $testText 'tenant isolation|Tenant-A|TenantId' 'CAMPAIGN-TEST-TENANT' 'Hay pruebas de aislamiento por tenant.' 'No se detectaron pruebas claras de aislamiento por tenant.' -Warning
-Test-Pattern $testText 'Overspend|Budget spent|Duplicate' 'CAMPAIGN-TEST-BUDGET' 'Hay pruebas de presupuesto y duplicidad de eventos.' 'No se detectaron pruebas de presupuesto o duplicidad.' -Warning
-Test-Pattern $testText 'concurr|stress|Interlocked' 'CAMPAIGN-TEST-CONCURRENCY' 'Hay pruebas de concurrencia o carga sobre campañas.' 'No se detectaron pruebas explícitas de concurrencia.' -Warning
+Write-Host '[7/7] Pruebas de regresion' -ForegroundColor Yellow
+Check $tests 'Campaign creation|CreateAsync' 'CAMPAIGN-TEST-CREATE' 'Tiene prueba de creacion.' 'No tiene prueba de creacion.' -Warning
+Check $tests 'tenant isolation|Tenant-A|TenantId' 'CAMPAIGN-TEST-TENANT' 'Tiene prueba de aislamiento.' 'No tiene prueba clara de aislamiento.' -Warning
+Check $tests 'Overspend|Budget spent|Duplicate' 'CAMPAIGN-TEST-BUDGET' 'Tiene pruebas de presupuesto y duplicidad.' 'No tiene pruebas de presupuesto o duplicidad.' -Warning
+Check $tests 'concurr|stress|Interlocked' 'CAMPAIGN-TEST-CONCURRENCY' 'Tiene prueba de concurrencia.' 'No tiene prueba explícita de concurrencia.' -Warning
 
 Write-Host "`n=========================================================================" -ForegroundColor Cyan
-Write-Host '                    DICTAMEN DE CAMPAÑAS' -ForegroundColor Cyan
-Write-Host "=========================================================================" -ForegroundColor Cyan
-Write-Host " Fallas críticas : $failures" -ForegroundColor $(if ($failures -eq 0) { 'Green' } else { 'Red' })
-Write-Host " Advertencias    : $warnings" -ForegroundColor $(if ($warnings -eq 0) { 'Green' } else { 'Yellow' })
-Write-Host "=========================================================================" -ForegroundColor Cyan
-Write-Host ' AUDITORIA TERMINADA - NO SE MODIFICO NINGUN ARCHIVO' -ForegroundColor Green
-
-if ($failures -gt 0) { exit 1 } else { exit 0 }
+Write-Host 'DICTAMEN DE CAMPANAS' -ForegroundColor Cyan
+Write-Host "Fallas criticas: $fail" -ForegroundColor $(if ($fail -eq 0) { 'Green' } else { 'Red' })
+Write-Host "Advertencias: $warn" -ForegroundColor $(if ($warn -eq 0) { 'Green' } else { 'Yellow' })
+Write-Host 'AUDITORIA TERMINADA - SOLO LECTURA' -ForegroundColor Green
+if ($fail -gt 0) { exit 1 } else { exit 0 }
