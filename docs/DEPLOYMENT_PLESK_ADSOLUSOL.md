@@ -1,8 +1,9 @@
 # ADSOLUSOL en Plesk
 
-El panel React se publica como archivos estáticos en el document root de
-`adsolusol.solusol.net`. La API .NET corre como `adsolusol-api.service` en
-`127.0.0.1:5000`; no debe exponerse ese puerto directamente a Internet.
+El panel React (`ADSOLUSOL.Presentation.Web`) se compila localmente (`dist/`) y
+se publica como archivos estáticos directamente en el Document Root de Plesk
+(`httpdocs` o `adsolusol.solusol.net`). La API .NET corre como
+`adsolusol-api.service` en `127.0.0.1:5000`; no debe exponerse ese puerto directamente a Internet.
 
 ## Autenticación del panel
 
@@ -23,19 +24,53 @@ sesión y `DELETE` cierra la sesión. Las operaciones máquina-a-máquina siguen
 aceptando las cabeceras firmadas existentes. Una cookie antigua o un ID de
 tenant sin contraseña ya no otorgan acceso.
 
-## Proxy nginx del subdominio
+## Topología de enrutamiento Nginx en Plesk
 
-Agregar una ubicación `/api/` específica en las directivas adicionales del
-subdominio, antes de la regla SPA existente. `proxy_pass` no lleva barra final
-para conservar `/api/...` al reenviar:
+La arquitectura de publicación requerida para el subdominio es:
+
+```text
+adsolusol.solusol.net/
+        │
+        ├── /               → Presentation.Web (index.html)
+        ├── /login          → Presentation.Web (try_files -> index.html)
+        ├── /*              → Presentation.Web / index.html
+        │
+        ├── /api/*          → Presentation.Api (127.0.0.1:5000)
+        └── /swagger/*      → Presentation.Api (127.0.0.1:5000)
+```
+
+En **Sitios web y dominios** > **Configuración de Apache y nginx** > **Directivas adicionales de nginx**,
+configurar el bloque completo. Nunca incluir una regla `location = /` que apunte al puerto 5000:
 
 ```nginx
+# API .NET
 location ^~ /api/ {
     proxy_pass http://127.0.0.1:5000;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection keep-alive;
     proxy_set_header Host $host;
+    proxy_cache_bypass $http_upgrade;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header X-Forwarded-Proto $scheme;
+}
+
+# Swagger UI y endpoints de esquema
+location = /swagger {
+    proxy_pass http://127.0.0.1:5000;
+}
+
+location ^~ /swagger/ {
+    proxy_pass http://127.0.0.1:5000;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
+
+# SPA Routing (Frontend React)
+location / {
+    try_files $uri $uri/ /index.html;
 }
 ```
 
