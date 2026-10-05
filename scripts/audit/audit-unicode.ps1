@@ -42,7 +42,7 @@ $validExts = @('.cs', '.csproj', '.json', '.md', '.ps1', '.xaml', '.razor', '.ts
 $files = Get-ChildItem -Path $ScriptRoot -Recurse -File -ErrorAction SilentlyContinue |
     Where-Object { 
         $validExts -contains $_.Extension.ToLower() -and 
-        $_.FullName -notmatch '\\/[\\/]' 
+        $_.FullName -notmatch '[\\/](\.git|bin|obj|node_modules|dist|BUILD|\.build|\.repair-backups|_audit|TestResults)[\\/]' 
     }
 
 $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
