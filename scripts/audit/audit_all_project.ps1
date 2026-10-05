@@ -201,6 +201,11 @@ $AuditorPipeline = @(
         Fase = "Fase 5: Quality Gate Integral"
         Script = "scripts\audit\audit-web.ps1"
         Args = @()
+    },
+    @{
+        Fase = "Fase 6: Consistencia de Auditoria"
+        Script = "Detect-AuditFalsePositives.ps1"
+        Args = @()
     }
 )
 
