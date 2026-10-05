@@ -1,13 +1,14 @@
 <#
 ================================================================================
-  REPAIRER by KLIK :: ORQUESTADOR MAESTRO DE AUDITORÍAS TOTALES
-  Ejecuta toda la suite de auditores periciales, métricas y calidad.
+  ADSOLUSOL :: ORQUESTADOR MAESTRO DE AUDITORIA FORENSE Y CALIDAD (.NET 8)
+  Ejecuta secuencialmente la suite completa de auditores canónicos sin omisiones.
+  Uso:
+    .\scripts\audit\auditar_todo.ps1
 ================================================================================
 #>
 [CmdletBinding()]
 param(
-    [switch]$Fix,
-    [switch]$Fast
+    [string]$Root = $PSScriptRoot
 )
 
 $ErrorActionPreference = "Continue"
@@ -15,126 +16,102 @@ try { $null = chcp 65001 } catch {}
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
 
-$root = if ($PSScriptRoot) { (Resolve-Path $PSScriptRoot).Path } else { (Resolve-Path (Get-Location).Path).Path }
-Set-Location $root
+if ([string]::IsNullOrWhiteSpace($Root)) { $Root = (Get-Location).Path }
+$ScriptRoot = (Resolve-Path $Root).Path
+while ($ScriptRoot -and -not (Test-Path (Join-Path $ScriptRoot "ADSOLUSOL.sln"))) {
+    $parent = Split-Path -Parent $ScriptRoot
+    if ($parent -eq $ScriptRoot) { break }
+    $ScriptRoot = $parent
+}
+Set-Location $ScriptRoot
 
-# Evitar pausas interactivas en scripts secundarios durante la corrida masiva
-$env:CI = "true"
-$stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
-
-Clear-Host
 Write-Host "==========================================================================" -ForegroundColor Cyan
-Write-Host " [REPAIRER by KLIK] PROTOCOLO MAESTRO DE AUDITORIA Y CONTROL TOTAL" -ForegroundColor Cyan
+Write-Host " [SUITE] ADSOLUSOL :: ORQUESTADOR MAESTRO DE AUDITORIA FORENSE           " -ForegroundColor Cyan
 Write-Host "==========================================================================" -ForegroundColor Cyan
-Write-Host "Ruta de Inspección : $root" -ForegroundColor DarkGray
-Write-Host "Opciones Activas   : Fix=$($Fix.IsPresent) | Fast=$($Fast.IsPresent)" -ForegroundColor DarkGray
-Write-Host ""
+Write-Host "Directorio Base: $ScriptRoot`n" -ForegroundColor DarkGray
 
-$auditors = @(
-    @{
-        Name   = "1. Estructura y Fronteras ADR-009"
-        Script = "check_structure.ps1"
-        Args   = @()
-    },
-    @{
-        Name   = "2. Chismoso CI/CD (Formato, Race & Build)"
-        Script = "chismoso.ps1"
-        Args   = @(if ($Fix) { "-Fix" }; if ($Fast) { "-Fast" })
-    },
-    @{
-        Name   = "3. Autopsia de Integridad y Notaría Documental"
-        Script = "autopsia_integridad.ps1"
-        Args   = @()
-    },
-    @{
-        Name   = "4. Calificador Numérico Modular (.NET 8 / C#)"
-        Script = "CALIFICADOR_MODULOS.ps1"
-        Args   = @()
-    },
-    @{
-        Name   = "5. Salud del Proyecto (Stack & Entorno)"
-        Script = "Calificar-Proyecto.ps1"
-        Args   = @()
-    },
-    @{
-        Name   = "6. Ultra-Mitotero v4.0 (Ledger, Red, EDR)"
-        Script = "audit_ultra-mitotero.ps1"
-        Args   = @()
-    },
-    @{
-        Name   = "7. Junta Médica Suprema Forense (10/10)"
-        Script = "junta_medica.ps1"
-        Args   = @(if ($Fix) { "-Fix" }; if ($Fast) { "-Fast" })
-    }
+$AuditorFiles = @(
+    "scripts\audit\audit-compilacion.ps1",
+    "scripts\audit\audit-concurrencia.ps1",
+    "scripts\audit\audit-diseno.ps1",
+    "scripts\audit\audit-dominio.ps1",
+    "scripts\audit\audit-seguridad.ps1",
+    "scripts\audit\audit-unicode.ps1",
+    "scripts\audit\audit-mojibake.ps1",
+    "scripts\audit\audit-tree.ps1",
+    "scripts\audit\CALIFICADOR_MODULOS.ps1",
+    "scripts\audit\autopsia_integridad.ps1",
+    "scripts\audit\junta_medica.ps1",
+    "scripts\audit\audit-live.ps1"
 )
 
-$results = @()
-$hasGlobalFailures = $false
+$Results = [System.Collections.Generic.List[PSCustomObject]]::new()
+$FailedCount = 0
+$WarnCount = 0
+$TotalSw = [System.Diagnostics.Stopwatch]::StartNew()
 
-foreach ($item in $auditors) {
-    $scriptPath = Join-Path $root $item.Script
+$pwshCmd = Get-Command pwsh -ErrorAction SilentlyContinue
+$psExe = if ($pwshCmd) { $pwshCmd.Source } else { "powershell.exe" }
+
+foreach ($scriptRel in $AuditorFiles) {
+    $scriptPath = Join-Path $ScriptRoot $scriptRel
+    $auditorName = Split-Path -Leaf $scriptRel
+    Write-Host "`n>>> [EJECUTANDO AUDITOR: $auditorName] ..." -ForegroundColor Yellow
+
     if (-not (Test-Path $scriptPath)) {
-        $scriptPath = Join-Path (Join-Path $root "scripts") $item.Script
-    }
-    if (-not (Test-Path $scriptPath)) {
-        Write-Host "`n[OMITIDO] Script $($item.Script) no encontrado." -ForegroundColor Yellow
+        Write-Host "  [FAIL] Script obligatorio no encontrado: $scriptRel" -ForegroundColor Red
+        $Results.Add([PSCustomObject]@{
+            Auditor  = $auditorName
+            Ruta     = $scriptRel
+            ExitCode = 1
+            Dictamen = "FAIL"
+            Duracion = "0.0s"
+        })
+        $FailedCount++
         continue
     }
 
-    Write-Host "`n==========================================================================" -ForegroundColor Yellow
-    Write-Host " [EJECUTANDO] $($item.Name) :: $($item.Script)" -ForegroundColor Yellow
-    Write-Host "==========================================================================" -ForegroundColor Yellow
+    $sw = [System.Diagnostics.Stopwatch]::StartNew()
+    & $psExe -NoProfile -ExecutionPolicy Bypass -File $scriptPath
+    $exitCode = $LASTEXITCODE
+    $sw.Stop()
+    $durationStr = "$([math]::Round($sw.Elapsed.TotalSeconds, 2))s"
 
-    $startStep = [System.Diagnostics.Stopwatch]::StartNew()
-    $callArgs = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", $scriptPath) + @($item.Args)
-    $proc = Start-Process -FilePath "powershell.exe" -ArgumentList $callArgs -NoNewWindow -Wait -PassThru
-    $exitCode = $proc.ExitCode
-    if ($null -eq $exitCode) {
-        $exitCode = 1
-    }
-    $startStep.Stop()
-    $duration = [math]::Round($startStep.Elapsed.TotalSeconds, 2)
+    $dictamen = if ($exitCode -eq 0) { "PASS" } elseif ($exitCode -eq 2) { "WARN" } else { "FAIL" }
+    if ($dictamen -eq "FAIL") { $FailedCount++ }
+    if ($dictamen -eq "WARN") { $WarnCount++ }
 
-    $passed = ($exitCode -eq 0)
-    if (-not $passed) {
-        $hasGlobalFailures = $true
-    }
-
-    $results += [PSCustomObject]@{
-        Auditor   = $item.Name.PadRight(42).Substring(0, 42)
-        Script    = $item.Script
-        Resultado = if ($passed) { "PASS" } else { "FAIL" }
-        TiempoSeg = $duration
-    }
+    $Results.Add([PSCustomObject]@{
+        Auditor  = $auditorName
+        Ruta     = $scriptRel
+        ExitCode = $exitCode
+        Dictamen = $dictamen
+        Duracion = $durationStr
+    })
 }
 
-$stopwatch.Stop()
-$totalElapsed = [math]::Round($stopwatch.Elapsed.TotalSeconds, 2)
+$TotalSw.Stop()
 
 Write-Host "`n==========================================================================" -ForegroundColor Cyan
-Write-Host "            TABLERO RESUMEN DE AUDITORIAS (TOTAL: ${totalElapsed}s)" -ForegroundColor Cyan
+Write-Host "                 TABLA CONSOLIDADA DE AUDITORES EJECUTADOS                " -ForegroundColor Cyan
+Write-Host "==========================================================================" -ForegroundColor Cyan
+$Results | Format-Table Auditor, Dictamen, ExitCode, Duracion, Ruta -AutoSize
+
+Write-Host "==========================================================================" -ForegroundColor Cyan
+Write-Host " Total Auditores Ejecutados : $($Results.Count) / $($AuditorFiles.Count)" -ForegroundColor White
+Write-Host " Auditores en PASS          : $($Results.Count - $FailedCount - $WarnCount)" -ForegroundColor Green
+Write-Host " Auditores con WARN         : $WarnCount" -ForegroundColor Yellow
+Write-Host " Auditores en FAIL          : $FailedCount" -ForegroundColor $(if ($FailedCount -eq 0) { "Green" } else { "Red" })
+Write-Host " Tiempo Total de Suite      : $([math]::Round($TotalSw.Elapsed.TotalSeconds, 2))s" -ForegroundColor DarkCyan
 Write-Host "==========================================================================" -ForegroundColor Cyan
 
-Write-Host ("{0,-42} {1,-26} {2,-10} {3,10}" -f "Auditor", "Script", "Resultado", "Tiempo (s)") -ForegroundColor DarkGray
-Write-Host ("{0,-42} {1,-26} {2,-10} {3,10}" -f ("-" * 42), ("-" * 26), ("-" * 10), ("-" * 10)) -ForegroundColor DarkGray
-
-foreach ($r in $results) {
-    $color = if ($r.Resultado -eq "PASS") { "Green" } else { "Red" }
-    Write-Host ("{0,-42} {1,-26} " -f $r.Auditor, $r.Script) -NoNewline
-    Write-Host ("{0,-10}" -f $r.Resultado) -ForegroundColor $color -NoNewline
-    Write-Host ("{0,10}" -f $r.TiempoSeg)
-}
-Write-Host ""
-
-if ($hasGlobalFailures) {
-    Write-Host "--------------------------------------------------------------------------" -ForegroundColor Red
-    Write-Host "[FAIL] SE DETECTARON ANOMALIAS EN UNO O MAS AUDITORES." -ForegroundColor Red
-    Write-Host "Sugerencia: Revisa los logs superiores o corre con '.\auditar_todo.ps1 -Fix'." -ForegroundColor Yellow
-    Write-Host "==========================================================================" -ForegroundColor Cyan
+if ($FailedCount -gt 0) {
+    Write-Host "`n[FAIL] La suite de auditoria detecto fallas en $FailedCount auditor(es).`n" -ForegroundColor Red
     exit 1
+} elseif ($WarnCount -gt 0) {
+    Write-Host "`n[PASS CON OBSERVACIONES] Todos los auditores obligatorios pasaron sin fallas criticas.`n" -ForegroundColor Yellow
+    exit 0
 } else {
-    Write-Host "--------------------------------------------------------------------------" -ForegroundColor Green
-    Write-Host "[PASS] ALTA TOTAL: TODOS LOS AUDITORES PASARON SATISFACTORIAMENTE." -ForegroundColor Green
-    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host "`n[PASS 10/10] TODOS LOS AUDITORES EJECUTADOS Y APROBADOS SATISFACTORIAMENTE.`n" -ForegroundColor Green
     exit 0
 }

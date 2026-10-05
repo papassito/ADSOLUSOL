@@ -92,7 +92,10 @@ function Get-TreeLines {
             $continueMarker = "$([char]0x2502)   " # "│   "
             $emptyMarker    = "    "
             $newPrefix = $Prefix + $(if ($isLast) { $emptyMarker } else { $continueMarker })
-            $lines.AddRange((Get-TreeLines -Path $item.FullName -MaxDepth $MaxDepth -CurrentExclude $CurrentExclude -CurrentDepth ($CurrentDepth + 1) -Prefix $newPrefix))
+            $subLines = Get-TreeLines -Path $item.FullName -MaxDepth $MaxDepth -CurrentExclude $CurrentExclude -CurrentDepth ($CurrentDepth + 1) -Prefix $newPrefix
+            if ($null -ne $subLines -and $subLines.Count -gt 0) {
+                $lines.AddRange([string[]]$subLines)
+            }
         }
     }
     return $lines.ToArray()

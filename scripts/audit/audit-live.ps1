@@ -79,7 +79,7 @@ Write-Host "`n[2/7] Inspeccionando BOM UTF-8, Mojibake y archivos vacios..." -Fo
 $textFiles = Get-ChildItem -Path @("src", "tests", "docs") -Recurse -File -ErrorAction SilentlyContinue |
     Where-Object { 
         $_.Extension.ToLower() -in @('.cs', '.csproj', '.json', '.md', '.ps1', '.xaml', '.razor') -and
-        $_.FullName -notmatch "\\/[\\/]" 
+        $_.FullName -notmatch '[\\/](\.git|bin|obj|node_modules|dist|BUILD|\.build|\.repair-backups|TestResults)[\\/]' 
     }
 
 foreach ($file in $textFiles) {

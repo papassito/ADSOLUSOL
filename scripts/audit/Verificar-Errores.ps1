@@ -1,7 +1,7 @@
 <#
 ================================================================================
   ADSOLUSOL DIAGNOSTIC SUITE :: VERIFICADOR FORENSE Y AUDITOR DE SALUD DIGITAL
-  Ejecucin directa sin bloqueo:
+  Ejecución directa sin bloqueo:
   powershell -ExecutionPolicy Bypass -File .\Verificar-Errores.ps1
 ================================================================================
 #>
@@ -12,6 +12,9 @@ param(
 )
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+try {
+    [System.Text.Encoding]::RegisterProvider([System.Text.CodePagesEncodingProvider]::Instance)
+} catch {}
 $ErrorActionPreference = "Continue"
 
 $RootPath = (Resolve-Path $Path).Path
@@ -52,7 +55,7 @@ Write-Host "[1/6] Analizando Codificacion, BOM y Caracteres Corruptos (Mojibake)
 
 $ArchivosTexto = Get-ChildItem -Path @("src", "tests", "docs") -Recurse -File -ErrorAction SilentlyContinue | Where-Object {
     $_.Extension.ToLower() -in @('.cs', '.csproj', '.ts', '.tsx', '.json', '.md', '.ps1') -and
-    $_.FullName -notmatch '\\/[\\/]'
+    $_.FullName -notmatch '[\\/](\.git|bin|obj|node_modules|dist|BUILD|\.build|\.repair-backups)[\\/]'
 }
 
 foreach ($f in $ArchivosTexto) {
@@ -72,9 +75,9 @@ foreach ($f in $ArchivosTexto) {
     }
 
     $contenido = Get-Content $f.FullName -Raw -Encoding UTF8 -ErrorAction SilentlyContinue
-    # Patrn de Mojibake mejorado:
-    # \u00C3[\u0080-\u00BF] -> Detecta secuencias de 2 bytes (ej. á para ).
-    # \u00E2[\u0080-\u00BF]{2} -> Detecta secuencias de 3 bytes que empiezan con  (ej. € para , └ para +).
+    # Patrón de Mojibake mejorado:
+    # \u00C3[\u0080-\u00BF] -> Detecta secuencias de 2 bytes (ej. Ã¡ para á).
+    # \u00E2[\u0080-\u00BF]{2} -> Detecta secuencias de 3 bytes que empiezan con â (ej. â‚¬ para €, â”” para └).
     if ($contenido -and $contenido -match "(\u00C3[\u0080-\u00BF]|\u00E2[\u0080-\u00BF]{2})") {
         if ($Fix) {
             try {
@@ -90,7 +93,7 @@ foreach ($f in $ArchivosTexto) {
                 $contenido = $repairedContent # Update content to prevent re-reporting
                 Write-Host " [REPARADO] [MOJIBAKE] $rel -> Caracteres restaurados a UTF-8" -ForegroundColor Green
             } catch {
-                Registrar-Falla "MOJIBAKE_FIX" $rel "Fall el intento de reparacin automtica de codificacin: $($_.Exception.Message)"
+                Registrar-Falla "MOJIBAKE_FIX" $rel "Falló el intento de reparación automática de codificación: $($_.Exception.Message)"
             }
         } else {
             Registrar-Falla "MOJIBAKE" $rel "Caracteres con codificacion corrupta detectados (tildes/simbolos deformados)" "ALERTA"
@@ -198,7 +201,7 @@ foreach ($n in $Necroticos) {
 }
 
 # -----------------------------------------------------------------------------
-# 6. RESUMEN DIAGNSTICO FINAL
+# 6. RESUMEN DIAGNÓSTICO FINAL
 # -----------------------------------------------------------------------------
 Write-Host ""
 Write-Host "[6/6] Consolidando Dictamen..." -ForegroundColor Yellow

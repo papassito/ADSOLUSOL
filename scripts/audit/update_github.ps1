@@ -42,14 +42,14 @@ function Generar-MensajeCommit {
     elseif ($paths | Where-Object { $_ -match '(?i)cmd[\\/]' }) {
         $tipo = "feat"
         $scope = "(cmd)"
-        $descripcion = "update service entrypoints and presentation handlers"
+        $descripcion = "update console command handlers"
     }
-    elseif ($paths | Where-Object { $_ -match '(?i)internal[\\/]engine' }) {
+    elseif ($paths | Where-Object { $_ -match '(?i)Motor|Orchestrator' }) {
         $tipo = "feat"
         $scope = "(engine)"
-        $descripcion = "update evaluation engine and scoring algorithms"
+        $descripcion = "update ad execution engine and workflow orchestrator"
     }
-    elseif ($paths | Where-Object { $_ -match '(?i)internal[\\/]domain' }) {
+    elseif ($paths | Where-Object { $_ -match '(?i)Domain|Application|Infrastructure' }) {
         $tipo = "refactor"
         $scope = "(domain)"
         $descripcion = "update canonical contracts and data models"

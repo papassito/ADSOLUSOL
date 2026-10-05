@@ -62,18 +62,28 @@ docs
 │   └── VALIDATE.md
 scripts
 │   ├── audit
-│   │   ├── auditar_todo.ps1
+│   │   ├── audit-compilacion.ps1
+│   │   ├── audit-concurrencia.ps1
+│   │   ├── audit-diseno.ps1
+│   │   ├── audit-dominio.ps1
+│   │   ├── audit-live.ps1
+│   │   ├── audit-mojibake.ps1
+│   │   ├── audit-seguridad.ps1
+│   │   ├── audit-unicode.ps1
 │   │   ├── autopsia_integridad.ps1
+│   │   ├── CALIFICADOR_MODULOS.ps1
 │   │   ├── junta_medica.ps1
+│   │   ├── radiografia_codigo.ps1
 │   │   ├── radiologico_forense.ps1
-│   │   └── smoke-test.ps1
+│   │   ├── smoke-test.ps1
+│   │   ├── test-stress.ps1
+│   │   └── Verificar-Errores.ps1
+│   ├── build
+│   │   └── release.ps1
 │   └── maintenance
-│       └── generate_docs.ps1
-│   ├── audit_chismoso.ps1
-│   ├── audit_ultra-mitotero.ps1
-│   ├── check_structure.ps1
-│   ├── chismoso.ps1
-│   └── radiografia_codigo.ps1
+│       ├── generate_docs.ps1
+│       ├── organize-scripts.ps1
+│       └── Show-ProjectTree.ps1
 src
 │   ├── ADSOLUSOL.Application
 │   │   ├── Enums
@@ -168,10 +178,10 @@ src
 │   │   ├── Security
 │   │   │   ├── PanelAuthConfiguration.cs
 │   │   │   └── PanelPasswordVerifier.cs
-│   │   └── ADSOLUSOL.Presentation.Api.csproj
 │   │   ├── App.razor
 │   │   ├── appsettings.Development.json
 │   │   ├── appsettings.json
+│   │   ├── ADSOLUSOL.Presentation.Api.csproj
 │   │   ├── Dockerfile
 │   │   ├── Home.razor
 │   │   ├── index.html
@@ -181,12 +191,12 @@ src
 │   │   ├── Commands
 │   │   │   ├── StartEngineCommand.cs
 │   │   │   └── SyncCampaignsCommand.cs
-│   │   └── ADSOLUSOL.Presentation.Cmd.csproj
 │   │   ├── appsettings.json
+│   │   ├── ADSOLUSOL.Presentation.Cmd.csproj
 │   │   └── Program.cs
 │   ├── ADSOLUSOL.Presentation.Desktop
-│   │   └── ADSOLUSOL.Presentation.Desktop.csproj
 │   │   ├── App.cs
+│   │   ├── ADSOLUSOL.Presentation.Desktop.csproj
 │   │   └── MauiProgram.cs
 │   └── ADSOLUSOL.Presentation.Web
 │       ├── src
@@ -199,17 +209,17 @@ src
 │       ├── .env.example
 │       ├── index.html
 │       ├── package-lock.json
-│       └── package.json
+│       ├── package.json
 │       ├── tsconfig.json
 │       ├── tsconfig.node.json
 │       └── vite.config.ts
 tests
 │   ├── ADSOLUSOL.ArchitectureTests
-│   │   └── ADSOLUSOL.ArchitectureTests.csproj
+│   │   ├── ADSOLUSOL.ArchitectureTests.csproj
 │   │   └── OnionArchitectureTests.cs
 │   └── ADSOLUSOL.RegressionTests
 │       ├── .env.example
-│       └── ADSOLUSOL.RegressionTests.csproj
+│       ├── ADSOLUSOL.RegressionTests.csproj
 │       ├── PanelAuthenticationTests.cs
 │       └── Program.cs
 ```

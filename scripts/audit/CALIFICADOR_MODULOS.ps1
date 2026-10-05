@@ -1,6 +1,6 @@
 # ============================================================
-# AUDITOR NUMERICO DE MODULOS - ADSOLUSOL (.NET 8 / C# / ONION) [ESTRICTO / HARDENED]
-# MODO SOLO LECTURA FORENSE - CERO INDULGENCIAS
+# AUDITOR NUMERICO DE MODULOS - GRADO NASA (MISSION-CRITICAL)
+# MODO SOLO LECTURA FORENSE - TOLERANCIA CERO
 #
 # Uso:
 #   .\scripts\audit\CALIFICADOR_MODULOS.ps1
@@ -171,12 +171,16 @@ function Buscar-DeudaTecnica {
         MOJIBAKE    = 0
         DOMAIN_LEAK = 0
         APP_LEAK    = 0
+        UNSAFE_STATIC = 0
     }
 
     $rxCatchVacio = [regex]'catch\s*(\([^\)]*\))?\s*\{\s*\}'
     $rxGenericThrow = [regex]'throw\s+new\s+Exception\s*\('
     $rxMojibake = [regex]'(\u00C3[\u0080-\u00BF]|\u00E2[\u0080-\u00BF]{2})'
     $rxIllegalDomain = [regex]'using\s+(Microsoft\.AspNetCore|Microsoft\.EntityFrameworkCore|Dapper|Microsoft\.Data\.Sqlite|System\.Data\.SqlClient)'
+    $rxIllegalApp = [regex]'using\s+ADSOLUSOL\.Infrastructure\b'
+    $rxUnsafeStatic = [regex]'static\s+(?:List|Dictionary|HashSet|Queue|Stack)<'
+    $rxPlaceholder = [regex]'(?-i:\bPLACEHOLDER\b(?!\s*[:=]))|(?i:\b(NOT IMPLEMENTED|IMPLEMENT ME|NotImplementedException)\b)'
 
     foreach ($archivo in $Archivos) {
         try {
@@ -201,6 +205,9 @@ function Buscar-DeudaTecnica {
             if ($archivo.FullName -match '[\\/]ADSOLUSOL\.Application[\\/]' -and $rxIllegalApp.IsMatch($raw)) {
                 $resultado.APP_LEAK++
             }
+            if ($rxUnsafeStatic.IsMatch($raw)) {
+                $resultado.UNSAFE_STATIC++
+            }
 
             foreach ($linea in $contenido) {
                 if ($linea -match '(?i)\bTODO\b') {
@@ -215,8 +222,7 @@ function Buscar-DeudaTecnica {
                 if ($linea -match '(?i)\bpanic\s*\(') {
                     $resultado.PANIC++
                 }
-                # Excluir atributos HTML/JSX como placeholder="..." para evitar falsos positivos en frontends
-                if ($linea -match '(?i)\b(NOT IMPLEMENTED|IMPLEMENT ME)\b' -or ($linea -match '\bPLACEHOLDER\b' -and $linea -notmatch 'placeholder\s*=')) {
+                if ($rxPlaceholder.IsMatch($linea)) {
                     $resultado.PLACEHOLDER++
                 }
             }
@@ -322,19 +328,21 @@ function Calificar-Modulo {
         }
 
         if ($codigo.Count -gt 0) {
+        $esModuloDeTests = ($Modulo.FullName -match '[\\/]tests[\\/]') -or ($Modulo.Name -match '(?i)Tests?$')
+
+        if ($esModuloDeTests) {
             if ($tests.Count -eq 0) {
-                $score -= 15
-                $problemas.Add("Sin pruebas detectadas")
-            }
-            else {
-                $ratioTest = $tests.Count / $codigo.Count
-                if ($ratioTest -lt 0.05) {
+                $score -= 25
+                $problemas.Add("Suite de pruebas sin ningun archivo de test ejecutable")
+            } elseif (($tests.Count / $codigo.Count) -lt 0.30) {
                     $score -= 10
-                    $problemas.Add("Cobertura estructural de tests muy baja")
-                }
-                elseif ($ratioTest -lt 0.10) {
-                    $score -= 5
-                    $problemas.Add("Pocos archivos de pruebas")
+                $problemas.Add("Proporcion de pruebas insuficiente dentro de la suite de testing")
+            }
+        } else {
+            $tieneCobertura = Comprobar-CoberturaTests -Modulo $Modulo -TestsLocales $tests -TargetRoot $targetRoot
+            if (-not $tieneCobertura) {
+                $score -= 20
+                $problemas.Add("Sin pruebas internas ni cobertura referenciada en tests/")
                 }
             }
         }
@@ -348,9 +356,9 @@ function Calificar-Modulo {
     }
 
     if ($vacios.Count -gt 0) {
-        $penalizacion = [Math]::Min(20, $vacios.Count * 4)
+        $penalizacion = [Math]::Min(20, $vacios.Count * 10)
         $score -= $penalizacion
-        $problemas.Add("$($vacios.Count) archivo(s) vacio(s)")
+        $problemas.Add("$($vacios.Count) archivo(s) vacio(s) de 0 bytes")
     }
 
     if ($deuda.TODO -gt 0) {
@@ -366,21 +374,61 @@ function Calificar-Modulo {
     }
 
     if ($deuda.HACK -gt 0) {
-        $p = [Math]::Min(10, $deuda.HACK * 2)
+        $p = [Math]::Min(15, $deuda.HACK * 3)
         $score -= $p
         $problemas.Add("$($deuda.HACK) HACK")
     }
 
-    if ($deuda.PLACEHOLDER -gt 0) {
-        $p = [Math]::Min(20, $deuda.PLACEHOLDER * 4)
+    if ($deuda.PANIC -gt 0) {
+        $p = [Math]::Min(20, $deuda.PANIC * 5)
         $score -= $p
-        $problemas.Add("$($deuda.PLACEHOLDER) implementacion(es) pendiente(s)")
+        $problemas.Add("$($deuda.PANIC) invocacion(es) panic()")
+    }
+
+    if ($deuda.PLACEHOLDER -gt 0) {
+        $p = [Math]::Min(25, $deuda.PLACEHOLDER * 5)
+        $score -= $p
+        $problemas.Add("$($deuda.PLACEHOLDER) stub(s) / implementacion(es) incompleta(s)")
+    }
+
+    if ($deuda.CATCH_VACIO -gt 0) {
+        $p = [Math]::Min(25, $deuda.CATCH_VACIO * 10)
+        $score -= $p
+        $problemas.Add("$($deuda.CATCH_VACIO) bloque(s) catch silencioso(s) (violacion fail-closed)")
+    }
+
+    if ($deuda.GENERIC_THROW -gt 0) {
+        $p = [Math]::Min(20, $deuda.GENERIC_THROW * 5)
+        $score -= $p
+        $problemas.Add("$($deuda.GENERIC_THROW) throw de System.Exception generico")
+    }
+
+    if ($deuda.DOMAIN_LEAK -gt 0) {
+        $score -= 30
+        $problemas.Add("Fuga arquitectonica critica: Capa Domain acoplada a infraestructura/database")
+    }
+
+    if ($deuda.APP_LEAK -gt 0) {
+        $score -= 25
+        $problemas.Add("Fuga arquitectonica critica: Capa Application acoplada a Infrastructure concreta")
+    }
+
+    if ($deuda.UNSAFE_STATIC -gt 0) {
+        $p = [Math]::Min(20, $deuda.UNSAFE_STATIC * 10)
+        $score -= $p
+        $problemas.Add("$($deuda.UNSAFE_STATIC) coleccion(es) estatica(s) mutable(s) insegura(s)")
+    }
+
+    if ($deuda.MOJIBAKE -gt 0) {
+        $p = [Math]::Min(20, $deuda.MOJIBAKE * 10)
+        $score -= $p
+        $problemas.Add("$($deuda.MOJIBAKE) archivo(s) con corrupcion UTF-8 / Mojibake")
     }
 
     if ($archivosGrandes -gt 0) {
-        $p = [Math]::Min(10, $archivosGrandes * 2)
+        $p = [Math]::Min(20, $archivosGrandes * 10)
         $score -= $p
-        $problemas.Add("$archivosGrandes archivo(s) >800 lineas")
+        $problemas.Add("$archivosGrandes archivo(s) >800 lineas (violacion NASA Rule 3 / SRP)")
     }
 
     if ($score -gt 100) { $score = 100 }
@@ -416,7 +464,7 @@ function Calificar-Modulo {
         TODO          = $deuda.TODO
         FIXME         = $deuda.FIXME
         HACK          = $deuda.HACK
-        Pendientes    = $deuda.PENDIENTE
+        Pendientes    = $deuda.PLACEHOLDER
         Grandes       = $archivosGrandes
         Observaciones = $detalle
     }

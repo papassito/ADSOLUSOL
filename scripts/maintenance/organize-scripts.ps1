@@ -34,6 +34,7 @@ $scriptMap = @{
     "radiologico_forense.ps1"   = "audit"
     "smoke-test.ps1"            = "audit"
     "audit-live.ps1"            = "audit"
+    "audit-tree.ps1"            = "audit"
     "radiografia_codigo.ps1"    = "audit"
     "Verificar-Errores.ps1"     = "audit"
 
@@ -76,6 +77,15 @@ $obsoleteScripts = @(
     "REPARAR-FINAL.ps1",
     "seal_adsolusol_release.ps1",
     "chismoso.ps1",
+    "CALIFICADOR_MODULOS.ps1",
+    "Calificar-Proyecto.ps1",
+    "Show-ProjectTree.ps1",
+    "release.ps1",
+    "audit-live.ps1",
+    "radiografia_codigo.ps1",
+    "Verificar-Errores.ps1",
+    "push.ps1",
+    "stress_test.ps1",
     "audit_ultra-mitotero.ps1",
     "CALIFICADOR_MODULOS.ps1",
     "Calificar-Proyecto.ps1",

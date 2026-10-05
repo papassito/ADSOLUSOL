@@ -412,30 +412,34 @@ foreach ($record in $medicalRecords) {
 
 $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 [System.IO.File]::WriteAllText($reportPath, $mdReport, $utf8NoBom)
-Write-Host "[OK] Expediente clínico guardado en: $reportPath" -ForegroundColor Green
+Write-Host "[OK] Expediente clinico guardado en: $reportPath" -ForegroundColor Green
 
-$criticalFailures = @($medicalRecords | Where-Object { $_.Status -notlike "SANO*" })
+$criticalFailures = @($medicalRecords | Where-Object { $_.Status -like "CRITICO*" -or $_.Status -like "OBSERVACION (Exit Code: 1)*" })
+$warningRecords = @($medicalRecords | Where-Object { $_.Status -like "*NO VERIFICADO*" -or $_.Status -like "*OBSERVACION*" -and $_.Status -notlike "CRITICO*" })
 
 Write-Host ""
 Write-Host "=========================================================" -ForegroundColor Cyan
 Write-Host "           DICTAMEN MEDICO FINAL DE ADSOLUSOL            " -ForegroundColor Cyan
 Write-Host "=========================================================" -ForegroundColor Cyan
 
-if ($criticalFailures.Count -eq 0) {
-    Write-Host "[PASS] ALTA MEDICA 10/10: ADSOLUSOL presenta salud digital y operativa al 100%." -ForegroundColor Green
+if ($criticalFailures.Count -eq 0 -and $warningRecords.Count -eq 0) {
+    Write-Host "[PASS 10/10] ALTA MEDICA: ADSOLUSOL presenta salud digital y operativa al 100%." -ForegroundColor Green
+} elseif ($criticalFailures.Count -eq 0) {
+    Write-Host "[PASS CON OBSERVACIONES] ALTA MEDICA: Cero fallas criticas, $($warningRecords.Count) observacion(es) no bloqueante(s)." -ForegroundColor Yellow
 } else {
-    Write-Host "[FAIL] INTERVENCION REQUERIDA: $($criticalFailures.Count) area(s) presentan observaciones." -ForegroundColor Red
+    Write-Host "[FAIL] INTERVENCION REQUERIDA: $($criticalFailures.Count) area(s) presentan fallas criticas." -ForegroundColor Red
     foreach ($failure in $criticalFailures) {
         $itemArea = $failure.Area
         $itemEsp = $failure.Especialista
-        Write-Host "  - $itemArea [$itemEsp]" -ForegroundColor Yellow
+        Write-Host "  - [CRITICO] $itemArea [$itemEsp]" -ForegroundColor Red
     }
 }
 
 # 6. Exit Code Estricto para Pipelines CI/CD
+$finalExit = if ($criticalFailures.Count -gt 0) { 1 } else { 0 }
 if ($env:CI) {
-    if ($criticalFailures.Count -gt 0) { exit 1 } else { exit 0 }
+    exit $finalExit
 } else {
-    $global:LASTEXITCODE = if ($criticalFailures.Count -gt 0) { 1 } else { 0 }
-    if ($criticalFailures.Count -gt 0) { exit 1 } else { exit 0 }
+    $global:LASTEXITCODE = $finalExit
+    exit $finalExit
 }

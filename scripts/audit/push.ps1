@@ -9,6 +9,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+$env:GIT_PAGER = "cat"
 
 try { $null = chcp 65001 } catch {}
 
@@ -45,7 +46,7 @@ function Limpiar-BasuraGit {
 
     Get-ChildItem -Path . -Recurse -Include $junkPatterns -Force -ErrorAction SilentlyContinue |
         Where-Object {
-            $_.FullName -notmatch '[\\/]\.git[\\/]'
+            $_.FullName -notmatch '[\\/](\.git|bin|obj|node_modules|\.repair-backups)[\\/]'
         } |
         ForEach-Object {
             Remove-Item $_.FullName -Force -ErrorAction SilentlyContinue
