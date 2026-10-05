@@ -167,6 +167,6 @@ if ($telemetryFails -gt 0) {
     Write-Host "`n[PASS WITH WARNINGS] Observaciones menores en telemetria.`n" -ForegroundColor Yellow
     exit 0
 } else {
-    Write-Host "`n[PASS 10/10] Telemetria publicitaria y operacional 100% integra y conforme.`n" -ForegroundColor Green
+    Write-Host "`n[PASS] Telemetria local y garantia de entrega conformes.`n" -ForegroundColor Green
     exit 0
 }
