@@ -72,6 +72,11 @@ $AuditorPipeline = @(
     },
     @{
         Fase = "Fase 2: Arquitectura y Dominio"
+        Script = "scripts\audit\audit-contratos.ps1"
+        Args = @()
+    },
+    @{
+        Fase = "Fase 2: Arquitectura y Dominio"
         Script = "scripts\audit\audit-tree.ps1"
         Args = @()
     },

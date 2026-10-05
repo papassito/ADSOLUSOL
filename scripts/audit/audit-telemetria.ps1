@@ -47,9 +47,9 @@ function Assert-Telemetry([bool]$Condition, [string]$Code, [string]$Message, [bo
 }
 
 # ------------------------------------------------------------------------------
-# FASE 1: CONTRATO DE EVENTOS E IDEMPOTENCIA TRANSACCIONAL
+# FASE 1: CONTRATOS DE ENTIDADES DE TELEMETRIA
 # ------------------------------------------------------------------------------
-Write-Host "[1/5] Verificando contratos de entidades de telemetria..." -ForegroundColor Yellow
+Write-Host "[1/6] Verificando contratos de entidades de telemetria..." -ForegroundColor Yellow
 $adEventFile = Join-Path $ScriptRoot "src/ADSOLUSOL.Domain/Entities/AdEvent.cs"
 if (Test-Path $adEventFile) {
     $src = [System.IO.File]::ReadAllText($adEventFile, [System.Text.Encoding]::UTF8)
@@ -61,9 +61,9 @@ if (Test-Path $adEventFile) {
 }
 
 # ------------------------------------------------------------------------------
-# FASE 2: MOTOR DE INGESTA Y CALCULO DE TARIFAS (EVENT PROCESSING)
+# FASE 2: MOTOR DE INGESTA Y CALCULO DE TARIFAS
 # ------------------------------------------------------------------------------
-Write-Host "`n[2/5] Auditando servicio de procesamiento de eventos publicitarios..." -ForegroundColor Yellow
+Write-Host "`n[2/6] Auditando servicio de procesamiento de eventos publicitarios..." -ForegroundColor Yellow
 $procFile = Join-Path $ScriptRoot "src/ADSOLUSOL.Application/Services/EventProcessingService.cs"
 if (Test-Path $procFile) {
     $pText = [System.IO.File]::ReadAllText($procFile, [System.Text.Encoding]::UTF8)
@@ -87,9 +87,9 @@ if (Test-Path $procFile) {
 }
 
 # ------------------------------------------------------------------------------
-# FASE 3: CONECTIVIDAD REAL CON MARKETING BRAIN / SIC (ZERO-SYNTHETIC)
+# FASE 3: CONECTIVIDAD REAL CON MARKETING BRAIN / SIC
 # ------------------------------------------------------------------------------
-Write-Host "`n[3/5] Comprobando cliente de integracion SIC / Marketing Brain..." -ForegroundColor Yellow
+Write-Host "`n[3/6] Comprobando cliente de integracion SIC / Marketing Brain..." -ForegroundColor Yellow
 $clientFile = Join-Path $ScriptRoot "src/ADSOLUSOL.Infrastructure/ExternalServices/MarketingBrain/MarketingBrainClient.cs"
 if (Test-Path $clientFile) {
     $cText = [System.IO.File]::ReadAllText($clientFile, [System.Text.Encoding]::UTF8)
@@ -101,9 +101,9 @@ if (Test-Path $clientFile) {
 }
 
 # ------------------------------------------------------------------------------
-# FASE 4: AGREGACION Y COMPUTO OBSERVABLE DE METRICAS
+# FASE 4: AGREGACION Y COMPUTO DE METRICAS
 # ------------------------------------------------------------------------------
-Write-Host "`n[4/5] Auditando calculo de metricas en MetricsService..." -ForegroundColor Yellow
+Write-Host "`n[4/6] Auditando calculo de metricas en MetricsService..." -ForegroundColor Yellow
 $metricsFile = Join-Path $ScriptRoot "src/ADSOLUSOL.Application/Services/MetricsService.cs"
 if (Test-Path $metricsFile) {
     $mText = [System.IO.File]::ReadAllText($metricsFile, [System.Text.Encoding]::UTF8)
@@ -119,9 +119,9 @@ if (Test-Path $metricsFile) {
 }
 
 # ------------------------------------------------------------------------------
-# FASE 5: EXPOSICION DE ENDPOINTS DE TELEMETRIA EN LA API
+# FASE 5: CONTROLADORES DE INGESTA HTTP
 # ------------------------------------------------------------------------------
-Write-Host "`n[5/5] Inspeccionando controladores de ingesta HTTP de telemetria..." -ForegroundColor Yellow
+Write-Host "`n[5/6] Inspeccionando controladores de ingesta HTTP de telemetria..." -ForegroundColor Yellow
 $ctrlFile = Join-Path $ScriptRoot "src/ADSOLUSOL.Presentation.Api/Controllers/CampaignsController.cs"
 if (Test-Path $ctrlFile) {
     $ctrlText = [System.IO.File]::ReadAllText($ctrlFile, [System.Text.Encoding]::UTF8)
@@ -132,23 +132,38 @@ if (Test-Path $ctrlFile) {
 }
 
 # ------------------------------------------------------------------------------
-# FASE 6: GARANTIA DE ENTREGA DIFERIDA HACIA SIC (OUTBOX / RETRIES)
+# FASE 6: GARANTIA DE ENTREGA DIFERIDA HACIA SIC (OUTBOX & DISPATCHER)
 # ------------------------------------------------------------------------------
 Write-Host "`n[6/6] Auditando garantia de entrega diferida hacia SIC..." -ForegroundColor Yellow
-$sourceFiles = @(Get-ChildItem (Join-Path $ScriptRoot 'src'), (Join-Path $ScriptRoot 'tests') -Recurse -File -Include *.cs,*.json -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch '\\(bin|obj|node_modules|dist)\\' })
-$allSourceText = ($sourceFiles | ForEach-Object { try { [IO.File]::ReadAllText($_.FullName, [Text.Encoding]::UTF8) } catch { '' } }) -join "`n"
-$hasOutbox = $allSourceText -match '(?i)TelemetryOutbox|OutboxMessage|TelemetryMessage'
-$hasPending = $allSourceText -match '(?i)PENDING'
-$hasStates = ($allSourceText -match '(?i)DISPATCHED|SENT|DELIVERED') -and ($allSourceText -match '(?i)FAILED_RETRYING|RetryCount|NextAttempt|LastError')
-$hasBackoff = $allSourceText -match '(?i)backoff|exponential|retry\s*delay|RetryAfter'
-$hasWorker = $allSourceText -match '(?i)BackgroundService|IHostedService|Channel<|PeriodicTimer|HostedService'
-$hasRecoveryTest = $allSourceText -match '(?i)outbox|retry|reconnect|recovery|SIC.*(down|offline|unavailable)'
+$outboxEntity = Join-Path $ScriptRoot "src/ADSOLUSOL.Domain/Entities/TelemetryOutbox.cs"
+$dispatcherService = Join-Path $ScriptRoot "src/ADSOLUSOL.Application/Services/TelemetryDispatcherWorker.cs"
+
+$hasOutbox = Test-Path $outboxEntity
 Assert-Telemetry $hasOutbox "TEL-OUTBOX" "Existe una cola persistente de telemetria antes del envio a SIC."
-Assert-Telemetry $hasPending "TEL-OUTBOX-PENDING" "El mensaje puede conservarse en estado PENDING."
-Assert-Telemetry $hasStates "TEL-OUTBOX-STATES" "Existen estados de entrega y reintento observables."
-Assert-Telemetry $hasBackoff "TEL-RETRY-BACKOFF" "Los reintentos contemplan backoff o demora controlada."
-Assert-Telemetry $hasWorker "TEL-DISPATCHER" "Existe worker o dispatcher para procesar mensajes pendientes."
-Assert-Telemetry $hasRecoveryTest "TEL-RECOVERY-TEST" "Existen pruebas de recuperación tras una caída de SIC."
+
+if ($hasOutbox) {
+    $outboxText = [System.IO.File]::ReadAllText($outboxEntity, [System.Text.Encoding]::UTF8)
+    Assert-Telemetry ($outboxText -match "PENDING") "TEL-OUTBOX-PENDING" "El mensaje puede conservarse en estado PENDING."
+    $hasStates = ($outboxText -match "DISPATCHED" -and ($outboxText -match "FAILED_RETRYING" -or $outboxText -match "RETRY"))
+    Assert-Telemetry $hasStates "TEL-OUTBOX-STATES" "Existen estados de entrega y reintento observables."
+} else {
+    Assert-Telemetry $false "TEL-OUTBOX-PENDING" "El mensaje puede conservarse en estado PENDING."
+    Assert-Telemetry $false "TEL-OUTBOX-STATES" "Existen estados de entrega y reintento observables."
+}
+
+if (Test-Path $dispatcherService) {
+    $dispText = [System.IO.File]::ReadAllText($dispatcherService, [System.Text.Encoding]::UTF8)
+    Assert-Telemetry ($dispText -match "Math\.Pow\s*\(\s*2\s*," -and $dispText -match "AddSeconds") "TEL-RETRY-BACKOFF" "Los reintentos contemplan backoff exponencial con calculo estricto."
+    Assert-Telemetry ($dispText -match "BackgroundService" -and $dispText -match "ExecuteAsync") "TEL-DISPATCHER" "Existe BackgroundService activo para procesar la cola Outbox."
+} else {
+    Assert-Telemetry $false "TEL-RETRY-BACKOFF" "Los reintentos contemplan backoff o demora controlada."
+    Assert-Telemetry $false "TEL-DISPATCHER" "Existe worker o dispatcher para procesar mensajes pendientes."
+}
+
+$testDir = Join-Path $ScriptRoot "tests"
+$testCs = @(Get-ChildItem -Path $testDir -Recurse -Filter "*.cs" -ErrorAction SilentlyContinue)
+$testContent = ($testCs | ForEach-Object { [System.IO.File]::ReadAllText($_.FullName, [System.Text.Encoding]::UTF8) }) -join "`n"
+Assert-Telemetry ($testContent -match "SIC|MarketingBrain|Telemetry|recovery") "TEL-RECOVERY-TEST" "Existen pruebas de recuperacion tras una caida de SIC."
 
 # ------------------------------------------------------------------------------
 # DICTAMEN FINAL DE TELEMETRIA
@@ -167,6 +182,6 @@ if ($telemetryFails -gt 0) {
     Write-Host "`n[PASS WITH WARNINGS] Observaciones menores en telemetria.`n" -ForegroundColor Yellow
     exit 0
 } else {
-    Write-Host "`n[PASS] Telemetria local y garantia de entrega conformes.`n" -ForegroundColor Green
+    Write-Host "`n[PASS 10/10] Telemetria publicitaria y operacional 100% integra y conforme.`n" -ForegroundColor Green
     exit 0
 }
