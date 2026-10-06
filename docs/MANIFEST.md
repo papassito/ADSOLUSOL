@@ -2,7 +2,7 @@
 
 **Estado:** SEALED / FROZEN DOCUMENTATION BASELINE
 **Fecha de sellado:** 2026-10-05
-**Total de archivos Markdown del baseline:** 38
+**Total de archivos Markdown del baseline:** 40
 
 ## SHA-256 de documentos sellados
 
@@ -26,9 +26,10 @@
 | `docs/contracts/MARKETING-API.md` | `81c52d2d3b113d3faaa72339cd20e9bb086760ee4b3e194610874c9a3dacded1` |
 | `docs/decisions/ADR-001.md` | `f3377d20ec983d718f90de3efbdf871dc96c41faed829fd8d41d0f5fafde5640` |
 | `docs/decisions/DECISIONS.md` | `8d0730886afff9a98dff6a07382a754c0fdd3688fffddf5b2b72d092eaed56d3` |
-| `docs/DEPLOYMENT_PLESK_ADSOLUSOL.md` | `14449e5c0c3fd72438e081f4d80dbcbb25afb2ca1a4cd3c55f008bdc90251a79` |
+| `docs/DEPLOYMENT_PLESK_ADSOLUSOL.md` | `fbc57adcda7f7c5863c1fb43c90bd69fa229ffe2686ac437ed9bc1009629faae` |
 | `docs/evidence/EVIDENCE.md` | `e74b448beafceb6d4c9d466744ce5c9aec28fc707622d327f0ecff60840ab8df` |
 | `docs/HISTORIAL DE ACTIVIDADES.MD` | `9fbc545ffd94f69349685dbbea831958b189c553f9f384df0671e16c3f1c6113` |
+| `docs/INSTRUCCION_SUITE_AUDITORIA_SOLUSOL_SIC_API_SIC.md` | `7b1f0d2299c5899fdeeb6d78c52dfa19b093b50cac92cdd8de73ac1bd6b5e6ef` |
 | `docs/integration/MARKETING-BRAIN.md` | `f2e20254e0b710092dbd5d9625b09efa4f063c4be64fbdd06628eee6f87d3b9c` |
 | `docs/LIBRARY.md` | `748e50eab7236a001ad9c770cf11cd7b0b7edd91f00f1be12dbb91b5aa144fd7` |
 | `docs/operations/VALIDATE.md` | `087817be63a455fe7153354e5e4b3fb85d3a8a8aa0a8170c01b6a90eaa52ab31` |
@@ -46,3 +47,4 @@
 | `README.md` | `75d4c2bcc4544f7e3df4defa53f5a9a98398b5ed9c480c2156a584a5f0771acc` |
 | `REQUIREMENTS.md` | `f4f5a8f0cff346df06ccf5767a9a99e49573b6ef96fae310a60b1c78d49ac917` |
 | `ROADMAP.md` | `8436b6343cb7c0da8e8f496b06ac320a5c033031e7a1cb77fad82196f9b8e8d8` |
+| `scripts/audit/INVENTARIO_AUDITORIA.md` | `2361dd809af7ecb9463a5530880fd4a7761c7a3ad2c243d92f306e783a249bb1` |

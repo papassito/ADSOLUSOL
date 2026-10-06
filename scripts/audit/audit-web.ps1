@@ -76,7 +76,7 @@ if (Test-Path $app) {
 # Umbral maximo para vistas y componentes individuales (350 lineas)
 $oversized = @()
 foreach ($f in $code) {
-    if ($f.Name -ne 'App.tsx') {
+    if ($f.Name -ne 'App.tsx' -and $f.Extension -ne '.css') {
         $lCount = (Get-Content $f.FullName).Count
         if ($lCount -gt 350) { $oversized += "$($f.Name) ($lCount lineas)" }
     }
@@ -113,7 +113,7 @@ foreach ($rv in $requiredViews) {
     if (-not $found) { $missingViews += $rv }
 }
 if ($missingViews.Count -eq 0) {
-    Pass 'WEB-SITEMAP-COVERAGE' "Todas las 9 vistas canónicas del frontend estan implementadas y segregadas."
+    Pass 'WEB-SITEMAP-COVERAGE' "Todas las 9 vistas canonicas del frontend estan implementadas y segregadas."
 } else {
     Fail 'WEB-SITEMAP-COVERAGE' "Vistas faltantes segun sitemap: $($missingViews -join ', ')."
 }
