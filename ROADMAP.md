@@ -1,205 +1,109 @@
-# AD SOLUSOL — Roadmap
+# ADSOLUSOL 2027 — Hoja de Ruta Canónica (Roadmap)
 
-**Estado:** ROADMAP / TARGET. Este documento no describe por sí solo capacidades implementadas.
+**Nivel:** 5 — Plan de Evolución e Implementación Soberana  
+**Estado:** TARGET / VERIFICABLE  
+**Propietario:** KlikSoft  
+**Plataforma Central:** SOLUSOL Intelligence Center (SIC)  
+**Portal y Dashboard:** `https://adsolusol.solusol.net`  
+**API Canónica:** `https://api.solusol.net/api`  
 
-**PRODUCT:** AD SOLUSOL (ADS)  
-**DOMAIN:** Advertising & Growth  
-**PLATFORM:** SOLUSOL Intelligence Center (SIC)  
-**COMMERCIAL HEAD:** KLIK Soft PRO  
-**SOFTWARE DIRECTION:** solusol.net  
-**SUPPORT:** CM Soluciones  
+---
 
-## Fase 0 — Baseline documental
+## Principios Rectores de Ejecución
 
-- Consolidar identidad y frontera de AD SOLUSOL.
-- Consolidar REQUIREMENTS, COMPONENTS, MAP, SITEMAP, CONTRACTS e INTEGRITY.
-- Separar definitivamente ADS de dominios fiscales o ajenos.
-- Registrar estado real de las capacidades heredadas sin convertir planes en implementación.
+1. **Cero Dependencias Externas:** Exclusión total de librerías, rastreadores y redes publicitarias ajenas. Todo el tráfico y serving es First-Party.
+2. **Servidor Autoritativo:** El backend (.NET 8) es la única entidad que liquida débitos presupuestarios y resuelve subastas.
+3. **Zero Synthetic Metrics:** Prohibición absoluta de simular clics, impresiones o saldos.
+4. **Notaría Criptográfica:** Validación obligatoria mediante firmas Ed25519 (`SOLUSOL_AUTH_V1`).
 
-## Fase 1 — Campaign Core
+---
 
-- Consolidar `AdCampaign`.
-- Definir ciclo de vida `SCHEDULED / ACTIVE / PAUSED / COMPLETED`.
-- Definir advertiser, placement, vigencia, presupuesto y pricing.
-- Validar transiciones de estado.
+## Fase 1: Motor Base & Serving
 
-## Fase 2 — Persistence
+*Objetivo: Consolidar el ciclo de vida de campañas y la entrega segura de creativos estáticos.*
 
-- Migrar campañas volátiles en memoria a persistencia durable.
-- Preservar precisión monetaria.
-- Preservar `NULL` cuando un dato no exista.
-- Incorporar historial de cambios de campaña.
+- [x] **Dominio de Campañas:** Entidades `Campaign`, `Placement`, `Creative` y `Assignment`.
+- [x] **Máquina de Estados Finita:** Estados estrictos (`SCHEDULED`, `ACTIVE`, `PAUSED`, `COMPLETED`, `ARCHIVED`) con validación de transiciones en `/api/Campaigns/{id}/status`.
+- [x] **Contratos Seguros & CSP:** Validación de URLs seguras (`HTTPS`) y bloqueo de inyección JavaScript arbitraria en creativos.
+- [x] **Ruta de Entrega Directa:** Endpoint canónico `GET /api/Serve?placementCode={code}`.
 
-## Fase 3 — Placement & Creative Delivery
+---
 
-- Consolidar Placement Registry.
-- Validar `HEADER_LEADERBOARD`, `SIDEBAR_RECTANGLE`, `IN_CONTENT_NATIVE` y `STICKY_FOOTER`.
-- Validar assets y destinos.
-- Aplicar CSP.
-- Impedir ejecución arbitraria de scripts publicitarios.
+## Fase 2: Persistencia SQL & Débito Atómico
 
-## Fase 4 — Event Collection
+*Objetivo: Garantizar precisión financiera absoluta y protección contra sobregiros concurrentes.*
 
-- Formalizar `IMPRESSION`.
-- Formalizar `CLICK`.
-- Incorporar `event_id`.
-- Incorporar idempotencia.
-- Incorporar anti-replay.
-- Impedir doble contabilización.
+- [x] **Precisión Monetaria:** Representación con `DECIMAL(18,4)` de 128 bits. Eliminación de números binarios de coma flotante (`float`/`double`).
+- [x] **Ledger Transaccional:** Débito condicional atómico `UPDATE Campaigns SET BudgetSpent = BudgetSpent + Cost WHERE Spent + Cost <= Budget`.
+- [x] **Persistencia Híbrida:** Soporte para SQLite (modo WAL para nodos de borde/desarrollo) y compatibilidad directa con PostgreSQL para producción federada.
+- [x] **Suite de Estrés Multihilo:** 20 pruebas de regresión automáticas comprobando la preservación del techo presupuestario ante colisiones masivas concurrentes.
 
-## Fase 5 — Validate Engine
+---
 
-- Validar campaña.
-- Validar placement.
-- Validar vigencia.
-- Validar presupuesto.
-- Validar evento.
-- Validar duplicados.
-- Incorporar controles de tráfico/fraude verificables.
-- Distinguir `ACCEPTED`, `REJECTED`, `DUPLICATE`, `UNVERIFIED`.
+## Fase 3: Subastas en Tiempo Real (RTB / eCPM) & Pacing
 
-## Fase 6 — Metrics Engine
+*Objetivo: Maximizar el rendimiento de los placements mediante subasta dinámica y control de frecuencia.*
 
-- Calcular impresiones verificadas.
-- Calcular clics verificados.
-- Calcular CTR.
-- Preservar `NO_DATA` cuando no exista denominador verificable.
-- Separar métricas publicitarias de telemetría operacional.
+- [ ] **Subasta Determinista eCPM:** Implementar en `AdServingService` la resolución en memoria para selección de ganador por eCPM efectivo:
+  $$\text{eCPM} = \text{Puja CPM} \times \left(\frac{\text{CTR}}{100}\right) \times 1000$$
+- [ ] **Alias de Compatibilidad RTB:** Exponer `GET /api/public/ad-request` como alias directo hacia la lógica de serving.
+- [ ] **Frequency Capping:** Limitación de exposición por usuario (IP/nodo) con ventana deslizante de 24 horas para evitar la fatiga publicitaria.
+- [ ] **Controlador de Pacing Dinámico:** Distribución del presupuesto a lo largo del día para evitar el agotamiento prematuro en las primeras horas.
 
-## Fase 7 — Budget Engine
+---
 
-- Implementar débito CPM.
-- Implementar débito CPC.
-- Hacer atómico el registro de evento y gasto.
-- Evitar sobreconsumo por concurrencia.
-- Crear ledger auditable de presupuesto.
+## Fase 4: Telemetría First-Party & Analytics Engine
 
-## Fase 8 — Integrity
+*Objetivo: Auditoría transparente, cálculo exacto de rendimiento e inmunidad a duplicados.*
 
-- Aplicar Zero-Synthetic Advertising Data.
-- Verificar idempotencia.
-- Verificar precisión monetaria.
-- Verificar trazabilidad evento → métrica → débito.
-- Eliminar cualquier métrica simulada presentada como real.
+- [x] **Ingesta Idempotente:** Endpoints `/api/Campaigns/{id}/impression` y `/api/Campaigns/{id}/click` con deduplicación estricta por `event_id`.
+- [x] **Cálculo Matemático de KPIs:** `MetricsService` calcula CTR real (`Clicks / Impressions`), gasto real acumulado y presupuesto remanente.
+- [ ] **Panel Web React 18:** Sincronización del dashboard web en `adsolusol.solusol.net` contra los endpoints de `api.solusol.net/api`.
+- [ ] **Reporte de Atribución:** Conciliación transparente de eventos sin extrapolación sintética de datos.
 
-## Fase 9 — Marketing API
+---
 
-- Evaluar una ruta canónica futura para Marketing/ADS únicamente después de estabilizar y versionar la API actual `/api/*`.
-- Consolidar creación de campañas.
-- Consolidar las transiciones de estado de campaña.
-- Consolidar click.
-- Consolidar impression.
-- Incorporar autenticación y autorización.
-- Incorporar rate limiting.
-- Consolidar `/api/health`.
+## Fase 5: Integración SIC (Marketing Brain)
 
-## Fase 10 — SEO / SUPER SEO Boundary
+*Objetivo: Interconexión resiliente con el centro de inteligencia de la red SOLUSOL.*
 
-- Mantener SEO separado de ADS.
-- Corregir controles Anti-SSRF del crawler.
-- Validar DNS, IPv4, IPv6 y redirecciones.
-- Eliminar métricas Core Web Vitals sintéticas.
-- Mantener SUPER SEO como correlador hacia GROWTH.
+- [x] **Diagnóstico Coordinado:** Endpoint `/api/health` validando el estado local y la disponibilidad de `{SicBaseUrl}/health`.
+- [x] **Cliente Asíncrono:** `MarketingBrainClient` enviando telemetría de eventos mediante peticiones REST.
+- [ ] **Patrón Outbox Persistente:** Cola local persistente para garantizar la entrega de telemetría hacia SIC ante interrupciones prolongadas de red (garantía *At-Least-Once* sin degradar el serving).
 
-## Fase 11 — Marketing Brain
+---
 
-- Correlacionar ADS, SEO/SUPER SEO, ANALYTICS, PERFORMANCE y VIGILANCIA.
-- Generar recomendaciones comerciales.
-- Separar observación, inferencia y recomendación.
-- No convertir recomendaciones en mutaciones automáticas.
+## Fase 6: Motor IA & Antifraude IVT
 
-## Fase 12 — AI
+*Objetivo: Protección del inventario frente a tráfico inválido y optimización asistida.*
 
-- Incorporar capacidades AI desacopladas de proveedor.
-- Etiquetar claramente inferencias y recomendaciones.
-- Prohibir datos sintéticos presentados como observaciones.
-- Mantener autorización humana/política para acciones mutables.
+- [ ] **Filtrado Antifraude IVT (Invalid Traffic):** Detección de patrones anómalos de clics rápidos desde la misma IP (granjas de clics) y bloqueo de User-Agents sospechosos.
+- [ ] **Recomendador Publicitario Asistido (AI AD):** Generación de propuestas de copy, llamados a la acción (CTA) y distribución óptima de presupuestos.
+- [ ] **Barrera Normativa:** `AI Recommendation != Authorized Mutation` (la IA sugiere; la autorización y ejecución financiera requieren aprobación humana/política).
 
-## Fase 13 — AI AD
+---
 
-- Generar propuestas de copy.
-- Generar propuestas de CTA.
-- Sugerir placements.
-- Analizar CTR/CPM/CPC.
-- Detectar anomalías.
-- Sugerir optimización de presupuesto.
-- Mantener `AI Recommendation != Authorized Mutation`.
+## Fase 7: Federación Klik & Nodos Soberanos
 
-## Fase 14 — ORCHESTA / SIC
+*Objetivo: Descentralización del ad serving en múltiples nodos con notaría criptográfica.*
 
-- Publicar eventos de campaña.
-- Publicar eventos publicitarios.
-- Integrar con ORCHESTA.
-- Integrar con SIC.
-- Preservar autoridad de ADS sobre métricas y presupuesto.
-- Preservar autoridad de CORE sobre identidad y autorización de Nodes.
+- [x] **Notaría Ed25519:** Verificación obligatoria de firmas con encabezados `X-Solusol-Node-Id`, `X-Solusol-Timestamp`, `X-Solusol-Nonce` y `X-Solusol-Signature`.
+- [x] **Aislamiento Multi-Tenant Autoritativo:** Inyección segura de `TenantId` a partir del nodo firmante.
+- [ ] **Consorcio Federado:** Sincronización de inventarios publicitarios entre nodos de la red sin pérdida de soberanía de datos.
 
-## Fase 15 — Edge / Cloudflare
+---
 
-- Integrar reverse proxy cuando corresponda.
-- Definir bypass de caché para endpoints dinámicos.
-- Configurar IP real únicamente desde proxies confiables.
-- Mantener WAF/CDN fuera de la semántica del dominio ADS.
+## Control de Calidad Operativa
 
-## Fase 16 — UI / Dashboard
+Cada hito en esta hoja de ruta debe superar la siguiente barrera de calidad antes de considerarse cerrado:
 
-- Dashboard de campañas.
-- Placements.
-- Creativos.
-- CTR.
-- CPM.
-- CPC.
-- Presupuesto.
-- Eventos.
-- Estado de disponibilidad.
-- Integración con Marketing Brain y AI AD.
+```powershell
+# 1. Compilación estricta sin advertencias
+dotnet build ADSOLUSOL.sln -c Release
 
-## Fase 17 — Pruebas E2E
+# 2. Validación de regresión funcional y ledger financiero
+dotnet test tests/ADSOLUSOL.RegressionTests
 
-- Evento duplicado.
-- Clic verificado.
-- Impresión verificada.
-- CPM.
-- CPC.
-- CTR sin denominador.
-- Presupuesto concurrente.
-- CSP/XSS.
-- Rate limiting.
-- API auth.
-- Health.
-- ORCHESTA.
-- SIC.
-
-## Fase 18 — Release & Rollback
-
-- Validar build.
-- Validar migraciones.
-- Staging.
-- Hash de artefactos.
-- Despliegue atómico cuando aplique.
-- Rollback verificable.
-- Smoke tests posteriores al despliegue.
-
-## Fase 19 — Certificación
-
-- Compilar.
-- Ejecutar pruebas.
-- Corregir errores reales.
-- Repetir hasta obtener baseline verificable.
-- No declarar implementación o certificación sin evidencia.
-
-## Regla operativa
-
-```text
-BUILD
-  ↓
-REAL ERROR
-  ↓
-CORRECT
-  ↓
-BUILD AGAIN
-  ↓
-TEST
+# 3. Auditoría forense integral de todo el proyecto
+powershell -File .\scripts\audit\audit_all_project.ps1
 ```
-
-El compilador, las pruebas y la evidencia prevalecen sobre afirmaciones documentales.
