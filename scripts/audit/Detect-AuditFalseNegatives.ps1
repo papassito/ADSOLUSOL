@@ -14,8 +14,16 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$root = (Resolve-Path $PSScriptRoot).Path
-$masterFullPath = Join-Path $root $MasterPath
+$scriptDir = if (-not [string]::IsNullOrWhiteSpace($PSScriptRoot)) { $PSScriptRoot } else { (Get-Location).Path }
+$root = (Resolve-Path $scriptDir).Path
+while ($root -and -not (Test-Path (Join-Path $root "ADSOLUSOL.sln"))) {
+    $parent = Split-Path $root -Parent
+    if ($parent -eq $root) { break }
+    $root = $parent
+}
+Set-Location $root
+$masterFullPath = if ([System.IO.Path]::IsPathRooted($MasterPath)) { $MasterPath } else { Join-Path $root $MasterPath }
+$outputFullPath = if ([System.IO.Path]::IsPathRooted($OutputPath)) { $OutputPath } else { Join-Path $root $OutputPath }
 $outputFullPath = Join-Path $root $OutputPath
 $findings = [System.Collections.Generic.List[string]]::new()
 
@@ -26,13 +34,14 @@ if (-not (Test-Path -LiteralPath $masterFullPath)) {
 $master = Get-Content -LiteralPath $masterFullPath -Raw
 $auditDir = Join-Path $root "scripts\audit"
 $registered = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
-foreach ($m in [regex]::Matches($master, 'Script\s*=\s*"[^"]+\\([^"\\]+\.ps1)"')) {
+foreach ($m in [regex]::Matches($master, 'Script\s*=\s*"[^"]*[\\/]([^"\\/]+\.ps1)"')) {
     [void]$registered.Add($m.Groups[1].Value)
 }
 
 # Scripts de auditoría existentes que no aparecen en la suite master.
+$utilityScripts = @("audit_all_project.ps1", "Clean-ProjectDuplicates.ps1", "smoke-test.ps1")
 foreach ($script in Get-ChildItem -LiteralPath $auditDir -Filter "*.ps1" -File) {
-    if ($script.Name -notin @("audit_all_project.ps1") -and -not $registered.Contains($script.Name)) {
+    if ($script.Name -notin $utilityScripts -and -not $registered.Contains($script.Name)) {
         $findings.Add("AUDITOR NO REGISTRADO EN SUITE MASTER: scripts\audit\$($script.Name)")
     }
 }

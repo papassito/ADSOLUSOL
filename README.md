@@ -87,17 +87,23 @@ El sistema utiliza un `SignatureVerificationMiddleware` para proteger los endpoi
 La aplicación de escritorio MAUI crea una base de datos `adsolusol.db` en el directorio de datos de la aplicación del usuario (`AppDataDirectory`) y asegura que el esquema se cree al arrancar. La API web utiliza una cadena de conexión definida en la configuración.
 
 
-## UI
+## Taxonomía Canónica de GUIs y Dominios de Interfaz
 
-El proyecto cuenta con dos interfaces de usuario:
+El ecosistema articula sus capacidades a través de tres superficies no redundantes con responsabilidades delimitadas:
 
-### 1. Aplicación de Escritorio (MAUI Blazor)
+### 1. Consola de Operación Canónica (Web React 18)
+- **Ruta:** `src/ADSOLUSOL.Presentation.Web`
+- **Rol:** GUI Canónica de Negocio y portal principal de producción (`https://adsolusol.solusol.net`).
+- **Capacidades:** Ciclo de vida de campañas, gestión de creativos HTTPS, asignación a placements normalizados, pacing presupuestario y observabilidad de telemetría en tiempo real bajo principio Zero-Synthetic.
 
-La interfaz de usuario principal es una aplicación de escritorio nativa de Windows construida con **.NET MAUI Blazor**. Los componentes de la UI residen en el proyecto de escritorio `src/ADSOLUSOL.Presentation.Desktop`.
+### 2. Consola de Operación Soberana (Desktop MAUI Blazor)
+- **Ruta:** `src/ADSOLUSOL.Presentation.Desktop`
+- **Rol:** Nodo Soberano Edge / Local para despliegues aislados o contingencias fuera de línea.
+- **Capacidades:** Operación nativa sobre SQLite local (`adsolusol.db`) sin dependencia obligatoria de red externa.
 
-### 2. Panel Web (React)
-
-Adicionalmente, existe un panel de administración web desarrollado en React (`src/ADSOLUSOL.Presentation.Web`) que consume la API para visualización y gestión de campañas. Esta interfaz sigue el principio de "Zero Synthetic", mostrando únicamente datos reales devueltos por el backend.
+### 3. Consola de Notaría e Ingeniería (Checador / Santiago)
+- **Rol:** Certificación técnica, auditoría forense y ejecución de Quality Gates Nivel 5.
+- **Capacidades:** Suite runner, análisis estático, radiografía de dependencias, verificación anti-falsos positivos y detección de anomalías.
 
 ## SIC / Marketing Brain
 

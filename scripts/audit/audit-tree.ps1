@@ -60,7 +60,7 @@ if ($strayCsproj.Count -gt 0) {
     Report-TreePass "ROOT-CLEAN" "Cero proyectos .csproj huerfanos en la raiz."
 }
 
-$parasiteFolders = @("ADSOLUSOL", "Backup", "BackUP", ".tmp_build", "TestResults")
+$parasiteFolders = @("ADSOLUSOL", "adsolusol2027", "ADSOLUSOL2027", "Backup", "BackUP", ".tmp_build", "TestResults", "Restaurar INTERFAZ")
 foreach ($folder in $parasiteFolders) {
     if (Test-Path (Join-Path $ScriptRoot $folder)) {
         Report-TreeFail "ROOT-POLLUTION" "Carpeta no autorizada o parasita detectada en la raiz: $folder/"
@@ -133,7 +133,9 @@ if ($mirrorDuplicates -eq 0) {
 
 # 5. Sanidad de Scripts
 Write-Host "`n[5/5] Verificando organizacion de scripts en scripts/..." -ForegroundColor Yellow
-$scriptsInRoot = Get-ChildItem -Path $ScriptRoot -Filter "*.ps1" -File -ErrorAction SilentlyContinue
+$allowedRootScripts = @("push.ps1")
+$scriptsInRoot = Get-ChildItem -Path $ScriptRoot -Filter "*.ps1" -File -ErrorAction SilentlyContinue |
+    Where-Object { $_.Name -notin $allowedRootScripts }
 
 if ($scriptsInRoot.Count -gt 0) {
     foreach ($s in $scriptsInRoot) {

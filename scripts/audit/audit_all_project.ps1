@@ -204,7 +204,22 @@ $AuditorPipeline = @(
     },
     @{
         Fase = "Fase 6: Consistencia de Auditoria"
-        Script = "Detect-AuditFalsePositives.ps1"
+        Script = "scripts\audit\Detect-AuditFalsePositives.ps1"
+        Args = @()
+    },
+    @{
+        Fase = "Fase 5: Quality Gate Integral"
+        Script = "scripts\audit\audit-salud-checador.ps1"
+        Args = @()
+    },
+    @{
+        Fase = "Fase 6: Consistencia de Auditoria"
+        Script = "scripts\audit\Detect-AuditFalseNegatives.ps1"
+        Args = @()
+    },
+    @{
+        Fase = "Fase 6: Consistencia de Auditoria"
+        Script = "scripts\audit\Detect-ProjectJunk.ps1"
         Args = @()
     }
 )

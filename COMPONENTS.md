@@ -59,8 +59,35 @@
 
 ---
 
-## 7. Presentation Layer (`ADSOLUSOL.Presentation.Web` & `Desktop`)
-- **Responsabilidad:** Visualización transparente del estado de campañas, creativos y rendimiento de inventario.
+## 7. Gobernanza de Interfaces y Autoridad Canónica
+
+Rige el principio arquitectónico: **Una función → Un dueño → Una pantalla canónica**. Se prohíbe la coexistencia de dashboards o pantallas de diagnóstico concurrentes con fuentes de verdad divergentes.
+
+### Triada de Verdades del Ecosistema
+1. **Business Truth (Verdad de Negocio):** Pertenece a `Presentation.Web`. Estado de campañas, facturación, pacing y entrega de creativos.
+2. **Operational Truth (Verdad Operativa):** Pertenece a `Presentation.Desktop`. Estado de borde, persistencia local SQLite y autonomía fuera de línea.
+3. **Engineering Truth (Verdad de Ingeniería):** Pertenece a `Santiago / Checador`. Sanidad del código, sellos criptográficos, pruebas de arquitectura e invariantes.
+
+### Regla de Asimetría Productor-Consumidor
+- La Consola Comercial (`Presentation.Web`) **puede consumir y desplegar pasivamente** los metadatos o sellos de certificación producidos por Santiago (e.g., Badge de Certificación Nivel 5, fecha de último peritaje, SHA de commit verificado).
+- La Consola Comercial **NUNCA DEBE ejecutar** scripts de auditoría (`audit_all_project.ps1`), suites de regresión ni invocar herramientas forenses (`CodeAuditorView`, `TestSuiteRunnerView`).
+
+### A. Consola Comercial Web (`ADSOLUSOL.Presentation.Web`)
+- **Dueño Exclusivo:** Operación comercial publicitaria en caliente (`https://adsolusol.solusol.net`).
+- **Alcance:** Confinado a las 9 vistas canónicas (`Dashboard`, `Campaigns`, `Placements`, `Creatives`, `Assignments`, `Serve`, `System`, `Settings`, `Login`).
+- **Salud (Health):** Exclusivamente **Salud de Runtime** (`/api/health`: disponibilidad de HTTP, base de datos local y conectividad con SIC).
+- **NO DEBE:** Alojar herramientas de ingeniería, exploradores de archivos del repositorio, ejecutores de suites de prueba (`TestSuiteRunnerView`), analizadores de AST ni visores de código fuente (`CodeAuditorView`).
+
+### B. Consola Soberana de Nodo (`ADSOLUSOL.Presentation.Desktop`)
+- **Dueño Exclusivo:** Operación de borde (Edge/Offline-First) en estaciones de trabajo aisladas (.NET MAUI Blazor).
+- **Alcance:** Interacción directa sobre la persistencia local SQLite (`adsolusol.db` en `AppDataDirectory`).
+- **NO DEBE:** Replicar la administración multi-tenant centralizada ni actuar como consola de desarrollo.
+
+### C. Consola de Notaría e Ingeniería (`Santiago / Checador`)
+- **Dueño Exclusivo:** Auditoría forense, aseguramiento de calidad (QA), certificación Nivel 5 y DevOps.
+- **Alcance:** Inspección estática de código, verificación de invariantes Onion, detección de falsos positivos/negativos, validación de sellos SHA-256 (`MANIFEST.md`) y ejecución de suites (`audit_all_project.ps1`).
+- **Salud (Health):** Exclusivamente **Salud Estructural** (integridad de capas, compilación y pruebas de regresión).
 - **NO DEBE:**
+  - Alojar formularios de creación de campañas comerciales ni gestionar transacciones de facturación.
   - Tomar decisiones financieras autoritativas.
   - Modificar respuestas de la API antes de presentarlas al usuario.

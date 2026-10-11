@@ -13,7 +13,14 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$root = (Resolve-Path $PSScriptRoot).Path
+$scriptDir = if (-not [string]::IsNullOrWhiteSpace($PSScriptRoot)) { $PSScriptRoot } else { (Get-Location).Path }
+$root = (Resolve-Path $scriptDir).Path
+while ($root -and -not (Test-Path (Join-Path $root "ADSOLUSOL.sln"))) {
+    $parent = Split-Path $root -Parent
+    if ($parent -eq $root) { break }
+    $root = $parent
+}
+Set-Location $root
 $excluded = '[\\/](\.git|bin|obj|node_modules|dist|build|coverage|_audit)[\\/]'
 $junkNames = @(
     ".DS_Store", "Thumbs.db", "desktop.ini", "ehthumbs.db",

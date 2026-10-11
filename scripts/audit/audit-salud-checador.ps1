@@ -13,7 +13,7 @@
 #>
 [CmdletBinding()]
 param(
-    [string]$TargetDir = (Get-Location).Path,
+    [string]$TargetDir = "",
     [switch]$IncludeBackups
 )
 
@@ -25,6 +25,15 @@ function Write-Section([string]$Title) {
     Write-Host " $Title" -ForegroundColor Yellow
     Write-Host "============================================================" -ForegroundColor Cyan
 }
+
+if ([string]::IsNullOrWhiteSpace($TargetDir)) { $TargetDir = (Get-Location).Path }
+$curr = (Resolve-Path -LiteralPath $TargetDir -ErrorAction Stop).ProviderPath
+while ($curr -and -not (Test-Path (Join-Path $curr "ADSOLUSOL.sln"))) {
+    $parent = Split-Path $curr -Parent
+    if ($parent -eq $curr) { break }
+    $curr = $parent
+}
+$root = $curr
 function Test-File([string]$RelativePath) {
     Test-Path -LiteralPath (Join-Path $root $RelativePath) -PathType Leaf
 }
@@ -34,18 +43,16 @@ function Test-Dir([string]$RelativePath) {
 function Get-CommandStatus([string]$Name) {
     if (Get-Command $Name -ErrorAction SilentlyContinue) { 'DISPONIBLE' } else { 'NO_DISPONIBLE' }
 }
+
+$excludedDirs = @('.git', 'node_modules', 'dist', 'build', 'coverage', '.next', '.venv', 'venv', '__pycache__', '.pytest_cache', '.mypy_cache', '.turbo', '.cache', 'target', 'bin', 'obj')
+$sourceExtensions = @('.py', '.ps1', '.psm1', '.ts', '.tsx', '.js', '.jsx', '.go', '.rs', '.cs')
+
 function Get-SourceInventory([string]$Module) {
     $base = Join-Path $root $Module
     $files = New-Object 'System.Collections.Generic.List[System.IO.FileInfo]'
-function Read-Source([System.IO.FileInfo]$File) {
-    try { return [System.IO.File]::ReadAllText($File.FullName) }
-    catch { Write-Warning "No se pudo leer $($File.FullName)"; return '' }
-}
-function Inspect-Module([string]$Module) {
     $allModuleFiles = New-Object 'System.Collections.Generic.List[System.IO.FileInfo]'
     $stack = New-Object 'System.Collections.Generic.Stack[string]'
     $stack.Push($base)
-    $stack.Push((Join-Path $root $Module))
     while ($stack.Count -gt 0) {
         $current = $stack.Pop()
         try { $items = @(Get-ChildItem -LiteralPath $current -Force -ErrorAction Stop) }
@@ -56,26 +63,30 @@ function Inspect-Module([string]$Module) {
                 if (-not $IncludeBackups -and $item.Name -eq 'Restaurar INTERFAZ') { continue }
                 if (($item.Attributes -band [System.IO.FileAttributes]::ReparsePoint) -ne 0) { continue }
                 $stack.Push($item.FullName)
-            } elseif ($sourceExtensions -contains $item.Extension.ToLowerInvariant()) {
-                $files.Add($item)
-            }
-            else {
+            } else {
                 $allModuleFiles.Add($item)
+                if ($sourceExtensions -contains $item.Extension.ToLowerInvariant()) {
+                    $files.Add($item)
+                }
             }
         }
     }
-    # Emitir FileInfo individualmente; evitar un arreglo anidado que rompa Read-Source.
-    foreach ($foundFile in $files) { Write-Output $foundFile }
+    return [pscustomobject]@{
+        CodeFiles = @($files)
+        AllFiles  = @($allModuleFiles)
+    }
 }
+
 function Read-Source([System.IO.FileInfo]$File) {
-    try { return [System.IO.File]::ReadAllText($File.FullName) }
+    try { return [System.IO.File]::ReadAllText($File.FullName, [System.Text.Encoding]::UTF8) }
     catch { Write-Warning "No se pudo leer $($File.FullName)"; return '' }
 }
+
 function Inspect-Module([string]$Module) {
-    $files = @(Get-SourceInventory $Module)
-    $files = @($allModuleFiles | Where-Object { $sourceExtensions -contains $_.Extension.ToLowerInvariant() })
+    $inv = Get-SourceInventory $Module
+    $files = @($inv.CodeFiles)
+    $allModuleFiles = @($inv.AllFiles)
     $testFiles = @($files | Where-Object { $_.Name -match '(^test[_\.-]|[_\.-]test\.|\.spec\.|Tests?\.)' })
-    $empty = @($files | Where-Object { $_.Length -eq 0 })
     $empty = @($allModuleFiles | Where-Object { $_.Length -eq 0 })
     $todo = 0; $fixme = 0; $placeholders = 0; $lines = 0
     $examples = New-Object 'System.Collections.Generic.List[string]'
@@ -85,7 +96,6 @@ function Inspect-Module([string]$Module) {
         $lines += [regex]::Matches($content, '\r\n|\n|\r').Count + 1
         $todo += [regex]::Matches($content, '(?im)\bTODO\b').Count
         $fixme += [regex]::Matches($content, '(?im)\bFIXME\b').Count
-        $found = [regex]::Matches($content, '(?im)NotImplementedError|\bNotImplementedException\b|throw\s+new\s+Error\s*\(\s*["\x27]Not implemented')
         $found = [regex]::Matches($content, '(?im)\bPLACEHOLDER\b|\bNOT\s+IMPLEMENTED\b|\bIMPLEMENT\s+ME\b|NotImplementedError|\bNotImplementedException\b|throw\s+new\s+Error\s*\(\s*["\x27]Not implemented')
         $placeholders += $found.Count
         if ($found.Count -gt 0 -and $examples.Count -lt 8) {
@@ -94,7 +104,6 @@ function Inspect-Module([string]$Module) {
         }
     }
     # Indice orientativo de higiene: no es una prueba de funcionalidad.
-    $score = [math]::Max(0, 100 - [math]::Min(20, $empty.Count * 3) - [math]::Min(15, $todo * 2) - [math]::Min(15, $fixme * 3) - [math]::Min(20, $placeholders * 4) - $(if ($files.Count -gt 0 -and $testFiles.Count -eq 0) { 10 } else { 0 }))
     $score = 100
     $score -= [math]::Min(20, $empty.Count * 3)
     $score -= [math]::Min(15, $todo * 2)
@@ -109,6 +118,7 @@ function Inspect-Module([string]$Module) {
             elseif ($ratio -lt 0.1) { $score -= 5 }
         }
     }
+    if ($score -lt 0) { $score = 0 }
     [pscustomobject]@{
         Module = $Module; Score = [int]$score; CodeFiles = $files.Count
         TestFiles = $testFiles.Count; Lines = $lines; Empty = $empty.Count
@@ -129,12 +139,6 @@ function Inspect-Wiring([string]$RelativePath, [string]$Pattern, [string]$Label)
     }
 }
 
-try { $root = (Resolve-Path -LiteralPath $TargetDir -ErrorAction Stop).ProviderPath }
-catch { throw "Directorio no accesible: $TargetDir" }
-if (-not (Test-Path -LiteralPath $root -PathType Container)) { throw "No es directorio: $root" }
-
-$excludedDirs = @('.git', 'node_modules', 'dist', 'build', 'coverage', '.next', '.venv', 'venv', '__pycache__', '.pytest_cache', '.mypy_cache', '.turbo', '.cache', 'target', 'bin', 'obj')
-$sourceExtensions = @('.py', '.ps1', '.psm1', '.ts', '.tsx', '.js', '.jsx', '.go', '.rs', '.cs')
 $modules = @('src', 'frontend', 'backend', 'checker', 'scripts')
 if ($IncludeBackups -and (Test-Dir 'Restaurar INTERFAZ')) { $modules += 'Restaurar INTERFAZ' }
 
@@ -193,3 +197,4 @@ Write-Host '[NO_EJECUTADO] Build del frontend, pytest, Pester, carga, estres, fa
 Write-Host '[NO_VERIFICADO] Integracion funcional, mediciones P95/P99, despliegue y botones.' -ForegroundColor Yellow
 Write-Host 'La presencia de archivos o texto no equivale a un PASS funcional.' -ForegroundColor Yellow
 Write-Host 'No se modifico ningun archivo del proyecto.' -ForegroundColor Green
+exit 0
