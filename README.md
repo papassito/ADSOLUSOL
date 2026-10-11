@@ -1,55 +1,75 @@
-# AD SOLUSOL — Advertising & Growth Engine
+# ADSOLUSOL 2027
 
-**Estado documental:** PRE-SELLO / alineado al código del ZIP de revisión 2026-09-18  
-**Estado de release:** NOT RELEASE-CERTIFIED  
-**Producto:** AD SOLUSOL (ADS)  
-**Cabeza comercial:** KLIK Soft PRO  
+Motor soberano de publicidad y monetización del ecosistema SOLUSOL.
+
+**Estado:** PREALFA / LABORATORIO — PRE-SELLO NIVEL 5  
+**Propietario:** KlikSoft  
 **Dirección de software:** solusol.net  
-**Soporte:** CM Soluciones
+**Soporte:** CM Soluciones  
 
-## Propósito
+---
 
-AD SOLUSOL es el motor de publicidad, monetización y analítica publicitaria del ecosistema solusol.net. Su dominio cubre campañas, placements, creativos, serving, impresiones, clics, métricas y presupuesto.
+## 1. ¿Qué es ADSOLUSOL?
 
-ADS mantiene separación estricta respecto de SEO/SUPER SEO, CORE, ORCHESTA y SIC. Puede integrarse con esos módulos mediante contratos explícitos, pero no absorbe sus responsabilidades.
+ADSOLUSOL (ADS) es la plataforma publicitaria soberana (First-Party Ad Server) diseñada para gestionar campañas, servir creativos verificados y liquidar débitos presupuestarios de forma atómica y auditable sin intermediarios.
+
+## 2. ¿Para qué existe?
+
+Existe para proporcionar total soberanía e independencia publicitaria frente a redes externas y plataformas intermediarias centralizadas, garantizando que las audiencias, los creativos, las impresiones y la facturación pertenezcan exclusivamente al ecosistema de la red.
+
+## 3. ¿Qué problema resuelve?
+
+1. **Fraude y métricas sintéticas:** Elimina el inventario inflado y las conversiones simuladas. Toda métrica proviene de eventos firmados con deduplicación por `event_id`.
+2. **Filtración de privacidad:** Elimina cookies de terceros y scripts de rastreo invasivos.
+3. **Sobregiros presupuestarios concurrentes:** Implementa un ledger atómico condicional en el backend que garantiza que ninguna campaña gaste más de su límite asignado (`BudgetSpent + Cost <= Budget`).
+4. **Ambigüedad de roles:** Establece fronteras estrictas: ADSOLUSOL no es un motor SEO, ni un ERP, ni un timbrador fiscal.
 
 ## Principios
 
-- **Zero-Synthetic:** no inventar clics, impresiones, gasto, disponibilidad ni telemetría.
-- **Servidor autoritativo:** gasto y eventos aceptados se determinan en backend.
-- **Authentication != Authorization:** una firma válida no equivale a permiso.
-- **Recommendation != Execution:** una recomendación de inteligencia no ejecuta mutaciones por sí sola.
+- **Privacy First:** Cero rastreo biométrico o perfilado entre dominios ajenos.
+- **First Party Telemetry:** La telemetría se recolecta directamente entre el visitante, el nodo y el ad server.
+- **Server Authoritative Accounting:** Las liquidaciones, costos y saldos son calculados exclusivamente en backend con transacciones atómicas.
+- **Zero Synthetic Metrics:** Prohibido simular métricas, clics o disponibilidad.
 
-## Stack observado
+## Módulos del Sistema
 
-- .NET 8 / ASP.NET Core
-- .NET MAUI Blazor (Aplicación de escritorio nativa de Windows)
-- SQLite
-- EF Core para contexto/esquema y Dapper en repositorios específicos
+1. **Campaign Engine:** Gestión del ciclo de vida de campañas (`SCHEDULED`, `ACTIVE`, `PAUSED`, `COMPLETED`), vigencia y techos de inversión.
+2. **Auction & Serving Engine:** Algoritmo ponderado de entrega de creativos en base a placements normalizados y presupuesto disponible.
+3. **Telemetry Engine:** Ingesta de eventos firmados (`IMPRESSION`, `CLICK`) con verificación anti-replay e idempotencia estricta.
+4. **Analytics Engine:** Cálculo matemático transparente de CTR, CPC y CPM sobre eventos confirmados.
+5. **Dashboard & UI:** Panel de control web React 18 / Vite y aplicación nativa de escritorio .NET MAUI Blazor.
 
-## API implementada actualmente
+## Dominios Oficiales
 
-Las rutas observadas en los controllers actuales son:
+- **Portal y Dashboard Web:** `https://adsolusol.solusol.net`
+- **API Canónica del Sistema:** `https://api.solusol.net/api`
 
-```text
-GET    /api/Campaigns
-GET    /api/Campaigns/{id}
-POST   /api/Campaigns
-POST   /api/Campaigns/{id}/status
-GET    /api/Campaigns/{id}/metrics
-POST   /api/Campaigns/{id}/click
-POST   /api/Campaigns/{id}/impression
+---
 
-POST   /api/Placements
-POST   /api/Creatives
+## Integraciones Ecosistémicas
 
-POST   /api/assignments/placement
-POST   /api/assignments/creative
+### Integración con API_SIC (SOLUSOL Intelligence Center)
+- **Canal Canónico:** Conexión HTTP/REST autenticada hacia `{SicBaseUrl}` (predeterminado `http://solusol.net:8080`).
+- **Marketing Brain:** Transmisión de telemetría de eventos de marketing y comprobación bidireccional de salud (`/api/health` evalúa `SicEngine` y la base de datos local).
 
-GET    /api/Serve?placementCode={code}
-GET    /api/health
-GET    /api/marketing/adsolusol/status
-GET    /api/marketing/adsolusol/ping
+### Integración con SOLUSOL_NET
+- **Identidad y Notaría:** Validación criptográfica Ed25519 mediante encabezados canónicos `X-Solusol-Node-Id`, `X-Solusol-Timestamp`, `X-Solusol-Nonce` y `X-Solusol-Signature`.
+- **Aislamiento Multi-tenant:** El middleware autoritativo resuelve el `TenantId` a partir del nodo firmante y asegura que los datos de una cuenta permanezcan aislados.
+
+---
+
+## Cómo se ejecuta
+
+### Requisitos Previos
+- .NET 8 SDK
+- Node.js 20+ y npm
+- SQLite (desarrollo / borde) o PostgreSQL (persistencia consolidada)
+
+### 1. Ejecución de la API Backend (.NET 8)
+```powershell
+cd src/ADSOLUSOL.Presentation.Api
+dotnet restore
+dotnet run --urls "http://localhost:5000"
 ```
 
 `MarketingController` declara la ruta base `/api/marketing/adsolusol` exponiendo comprobaciones `/status` y `/ping`.

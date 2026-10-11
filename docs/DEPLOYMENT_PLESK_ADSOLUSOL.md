@@ -26,14 +26,18 @@ tenant sin contraseña ya no otorgan acceso.
 
 ## Topología de enrutamiento Nginx en Plesk
 
-La arquitectura de publicación requerida para el subdominio es:
+La arquitectura de publicación requerida para los dominios es:
 
 ```text
-adsolusol.solusol.net/
+adsolusol.solusol.net/  (Portal & Panel Web)
         │
         ├── /               → Presentation.Web (index.html)
         ├── /login          → Presentation.Web (try_files -> index.html)
         ├── /*              → Presentation.Web / index.html
+        │
+        └── /api/*          → Proxy hacia api.solusol.net (o backend local 127.0.0.1:5000)
+
+api.solusol.net/        (API Canónica del Sistema)
         │
         ├── /api/*          → Presentation.Api (127.0.0.1:5000)
         └── /swagger/*      → Presentation.Api (127.0.0.1:5000)
