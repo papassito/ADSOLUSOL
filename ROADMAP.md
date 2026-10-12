@@ -58,9 +58,9 @@
 
 - [x] **Ingesta Idempotente:** Endpoints `/api/Campaigns/{id}/impression` y `/api/Campaigns/{id}/click` con deduplicación estricta por `event_id`.
 - [x] **Cálculo Matemático de KPIs:** `MetricsService` calcula CTR real (`Clicks / Impressions`), gasto real acumulado y presupuesto remanente.
-- [ ] **Sprint 1 — Workbench Operativo (F1-F4):** Despliegue de consola de despacho canónica de 4 pisos ([F1] Crear, [F2] Operar, [F3] Auditar Ledger, [F4] Inventario de Espacios) + Bandeja de Incidentes. El inventario es la vista central de capacidad y rendimiento por sitio/placement.
-- [ ] **Sprint 2 — Wizard Rápido de Campaña:** Drawer lateral con validación de precisión decimal, vigencias y asociación a placements normalizados.
-- [ ] **Sprint 3 — Dashboard Analítico Profundo:** Panel secundario con embudos First-Party, ROAS/ROI real del ledger y heatmaps de efectividad.
+- [/] **Sprint 1 — Workbench Operativo (F1-F4) [EN CONSTRUCCIÓN]:** Arquitectura de 4 pisos ([F1] Crear, [F2] Operar, [F3] Auditar con Feed de Evidencia Comercial, [F4] Inventario integrado en Piso 3B) + Bandeja de Incidentes (INFO/WARN/CRITICAL). Estado: Diseñado, en fase de maquetación y cableado de APIs.
+- [ ] **Sprint 2 — Wizard Rápido de Campaña:** Drawer modal interactivo con validación de precisión decimal, vigencias temporales y asociación a códigos de espacio normalizados.
+- [ ] **Sprint 3 — Dashboard Analítico Profundo:** Panel analítico secundario (ROI, ROAS, CPM, CPC, mapas de calor de efectividad y embudos First-Party de circuito cerrado).
 - [ ] **Reporte de Atribución:** Conciliación transparente de eventos sin extrapolación sintética de datos.
 
 ---
