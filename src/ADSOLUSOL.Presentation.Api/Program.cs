@@ -181,8 +181,12 @@ app.Use(async (context, next) =>
     await next();
 });
 
-// Redirigir la raíz a Swagger o mostrar información básica de la API
-app.MapGet("/", () => Results.Redirect("/swagger"));
+// Respuesta de estado para la raíz de la API (evita redirección 302 hacia Swagger)
+app.MapGet("/", () => Results.Ok(new
+{
+    service = "ADSOLUSOL Sovereign Ad Server API",
+    status = "ONLINE"
+}));
 
 app.UseMiddleware<SignatureVerificationMiddleware>();
 app.UseAuthorization();
