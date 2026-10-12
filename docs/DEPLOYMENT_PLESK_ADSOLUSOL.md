@@ -5,24 +5,17 @@ se publica como archivos estáticos directamente en el Document Root de Plesk
 (`httpdocs` o `adsolusol.solusol.net`). La API .NET corre como
 `adsolusol-api.service` en `127.0.0.1:5000`; no debe exponerse ese puerto directamente a Internet.
 
-## Autenticación del panel
+## Acceso Directo al Workbench (Modo Construcción — Sin Login Temporal)
 
-Cada tenant autorizado necesita un hash PBKDF2 independiente en la configuración
-del servicio, con clave `PanelAuth__Tenants__<tenantId>`. Nunca guardar la
-contraseña en `appsettings.json`, Git, ni en los archivos públicos de Plesk.
-El formato del hash es `pbkdf2-sha256:310000:<salt base64>:<hash base64>`.
-Sin una entrada configurada, ese tenant no puede iniciar sesión.
+Durante la fase de construcción y estabilización de la interfaz, el portal web (`adsolusol.solusol.net`)
+levanta directamente en el **Workbench Operativo** con acceso inmediato y sin fricción.
+Se prescinde temporalmente de formularios interactivos de usuario y contraseña para agilizar
+el desarrollo, verificación de rutas y prueba ágil de los flujos de trabajo en caliente.
 
-Las cookies del panel son HttpOnly, Secure, SameSite=Strict, con ticket firmado
-y cifrado mediante ASP.NET Core Data Protection. Las claves se conservan en
-`/var/www/adsolusol-api/App_Data/keys`; respaldar ese directorio, asignarlo a
-`www-data` y restringirlo a modo 0700. Conservar también
-`App_Data/adsolusol.db` al actualizar los binarios.
-
-`POST /api/auth/session` exige `tenantId` y `password`; `GET` comprueba la
-sesión y `DELETE` cierra la sesión. Las operaciones máquina-a-máquina siguen
-aceptando las cabeceras firmadas existentes. Una cookie antigua o un ID de
-tenant sin contraseña ya no otorgan acceso.
+El operador accede en 0 clics a las 4 acciones canónicas:
+[F1] Nueva Campaña, [F2] Gestionar Pauta, [F3] Auditar Resultados y [F4] Inventario de Espacios.
+La seguridad del sistema no reside en la autenticación del usuario final, sino en la
+infraestructura: restricción de red por proxy y verificación criptográfica Ed25519 de máquina a máquina (`SOLUSOL_AUTH_V1`). Una vez concluida la construcción, se evaluará el cierre perimetral interactivo.
 
 ## Topología de enrutamiento Nginx en Plesk
 
@@ -32,7 +25,6 @@ La arquitectura de publicación requerida para los dominios es:
 adsolusol.solusol.net/  (Portal & Panel Web)
         │
         ├── /               → Presentation.Web (index.html)
-        ├── /login          → Presentation.Web (try_files -> index.html)
         ├── /*              → Presentation.Web / index.html
         │
         └── /api/*          → Proxy hacia api.solusol.net (o backend local 127.0.0.1:5000)
@@ -76,10 +68,3 @@ location ^~ /swagger/ {
 location / {
     try_files $uri $uri/ /index.html;
 }
-```
-
-No aplicar la regla hasta que el backend reparado esté activo y se haya probado
-con tenant/contraseña válidos. Después verificar HTTPS, `/api/health` (200),
-sesión sin credenciales (401), sesión válida, acceso a campañas del propio
-tenant y rechazo de cookies falsificadas. Si falla, retirar la regla de nginx
-y restaurar el binario anterior conservando SQLite y las claves de sesión.

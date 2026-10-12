@@ -74,7 +74,7 @@ Rige el principio arquitectónico: **Una función → Un dueño → Una pantalla
 
 ### A. Consola Comercial Web (`ADSOLUSOL.Presentation.Web`)
 - **Dueño Exclusivo:** Operación comercial publicitaria en caliente (`https://adsolusol.solusol.net`).
-- **Alcance:** Confinado a las 9 vistas canónicas (`Dashboard`, `Campaigns`, `Placements`, `Creatives`, `Assignments`, `Serve`, `System`, `Settings`, `Login`).
+- **Alcance:** Confinado al Workbench Operativo Canónico de Acceso Directo ([F1] Crear, [F2] Operar, [F3] Auditar, [F4] Inventario de Espacios y Sitios) con cero barreras de login interactivo, más las vistas de soporte (`Dashboard`, `Placements`, `Creatives`, `Assignments`, `Serve`, `System`, `Settings`).
 - **Salud (Health):** Exclusivamente **Salud de Runtime** (`/api/health`: disponibilidad de HTTP, base de datos local y conectividad con SIC).
 - **NO DEBE:** Alojar herramientas de ingeniería, exploradores de archivos del repositorio, ejecutores de suites de prueba (`TestSuiteRunnerView`), analizadores de AST ni visores de código fuente (`CodeAuditorView`).
 

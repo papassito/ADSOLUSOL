@@ -58,7 +58,9 @@
 
 - [x] **Ingesta Idempotente:** Endpoints `/api/Campaigns/{id}/impression` y `/api/Campaigns/{id}/click` con deduplicación estricta por `event_id`.
 - [x] **Cálculo Matemático de KPIs:** `MetricsService` calcula CTR real (`Clicks / Impressions`), gasto real acumulado y presupuesto remanente.
-- [ ] **Panel Web React 18:** Sincronización del dashboard web en `adsolusol.solusol.net` contra los endpoints de `api.solusol.net/api`.
+- [ ] **Sprint 1 — Workbench Operativo (F1-F4):** Despliegue de consola de despacho canónica de 4 pisos ([F1] Crear, [F2] Operar, [F3] Auditar Ledger, [F4] Inventario de Espacios) + Bandeja de Incidentes. El inventario es la vista central de capacidad y rendimiento por sitio/placement.
+- [ ] **Sprint 2 — Wizard Rápido de Campaña:** Drawer lateral con validación de precisión decimal, vigencias y asociación a placements normalizados.
+- [ ] **Sprint 3 — Dashboard Analítico Profundo:** Panel secundario con embudos First-Party, ROAS/ROI real del ledger y heatmaps de efectividad.
 - [ ] **Reporte de Atribución:** Conciliación transparente de eventos sin extrapolación sintética de datos.
 
 ---
