@@ -65,7 +65,7 @@ export function AssignmentsView(props: { campaigns: Campaign[] }) {
         </label>
 
         <label className="field">
-          <span>CampaÃƒÂ±a</span>
+          <span>Campaña</span>
           <select required value={campaignId} onChange={event => setCampaignId(event.target.value)}>
             <option value="">Seleccionar</option>
             {props.campaigns.map(campaign => (

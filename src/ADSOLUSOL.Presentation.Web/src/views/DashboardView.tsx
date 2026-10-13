@@ -46,26 +46,26 @@ export function DashboardView(props: {
 
       <div className="stats-grid">
         <StatCard
-          label="CampaÃƒÂ±as"
-          value={aggregate ? number(aggregate.count) : "UNVERIFIED"}
+          label="Campañas"
+          value={aggregate ? number(aggregate.count) : "—"}
           detail="Registros devueltos por API"
         />
 
         <StatCard
           label="Activas"
-          value={aggregate ? number(aggregate.active) : "UNVERIFIED"}
+          value={aggregate ? number(aggregate.active) : "—"}
           detail="Estado ACTIVE"
         />
 
         <StatCard
           label="Presupuesto"
-          value={aggregate ? money(aggregate.budget) : "UNVERIFIED"}
+          value={aggregate ? money(aggregate.budget) : "—"}
           detail="Total configurado"
         />
 
         <StatCard
           label="Gastado"
-          value={aggregate ? money(aggregate.spent) : "UNVERIFIED"}
+          value={aggregate ? money(aggregate.spent) : "—"}
           detail="BudgetSpent real"
         />
       </div>
@@ -105,7 +105,7 @@ export function DashboardView(props: {
               </div>
 
               <div className="health-row">
-                <span>ÃƒÅ¡ltima lectura</span>
+                <span>Última lectura</span>
                 <strong>{date(props.health.timestamp)}</strong>
               </div>
             </div>
@@ -115,7 +115,7 @@ export function DashboardView(props: {
         <Card>
           <div className="card-header">
             <div>
-              <span className="eyebrow">CampaÃƒÂ±as</span>
+              <span className="eyebrow">Campañas</span>
               <h2>Actividad reciente</h2>
             </div>
           </div>
@@ -135,8 +135,8 @@ export function DashboardView(props: {
             </div>
           ) : (
             <EmptyState
-              title="Sin campaÃƒÂ±as"
-              description="No hay campaÃƒÂ±as disponibles o el backend aÃƒÂºn no devolviÃƒÂ³ datos."
+              title="Sin campañas"
+              description="No hay campañas disponibles o el backend aún no devolvió datos."
             />
           )}
         </Card>

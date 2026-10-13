@@ -149,7 +149,7 @@ export default function App() {
           </div>
         </div>
 
-        <nav className="navigation">
+        <nav className="navigation" aria-label="Navegación principal">
           {navigation.map(item => (
             <button
               key={item.id}
@@ -165,7 +165,7 @@ export default function App() {
         </nav>
       </aside>
 
-      <main className="main-area">
+      <main className="main-area" id="main-content" tabIndex={-1}>
         <header className="topbar">
           <div>
             <span className="eyebrow">ADSOLUSOL</span>

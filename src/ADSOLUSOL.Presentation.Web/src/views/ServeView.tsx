@@ -73,13 +73,13 @@ export function ServeView() {
         {noAd && (
           <EmptyState
             title="NO_AD_AVAILABLE"
-            description="El backend no encontrÃƒÂ³ un anuncio elegible. La UI no genera fallback ficticio."
+            description="El backend no encontró un anuncio elegible. La UI no genera fallback ficticio."
           />
         )}
 
         {!noAd && !creative && (
           <EmptyState
-            title="Sin decisiÃƒÂ³n"
+            title="Sin decisión"
             description="Ejecuta una consulta de serving."
           />
         )}
