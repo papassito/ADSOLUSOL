@@ -38,7 +38,7 @@ export function SettingsView() {
     setError(null);
     try {
       await api.updateSettings(settings);
-      setMessage("ConfiguraciÃƒÂ³n guardada correctamente.");
+      setMessage("Configuración guardada correctamente.");
     } catch (cause) {
       setError(errorMessage(cause));
     } finally {
@@ -50,15 +50,15 @@ export function SettingsView() {
     ["tenant.name", "Nombre comercial", "Nombre mostrado en reportes"],
     ["tenant.timezone", "Zona horaria", "Ej. America/Hermosillo"],
     ["campaign.defaultBudget", "Presupuesto predeterminado", "Monto inicial sugerido"],
-    ["campaign.defaultDurationDays", "DuraciÃƒÂ³n predeterminada (dÃƒÂ­as)", "DuraciÃƒÂ³n sugerida de campaÃƒÂ±as"],
-    ["reporting.email", "Correo de informes", "Destino de los informes periÃƒÂ³dicos"]
+    ["campaign.defaultDurationDays", "Duración predeterminada (días)", "Duración sugerida de campañas"],
+    ["reporting.email", "Correo de informes", "Destino de los informes periódicos"]
   ];
 
   return (
     <div className="two-column">
       <Card>
         <div className="card-header"><div><span className="eyebrow">Tenant</span><h2>Configurador</h2></div><button type="button" className="button button-secondary button-small" onClick={() => void load()}>Recargar</button></div>
-        {loading ? <p className="muted">Cargando configuraciÃƒÂ³n...</p> : (
+        {loading ? <p className="muted">Cargando configuración...</p> : (
           <form className="form-grid" onSubmit={save}>
             {fields.map(([key, label, hint]) => (
               <label className="field field-wide" key={key}>
@@ -69,7 +69,7 @@ export function SettingsView() {
             ))}
             {error && <ErrorPanel message={error} />}
             {message && <p className="success-message">{message}</p>}
-            <button className="button button-primary" disabled={saving} type="submit">{saving ? "Guardando..." : "Guardar configuraciÃƒÂ³n"}</button>
+            <button className="button button-primary" disabled={saving} type="submit">{saving ? "Guardando..." : "Guardar configuración"}</button>
           </form>
         )}
       </Card>
