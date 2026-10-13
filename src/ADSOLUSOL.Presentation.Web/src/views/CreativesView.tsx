@@ -106,8 +106,8 @@ export function CreativesView() {
       </Card>
 
       <Card>
-        <div className="card-header"><div><span className="eyebrow">Zero Synthetic</span><h2>CatÃƒÂ¡logo</h2></div></div>
-        <EmptyState title="GET no disponible" description="El backend actual no expone todavÃƒÂ­a un endpoint para listar creativos. La UI muestra ÃƒÂºnicamente respuestas reales de creaciÃƒÂ³n." />
+        <div className="card-header"><div><span className="eyebrow">Zero Synthetic</span><h2>Catálogo</h2></div></div>
+        <EmptyState title="GET no disponible" description="El backend actual no expone todavía un endpoint para listar creativos. La UI muestra únicamente respuestas reales de creación." />
       </Card>
     </div>
   );
