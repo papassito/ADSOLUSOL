@@ -20,7 +20,7 @@ export function LoginView(props: { onLogin: (tenantId: string) => void }) {
     } catch (cause) {
       setError(
         cause instanceof ApiError && cause.status === 401
-          ? "Tenant o contraseÃƒÂ±a incorrectos."
+          ? "Tenant o contraseña incorrectos."
           : errorMessage(cause)
       );
     } finally {
@@ -33,15 +33,15 @@ export function LoginView(props: { onLogin: (tenantId: string) => void }) {
       <Card className="login-card">
         <span className="eyebrow">Acceso protegido</span>
         <h2>Ingresar a ADSOLUSOL</h2>
-        <p className="muted">Las campaÃƒÂ±as y presupuestos solo se muestran despuÃƒÂ©s de autenticar el tenant.</p>
+        <p className="muted">Las campañas y presupuestos solo se muestran después de autenticar el tenant.</p>
         {error && <ErrorPanel message={error} />}
         <form className="form-grid" onSubmit={submit}>
           <label className="field field-wide">
-            <span>Correo electrÃƒÂ³nico o Tenant ID</span>
+            <span>Correo electrónico o Tenant ID</span>
             <input required autoComplete="username" value={tenantId} onChange={event => setTenantId(event.target.value)} />
           </label>
           <label className="field field-wide">
-            <span>ContraseÃƒÂ±a</span>
+            <span>Contraseña</span>
             <input required type="password" autoComplete="current-password" value={password} onChange={event => setPassword(event.target.value)} />
           </label>
           <button className="button button-primary" disabled={submitting} type="submit">

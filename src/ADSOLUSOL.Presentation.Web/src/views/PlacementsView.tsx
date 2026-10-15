@@ -97,7 +97,7 @@ export function PlacementsView() {
 
       <Card>
         <div className="card-header"><div><span className="eyebrow">Zero Synthetic</span><h2>Listado</h2></div></div>
-        <EmptyState title="GET no disponible" description="El backend actual no expone todavÃƒÂ­a un endpoint de listado de placements. La UI no inventarÃƒÂ¡ registros ni mantendrÃƒÂ¡ un catÃƒÂ¡logo sintÃƒÂ©tico." />
+        <EmptyState title="GET no disponible" description="El backend actual no expone todavía un endpoint de listado de placements. La UI no inventará registros ni mantendrá un catálogo sintético." />
       </Card>
     </div>
   );

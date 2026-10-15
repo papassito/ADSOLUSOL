@@ -103,7 +103,7 @@ export function CampaignsView(props: {
         <div className="card-header">
           <div>
             <span className="eyebrow">Campaign management</span>
-            <h2>Nueva campaÃƒÂ±a</h2>
+            <h2>Nueva campaña</h2>
           </div>
         </div>
 
@@ -118,7 +118,7 @@ export function CampaignsView(props: {
               required
               value={form.name}
               onChange={event => setForm({ ...form, name: event.target.value })}
-              placeholder="CampaÃƒÂ±a"
+              placeholder="Campaña"
             />
           </label>
 
@@ -178,7 +178,7 @@ export function CampaignsView(props: {
 
           <div className="form-actions field-wide">
             <button className="button button-primary" type="submit" disabled={saving}>
-              {saving ? "Guardando..." : "Crear campaÃƒÂ±a"}
+              {saving ? "Guardando..." : "Crear campaña"}
             </button>
           </div>
         </form>
@@ -188,7 +188,7 @@ export function CampaignsView(props: {
         <div className="card-header">
           <div>
             <span className="eyebrow">Persistencia</span>
-            <h2>CampaÃƒÂ±as</h2>
+            <h2>Campañas</h2>
           </div>
 
           <span className="record-count">
@@ -206,15 +206,15 @@ export function CampaignsView(props: {
 
         {!props.loading && props.campaigns.length === 0 ? (
           <EmptyState
-            title="Sin campaÃƒÂ±as"
-            description="La API no devolviÃƒÂ³ campaÃƒÂ±as."
+            title="Sin campañas"
+            description="La API no devolvió campañas."
           />
         ) : (
           <div className="table-wrapper">
             <table>
               <thead>
                 <tr>
-                  <th>CampaÃƒÂ±a</th>
+                  <th>Campaña</th>
                   <th>Estado</th>
                   <th>Presupuesto</th>
                   <th>Gastado</th>
@@ -259,7 +259,7 @@ export function CampaignsView(props: {
                           disabled={metricsLoading === campaign.id}
                           onClick={() => void loadMetrics(campaign)}
                         >
-                          MÃƒÂ©tricas
+                          Métricas
                         </button>
                       </div>
                     </td>
@@ -275,7 +275,7 @@ export function CampaignsView(props: {
         <Card>
           <div className="card-header">
             <div>
-              <span className="eyebrow">MÃƒÂ©tricas</span>
+              <span className="eyebrow">Métricas</span>
               <h2>{selectedMetrics.campaign.name}</h2>
             </div>
 
