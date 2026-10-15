@@ -25,6 +25,10 @@ type View =
   | "system"
   | "settings";
 
+const dashboardPreview =
+  import.meta.env.DEV &&
+  new URLSearchParams(window.location.search).get("preview") === "dashboard";
+
 const navigation: Array<{
   id: View;
   label: string;
@@ -50,6 +54,10 @@ export default function App() {
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
+    if (dashboardPreview) {
+      return;
+    }
+
     void api
       .getSession()
       .then(result => setSession(result.tenantId))
@@ -57,6 +65,10 @@ export default function App() {
   }, []);
 
   const refresh = useCallback(async () => {
+    if (dashboardPreview) {
+      return;
+    }
+
     setRefreshing(true);
 
     const [healthResult, campaignResult] = await Promise.allSettled([
@@ -139,7 +151,7 @@ export default function App() {
   };
 
   return (
-    <div className="app-shell">
+    <div className={dashboardPreview ? "app-shell dashboard-preview" : "app-shell"}>
       <aside className="sidebar">
         <div className="brand">
           <div className="brand-mark">AD</div>
@@ -187,12 +199,16 @@ export default function App() {
                 </button>
               </>
             )}
-            <ConnectionIndicator health={health} error={healthError} />
+            {dashboardPreview ? (
+              <span className="preview-label">VISTA LOCAL · API SIN CONSULTAR</span>
+            ) : (
+              <ConnectionIndicator health={health} error={healthError} />
+            )}
 
             <button
               type="button"
               className="button button-secondary"
-              disabled={refreshing}
+              disabled={refreshing || dashboardPreview}
               onClick={() => void refresh()}
             >
               {refreshing ? "Actualizando..." : "Actualizar"}
@@ -201,7 +217,15 @@ export default function App() {
         </header>
 
         <div className="content">
-          {session === undefined ? (
+          {dashboardPreview ? (
+            <DashboardView
+              campaigns={null}
+              campaignError={null}
+              health={null}
+              healthError={null}
+              preview
+            />
+          ) : session === undefined ? (
             <p className="muted">Verificando acceso...</p>
           ) : session === null ? (
             <LoginView onLogin={setSession} />

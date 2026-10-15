@@ -14,11 +14,21 @@ import {
 
 const unavailable = "NO DISPONIBLE";
 
+const unavailableDimensions = [
+  { label: "Palabras clave", detail: "Sin datos en la API" },
+  { label: "Conversiones", detail: "Sin datos en la API" },
+  { label: "Dispositivos", detail: "Sin desglose en la API" },
+  { label: "Anuncios", detail: "Sin resultados por anuncio" },
+  { label: "Ubicaciones", detail: "Sin desglose geográfico" },
+  { label: "Alertas", detail: "Sin feed de alertas" }
+];
+
 export function DashboardView(props: {
   campaigns: Campaign[] | null;
   campaignError: string | null;
   health: HealthResponse | null;
   healthError: string | null;
+  preview?: boolean;
 }) {
   const [metricsByCampaign, setMetricsByCampaign] = useState<Record<string, CampaignMetrics>>({});
   const [metricsLoading, setMetricsLoading] = useState(false);
@@ -26,256 +36,151 @@ export function DashboardView(props: {
   useEffect(() => {
     let cancelled = false;
 
-    async function loadMetrics() {
-      if (!props.campaigns) {
-        setMetricsByCampaign({});
-        return;
-      }
-
-      if (props.campaigns.length === 0) {
-        setMetricsByCampaign({});
-        return;
-      }
-
-      setMetricsLoading(true);
-      const results = await Promise.allSettled(
-        props.campaigns.map(async campaign => ({
-          id: campaign.id,
-          metrics: await api.getCampaignMetrics(campaign.id)
-        }))
-      );
-
-      if (!cancelled) {
-        const next: Record<string, CampaignMetrics> = {};
-        for (const result of results) {
-          if (result.status === "fulfilled") {
-            next[result.value.id] = result.value.metrics;
-          }
-        }
-        setMetricsByCampaign(next);
-        setMetricsLoading(false);
-      }
+    if (props.preview || !props.campaigns || props.campaigns.length === 0) {
+      setMetricsByCampaign({});
+      setMetricsLoading(false);
+      return () => {
+        cancelled = true;
+      };
     }
 
-    void loadMetrics();
+    setMetricsByCampaign({});
+    setMetricsLoading(true);
+    void Promise.allSettled(props.campaigns.map(async campaign => ({
+      id: campaign.id,
+      metrics: await api.getCampaignMetrics(campaign.id)
+    }))).then(results => {
+      if (cancelled) return;
+      const next: Record<string, CampaignMetrics> = {};
+      for (const result of results) {
+        if (result.status === "fulfilled") next[result.value.id] = result.value.metrics;
+      }
+      setMetricsByCampaign(next);
+      setMetricsLoading(false);
+    });
+
     return () => {
       cancelled = true;
     };
-  }, [props.campaigns]);
+  }, [props.campaigns, props.preview]);
 
   const aggregate = useMemo(() => {
-    if (!props.campaigns) {
-      return null;
-    }
-
+    if (!props.campaigns) return null;
     const campaigns = props.campaigns;
-    const allMetricsAvailable =
-      campaigns.length === 0 ||
+    const metricsAvailable = campaigns.length > 0 &&
       campaigns.every(campaign => metricsByCampaign[campaign.id] !== undefined);
-
-    const impressions = allMetricsAvailable
-      ? campaigns.reduce((total, campaign) => total + (metricsByCampaign[campaign.id]?.impressions ?? 0), 0)
+    const impressions = metricsAvailable
+      ? campaigns.reduce((total, campaign) => total + metricsByCampaign[campaign.id].impressions, 0)
       : null;
-    const clicks = allMetricsAvailable
-      ? campaigns.reduce((total, campaign) => total + (metricsByCampaign[campaign.id]?.clicks ?? 0), 0)
+    const clicks = metricsAvailable
+      ? campaigns.reduce((total, campaign) => total + metricsByCampaign[campaign.id].clicks, 0)
       : null;
 
     return {
       count: campaigns.length,
       active: campaigns.filter(campaign => campaign.status.toUpperCase() === "ACTIVE").length,
-      budget: campaigns.reduce((total, campaign) => total + campaign.budget, 0),
       spent: campaigns.reduce((total, campaign) => total + campaign.budgetSpent, 0),
       impressions,
       clicks,
       ctr: impressions !== null && clicks !== null
-        ? (impressions > 0 ? (clicks / impressions) * 100 : 0)
+        ? impressions > 0 ? clicks / impressions * 100 : 0
         : null
     };
   }, [props.campaigns, metricsByCampaign]);
 
-  const metricsComplete = Boolean(aggregate && aggregate.impressions !== null && aggregate.clicks !== null);
+  const metricsComplete = Boolean(aggregate && aggregate.impressions !== null);
+  const metricDetail = props.preview
+    ? "Vista previa, sin datos de cuenta"
+    : metricsLoading
+    ? "Consultando API..."
+    : metricsComplete
+      ? "Eventos registrados por la API"
+      : unavailable;
 
   return (
-    <div className="stack dashboard-stack">
-      <div className="dashboard-intro">
+    <div className="dashboard-page">
+      <header className="dashboard-heading">
         <div>
-          <span className="eyebrow">Centro de rendimiento</span>
-          <h2>Resumen de publicidad</h2>
-          <p>Indicadores calculados a partir de la API de ADSOLUSOL. Sin estimaciones ni métricas sintéticas.</p>
+          <span className="eyebrow">ADSOLUSOL / RENDIMIENTO</span>
+          <h2>Control de pauta</h2>
+          <p>Una lectura clara de campañas, entrega y gasto.</p>
         </div>
-        <span className="data-source-badge">FUENTE: API</span>
-      </div>
+        {props.preview ? (
+          <span className="preview-label">VISTA LOCAL · SIN DATOS</span>
+        ) : (
+          <span className="data-source-label">FUENTE · API</span>
+        )}
+      </header>
 
       {props.campaignError && <ErrorPanel message={props.campaignError} />}
 
-      <div className="stats-grid dashboard-stats">
-        <StatCard
-          label="Campañas"
-          value={aggregate ? number(aggregate.count) : unavailable}
-          detail="Registros devueltos por API"
-        />
-        <StatCard
-          label="Campañas activas"
-          value={aggregate ? number(aggregate.active) : unavailable}
-          detail="Estado ACTIVE"
-        />
-        <StatCard
-          label="Impresiones"
-          value={metricsComplete ? number(aggregate!.impressions!) : unavailable}
-          detail={metricsLoading ? "Consultando métricas…" : "Eventos reportados por API"}
-        />
-        <StatCard
-          label="Clics"
-          value={metricsComplete ? number(aggregate!.clicks!) : unavailable}
-          detail={metricsLoading ? "Consultando métricas…" : "Eventos reportados por API"}
-        />
-        <StatCard
-          label="CTR"
-          value={metricsComplete ? `${aggregate!.ctr!.toLocaleString("es-MX", { maximumFractionDigits: 2 })}%` : unavailable}
-          detail="Clics ÷ impresiones"
-        />
-        <StatCard
-          label="Gasto registrado"
-          value={aggregate ? money(aggregate.spent) : unavailable}
-          detail="Suma de BudgetSpent"
-        />
-      </div>
+      <section className="stats-grid dashboard-stats" aria-label="Indicadores principales">
+        <StatCard label="Campañas" value={aggregate ? number(aggregate.count) : unavailable} detail={props.preview ? "Vista previa sin datos" : aggregate ? `${number(aggregate.active)} activas` : "Esperando respuesta de API"} />
+        <StatCard label="Impresiones" value={metricsComplete ? number(aggregate!.impressions!) : unavailable} detail={metricDetail} />
+        <StatCard label="Clics" value={metricsComplete ? number(aggregate!.clicks!) : unavailable} detail={metricDetail} />
+        <StatCard label="CTR" value={metricsComplete ? `${aggregate!.ctr!.toLocaleString("es-MX", { maximumFractionDigits: 2 })}%` : unavailable} detail="Clics / impresiones" />
+        <StatCard label="CPC promedio" value={unavailable} detail="La API no reporta CPC observado" />
+        <StatCard label="Gasto registrado" value={aggregate ? money(aggregate.spent) : unavailable} detail={aggregate ? "Suma de gasto de campañas" : "Esperando respuesta de API"} />
+      </section>
 
-      <div className="dashboard-layout">
-        <div className="dashboard-primary stack">
-          <Card>
-            <div className="card-header">
-              <div>
-                <span className="eyebrow">Rendimiento</span>
-                <h2>Actividad de campañas</h2>
-              </div>
-              <span className="muted">Datos actuales</span>
+      <section className="dashboard-grid" aria-label="Desempeño y cobertura">
+        <Card className="dashboard-panel dashboard-campaigns">
+          <div className="card-header dashboard-panel-heading">
+            <div><span className="eyebrow">ENTREGA</span><h2>Campañas</h2></div>
+            <span className="panel-count">{aggregate ? number(aggregate.count) : "—"} TOTAL</span>
+          </div>
+          {props.campaigns && props.campaigns.length > 0 ? (
+            <div className="campaign-table">
+              <div className="campaign-table-head"><span>Campaña</span><span>Estado</span><span>Impresiones</span><span>Clics</span><span>Gasto</span></div>
+              {props.campaigns.slice(0, 8).map(campaign => {
+                const metrics = metricsByCampaign[campaign.id];
+                return (
+                  <div className="campaign-table-row" key={campaign.id}>
+                    <div className="campaign-table-name"><strong>{campaign.name}</strong><small>{campaign.id}</small></div>
+                    <StatusBadge value={campaign.status} />
+                    <span className="table-number">{metrics ? number(metrics.impressions) : unavailable}</span>
+                    <span className="table-number">{metrics ? number(metrics.clicks) : unavailable}</span>
+                    <span className="table-number">{money(campaign.budgetSpent)}</span>
+                  </div>
+                );
+              })}
             </div>
-
-            {props.campaigns && props.campaigns.length > 0 ? (
-              <div className="campaign-performance-list">
-                {props.campaigns.slice(0, 8).map(campaign => {
-                  const metrics = metricsByCampaign[campaign.id];
-                  return (
-                    <div key={campaign.id} className="campaign-performance-row">
-                      <div className="campaign-performance-name">
-                        <strong>{campaign.name}</strong>
-                        <small>{campaign.id}</small>
-                      </div>
-                      <div className="campaign-performance-metric">
-                        <span>Presupuesto</span>
-                        <strong>{money(campaign.budget)}</strong>
-                      </div>
-                      <div className="campaign-performance-metric">
-                        <span>Impresiones</span>
-                        <strong>{metrics ? number(metrics.impressions) : unavailable}</strong>
-                      </div>
-                      <div className="campaign-performance-metric">
-                        <span>Clics</span>
-                        <strong>{metrics ? number(metrics.clicks) : unavailable}</strong>
-                      </div>
-                      <StatusBadge value={campaign.status} />
-                    </div>
-                  );
-                })}
-              </div>
-            ) : (
-              <EmptyState
-                title="Sin campañas disponibles"
-                description="La API no devolvió campañas para esta cuenta, o todavía no hay registros."
-              />
-            )}
-          </Card>
-
-          <Card>
-            <div className="card-header">
-              <div>
-                <span className="eyebrow">Tendencia</span>
-                <h2>Rendimiento en el tiempo</h2>
-              </div>
-            </div>
+          ) : (
             <EmptyState
-              title="Histórico no disponible"
-              description="La API actual no expone una serie temporal para graficar. No se dibujará una curva ficticia."
+              title={props.preview ? "Sin datos de cuenta" : props.campaigns ? "Sin campañas" : unavailable}
+              description={props.preview ? "Inicia sesión para consultar los datos de la cuenta." : props.campaigns ? "La API devolvió una lista vacía de campañas." : "No se recibieron campañas de la API."}
             />
-          </Card>
-        </div>
+          )}
+        </Card>
 
-        <aside className="dashboard-rail stack">
-          <Card>
-            <div className="card-header">
-              <div>
-                <span className="eyebrow">Runtime</span>
-                <h2>Estado del sistema</h2>
-              </div>
+        <Card className="dashboard-panel dashboard-system">
+          <div className="card-header dashboard-panel-heading"><div><span className="eyebrow">SERVICIO</span><h2>Estado del sistema</h2></div></div>
+          {props.preview ? (
+            <EmptyState title="API sin consultar" description="La vista previa no envía solicitudes al backend." />
+          ) : props.healthError ? <ErrorPanel message={props.healthError} /> : props.health ? (
+            <div className="health-grid dashboard-health">
+              <div className="health-row"><span>General</span><StatusBadge value={props.health.status} /></div>
+              <div className="health-row"><span>Base de datos</span><StatusBadge value={props.health.checks.database} /></div>
+              <div className="health-row"><span>SIC</span><StatusBadge value={props.health.checks.sicEngine} /></div>
+              <div className="health-row"><span>Última lectura</span><strong>{date(props.health.timestamp)}</strong></div>
             </div>
+          ) : <p className="muted">Verificando servicio...</p>}
+        </Card>
 
-            {props.healthError && <ErrorPanel message={props.healthError} />}
-            {!props.health && !props.healthError && <p className="muted">Verificando conexión…</p>}
+        <Card className="dashboard-panel dashboard-history">
+          <div className="card-header dashboard-panel-heading"><div><span className="eyebrow">TENDENCIA</span><h2>Rendimiento en el tiempo</h2></div><span className="panel-period">SERIE TEMPORAL</span></div>
+          <EmptyState title={unavailable} description="La API no ofrece una serie histórica para construir una gráfica verificable." />
+        </Card>
 
-            {props.health && (
-              <div className="health-grid">
-                <div className="health-row">
-                  <span>Estado general</span>
-                  <StatusBadge value={props.health.status} />
-                </div>
-                <div className="health-row">
-                  <span>Base de datos</span>
-                  <StatusBadge value={props.health.checks.database} />
-                </div>
-                <div className="health-row">
-                  <span>SIC</span>
-                  <StatusBadge value={props.health.checks.sicEngine} />
-                </div>
-                <div className="health-row">
-                  <span>Última lectura</span>
-                  <strong>{date(props.health.timestamp)}</strong>
-                </div>
-              </div>
-            )}
-          </Card>
-
-          <Card>
-            <div className="card-header">
-              <div>
-                <span className="eyebrow">Optimización</span>
-                <h2>Oportunidades</h2>
-              </div>
+        {unavailableDimensions.map(dimension => (
+          <Card className="dashboard-panel dashboard-module" key={dimension.label}>
+            <div className="card-header dashboard-panel-heading">
+              <div><span className="eyebrow">COBERTURA DE DATOS</span><h2>{dimension.label}</h2></div>
             </div>
-            <EmptyState
-              title="Sin recomendaciones verificadas"
-              description="No hay datos de conversiones, CPA o ROAS disponibles en la API actual para justificar recomendaciones."
-            />
+            <EmptyState title={unavailable} description={dimension.detail} />
           </Card>
-
-          <Card>
-            <div className="card-header">
-              <div>
-                <span className="eyebrow">Cobertura</span>
-                <h2>Datos del panel</h2>
-              </div>
-            </div>
-            <div className="health-grid">
-              <div className="health-row">
-                <span>Campañas</span>
-                <StatusBadge value={props.campaigns ? "AVAILABLE" : "UNVERIFIED"} />
-              </div>
-              <div className="health-row">
-                <span>Métricas</span>
-                <StatusBadge value={metricsComplete ? "AVAILABLE" : metricsLoading ? "CHECKING" : "UNAVAILABLE"} />
-              </div>
-              <div className="health-row">
-                <span>Histórico</span>
-                <StatusBadge value="UNAVAILABLE" />
-              </div>
-              <div className="health-row">
-                <span>Conversiones / ROAS</span>
-                <StatusBadge value="UNAVAILABLE" />
-              </div>
-            </div>
-          </Card>
-        </aside>
-      </div>
+        ))}
+      </section>
     </div>
   );
 }
