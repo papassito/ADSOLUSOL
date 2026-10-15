@@ -62,3 +62,52 @@ Los pendientes técnicos vigentes de ADSOLUSOL deben obtenerse del `README.md` y
 * instalador y verificación posterior a instalación.
 
 Este historial no sustituye la fuente de estado vigente.
+
+---
+
+### 5. Recuperación y alineación de producción (15 Oct 2026)
+
+Se reconstruyó el acceso centralizado a AdSolusol desde fuentes, alineando los repositorios, los artefactos Release y los servicios desplegados. No se modificaron bases de datos, configuración de producción ni llaves.
+
+**Portal central y SSO**
+
+* Se recuperó y versionó en `SOLUSOL_NET/portal-core/` el módulo GoFiber que estaba presente en el VPS, pero ausente del checkout local. El portal central conserva su autenticación propia por cookie y expone `GET /adsolusol/sso` solo bajo `AuthGuard`.
+* El portal genera un ticket HMAC de un minuto con correo, expiración y nonce aleatorio; su formulario lo entrega por POST a `https://adsolusol.solusol.net/api/auth/solusol-sso`.
+* ADSOLUSOL valida firma, expiración, nonce de un solo uso, correo y tenant; emite la cookie segura `ADSOLUSOL.Panel` y devuelve al dashboard central con `?adsolusol=connected`.
+* El dashboard central muestra el iframe privado solo después del handoff SSO. El vhost de ADSOLUSOL redirige `/` y `/index.html` a `https://solusol.net/dashboard`; `/panel` redirige al shell protegido `/api/panel`. El acceso anónimo a `/api/panel` devuelve 401.
+* El módulo `auth_request` no está disponible en el Nginx de este VPS. Se usó en su lugar un endpoint ASP.NET protegido por el middleware de sesión, sin debilitar la política de autenticación.
+
+**API, inventario y creativos**
+
+* ADSOLUSOL quedó en `main`, commit `8cd7d80` (`feat(panel): connect central SSO, creative assets and placements`). SOLUSOL_NET quedó en `main`, commit `e2e199b` (`feat(portal): restore central AdSolusol SSO bridge`). Ambos commits están publicados en `origin/main`.
+* Se reconstruyó y desplegó la API ASP.NET desde `8cd7d80`. `/api/health` responde 200 `Healthy`, con base de datos y SIC en `UP`.
+* El formulario y el dashboard usan `GET /api/Placements`, existente en el backend. Se retiró el mapa geográfico decorativo y se muestra “Sin datos geográficos” cuando no existe telemetría.
+* Se añadió carga autenticada de creativos PNG, JPEG y WebP, hasta 5 MB por archivo y 20 cargas por hora/IP. Se valida la firma binaria; los archivos reciben nombre aleatorio y se sirven como solo lectura, con `nosniff` y CSP. SVG y archivos con extensión/tipo falsos se rechazan.
+* El cliente de upload conserva la URL si falla la creación del creativo. El formulario permite cargar imagen o proporcionar URL y muestra la imagen creada.
+
+**Verificación**
+
+* `dotnet test` regresión: 10/10; arquitectura: 2/2.
+* `go test ./...` en `portal-core`: todas las suites pasan; build Linux amd64 realizado con `CGO_ENABLED=0`.
+* `npm run build -- --outDir %TEMP%\adsolusol-final-web`: PASS.
+* Pruebas de upload aisladas: login 200; PNG válido 200; URL de imagen 200 con `image/png`; archivo no imagen 400. `/api/panel` aislado devolvió 401 sin sesión y 200 con cookie.
+* En navegador se confirmó `/dashboard?adsolusol=connected`, iframe cargado con tenant `tenant_02`, estado API `HEALTHY`, campañas y placement real visibles, sin errores JavaScript.
+* En producción, `/` redirige al dashboard central, `/panel` redirige al endpoint privado, `/api/panel` anónimo responde 401 y `/api/health` responde 200. El login SSO anónimo devuelve el redirect esperado a `/login`.
+* `nginx -t` pasó antes del reload. GoFiber y `adsolusol-api` quedaron activos después del despliegue.
+
+**Backups de producción**
+
+* `/root/backup-solusol-portal-source-before-e2e199b.tgz`
+* `/root/backup-solusol-core-before-e2e199b`
+* `/root/backup-adsolusol-api-before-8cd7d80.tgz`
+* `/root/backup-adsolusol-web-before-8cd7d80.tgz`
+* `/root/backup-adsolusol-vhost-before-8cd7d80.conf`
+
+**Pendientes operativos**
+
+* Una consulta real a Ad Serving para el placement existente devolvió `NO_AD_AVAILABLE`; falta cargar un creativo real y asociarlo a una campaña activa y al placement. No se generaron anuncios ni eventos ficticios.
+* El backend conserva rutas para registrar clics e impresiones, pero el tag público/serving aún no las emite automáticamente.
+* SEO externo, Google Ads y Google Maps no están activados; requieren proveedor, cuentas, credenciales y consentimiento/telemetría apropiados.
+* El browser smoke de la carga de archivos fue bloqueado por la política de origen al usar `localhost`; el endpoint sí se probó directamente con el origen permitido en el entorno local aislado.
+
+Los cambios locales preexistentes de `docs/EXPEDIENTE_CLINICO_MAESTRO.md`, `dist/index.html`, archivos `.old`, `.vscode/` y `smoke-test.ps1` se conservaron y no se incluyeron en los commits.
