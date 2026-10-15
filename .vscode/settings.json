@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^cd src\\\\ADSOLUSOL\\.Presentation\\.Web; foreach\\(\\$f in 'index\\.html','src\\\\main\\.tsx','src\\\\App\\.tsx','src\\\\views\\\\DashboardView\\.tsx','src\\\\views\\\\LoginView\\.tsx'\\)\\{ Copy-Item \\$f \"\\$f\\.old\" -Force; \"\\$f\\.old\" \\}$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

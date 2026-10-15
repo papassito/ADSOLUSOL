@@ -38,6 +38,7 @@ function Limpiar-BasuraGit {
         "Thumbs.db",
         "desktop.ini",
         ".DS_Store",
+        "*.old",
         "*_old.*",
         "*_copy.*"
     )

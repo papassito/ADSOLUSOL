@@ -1,0 +1,70 @@
+/* VARIABLES DE TEMA & TIPOGRAFÍA DUAL */
+:root {
+  --font-heading: 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* DEFAULT: OLED DARK MODE (BLACK 100% RGB 0,0,0) */
+  --bg-base: #000000;
+  --bg-surface: #0a0a0a;
+  --bg-card: #121212;
+  --border-color: rgba(255, 255, 255, 0.12);
+  --border-accent: rgba(255, 255, 255, 0.2);
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+}
+
+/* LIGHT MODE OVERRIDES */
+html.light {
+  --bg-base: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-card: #ffffff;
+  --border-color: #e2e8f0;
+  --border-accent: #cbd5e1;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+}
+
+#root {
+  display: contents;
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-main);
+  font-family: var(--font-body);
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: var(--font-heading);
+}
+
+.font-mono-num, .currency-val {
+  font-family: var(--font-mono);
+}
+
+.app-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.app-card:hover {
+  border-color: var(--border-accent);
+}
+
+.app-surface {
+  background-color: var(--bg-surface);
+  border-color: var(--border-color);
+}
+
+/* Hotspot animation on SVG Map */
+@keyframes pulse-ring {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.4); opacity: 0.2; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+.map-hotspot {
+  animation: pulse-ring 2s infinite ease-in-out;
+}
