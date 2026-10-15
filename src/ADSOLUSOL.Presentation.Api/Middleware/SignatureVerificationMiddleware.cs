@@ -30,7 +30,8 @@ public class SignatureVerificationMiddleware
         }
 
         // Login/logout/session are handled by ASP.NET Core cookie authentication.
-        if (path.Equals("/api/auth/session", StringComparison.OrdinalIgnoreCase))
+        if (path.Equals("/api/auth/session", StringComparison.OrdinalIgnoreCase) ||
+            path.Equals("/api/auth/solusol-sso", StringComparison.OrdinalIgnoreCase))
         {
             await _next(context);
             return;

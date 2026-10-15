@@ -14,11 +14,13 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.RateLimiting;
 using ADSOLUSOL.Presentation.Api.Security;
 using System.Security.Claims;
+using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.RateLimiting;
 using System.Collections.Concurrent;
 
+var usedSolusolSsoNonces = new ConcurrentDictionary<string, DateTimeOffset>(StringComparer.Ordinal);
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
@@ -210,6 +212,51 @@ app.MapPost("/api/auth/session", async (HttpContext context, IConfiguration conf
     var identity = new ClaimsIdentity(new[] { new Claim("tenant_id", tenantId) }, "PanelCookie");
     await context.SignInAsync("PanelCookie", new ClaimsPrincipal(identity));
     return Results.Ok(new { status = "AUTHENTICATED", tenantId });
+}).RequireRateLimiting("panel-login");
+
+app.MapPost("/api/auth/solusol-sso", async (HttpContext context, IConfiguration configuration) =>
+{
+    if (!string.Equals(context.Request.Headers.Origin.ToString(), "https://solusol.net", StringComparison.OrdinalIgnoreCase))
+        return Results.StatusCode(StatusCodes.Status403Forbidden);
+
+    var form = await context.Request.ReadFormAsync();
+    var keyPath = configuration["ADSOLUSOL_SSO_KEY_FILE"] ?? "/etc/solusol-sso.key";
+    byte[] signingKey;
+    try
+    {
+        signingKey = Encoding.UTF8.GetBytes((await File.ReadAllTextAsync(keyPath)).Trim());
+    }
+    catch (IOException)
+    {
+        return Results.StatusCode(StatusCodes.Status503ServiceUnavailable);
+    }
+    catch (UnauthorizedAccessException)
+    {
+        return Results.StatusCode(StatusCodes.Status503ServiceUnavailable);
+    }
+
+    if (!SolusolSsoTicketVerifier.TryValidate(form["ticket"].ToString(), signingKey, DateTimeOffset.UtcNow, out var ticket))
+        return Results.Unauthorized();
+
+    var now = DateTimeOffset.UtcNow;
+    foreach (var entry in usedSolusolSsoNonces)
+        if (entry.Value <= now) usedSolusolSsoNonces.TryRemove(entry.Key, out _);
+
+    if (!usedSolusolSsoNonces.TryAdd(ticket!.Nonce!, DateTimeOffset.FromUnixTimeSeconds(ticket.Expiry)))
+        return Results.Unauthorized();
+
+    var allowedEmail = configuration["ADSOLUSOL_SSO_EMAIL"];
+    var tenantId = configuration["ADSOLUSOL_SSO_TENANT_ID"];
+    if (string.IsNullOrWhiteSpace(allowedEmail) ||
+        !string.Equals(ticket.Email, allowedEmail, StringComparison.OrdinalIgnoreCase) ||
+        string.IsNullOrWhiteSpace(tenantId) ||
+        !Regex.IsMatch(tenantId, "^[A-Za-z0-9_-]{1,64}$") ||
+        string.IsNullOrWhiteSpace(PanelAuthConfiguration.GetPasswordHash(configuration, tenantId)))
+        return Results.Unauthorized();
+
+    var identity = new ClaimsIdentity(new[] { new Claim("tenant_id", tenantId) }, "PanelCookie");
+    await context.SignInAsync("PanelCookie", new ClaimsPrincipal(identity));
+    return Results.Redirect("/index.html");
 }).RequireRateLimiting("panel-login");
 
 app.MapGet("/api/auth/session", (HttpContext context) =>
