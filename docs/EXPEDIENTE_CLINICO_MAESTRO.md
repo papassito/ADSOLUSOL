@@ -1,115 +1,99 @@
-# Expediente Clínico Maestro - ADSOLUSOL (Ads & Growth Engine)
+# Expediente Clínico Maestro - CHECADOR_KLIK by KLIK Soft PRO
 
-**Fecha y Hora del Chequeo Forense:** 2026-10-11 14:37:18
-
-**Ecosistema Auditado:** C# / .NET 8 (71 archivos) | PowerShell (44 scripts) | Markdown Docs (52 archivos) | JSON / Config (15 archivos)
+**Fecha y Hora del Chequeo Forense:** 2026-10-14 18:43:43
 
 ## Dictamen Resumido de la Junta Médica Forense
 
-| Área Médica | Especialista / Peritaje Forense | Diagnóstico Clínico |
+| Área Médica | Especialista / Peritaje | Diagnóstico |
 |---|---|---|
-| **Inmunologia de Codificacion, BOM y Caracteres de Control** | Integridad UTF-8, Ausencia de BOM, Nulos y Caracteres Invalidos | **SANO (PASS)** |
-| **Traumatologia y Segregacion Estructural (Clean / Onion)** | Higiene de Raiz, Deteccion de Huerfanos y Contratos de Repositorio | **SANO (PASS)** |
-| **Oftalmologia y Formato Canonico (.NET Format)** | Inspeccion Visual y Estilo Canonico de Codigo C# | **SANO (PASS)** |
-| **Neurologia y Analisis Estatico (dotnet build & Roslyn)** | Diagnostico de Compilacion, Tipado y Diagnosticos Roslyn | **SANO (PASS)** |
-| **Cardiologia Forense (Pruebas Unitarias, Regresion y Smokey)** | Verificacion de Motores, Debito Presupuestario y Smokey Tests | **SANO (PASS)** |
-| **Farmacologia, Criptografia y Blindaje Perimetral EDR** | Inmunidad a Secretos Expuestos y Heuristicas Antivirus | **SANO (PASS)** |
-| **Calidad de Codigo y Olores (Code Smells)** | Deteccion de Excepciones no Implementadas, Capturas Silenciosas y Comentarios TODO/FIXME | **SANO (PASS)** |
-| **Gobernanza y Verificacion de Integracion Externa (SIC)** | Analisis de Codigo Fuente para Conectividad Real (No Mocks) | **NO VERIFICADO / OBSERVACION** |
-| **Dermatologia y Cobertura Funcional de UI (Sitemap & DI Wiring)** | Integridad de Vistas Blazor, Navegacion y Contenedor Desktop | **SANO (PASS)** |
-| **Endoscopia y Pruebas de Componentes UI (bUnit)** | Verificacion Funcional de Componentes Blazor Aislados | **NO VERIFICADO / OBSERVACION** |
+| **Detección de Lenguajes y Stack del Repositorio** | Censo Arquitectónico y Entrypoints Principales | **OBSERVACIÓN (FAIL)** |
+| **Inmunología de Codificación, BOM y Caracteres Nulos** | Inspección de Bytes Mágicos, UTF-8 y Caracteres de Control | **OBSERVACIÓN (FAIL)** |
+| **Peritaje de Texto, Corrupción y Mojibake** | Detección de Secuencias UTF-8 Corruptas y Texto Truncado | **SANO (PASS)** |
+| **Traumatología Estructural y Fronteras Arquitectónicas** | Topología del Paquete checker/ y Módulos Especializados | **OBSERVACIÓN (FAIL)** |
+| **Integridad de Archivos Vacíos y Truncados** | Detección de Archivos de 0 Bytes o Truncados | **OBSERVACIÓN (FAIL)** |
+| **Neurología y Sintaxis de Bytecode (py_compile)** | Compilación Estática de AST y Bytecode Python | **SANO (PASS)** |
+| **Cardiología Forense (Batería de Pruebas Pytest)** | Ejecución Integral de Pruebas Unitarias y de Integración | **OBSERVACIÓN (FAIL)** |
+| **Farmacología, Seguridad de Red y Blindaje EDR** | Inmunidad a Inyección, Comandos Ofuscados y Endpoints Limpios | **SANO (PASS)** |
+| **Invariantes del Motor (Soporte Multilingüe y Reglas)** | Verificación de Estrategias y Balanceador de Delimitadores | **SANO (PASS)** |
+| **Cirugía General y Binarios de Producción** | Verificación de Entorno de Empaquetado PyInstaller | **SANO (PASS)** |
 
 ---
 
 ## Detalle de Observaciones Quirúrgicas y Laboratorio
 
-### Área: Inmunologia de Codificacion, BOM y Caracteres de Control
-**Especialista:** Integridad UTF-8, Ausencia de BOM, Nulos y Caracteres Invalidos | **Estado:** **SANO (PASS)**
-
-*Alcance Clínico:* Auditoría de codificación UTF-8 estricta, ausencia de BOM, caracteres nulos y secuencias corruptas.
+### Área: Detección de Lenguajes y Stack del Repositorio
+**Especialista:** Censo Arquitectónico y Entrypoints Principales | **Estado:** **OBSERVACIÓN (FAIL)**
 
 ```text
-[SANO] 120 archivos analizados sin BOM, caracteres nulos ni corrupción UTF-8.
+[PATOLOGÍA] Entrypoints mandatorios faltantes en la raíz: main.py, gui_app.py, api.py, requirements.txt, pyproject.toml
 ```
 
-### Área: Traumatologia y Segregacion Estructural (Clean / Onion)
-**Especialista:** Higiene de Raiz, Deteccion de Huerfanos y Contratos de Repositorio | **Estado:** **SANO (PASS)**
-
-*Alcance Clínico:* Inspección de proyectos huérfanos en raíz, segregación de UI MAUI y contratos tipados en repositorios.
+### Área: Inmunología de Codificación, BOM y Caracteres Nulos
+**Especialista:** Inspección de Bytes Mágicos, UTF-8 y Caracteres de Control | **Estado:** **OBSERVACIÓN (FAIL)**
 
 ```text
-[SANO] Topología Onion inmaculada: cero fuentes huérfanas y contratos asíncronos válidos.
+Marca BOM UTF-8 hallada en: .build\master-smoke.txt
+Marca BOM UTF-8 hallada en: _audit\audit_master_20261005_114850.txt
+Marca BOM UTF-8 hallada en: _audit\audit_master_20261005_115238.txt
+Marca BOM UTF-8 hallada en: _audit\audit_master_latest.txt
+Marca BOM UTF-8 hallada en: _audit\informe.txt
+Marca BOM UTF-8 hallada en: _audit\SOLUSOL-SIC-AUDIT-20260914-110336.txt
+Marca BOM UTF-8 hallada en: .build\bin\ADSOLUSOL.Presentation.Api\Debug\net8.0\DOCUMENTATION_SEAL.json
 ```
 
-### Área: Oftalmologia y Formato Canonico (.NET Format)
-**Especialista:** Inspeccion Visual y Estilo Canonico de Codigo C# | **Estado:** **SANO (PASS)**
-
-*Alcance Clínico:* Verificación pericial del formato de código mediante dotnet format oficial.
+### Área: Peritaje de Texto, Corrupción y Mojibake
+**Especialista:** Detección de Secuencias UTF-8 Corruptas y Texto Truncado | **Estado:** **SANO (PASS)**
 
 ```text
-[SANO] Agudeza visual 20/20: Todo el código C# cumple con el estándar canónico.
+[SANO] Texto íntegro: Cero secuencias mojibake ni contaminación CLIXML.
 ```
 
-### Área: Neurologia y Analisis Estatico (dotnet build & Roslyn)
-**Especialista:** Diagnostico de Compilacion, Tipado y Diagnosticos Roslyn | **Estado:** **SANO (PASS)**
-
-*Alcance Clínico:* Compilación estática de todos los proyectos de la solución en configuración Release.
+### Área: Traumatología Estructural y Fronteras Arquitectónicas
+**Especialista:** Topología del Paquete checker/ y Módulos Especializados | **Estado:** **OBSERVACIÓN (FAIL)**
 
 ```text
-[SANO] Compilación diagnóstica 100% limpia: Cero errores CS, MSB o NuGet.
+[PATOLOGÍA] Módulos nucleares ausentes: checker/engine.py, checker/detect.py, checker/lsp_server.py, checker/deadlocks.py, checker/dependencies.py, checker/rules/__init__.py, tests/test_checker.py
 ```
 
-### Área: Cardiologia Forense (Pruebas Unitarias, Regresion y Smokey)
-**Especialista:** Verificacion de Motores, Debito Presupuestario y Smokey Tests | **Estado:** **SANO (PASS)**
-
-*Alcance Clínico:* Evaluación de suites de regresión, integridad de débito atómico y telemetría de rendimiento.
+### Área: Integridad de Archivos Vacíos y Truncados
+**Especialista:** Detección de Archivos de 0 Bytes o Truncados | **Estado:** **OBSERVACIÓN (FAIL)**
 
 ```text
-[SANO] Pulso cardíaco regular: 100% pruebas de regresión aprobadas en 5.59s (rendimiento óptimo).
+[PATOLOGÍA] Archivos vacíos indebidos: .build\obj\ADSOLUSOL.Application\Debug\net8.0\ADSOLUSO.AD9FD95E.Up2Date, .build\obj\ADSOLUSOL.Application\Release\net8.0\ADSOLUSO.AD9FD95E.Up2Date, .build\obj\ADSOLUSOL.ArchitectureTests\Debug\net8.0\ADSOLUSO.0E6BA89E.Up2Date, .build\obj\ADSOLUSOL.ArchitectureTests\Release\net8.0\ADSOLUSO.0E6BA89E.Up2Date, .build\obj\ADSOLUSOL.Infrastructure\Debug\net8.0\ADSOLUSO.16A12EC5.Up2Date, .build\obj\ADSOLUSOL.Infrastructure\Release\net8.0\ADSOLUSO.16A12EC5.Up2Date, .build\obj\ADSOLUSOL.Motor\Debug\net8.0\ADSOLUSO.114E47C0.Up2Date, .build\obj\ADSOLUSOL.Motor\Release\net8.0\ADSOLUSO.114E47C0.Up2Date, .build\obj\ADSOLUSOL.Orchestrator\Debug\net8.0\ADSOLUSO.245E7DAD.Up2Date, .build\obj\ADSOLUSOL.Orchestrator\Release\net8.0\ADSOLUSO.245E7DAD.Up2Date, .build\obj\ADSOLUSOL.Presentation.Api\Debug\net8.0\ADSOLUSO.1BDE80BE.Up2Date, .build\obj\ADSOLUSOL.Presentation.Api\Debug\net8.0\ADSOLUSOL.Presentation.Api.MvcApplicationPartsAssemblyInfo.cache, .build\obj\ADSOLUSOL.Presentation.Api\Release\net8.0\ADSOLUSO.1BDE80BE.Up2Date, .build\obj\ADSOLUSOL.Presentation.Api\Release\net8.0\ADSOLUSOL.Presentation.Api.MvcApplicationPartsAssemblyInfo.cache, .build\obj\ADSOLUSOL.Presentation.Api\Release\net8.0\linux-x64\ADSOLUSO.1BDE80BE.Up2Date, .build\obj\ADSOLUSOL.Presentation.Api\Release\net8.0\linux-x64\ADSOLUSOL.Presentation.Api.MvcApplicationPartsAssemblyInfo.cache, .build\obj\ADSOLUSOL.Presentation.Cmd\Debug\net8.0\ADSOLUSO.C59B737F.Up2Date, .build\obj\ADSOLUSOL.Presentation.Cmd\Release\net8.0\ADSOLUSO.C59B737F.Up2Date, .build\obj\ADSOLUSOL.Presentation.Desktop\Debug\net8.0-windows10.0.19041.0\ADSOLUSO.D3143DBA.Up2Date, .build\obj\ADSOLUSOL.Presentation.Desktop\Debug\net8.0-windows10.0.19041.0\mauifont.inputs, .build\obj\ADSOLUSOL.Presentation.Desktop\Debug\net8.0-windows10.0.19041.0\mauifont.stamp, .build\obj\ADSOLUSOL.Presentation.Desktop\Debug\net8.0-windows10.0.19041.0\mauiimage.inputs, .build\obj\ADSOLUSOL.Presentation.Desktop\Debug\net8.0-windows10.0.19041.0\mauiimage.stamp, .build\obj\ADSOLUSOL.Presentation.Desktop\Debug\net8.0-windows10.0.19041.0\mauisplash.inputs, .build\obj\ADSOLUSOL.Presentation.Desktop\Debug\net8.0-windows10.0.19041.0\mauisplash.stamp, .build\obj\ADSOLUSOL.Presentation.Desktop\Release\net8.0-windows10.0.19041.0\ADSOLUSO.D3143DBA.Up2Date, .build\obj\ADSOLUSOL.Presentation.Desktop\Release\net8.0-windows10.0.19041.0\mauifont.inputs, .build\obj\ADSOLUSOL.Presentation.Desktop\Release\net8.0-windows10.0.19041.0\mauifont.stamp, .build\obj\ADSOLUSOL.Presentation.Desktop\Release\net8.0-windows10.0.19041.0\mauiimage.inputs, .build\obj\ADSOLUSOL.Presentation.Desktop\Release\net8.0-windows10.0.19041.0\mauiimage.stamp, .build\obj\ADSOLUSOL.Presentation.Desktop\Release\net8.0-windows10.0.19041.0\mauisplash.inputs, .build\obj\ADSOLUSOL.Presentation.Desktop\Release\net8.0-windows10.0.19041.0\mauisplash.stamp, .build\obj\ADSOLUSOL.Presentation.Desktop\Release\net8.0-windows10.0.19041.0\win-x64\ADSOLUSO.D3143DBA.Up2Date, .build\obj\ADSOLUSOL.Presentation.Desktop\Release\net8.0-windows10.0.19041.0\win-x64\mauifont.inputs, .build\obj\ADSOLUSOL.Presentation.Desktop\Release\net8.0-windows10.0.19041.0\win-x64\mauifont.stamp, .build\obj\ADSOLUSOL.Presentation.Desktop\Release\net8.0-windows10.0.19041.0\win-x64\mauiimage.inputs, .build\obj\ADSOLUSOL.Presentation.Desktop\Release\net8.0-windows10.0.19041.0\win-x64\mauiimage.stamp, .build\obj\ADSOLUSOL.Presentation.Desktop\Release\net8.0-windows10.0.19041.0\win-x64\mauisplash.inputs, .build\obj\ADSOLUSOL.Presentation.Desktop\Release\net8.0-windows10.0.19041.0\win-x64\mauisplash.stamp, .build\obj\ADSOLUSOL.Presentation.Desktop\Release\net8.0-windows10.0.19041.0\win10-x64\ADSOLUSO.D3143DBA.Up2Date, .build\obj\ADSOLUSOL.Presentation.Desktop\Release\net8.0-windows10.0.19041.0\win10-x64\mauifont.inputs, .build\obj\ADSOLUSOL.Presentation.Desktop\Release\net8.0-windows10.0.19041.0\win10-x64\mauifont.stamp, .build\obj\ADSOLUSOL.Presentation.Desktop\Release\net8.0-windows10.0.19041.0\win10-x64\mauiimage.inputs, .build\obj\ADSOLUSOL.Presentation.Desktop\Release\net8.0-windows10.0.19041.0\win10-x64\mauiimage.stamp, .build\obj\ADSOLUSOL.Presentation.Desktop\Release\net8.0-windows10.0.19041.0\win10-x64\mauisplash.inputs, .build\obj\ADSOLUSOL.Presentation.Desktop\Release\net8.0-windows10.0.19041.0\win10-x64\mauisplash.stamp, .build\obj\ADSOLUSOL.RegressionTests\Debug\net8.0\ADSOLUSO.761BAB84.Up2Date, .build\obj\ADSOLUSOL.RegressionTests\Release\net8.0\ADSOLUSO.761BAB84.Up2Date
 ```
 
-### Área: Farmacologia, Criptografia y Blindaje Perimetral EDR
-**Especialista:** Inmunidad a Secretos Expuestos y Heuristicas Antivirus | **Estado:** **SANO (PASS)**
-
-*Alcance Clínico:* Inspección perimetral de cadenas sensibles y blindaje contra falsos positivos EDR/Antivirus.
+### Área: Neurología y Sintaxis de Bytecode (py_compile)
+**Especialista:** Compilación Estática de AST y Bytecode Python | **Estado:** **SANO (PASS)**
 
 ```text
-[SANO] Inmunidad EDR: Cero secretos expuestos y scripts libres de heurísticas maliciosas.
+[SANO] Compilación AST/Bytecode 100% válida en 0 archivos Python.
 ```
 
-### Área: Calidad de Codigo y Olores (Code Smells)
-**Especialista:** Deteccion de Excepciones no Implementadas, Capturas Silenciosas y Comentarios TODO/FIXME | **Estado:** **SANO (PASS)**
-
-*Alcance Clínico:* Análisis estático para detectar patrones de código problemáticos como NotImplementedException, bloques catch vacíos y comentarios de trabajo pendiente.
+### Área: Cardiología Forense (Batería de Pruebas Pytest)
+**Especialista:** Ejecución Integral de Pruebas Unitarias y de Integración | **Estado:** **OBSERVACIÓN (FAIL)**
 
 ```text
-[SANO] Código libre de olores críticos (excepciones no implementadas, capturas silenciosas).
+[EXCEPCIÓN] No se pudo ejecutar pytest: Command '['Y:\\Documentos\\GitHub\\CHECK_CODE_BY_KLIK_estable\\dist\\codechecker_gui.exe', '-m', 'pytest', 'tests/test_checker.py', '-q']' timed out after 90 seconds
 ```
 
-### Área: Gobernanza y Verificacion de Integracion Externa (SIC)
-**Especialista:** Analisis de Codigo Fuente para Conectividad Real (No Mocks) | **Estado:** **NO VERIFICADO / OBSERVACION**
-
-*Alcance Clínico:* Auditoría de conectividad real hacia SIC (distingue implementación de verificación activa de red).
+### Área: Farmacología, Seguridad de Red y Blindaje EDR
+**Especialista:** Inmunidad a Inyección, Comandos Ofuscados y Endpoints Limpios | **Estado:** **SANO (PASS)**
 
 ```text
-[OBSERVACION] MarketingBrainClient implementa HttpClient, pero conectividad con SIC permanece como: NO VERIFICADA EN RED.
+[SANO] Inmunidad EDR: Cero patrones de inyección dinámica sospechosa.
 ```
 
-### Área: Dermatologia y Cobertura Funcional de UI (Sitemap & DI Wiring)
-**Especialista:** Integridad de Vistas Blazor, Navegacion y Contenedor Desktop | **Estado:** **SANO (PASS)**
-
-*Alcance Clínico:* Inspección de cobertura funcional, registros de servicios y cableado de navegación Desktop.
+### Área: Invariantes del Motor (Soporte Multilingüe y Reglas)
+**Especialista:** Verificación de Estrategias y Balanceador de Delimitadores | **Estado:** **SANO (PASS)**
 
 ```text
-[SANO] Cobertura funcional de UI y contenedor DI al 100% verificado.
+[SANO] Invariantes operativas: 23 lenguajes activos y DelimiterChecker balanceado.
 ```
 
-### Área: Endoscopia y Pruebas de Componentes UI (bUnit)
-**Especialista:** Verificacion Funcional de Componentes Blazor Aislados | **Estado:** **NO VERIFICADO / OBSERVACION**
-
-*Alcance Clínico:* Ejecuta la suite de pruebas de componentes de UI (bUnit) para validar la lógica y el renderizado de los componentes Razor de forma aislada.
+### Área: Cirugía General y Binarios de Producción
+**Especialista:** Verificación de Entorno de Empaquetado PyInstaller | **Estado:** **SANO (PASS)**
 
 ```text
-[NO VERIFICADO] No se localizaron proyectos de pruebas de UI (bUnit) en tests/. Suite ausente.
+[INFO] Sin ejecutables en dist/. Listos para generar vía build.bat.
 ```
 
