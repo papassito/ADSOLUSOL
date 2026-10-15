@@ -76,6 +76,16 @@ builder.Services.AddRateLimiter(options =>
                 QueueLimit = 0,
                 AutoReplenishment = true
             }));
+    options.AddPolicy("creative-uploads", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 20,
+                Window = TimeSpan.FromHours(1),
+                QueueLimit = 0,
+                AutoReplenishment = true
+            }));
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 });
 
@@ -136,6 +146,7 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 });
 
 var app = builder.Build();
+var panelIndexPath = Path.Combine(builder.Environment.ContentRootPath, "panel", "index.html");
 
 // Inicialización de esquema SQLite en desarrollo o cuando se solicite por configuración/entorno
 var shouldInitSchema = app.Environment.IsDevelopment()
@@ -189,6 +200,15 @@ app.MapGet("/", () => Results.Ok(new
     service = "ADSOLUSOL Sovereign Ad Server API",
     status = "ONLINE"
 }));
+
+app.MapGet("/api/panel", (HttpContext context) =>
+{
+    if (string.IsNullOrWhiteSpace(context.Items["TenantId"] as string))
+        return Results.Unauthorized();
+    return File.Exists(panelIndexPath)
+        ? Results.File(panelIndexPath, "text/html; charset=utf-8")
+        : Results.NotFound();
+});
 
 app.UseMiddleware<SignatureVerificationMiddleware>();
 app.UseAuthorization();
@@ -256,7 +276,7 @@ app.MapPost("/api/auth/solusol-sso", async (HttpContext context, IConfiguration 
 
     var identity = new ClaimsIdentity(new[] { new Claim("tenant_id", tenantId) }, "PanelCookie");
     await context.SignInAsync("PanelCookie", new ClaimsPrincipal(identity));
-    return Results.Redirect("/index.html");
+    return Results.Redirect("https://solusol.net/dashboard?adsolusol=connected");
 }).RequireRateLimiting("panel-login");
 
 app.MapGet("/api/auth/session", (HttpContext context) =>

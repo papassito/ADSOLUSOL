@@ -917,14 +917,14 @@ body { background: var(--bg); color: var(--text); }
 .topbar { background: #fff; border-color: var(--border); }
 .topbar h1 { color: #202124; font-size: 20px; }
 .content { padding: 22px 24px 36px; }
-.card { border-color: var(--border); border-radius: 6px; background: #fff; box-shadow: 0 1px 2px rgba(32, 33, 36, .06); }
-.card-header { border-color: var(--border-soft); }
-.stat-value { color: #202124; font-family: "Aptos", "Segoe UI", sans-serif; font-size: 21px; font-weight: 600; letter-spacing: 0; }
-.stat-label, .stat-detail, .muted { color: #5f6368; }
-.eyebrow { color: #5f6368; }
-.button-primary { background: #1a73e8; }
-.button-secondary { border-color: var(--border); background: #fff; color: #3c4043; }
-input, select, textarea { border-color: var(--border); background: #fff; color: #202124; }
+.card { border-color: var(--border-color); border-radius: 6px; background: var(--bg-card); color: var(--text-main); box-shadow: none; }
+.card-header { border-color: var(--border-color); }
+.stat-value { color: var(--text-main); font-family: var(--font-body); font-size: 21px; font-weight: 600; letter-spacing: 0; }
+.stat-label, .stat-detail, .muted, .eyebrow, .field > span, .checkbox-field > span { color: var(--text-muted); }
+.button { border-color: var(--border-color); background: var(--bg-surface); color: var(--text-main); }
+.button-primary { border-color: #1a73e8; background: #1a73e8; color: #fff; }
+.button-secondary { border-color: var(--border-color); background: var(--bg-surface); color: var(--text-main); }
+input, select, textarea { border-color: var(--border-color); background: var(--bg-surface); color: var(--text-main); }
 input:focus, select:focus, textarea:focus { border-color: #1a73e8; box-shadow: 0 0 0 3px rgba(26, 115, 232, .12); }
 .status-badge, .connection { border-radius: 4px; }
 .status-ACTIVE, .status-HEALTHY, .status-UP, .connection.connected { border-color: #c6e7ce; background: #e6f4ea; color: #137333; }

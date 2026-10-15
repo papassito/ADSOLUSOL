@@ -6,7 +6,8 @@ import type {
   CreateCreativeRequest,
   CreatePlacementRequest,
   Creative,
-  HealthResponse
+  HealthResponse,
+  Placement
 } from "./types";
 
 const configuredBase =
@@ -55,7 +56,7 @@ async function request<T>(
 
   headers.set("Accept", "application/json");
 
-  if (init.body && !headers.has("Content-Type")) {
+  if (init.body && !(init.body instanceof FormData) && !headers.has("Content-Type")) {
     headers.set(
       "Content-Type",
       "application/json; charset=utf-8"
@@ -263,6 +264,10 @@ export const api = {
     );
   },
 
+  listPlacements(): Promise<Placement[]> {
+    return request<Placement[]>(routes.placements);
+  },
+
   createCreative(
     data: CreateCreativeRequest
   ): Promise<Creative> {
@@ -273,6 +278,15 @@ export const api = {
         body: JSON.stringify(data)
       }
     );
+  },
+
+  uploadCreativeAsset(file: File): Promise<{ contentUrl: string; contentType: string }> {
+    const body = new FormData();
+    body.append("file", file);
+    return request<{ contentUrl: string; contentType: string }>("/api/Creatives/assets", {
+      method: "POST",
+      body
+    });
   },
 
   assignPlacement(

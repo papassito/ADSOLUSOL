@@ -22,6 +22,13 @@ public class SignatureVerificationMiddleware
     {
         // Bypass seguro: solo ruta raíz exacta, endpoint de salud o documentación swagger
         var path = context.Request.Path;
+        if ((HttpMethods.IsGet(context.Request.Method) || HttpMethods.IsHead(context.Request.Method)) &&
+            path.Value?.StartsWith("/api/Creatives/assets/", StringComparison.OrdinalIgnoreCase) == true)
+        {
+            await _next(context);
+            return;
+        }
+
         if (path == "/" || path.StartsWithSegments("/api/health") || path.StartsWithSegments("/swagger") ||
             (path.Value?.EndsWith("blazor.web.js") == true))
         {
