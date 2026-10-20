@@ -29,3 +29,8 @@ App_Data/*.db
 *.tmp
 *.bak
 TestResults/
+
+# Local configuration and demo state
+.env*
+!.env.example
+adsolusol_enterprise_db.json
