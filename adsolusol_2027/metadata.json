@@ -1,6 +1,0 @@
-{
-  "name": "AdManager Pro   Bento Grid Campaign Management",
-  "description": "High-density SaaS dashboard to create, manage, and finalize digital ad campaigns with real-time performance analytics.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}

@@ -39,7 +39,7 @@ export const MODULE_META: Record<
   creativos: {
     title: 'Estudio de Creativos + GPS',
     category: 'Inventario y Creativos',
-    subtitle: 'Diseño con IA, conexión a Google Maps ("Cómo llegar") y vista previa SERP móvil',
+    subtitle: 'Diseño asistido, conexión a Google Maps ("Cómo llegar") y vista previa SERP móvil',
     icon: ImageIcon,
   },
   asignaciones: {
@@ -98,9 +98,15 @@ export const AI_PRESETS = [
     description:
       'Análisis clínicos de alta precisión en Hermosillo. ¡Abierto los Domingos! Cotiza por WhatsApp sin fila.',
     locationAddress: 'Oaxaca 63, Col. Centro, Hermosillo, Sonora',
-    sitelinks: ['Check Up Básico \$500', 'Resultados en Línea'],
+    sitelinks: ['Check Up Básico $500', 'Resultados en Línea'],
   },
-  // ... otros presets
+  {
+    title: 'Ultrasonidos y Rayos X | Radiología San Francisco',
+    description:
+      'Equipos digitales de alta definición y médicos radiólogos certificados. Atención inmediata en Hermosillo.',
+    locationAddress: 'Oaxaca 63, Col. Centro, Hermosillo, Sonora',
+    sitelinks: ['Ultrasonido Obstétrico', 'Rayos X Digitales'],
+  },
 ];
 
 export const BRANCH_LOCATIONS = [
@@ -111,9 +117,5 @@ export const BRANCH_LOCATIONS = [
   {
     label: 'Sucursal Quiroga (Norte/Poniente)',
     address: 'Blvd. Antonio Quiroga, Hermosillo, Sonora',
-  },
-  {
-    label: 'Unidad de Radiología San Francisco',
-    address: 'Radiología San Francisco, Oaxaca 63, Centro, Hermosillo, Sonora',
   },
 ];

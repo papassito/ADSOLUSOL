@@ -147,7 +147,6 @@ export const CampaignsGrid: React.FC<CampaignsGridProps> = ({
           <tbody className="divide-y divide-slate-800/60 text-xs">
             {paginatedCampaigns.map((c: Campaign) => {
               const ctr = c.impressions > 0 ? ((c.clicks / c.impressions) * 100).toFixed(2) : '0.00';
-              const pct = Math.round((c.spent / Math.max(1, c.budget)) * 100);
               return (
                 <tr key={c.id} className="hover:bg-slate-800/30 transition-colors">
                   <td className="py-3.5 px-2">

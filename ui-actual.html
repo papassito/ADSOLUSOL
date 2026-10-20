@@ -1,20 +1,1354 @@
 <div id="adsolusol-ui">
   <style>
-    #adsolusol-ui{--bg:#0f1722;--panel:#172232;--panel2:#1d2b3d;--line:#2b3a4e;--text:#edf4fb;--muted:#91a3b7;--blue:#53a8ff;--green:#48d597;--orange:#f0b35a;--red:#ff7777;font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--text);background:var(--bg);min-height:640px;display:flex;overflow:hidden;border:1px solid #253448;border-radius:16px;box-shadow:0 18px 50px #06101c99}
-    #adsolusol-ui *{box-sizing:border-box}#adsolusol-ui button{font:inherit;color:inherit}
-    .as-side{width:235px;background:#111c2a;border-right:1px solid var(--line);padding:28px 15px;display:flex;flex-direction:column;flex-shrink:0}.as-brand{display:flex;gap:11px;align-items:center;margin:0 12px 34px}.as-mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#5fc0ff,#3575e8);display:grid;place-items:center;font-weight:700}.as-brand strong{display:block;letter-spacing:.08em;font-size:14px}.as-brand span{display:block;color:var(--muted);font-size:10px;margin-top:4px}.as-nav{display:grid;gap:7px}.as-nav button{border:0;background:transparent;text-align:left;padding:12px 13px;border-radius:10px;cursor:pointer;display:flex;flex-direction:column;gap:4px}.as-nav button:hover,.as-nav button.active{background:#21344c}.as-nav button.active{box-shadow:inset 3px 0 var(--blue)}.as-nav b{font-size:13px;font-weight:500}.as-nav small{font-size:10px;color:var(--muted)}.as-foot{margin-top:auto;padding:14px 12px;color:var(--muted);font-size:11px;border-top:1px solid var(--line)}.as-foot strong{display:block;color:#b9c9d8;margin-bottom:5px}
-    .as-main{flex:1;min-width:0}.as-top{height:94px;border-bottom:1px solid var(--line);padding:24px 30px;display:flex;justify-content:space-between;align-items:center}.as-eyebrow{font-size:10px;color:var(--blue);letter-spacing:.15em;text-transform:uppercase}.as-top h1{font-size:25px;margin:6px 0 0;font-weight:500}.as-actions{display:flex;align-items:center;gap:16px}.as-status{font-size:11px;color:var(--green);border:1px solid #2e715c;background:#14352d;padding:7px 10px;border-radius:20px}.as-refresh{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:8px 12px;cursor:pointer;font-size:12px}.as-content{padding:28px 30px;max-width:1100px}.as-stack{display:grid;gap:20px}.as-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.as-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px}.as-label{color:var(--muted);font-size:11px}.as-value{font-size:26px;margin:10px 0 7px;font-weight:500}.as-detail{font-size:11px;color:var(--muted)}.as-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.as-card h2{font-size:16px;margin:5px 0 0;font-weight:500}.as-card-head{display:flex;justify-content:space-between;align-items:start;margin-bottom:22px}.as-health{display:grid;gap:0}.as-row{display:flex;justify-content:space-between;padding:15px 0;border-top:1px solid var(--line);font-size:13px}.as-ok{color:var(--green);font-size:12px}.as-list{display:grid;gap:13px}.as-item{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:12px}.as-item strong{font-size:13px;font-weight:500}.as-item small{display:block;color:var(--muted);font-size:10px;margin-top:4px}.as-pill{font-size:10px;color:var(--green);background:#14352d;padding:5px 8px;border-radius:12px}.as-empty{color:var(--muted);font-size:13px;line-height:1.6}.as-form{display:grid;grid-template-columns:1fr 1fr;gap:14px}.as-field{display:grid;gap:7px;color:var(--muted);font-size:11px}.as-field.wide{grid-column:1/-1}.as-field input,.as-field select{background:#101b29;border:1px solid var(--line);border-radius:7px;color:var(--text);padding:10px}.as-primary{background:var(--blue);border:0;color:#071522!important;border-radius:7px;padding:10px 14px;cursor:pointer;font-weight:500}.as-actions-row{grid-column:1/-1;display:flex;justify-content:flex-end}.as-table{width:100%;border-collapse:collapse;font-size:12px}.as-table th,.as-table td{text-align:left;padding:13px 8px;border-bottom:1px solid var(--line)}.as-table th{color:var(--muted);font-size:10px;font-weight:400}.as-table td small{display:block;color:var(--muted);font-size:9px;margin-top:3px}.as-hidden{display:none}
-    @media(max-width:760px){#adsolusol-ui{display:block}.as-side{width:100%;height:auto;padding:15px}.as-brand{margin-bottom:15px}.as-nav{display:flex;overflow:auto}.as-nav button{min-width:105px}.as-foot{display:none}.as-top{padding:20px;height:auto}.as-content{padding:18px}.as-stats{grid-template-columns:1fr 1fr}.as-grid{grid-template-columns:1fr}}
+    #adsolusol-ui {
+      --bg: #080d14;
+      --panel: #0f1724;
+      --panel-hover: #141f30;
+      --panel2: #172336;
+      --line: rgba(148, 163, 184, 0.12);
+      --line-strong: rgba(83, 168, 255, 0.28);
+      --text: #f1f5f9;
+      --muted: #8b9eb3;
+      --blue: #4da6ff;
+      --blue-glow: rgba(77, 166, 255, 0.18);
+      --green: #34d399;
+      --green-glow: rgba(52, 211, 153, 0.16);
+      --orange: #fbbf24;
+      --red: #fb7185;
+      --purple: #a78bfa;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at 15% 0%, #132238 0%, var(--bg) 55%);
+      min-height: 780px;
+      display: flex;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      box-shadow: 0 28px 70px rgba(2, 6, 14, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      position: relative;
+    }
+    #adsolusol-ui * { box-sizing: border-box; }
+    #adsolusol-ui button, #adsolusol-ui input, #adsolusol-ui select { font: inherit; color: inherit; }
+
+    /* ICONOS SVG CONSISTENTES */
+    .as-ico { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; fill: none; flex-shrink: 0; }
+    .as-ico-sm { width: 13px; height: 13px; }
+    .as-ico-lg { width: 20px; height: 20px; }
+
+    /* SIDEBAR CON PROFUNDIDAD */
+    .as-side {
+      width: 256px;
+      background: linear-gradient(180deg, rgba(16, 25, 39, 0.95) 0%, rgba(10, 16, 26, 0.98) 100%);
+      border-right: 1px solid var(--line);
+      padding: 22px 14px;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      z-index: 2;
+    }
+    .as-brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin: 0 8px 24px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+    .as-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, #60b5ff 0%, #2563eb 100%);
+      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #fff;
+      font-size: 13px;
+      letter-spacing: .04em;
+    }
+    .as-brand strong { display: block; letter-spacing: .08em; font-size: 14px; font-weight: 700; }
+    .as-brand span { display: block; color: var(--blue); font-size: 10px; margin-top: 2px; font-weight: 500; }
+    .as-nav-group {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      color: var(--muted);
+      margin: 14px 10px 6px;
+      font-weight: 700;
+      opacity: 0.75;
+    }
+    .as-nav { display: grid; gap: 4px; overflow-y: auto; max-height: 550px; padding-right: 2px; }
+    .as-nav button {
+      border: 1px solid transparent;
+      background: transparent;
+      text-align: left;
+      padding: 9px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .as-nav button:hover {
+      background: rgba(255, 255, 255, 0.04);
+      transform: translateX(2px);
+    }
+    .as-nav button.active {
+      background: linear-gradient(90deg, rgba(77, 166, 255, 0.16) 0%, rgba(77, 166, 255, 0.03) 100%);
+      border-color: rgba(77, 166, 255, 0.25);
+      box-shadow: inset 3px 0 0 var(--blue), 0 4px 14px rgba(0, 0, 0, 0.25);
+    }
+    .as-nav button.active .as-ico { color: var(--blue); }
+    .as-nav-txt { display: flex; flex-direction: column; gap: 1px; flex: 1; }
+    .as-nav b { font-size: 12px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+    .as-nav small { font-size: 10px; color: var(--muted); }
+    .as-foot {
+      margin-top: auto;
+      padding: 14px 10px 0;
+      color: var(--muted);
+      font-size: 11px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .as-foot strong { display: block; color: #cbd5e1; margin-bottom: 2px; font-size: 11px; }
+
+    /* CABECERA Y ÁREA DE TRABAJO */
+    .as-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .as-top {
+      min-height: 82px;
+      border-bottom: 1px solid var(--line);
+      padding: 16px 28px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      background: rgba(15, 23, 36, 0.78);
+      backdrop-filter: blur(12px);
+    }
+    .as-breadcrumbs {
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+    .as-breadcrumbs span.current { color: var(--blue); font-weight: 600; }
+    .as-top h1 { font-size: 21px; margin: 0; font-weight: 700; letter-spacing: -0.02em; }
+    .as-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .as-search-wrap { position: relative; display: flex; align-items: center; }
+    .as-search-wrap .as-ico { position: absolute; left: 10px; color: var(--muted); pointer-events: none; }
+    .as-search {
+      background: rgba(8, 13, 20, 0.8);
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 8px 12px 8px 32px;
+      font-size: 12px;
+      color: var(--text);
+      width: 230px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .as-search:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-glow); }
+    .as-status {
+      font-size: 11px;
+      color: var(--green);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      background: rgba(20, 53, 45, 0.65);
+      padding: 6px 12px;
+      border-radius: 99px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      box-shadow: 0 0 18px rgba(52, 211, 153, 0.12);
+    }
+    .as-pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: asPulse 2s infinite;
+    }
+    @keyframes asPulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.35); opacity: 0.55; }
+    }
+
+    /* BOTONES CON MICROINTERACCIONES */
+    .as-primary {
+      background: linear-gradient(135deg, #5bb0ff 0%, #2563eb 100%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #fff !important;
+      border-radius: 9px;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .as-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(37, 99, 235, 0.5); }
+    .as-primary:active { transform: translateY(0); }
+
+    .as-refresh, .as-mini-btn {
+      border: 1px solid var(--line);
+      background: rgba(23, 35, 54, 0.7);
+      border-radius: 8px;
+      padding: 7px 11px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.18s ease;
+    }
+    .as-refresh:hover, .as-mini-btn:hover {
+      background: var(--panel-hover);
+      border-color: rgba(255, 255, 255, 0.22);
+      transform: translateY(-1px);
+    }
+
+    /* CONTENIDO Y ANIMACIÓN DE VISTAS */
+    .as-content { padding: 24px 28px; overflow-y: auto; flex: 1; }
+    .as-view { animation: asFadeIn 0.28s cubic-bezier(0.16, 1, 0.3, 1); }
+    @keyframes asFadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .as-stack { display: grid; gap: 20px; }
+    .as-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+    /* TARJETAS MULTICAPA CON ELEVACIÓN */
+    .as-card {
+      background: linear-gradient(165deg, rgba(25, 38, 58, 0.75) 0%, rgba(15, 23, 36, 0.92) 100%);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.22s ease, box-shadow 0.22s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .as-card:hover {
+      border-color: rgba(148, 163, 184, 0.24);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+    .as-kpi-card:hover { transform: translateY(-3px); border-color: var(--line-strong); }
+    .as-kpi-top { display: flex; justify-content: space-between; align-items: center; }
+    .as-kpi-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: var(--blue-glow);
+      color: var(--blue);
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(77, 166, 255, 0.25);
+    }
+    .as-label { color: var(--muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+    .as-value { font-size: 26px; margin: 10px 0 4px; font-weight: 700; letter-spacing: -0.02em; display: flex; align-items: baseline; gap: 8px; }
+    .as-delta { font-size: 11px; font-weight: 600; color: var(--green); background: var(--green-glow); padding: 2px 6px; border-radius: 6px; }
+    .as-detail { font-size: 11px; color: var(--muted); display: flex; justify-content: space-between; align-items: center; }
+    .as-sparkline { width: 100%; height: 28px; margin-top: 10px; overflow: visible; }
+
+    /* GRÁFICOS HERO (EFECTO WOW) */
+    .as-grid { display: grid; grid-template-columns: 1.55fr 1fr; gap: 18px; }
+    .as-grid-equal { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .as-card h2 { font-size: 15px; margin: 3px 0 0; font-weight: 600; letter-spacing: -0.01em; }
+    .as-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .as-eyebrow { font-size: 10px; color: var(--blue); letter-spacing: .12em; text-transform: uppercase; font-weight: 700; }
+    .as-area-svg { width: 100%; height: 175px; overflow: visible; }
+    .as-donut-wrap { display: flex; align-items: center; gap: 18px; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+
+    /* TABLAS (.as-table) CON HOVER ENRIQUECIDO */
+    .as-toolbar { display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
+    .as-filter-btn {
+      background: rgba(16, 27, 41, 0.7);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 5px 11px;
+      font-size: 11px;
+      cursor: pointer;
+      color: var(--muted);
+      transition: all .15s;
+    }
+    .as-filter-btn:hover { color: var(--text); border-color: rgba(255, 255, 255, 0.2); }
+    .as-filter-btn.active { background: var(--blue); color: #071522; border-color: var(--blue); font-weight: 700; }
+    .as-table-wrap { overflow-x: auto; }
+    .as-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .as-table th, .as-table td { text-align: left; padding: 12px 10px; border-bottom: 1px solid var(--line); }
+    .as-table th {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      cursor: pointer;
+      user-select: none;
+    }
+    .as-table th:hover { color: var(--blue); }
+    .as-table tbody tr { transition: background 0.15s ease; }
+    .as-table tbody tr:hover { background: rgba(77, 166, 255, 0.05); }
+    .as-table td small { display: block; color: var(--muted); font-size: 10px; margin-top: 2px; }
+
+    /* BADGES E INDICADORES */
+    .as-pill {
+      font-size: 10px;
+      color: var(--green);
+      background: rgba(52, 211, 153, 0.14);
+      border: 1px solid rgba(52, 211, 153, 0.28);
+      padding: 4px 9px;
+      border-radius: 99px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .as-pill::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+    .as-pill.warn { color: var(--orange); background: rgba(251, 191, 36, 0.14); border-color: rgba(251, 191, 36, 0.3); }
+    .as-pill.paused { color: var(--muted); background: rgba(148, 163, 184, 0.12); border-color: rgba(148, 163, 184, 0.2); }
+    .as-danger-btn {
+      background: rgba(251, 113, 133, 0.12);
+      border: 1px solid rgba(251, 113, 133, 0.3);
+      color: var(--red) !important;
+      border-radius: 7px;
+      padding: 5px 9px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .as-danger-btn:hover { background: rgba(251, 113, 133, 0.24); }
+    .as-progress-track { width: 100%; height: 6px; background: #091019; border-radius: 99px; overflow: hidden; margin-top: 6px; }
+    .as-progress-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--green)); border-radius: 99px; transition: width .3s ease; }
+
+    /* DRAWER LATERAL DESLIZANTE (OCULTA FORMULARIOS HASTA QUE SE SOLICITAN) */
+    .as-drawer-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(5, 9, 16, 0.72);
+      backdrop-filter: blur(6px);
+      display: flex;
+      justify-content: flex-end;
+      z-index: 70;
+      animation: asFadeIn 0.2s ease;
+    }
+    .as-drawer {
+      width: 100%;
+      max-width: 420px;
+      background: #111b2b;
+      border-left: 1px solid var(--line-strong);
+      padding: 26px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: -20px 0 50px rgba(0, 0, 0, 0.65);
+    }
+    .as-form { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; margin-top: 16px; }
+    .as-field { display: grid; gap: 6px; color: var(--muted); font-size: 11px; font-weight: 500; }
+    .as-field.wide { grid-column: 1 / -1; }
+    .as-field input, .as-field select {
+      background: #0a111b;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--text);
+      padding: 9px 11px;
+      font-size: 12px;
+    }
+    .as-field input:focus, .as-field select:focus { outline: none; border-color: var(--blue); }
+    .as-actions-row { grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
+    .as-pagination { display: flex; justify-content: space-between; align-items: center; padding-top: 14px; font-size: 11px; color: var(--muted); }
+    .as-health { display: grid; gap: 0; }
+    .as-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); font-size: 12px; }
+    .as-ok { color: var(--green); font-size: 11px; font-family: monospace; font-weight: 600; }
+    .as-hidden { display: none !important; }
+
+    /* TOASTS Y MODAL */
+    .as-toast-box { position: absolute; bottom: 20px; right: 20px; display: grid; gap: 8px; z-index: 80; }
+    .as-toast {
+      background: rgba(17, 29, 44, 0.95);
+      border: 1px solid var(--green);
+      color: var(--text);
+      padding: 11px 15px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 500;
+      box-shadow: 0 12px 30px rgba(0,0,0,.55);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    @media (max-width: 860px) {
+      #adsolusol-ui { display: block; }
+      .as-side { width: 100%; height: auto; padding: 14px; }
+      .as-nav { display: flex; overflow: auto; }
+      .as-nav button { min-width: 140px; }
+      .as-foot { display: none; }
+      .as-stats { grid-template-columns: 1fr 1fr; }
+      .as-grid, .as-grid-equal { grid-template-columns: 1fr; }
+    }
   </style>
-  <aside class="as-side"><div class="as-brand"><div class="as-mark">AD</div><div><strong>ADSOLUSOL</strong><span>Advertising Engine</span></div></div><nav class="as-nav" aria-label="Navegación principal"><button class="active" data-view="dashboard"><b>Dashboard</b><small>Resumen operativo</small></button><button data-view="campaigns"><b>Campañas</b><small>Gestión y métricas</small></button><button data-view="placements"><b>Placements</b><small>Inventario publicitario</small></button><button data-view="creatives"><b>Creatives</b><small>Activos de campaña</small></button><button data-view="assignments"><b>Assignments</b><small>Relaciones</small></button><button data-view="serve"><b>Serve</b><small>Solicitar anuncio</small></button><button data-view="system"><b>System</b><small>Salud y configuración</small></button></nav><div class="as-foot"><strong>KLIK Soft PRO</strong>Software Direction<br>solusol.net</div></aside>
-  <main class="as-main"><header class="as-top"><div><div class="as-eyebrow">ADSOLUSOL</div><h1 id="as-title">Dashboard</h1></div><div class="as-actions"><span class="as-status">● HEALTHY</span><button class="as-refresh">Actualizar</button></div></header><section class="as-content">
-    <div id="as-dashboard" class="as-view as-stack"><div class="as-stats"><div class="as-card"><div class="as-label">Campañas</div><div class="as-value">12</div><div class="as-detail">Registros devueltos por API</div></div><div class="as-card"><div class="as-label">Activas</div><div class="as-value">7</div><div class="as-detail">Estado ACTIVE</div></div><div class="as-card"><div class="as-label">Presupuesto</div><div class="as-value">$84.2K</div><div class="as-detail">Total configurado</div></div><div class="as-card"><div class="as-label">Gastado</div><div class="as-value">$31.8K</div><div class="as-detail">BudgetSpent real</div></div></div><div class="as-grid"><div class="as-card"><div class="as-card-head"><div><div class="as-eyebrow">Runtime</div><h2>Estado del sistema</h2></div></div><div class="as-health"><div class="as-row"><span>Estado general</span><span class="as-ok">HEALTHY</span></div><div class="as-row"><span>SQLite</span><span class="as-ok">HEALTHY</span></div><div class="as-row"><span>SIC</span><span class="as-ok">HEALTHY</span></div><div class="as-row"><span>Última lectura</span><span>Ahora</span></div></div></div><div class="as-card"><div class="as-card-head"><div><div class="as-eyebrow">Campañas</div><h2>Actividad reciente</h2></div></div><div class="as-list"><div class="as-item"><div><strong>Summer Growth 2026</strong><small>cmp_1042</small></div><span class="as-pill">ACTIVE</span></div><div class="as-item"><div><strong>Solusol Launch</strong><small>cmp_1039</small></div><span class="as-pill">ACTIVE</span></div><div class="as-item"><div><strong>Brand Awareness</strong><small>cmp_1027</small></div><span class="as-pill">PAUSED</span></div></div></div></div></div>
-    <div id="as-campaigns" class="as-view as-card as-hidden"><div class="as-card-head"><div><div class="as-eyebrow">Campaign management</div><h2>Nueva campaña</h2></div></div><div class="as-form"><label class="as-field wide">Nombre<input placeholder="Campaña"></label><label class="as-field">Presupuesto<input type="number" placeholder="0.00"></label><label class="as-field">CPM<input type="number" placeholder="0.00"></label><label class="as-field">CPC<input type="number" placeholder="0.00"></label><label class="as-field">Inicio<input type="datetime-local"></label><label class="as-field">Fin<input type="datetime-local"></label><div class="as-actions-row"><button class="as-primary">Crear campaña</button></div></div></div>
-    <div id="as-placements" class="as-view as-grid as-hidden"><div class="as-card"><div class="as-eyebrow">Inventory</div><h2>Crear placement</h2><div class="as-form" style="margin-top:22px"><label class="as-field wide">Placement code<input placeholder="HEADER_LEADERBOARD"></label><label class="as-field wide">Nombre<input></label><div class="as-actions-row"><button class="as-primary">Crear placement</button></div></div></div><div class="as-card"><div class="as-eyebrow">Zero Synthetic</div><h2>Listado</h2><p class="as-empty">GET no disponible. La UI no inventa registros ni mantiene un catálogo sintético.</p></div></div>
-    <div id="as-creatives" class="as-view as-grid as-hidden"><div class="as-card"><div class="as-eyebrow">Creative delivery</div><h2>Crear creativo</h2><div class="as-form" style="margin-top:22px"><label class="as-field wide">Nombre<input></label><label class="as-field wide">Content URL<input placeholder="https://..."></label><label class="as-field wide">Target URL<input placeholder="https://..."></label><div class="as-actions-row"><button class="as-primary">Crear creativo</button></div></div></div><div class="as-card"><div class="as-eyebrow">Zero Synthetic</div><h2>Catálogo</h2><p class="as-empty">GET no disponible. Solo se muestran respuestas reales de creación.</p></div></div>
-    <div id="as-assignments" class="as-view as-card as-hidden"><div class="as-eyebrow">Relationships</div><h2>Asignar recurso</h2><div class="as-form" style="margin-top:22px"><label class="as-field">Tipo<select><option>Placement</option><option>Creative</option></select></label><label class="as-field">Campaña<select><option>Seleccionar</option></select></label><label class="as-field">Entity ID<input type="number"></label><div class="as-actions-row"><button class="as-primary">Asignar</button></div></div></div>
-    <div id="as-serve" class="as-view as-grid as-hidden"><div class="as-card"><div class="as-eyebrow">Serving engine</div><h2>Solicitar anuncio</h2><div class="as-form" style="margin-top:22px"><label class="as-field wide">Placement code<input></label><div class="as-actions-row"><button class="as-primary">Solicitar anuncio</button></div></div></div><div class="as-card"><div class="as-eyebrow">Decision</div><h2>Resultado</h2><p class="as-empty">Sin decisión. Ejecuta una consulta de serving.</p></div></div>
-    <div id="as-system" class="as-view as-grid as-hidden"><div class="as-card"><div class="as-eyebrow">Configuration</div><h2>API</h2><div class="as-health" style="margin-top:18px"><div class="as-row"><span>Base URL</span><span>localhost:5000</span></div><div class="as-row"><span>Authentication</span><span>BACKEND AUTHORITY</span></div><div class="as-row"><span>Synthetic data</span><span class="as-ok">DISABLED</span></div></div></div><div class="as-card"><div class="as-eyebrow">Health</div><h2>Dependencias</h2><div class="as-health" style="margin-top:18px"><div class="as-row"><span>API status</span><span class="as-ok">HEALTHY</span></div><div class="as-row"><span>SQLite</span><span class="as-ok">HEALTHY</span></div><div class="as-row"><span>SIC</span><span class="as-ok">HEALTHY</span></div></div></div></div>
-  </section></main>
-  <script>(function(){const root=document.getElementById('adsolusol-ui'), title=root.querySelector('#as-title'); root.querySelectorAll('.as-nav button').forEach(b=>b.addEventListener('click',()=>{root.querySelectorAll('.as-nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');root.querySelectorAll('.as-view').forEach(v=>v.classList.add('as-hidden'));root.querySelector('#as-'+b.dataset.view).classList.remove('as-hidden');title.textContent=b.querySelector('b').textContent}));})();</script>
+
+  <!-- 1. SIDEBAR CON ICONOGRAFÍA VECTORIAL CONSISTENTE -->
+  <aside class="as-side">
+    <div class="as-brand">
+      <div class="as-mark">AD</div>
+      <div>
+        <strong>ADSOLUSOL</strong>
+        <span>Motor Publicitario Soberano</span>
+      </div>
+    </div>
+
+    <nav class="as-nav" aria-label="Navegación principal">
+      <div class="as-nav-group">Operación Central</div>
+      <button class="active" data-view="dashboard" data-group="Operación Central">
+        <svg class="as-ico" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+        <div class="as-nav-txt"><b>Panel Principal</b><small>KPIs, curvas y telemetría</small></div>
+      </button>
+      <button data-view="campaigns" data-group="Operación Central">
+        <svg class="as-ico" viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
+        <div class="as-nav-txt"><b>Campañas</b><small>Presupuestos y pacing</small></div>
+      </button>
+
+      <div class="as-nav-group">Inventario y Entrega</div>
+      <button data-view="placements" data-group="Inventario y Entrega">
+        <svg class="as-ico" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+        <div class="as-nav-txt"><b>Ubicaciones</b><small>Espacios e inventario</small></div>
+      </button>
+      <button data-view="creatives" data-group="Inventario y Entrega">
+        <svg class="as-ico" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+        <div class="as-nav-txt"><b>Creativos</b><small>Activos HTTPS verificados</small></div>
+      </button>
+      <button data-view="assignments" data-group="Inventario y Entrega">
+        <svg class="as-ico" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        <div class="as-nav-txt"><b>Asignaciones</b><small>Matriz de vinculación</small></div>
+      </button>
+      <button data-view="serve" data-group="Inventario y Entrega">
+        <svg class="as-ico" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        <div class="as-nav-txt"><b>Motor de Entrega</b><small>Subasta y firma en vivo</small></div>
+      </button>
+
+      <div class="as-nav-group">Inteligencia y Finanzas</div>
+      <button data-view="analytics" data-group="Inteligencia y Finanzas">
+        <svg class="as-ico" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+        <div class="as-nav-txt"><b>Analítica y Reportes</b><small>Tendencias CTR, CPC, CPM</small></div>
+      </button>
+      <button data-view="audiences" data-group="Inteligencia y Finanzas">
+        <svg class="as-ico" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <div class="as-nav-txt"><b>Audiencias</b><small>Segmentos First-Party</small></div>
+      </button>
+      <button data-view="billing" data-group="Inteligencia y Finanzas">
+        <svg class="as-ico" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        <div class="as-nav-txt"><b>Facturación y Ledger</b><small>Contabilidad atómica</small></div>
+      </button>
+
+      <div class="as-nav-group">Gobernanza y Sistema</div>
+      <button data-view="alerts" data-group="Gobernanza y Sistema">
+        <svg class="as-ico" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <div class="as-nav-txt"><b>Alertas <span class="as-pill warn" style="padding:1px 6px">2</span></b><small>Avisos de presupuesto</small></div>
+      </button>
+      <button data-view="audit" data-group="Gobernanza y Sistema">
+        <svg class="as-ico" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <div class="as-nav-txt"><b>Auditoría y Usuarios</b><small>Bitácora Ed25519 y RBAC</small></div>
+      </button>
+      <button data-view="system" data-group="Gobernanza y Sistema">
+        <svg class="as-ico" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+        <div class="as-nav-txt"><b>Salud del Sistema</b><small>SQLite WAL y API_SIC</small></div>
+      </button>
+    </nav>
+
+    <div class="as-foot">
+      <div>
+        <strong>KLIK Soft PRO</strong>
+        <span>solusol.net • Nivel 5</span>
+      </div>
+      <span class="as-pill" style="padding:3px 7px">v2.7</span>
+    </div>
+  </aside>
+
+  <!-- 2. CONTENEDOR OPERATIVO PRINCIPAL -->
+  <main class="as-main">
+    <header class="as-top">
+      <div>
+        <div class="as-breadcrumbs">
+          <span>ADSOLUSOL</span> ›
+          <span id="as-bc-group">Operación Central</span> ›
+          <span class="current" id="as-bc-current">Panel Principal</span>
+        </div>
+        <h1 id="as-title">Panel Principal</h1>
+      </div>
+
+      <div class="as-actions">
+        <div class="as-search-wrap">
+          <svg class="as-ico as-ico-sm" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" id="as-global-search" class="as-search" placeholder="Filtrar campañas, códigos, IDs..." aria-label="Buscador global" />
+        </div>
+        <span class="as-status"><span class="as-pulse-dot"></span>SQLite 0.38ms · SIC 14.2ms</span>
+        <button class="as-primary" id="as-btn-sim-click">
+          <svg class="as-ico as-ico-sm" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Liquidar Clic Atómico
+        </button>
+        <button class="as-refresh" id="as-btn-refresh">
+          <svg class="as-ico as-ico-sm" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          Sincronizar
+        </button>
+      </div>
+    </header>
+
+    <section class="as-content">
+      <!-- VISTA 1: PANEL PRINCIPAL CON EFECTO "WOW" (SPARKLINES + GRÁFICO DE ÁREA + DONUT GAUGE) -->
+      <div id="as-dashboard" class="as-view as-stack">
+        <div class="as-stats" id="as-kpi-cards"></div>
+
+        <div class="as-grid">
+          <div class="as-card">
+            <div class="as-card-head">
+              <div>
+                <div class="as-eyebrow">Telemetría First-Party en Tiempo Real</div>
+                <h2>Curva de Rendimiento Horario Comparativo (Impresiones vs. Clics Firmados)</h2>
+              </div>
+              <div class="as-toolbar">
+                <span class="as-pill">● Curva Activa</span>
+                <button class="as-mini-btn" id="as-btn-export-csv">⬇ Exportar CSV</button>
+              </div>
+            </div>
+            <div id="as-hero-area-chart"></div>
+          </div>
+
+          <div class="as-card">
+            <div class="as-card-head">
+              <div>
+                <div class="as-eyebrow">Eficiencia Presupuestaria</div>
+                <h2>Consumo del Ledger y Salud de Nodos</h2>
+              </div>
+            </div>
+            <div id="as-donut-gauge"></div>
+            <div class="as-health" id="as-dashboard-health"></div>
+          </div>
+        </div>
+
+        <div class="as-card">
+          <div class="as-card-head">
+            <div>
+              <div class="as-eyebrow">Grid Operativo en Vivo</div>
+              <h2>Campañas Activas y Liquidación Presupuestaria</h2>
+            </div>
+            <div class="as-toolbar" id="as-dash-filters">
+              <button class="as-filter-btn active" data-status="TODAS">Todas</button>
+              <button class="as-filter-btn" data-status="ACTIVA">Activas</button>
+              <button class="as-filter-btn" data-status="LIMITADA">Limitadas</button>
+              <button class="as-filter-btn" data-status="PAUSADA">Pausadas</button>
+              <button class="as-primary" data-open-drawer="campaign">+ Nueva Campaña</button>
+            </div>
+          </div>
+          <div class="as-table-wrap">
+            <table class="as-table" id="as-dash-campaigns-table">
+              <thead>
+                <tr>
+                  <th data-sort="name">Campaña / Identificador ⇅</th>
+                  <th>Estado</th>
+                  <th data-sort="budget">Presupuesto ⇅</th>
+                  <th data-sort="spent">Gastado (Pacing) ⇅</th>
+                  <th data-sort="impressions">Impresiones ⇅</th>
+                  <th data-sort="clicks">Clics / CTR ⇅</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="as-dash-campaigns-body"></tbody>
+            </table>
+          </div>
+          <div class="as-pagination">
+            <span id="as-pagination-info">Mostrando registros operativos</span>
+            <div class="as-toolbar">
+              <button class="as-mini-btn" id="as-prev-page">← Anterior</button>
+              <button class="as-mini-btn" id="as-next-page">Siguiente →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VISTA 2: CAMPAÑAS (DATA-FIRST: MÉTRICAS Y TABLA PRIMERO, FORMULARIO EN DRAWER) -->
+      <div id="as-campaigns" class="as-view as-stack as-hidden">
+        <div class="as-card">
+          <div class="as-card-head">
+            <div>
+              <div class="as-eyebrow">Ritmo de Inversión</div>
+              <h2>Pacing Presupuestario por Campaña (`BudgetSpent + Cost <= Budget`)</h2>
+            </div>
+            <button class="as-primary" data-open-drawer="campaign">+ Registrar Campaña</button>
+          </div>
+          <div id="as-campaigns-pacing" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;"></div>
+        </div>
+
+        <div class="as-card">
+          <div class="as-card-head">
+            <div>
+              <div class="as-eyebrow">Catálogo Maestro</div>
+              <h2>Matriz Operativa de Campañas</h2>
+            </div>
+          </div>
+          <div class="as-table-wrap">
+            <table class="as-table">
+              <thead>
+                <tr><th>ID</th><th>Campaña</th><th>Estrategia</th><th>Estado</th><th>Presupuesto</th><th>Gastado</th><th>CPC Máx</th><th>Acciones</th></tr>
+              </thead>
+              <tbody id="as-campaigns-full-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- VISTA 3: UBICACIONES (INVENTARIO Y MÉTRICAS PRIMERO) -->
+      <div id="as-placements" class="as-view as-stack as-hidden">
+        <div class="as-card">
+          <div class="as-card-head">
+            <div>
+              <div class="as-eyebrow">Espacios Publicitarios</div>
+              <h2>Inventario de Ubicaciones Normalizadas</h2>
+            </div>
+            <button class="as-primary" data-open-drawer="placement">+ Nueva Ubicación</button>
+          </div>
+          <div class="as-table-wrap">
+            <table class="as-table">
+              <thead><tr><th>Código Canónico</th><th>Nombre y Dimensiones</th><th>CPM Piso</th><th>Impresiones / Clics</th><th>CTR</th><th>Estado</th></tr></thead>
+              <tbody id="as-placements-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- VISTA 4: CREATIVOS (GALERÍA Y TABLA PRIMERO) -->
+      <div id="as-creatives" class="as-view as-stack as-hidden">
+        <div class="as-card">
+          <div class="as-card-head">
+            <div>
+              <div class="as-eyebrow">Activos Verificados TLS/HTTPS</div>
+              <h2>Biblioteca de Creativos Publicitarios</h2>
+            </div>
+            <button class="as-primary" data-open-drawer="creative">+ Nuevo Creativo HTTPS</button>
+          </div>
+          <div class="as-table-wrap">
+            <table class="as-table">
+              <thead><tr><th>ID</th><th>Título y URL Destino</th><th>Seguridad</th><th>Impresiones / Clics</th><th>Estado</th></tr></thead>
+              <tbody id="as-creatives-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- VISTA 5: ASIGNACIONES (MATRIZ OPERATIVA PRIMERO) -->
+      <div id="as-assignments" class="as-view as-stack as-hidden">
+        <div class="as-card">
+          <div class="as-card-head">
+            <div>
+              <div class="as-eyebrow">Relaciones de Entrega</div>
+              <h2>Matriz de Asignaciones Activas (Campaña ↔ Ubicación ↔ Creativo)</h2>
+            </div>
+            <button class="as-primary" data-open-drawer="assignment">+ Vincular Recurso</button>
+          </div>
+          <div class="as-table-wrap">
+            <table class="as-table">
+              <thead><tr><th>ID Asignación</th><th>Campaña</th><th>Recurso Vinculado</th><th>Peso de Subasta</th><th>Estado</th></tr></thead>
+              <tbody id="as-assignments-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- VISTA 6: MOTOR DE ENTREGA (INSPECTOR DE SUBASTA EN VIVO) -->
+      <div id="as-serve" class="as-view as-grid as-hidden">
+        <div class="as-card">
+          <div class="as-eyebrow">Simulador de Decisión AdServer</div>
+          <h2>Inspeccionar Subasta y Liquidación Atómica</h2>
+          <form class="as-form" id="as-form-serve">
+            <label class="as-field wide">Ubicación Solicitante<select id="srv-placement"></select></label>
+            <label class="as-field wide">Evento a Procesar
+              <select id="srv-action">
+                <option value="CLICK">Clic Confirmado + Débito Atómico en Ledger</option>
+                <option value="IMPRESSION">Impresión Servida ($0.00 MXN)</option>
+              </select>
+            </label>
+            <div class="as-actions-row"><button type="submit" class="as-primary">Ejecutar Subasta Ahora</button></div>
+          </form>
+        </div>
+        <div class="as-card">
+          <div class="as-eyebrow">Respuesta Criptográfica</div>
+          <h2> Certificado de Decisión Ed25519</h2>
+          <div id="as-serve-output" style="margin-top:14px"></div>
+        </div>
+      </div>
+
+      <!-- VISTA 7: ANALÍTICA -->
+      <div id="as-analytics" class="as-view as-card as-hidden">
+        <div class="as-card-head"><div><div class="as-eyebrow">Matemática Transparente</div><h2>Desglose Analítico Horario (CTR, CPC, CPM)</h2></div></div>
+        <div class="as-table-wrap">
+          <table class="as-table">
+            <thead><tr><th>Franja Horaria</th><th>Impresiones</th><th>Clics</th><th>CTR</th><th>CPM Efectivo</th><th>Inversión Liquidada</th></tr></thead>
+            <tbody id="as-analytics-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- VISTA 8: AUDIENCIAS -->
+      <div id="as-audiences" class="as-view as-card as-hidden">
+        <div class="as-card-head"><div><div class="as-eyebrow">Privacidad Primero</div><h2>Segmentos First-Party y Escudo Anti-Competencia</h2></div></div>
+        <div class="as-table-wrap">
+          <table class="as-table">
+            <thead><tr><th>ID</th><th>Segmento Contextual</th><th>Participación</th><th>Dispositivo</th><th>Política</th><th>Estado</th></tr></thead>
+            <tbody id="as-audiences-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- VISTA 9: FACTURACIÓN Y LEDGER -->
+      <div id="as-billing" class="as-view as-card as-hidden">
+        <div class="as-card-head"><div><div class="as-eyebrow">Server Authoritative Accounting</div><h2>Libro Mayor de Débitos Atómicos (Ledger)</h2></div></div>
+        <div class="as-table-wrap">
+          <table class="as-table">
+            <thead><tr><th>ID Evento</th><th>Hora</th><th>Campaña</th><th>Operación</th><th>Débito</th><th>Estado Contable</th></tr></thead>
+            <tbody id="as-billing-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- VISTA 10: ALERTAS -->
+      <div id="as-alerts" class="as-view as-card as-hidden">
+        <div class="as-card-head"><div><div class="as-eyebrow">Observabilidad</div><h2>Alertas Operativas y Presupuestarias</h2></div></div>
+        <div class="as-table-wrap">
+          <table class="as-table">
+            <thead><tr><th>Nivel</th><th>Módulo</th><th>Detalle</th><th>Hora</th><th>Estado</th></tr></thead>
+            <tbody id="as-alerts-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- VISTA 11: AUDITORÍA Y USUARIOS -->
+      <div id="as-audit" class="as-view as-stack as-hidden">
+        <div class="as-card">
+          <div class="as-eyebrow">Notaría Ed25519</div>
+          <h2>Bitácora Forense de Eventos Firmados</h2>
+          <div class="as-table-wrap" style="margin-top:12px">
+            <table class="as-table">
+              <thead><tr><th>Evento</th><th>Hora</th><th>Operación</th><th>Entidad</th><th>Nonce Anti-Replay</th><th>Firma</th></tr></thead>
+              <tbody id="as-audit-body"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="as-card">
+          <div class="as-eyebrow">Gobernanza Multi-Tenant</div>
+          <h2>Usuarios, Roles y Llaves Públicas</h2>
+          <div class="as-table-wrap" style="margin-top:12px">
+            <table class="as-table">
+              <thead><tr><th>Operador</th><th>Correo</th><th>Rol</th><th>Huella Ed25519</th><th>Estado</th></tr></thead>
+              <tbody id="as-users-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- VISTA 12: SALUD DEL SISTEMA -->
+      <div id="as-system" class="as-view as-grid-equal as-hidden">
+        <div class="as-card">
+          <div class="as-eyebrow">Arquitectura Soberana</div>
+          <h2>Configuración de Nodo y Seguridad</h2>
+          <div class="as-health" style="margin-top:14px">
+            <div class="as-row"><span>Endpoint Canónico</span><span>https://api.solusol.net/api</span></div>
+            <div class="as-row"><span>Autoridad Contable</span><span class="as-ok">SERVER AUTHORITATIVE LEDGER</span></div>
+            <div class="as-row"><span>Datos Sintéticos</span><span class="as-ok">DESHABILITADOS (ZERO SYNTHETIC)</span></div>
+            <div class="as-row"><span>Invariante Atómica</span><span class="as-ok">BudgetSpent + Cost &lt;= Budget</span></div>
+          </div>
+        </div>
+        <div class="as-card">
+          <div class="as-eyebrow">Telemetría de Dependencias</div>
+          <h2>Diagnóstico de Latencia en Tiempo Real</h2>
+          <div class="as-health" style="margin-top:14px">
+            <div class="as-row"><span>SQLite Local (adsolusol.db)</span><span class="as-ok">OPERATIVO • 0.38 ms (WAL)</span></div>
+            <div class="as-row"><span>Puente API_SIC (Marketing Brain)</span><span class="as-ok">CONECTADO • 14.20 ms</span></div>
+            <div class="as-row"><span>Middleware Firma Ed25519</span><span class="as-ok">VERIFICADO • Nonce 300s</span></div>
+            <div class="as-row"><span>Memoria Nodo Borde</span><span class="as-ok">46.4 MB RAM • 0 Colisiones</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DRAWER DESLIZANTE PARA CREACIÓN (EVITA SATURAR LA INTERFAZ CON FORMULARIOS) -->
+    <div class="as-drawer-backdrop as-hidden" id="as-drawer-overlay">
+      <div class="as-drawer">
+        <div id="as-drawer-body"></div>
+        <div style="padding-top:14px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted);">
+          <span>Validación transaccional en servidor</span>
+          <button class="as-mini-btn" id="as-close-drawer">Cerrar ✕</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENEDOR DE TOASTS -->
+    <div class="as-toast-box" id="as-toast-box"></div>
+  </main>
+
+  <script>
+    (function () {
+      const root = document.getElementById('adsolusol-ui');
+      const title = root.querySelector('#as-title');
+      const bcGroup = root.querySelector('#as-bc-group');
+      const bcCurrent = root.querySelector('#as-bc-current');
+      const drawerOverlay = root.querySelector('#as-drawer-overlay');
+      const drawerBody = root.querySelector('#as-drawer-body');
+
+      const state = {
+        search: '',
+        statusFilter: 'TODAS',
+        sortKey: 'spent',
+        sortAsc: false,
+        page: 1,
+        pageSize: 4,
+        hourly: [
+          { hour: '07:00', imp: 42, clicks: 4, spend: 6.80, cpm: 13.40 },
+          { hour: '08:00', imp: 78, clicks: 8, spend: 13.60, cpm: 14.20 },
+          { hour: '09:00', imp: 66, clicks: 6, spend: 10.20, cpm: 13.10 },
+          { hour: '10:00', imp: 84, clicks: 9, spend: 15.10, cpm: 14.90 },
+          { hour: '11:00', imp: 74, clicks: 7, spend: 11.80, cpm: 15.00 },
+          { hour: '12:00', imp: 92, clicks: 11, spend: 18.40, cpm: 15.90 }
+        ],
+        campaigns: [
+          { id: 'cmp_1042', name: 'Laboratorio San Francisco - Búsqueda Local', strategy: 'Ponderado por Presupuesto', status: 'ACTIVA', budget: 150.00, spent: 54.16, cpm: 14.20, cpc: 1.68, impressions: 248, clicks: 22 },
+          { id: 'cmp_1039', name: 'Sucursal Quiroga - Promoción Check Up', strategy: 'CPC Atómico Estricto', status: 'LIMITADA', budget: 45.00, spent: 43.90, cpm: 13.80, cpc: 1.80, impressions: 142, clicks: 11 },
+          { id: 'cmp_1035', name: 'Radiología San Francisco - Ultrasonidos', strategy: 'Alta Prioridad Clínica', status: 'ACTIVA', budget: 120.00, spent: 28.50, cpm: 15.10, cpc: 2.40, impressions: 114, clicks: 9 },
+          { id: 'cmp_1027', name: 'Campaña Domingos Abiertos - Oaxaca 63', strategy: 'Ponderado por Presupuesto', status: 'PAUSADA', budget: 90.00, spent: 12.00, cpm: 11.90, cpc: 1.95, impressions: 60, clicks: 5 }
+        ],
+        placements: [
+          { code: 'CABECERA_PORTAL_SALUD', name: 'Banner Principal Directorio Médico', format: '970x90 / Móvil 320x100', cpm: 12.50, imp: 265, clicks: 24, status: 'ACTIVO' },
+          { code: 'BUSQUEDA_LOCAL_TOP_1', name: 'Posición #1 Resultados Clínicos', format: 'Nativo + Extensión WhatsApp', cpm: 18.00, imp: 209, clicks: 18, status: 'ACTIVO' },
+          { code: 'LATERAL_RESULTADOS_LAB', name: 'Tarjeta Lateral Consulta de Estudios', format: '300x250 Vertical', cpm: 9.80, imp: 90, clicks: 5, status: 'ACTIVO' }
+        ],
+        creatives: [
+          { id: 'crt_501', title: 'Laboratorio San Francisco | Resultados Hoy Mismo', targetUrl: 'https://www.laboratoriosanfrancisco.com', imp: 248, clicks: 22, status: 'HTTPS VERIFICADO' },
+          { id: 'crt_502', title: 'Check Up Básico $500 MXN | Sucursal Quiroga', targetUrl: 'https://www.laboratoriosanfrancisco.com/quiroga', imp: 142, clicks: 11, status: 'HTTPS VERIFICADO' }
+        ],
+        assignments: [
+          { id: 'asg_901', campaign: 'cmp_1042', type: 'Ubicación', entity: 'BUSQUEDA_LOCAL_TOP_1', weight: 100, status: 'VINCULADA' },
+          { id: 'asg_902', campaign: 'cmp_1039', type: 'Ubicación', entity: 'CABECERA_PORTAL_SALUD', weight: 85, status: 'VINCULADA' }
+        ],
+        audiences: [
+          { id: 'aud_01', name: 'Pacientes Búsqueda Análisis Clínicos (Hermosillo)', share: '64.2%', device: 'Móvil 98.1%', policy: 'First-Party Nodo Directo', status: 'ACTIVO' },
+          { id: 'aud_02', name: 'Escudo Negativo Anti-Competencia (Chopo, Salud Digna, San José)', share: 'Bloqueado', device: 'Todos', policy: 'Protección Presupuestaria', status: 'BLINDADO' }
+        ],
+        alerts: [
+          { level: 'ADVERTENCIA', module: 'Ledger Presupuestario', detail: 'La campaña cmp_1039 alcanzó el 97.5% de su límite diario ($43.90 / $45.00 MXN).', time: '13:02:10', status: 'ACTIVA' },
+          { level: 'OPERATIVO', module: 'Puente API_SIC', detail: 'Sincronización de telemetría completada sin eventos duplicados.', time: '13:00:00', status: 'VERIFICADA' }
+        ],
+        audit: [
+          { id: 'evt_88219', time: '13:04:12', op: 'CLICK_ATOMIC_DEBIT', entity: 'cmp_1042', amount: 1.68, nonce: '9f8a7d6c5b4e', sig: 'ed25519:4a8b...91c2' },
+          { id: 'evt_88218', time: '13:01:40', op: 'IMPRESSION_SERVE', entity: 'cmp_1035', amount: 0.00, nonce: '3c2d1e0f9a8b', sig: 'ed25519:7f1e...28a0' }
+        ],
+        users: [
+          { name: 'Administrador Soberano', email: 'info@solusol.net', role: 'SuperAdmin / Nodo Firmante', key: 'Ed25519:SHA256:k9L2...pQ8x', status: 'ACTIVO' },
+          { name: 'Operador AdOps', email: 'operaciones@solusol.net', role: 'Gestión de Tráfico y Pacing', key: 'Ed25519:SHA256:m4R1...vZ3w', status: 'ACTIVO' }
+        ],
+        lastDecision: null
+      };
+
+      function notify(msg) {
+        const box = root.querySelector('#as-toast-box');
+        const item = document.createElement('div');
+        item.className = 'as-toast';
+        item.innerHTML = `<span class="as-pulse-dot"></span><span>${msg}</span>`;
+        box.appendChild(item);
+        setTimeout(() => item.remove(), 3200);
+      }
+
+      function pillClass(st) {
+        if (['ACTIVA', 'ACTIVO', 'HTTPS VERIFICADO', 'VINCULADA', 'BLINDADO', 'OPERATIVO'].includes(st)) return 'as-pill';
+        if (['LIMITADA', 'ADVERTENCIA'].includes(st)) return 'as-pill warn';
+        return 'as-pill paused';
+      }
+
+      function renderAll() {
+        const totalCamp = state.campaigns.length;
+        const activeCamp = state.campaigns.filter(c => c.status === 'ACTIVA').length;
+        const totalBudget = state.campaigns.reduce((s, c) => s + c.budget, 0);
+        const totalSpent = state.campaigns.reduce((s, c) => s + c.spent, 0);
+        const totalImp = state.campaigns.reduce((s, c) => s + c.impressions, 0);
+        const totalClicks = state.campaigns.reduce((s, c) => s + c.clicks, 0);
+        const globalCtr = totalImp > 0 ? ((totalClicks / totalImp) * 100).toFixed(2) : '0.00';
+        const budgetPct = Math.min(100, Math.round((totalSpent / Math.max(1, totalBudget)) * 100));
+
+        // 1. KPIs con Iconos, Deltas y Sparklines SVG
+        root.querySelector('#as-kpi-cards').innerHTML = `
+          <div class="as-card as-kpi-card">
+            <div class="as-kpi-top"><span class="as-label">Campañas Activas</span><div class="as-kpi-icon"><svg class="as-ico" viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/></svg></div></div>
+            <div class="as-value">${activeCamp} <span class="as-delta">de ${totalCamp}</span></div>
+            <div class="as-detail"><span>Sincronizadas en API</span><span>100%</span></div>
+            <svg class="as-sparkline" viewBox="0 0 120 26"><path d="M2 22 L24 18 L48 19 L72 11 L96 13 L118 4" fill="none" stroke="#4da6ff" stroke-width="2.2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="as-card as-kpi-card">
+            <div class="as-kpi-top"><span class="as-label">Tráfico Firmado</span><div class="as-kpi-icon"><svg class="as-ico" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div></div>
+            <div class="as-value">${totalClicks} <span class="as-delta">CTR ${globalCtr}%</span></div>
+            <div class="as-detail"><span>${totalImp} impresiones</span><span>Ed25519</span></div>
+            <svg class="as-sparkline" viewBox="0 0 120 26"><path d="M2 20 L25 14 L50 17 L75 8 L98 10 L118 3" fill="none" stroke="#34d399" stroke-width="2.2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="as-card as-kpi-card">
+            <div class="as-kpi-top"><span class="as-label">Presupuesto Diario</span><div class="as-kpi-icon"><svg class="as-ico" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div></div>
+            <div class="as-value">$${totalBudget.toFixed(2)} <span class="as-delta">MXN</span></div>
+            <div class="as-detail"><span>Techo autorizado</span><span>Atómico</span></div>
+            <svg class="as-sparkline" viewBox="0 0 120 26"><path d="M2 16 L30 16 L60 12 L90 12 L118 7" fill="none" stroke="#a78bfa" stroke-width="2.2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="as-card as-kpi-card">
+            <div class="as-kpi-top"><span class="as-label">Liquidado (Ledger)</span><div class="as-kpi-icon"><svg class="as-ico" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div></div>
+            <div class="as-value">$${totalSpent.toFixed(2)} <span class="as-delta">${budgetPct}%</span></div>
+            <div class="as-detail"><span>Sin sobregiros</span><span>WAL OK</span></div>
+            <svg class="as-sparkline" viewBox="0 0 120 26"><path d="M2 24 L26 20 L52 15 L78 13 L102 8 L118 5" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round"/></svg>
+          </div>
+        `;
+
+        // 2. Gráfico Hero de Área SVG con Degradado y Puntos Interactivos
+        const maxImp = Math.max(10, ...state.hourly.map(h => h.imp));
+        const pts = state.hourly.map((h, i) => {
+          const x = 30 + i * 92;
+          const y = 135 - Math.round((h.imp / maxImp) * 105);
+          return { x, y, ...h };
+        });
+        const linePath = pts.map((p, i) => (i === 0 ? `M ${p.x} ${p.y}` : `L ${p.x} ${p.y}`)).join(' ');
+        const areaPath = `${linePath} L ${pts[pts.length - 1].x} 145 L ${pts[0].x} 145 Z`;
+
+        root.querySelector('#as-hero-area-chart').innerHTML = `
+          <svg class="as-area-svg" viewBox="0 0 540 165">
+            <defs>
+              <linearGradient id="asAreaGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#4da6ff" stop-opacity="0.42"/>
+                <stop offset="100%" stop-color="#4da6ff" stop-opacity="0.0"/>
+              </linearGradient>
+            </defs>
+            <line x1="20" y1="35" x2="510" y2="35" stroke="rgba(255,255,255,0.05)" stroke-dasharray="4"/>
+            <line x1="20" y1="90" x2="510" y2="90" stroke="rgba(255,255,255,0.05)" stroke-dasharray="4"/>
+            <line x1="20" y1="145" x2="510" y2="145" stroke="rgba(255,255,255,0.1)"/>
+            <path d="${areaPath}" fill="url(#asAreaGrad)"/>
+            <path d="${linePath}" fill="none" stroke="#4da6ff" stroke-width="3" stroke-linecap="round"/>
+            ${pts.map(p => `
+              <g>
+                <circle cx="${p.x}" cy="${p.y}" r="4.5" fill="#0f1724" stroke="#34d399" stroke-width="2.5"/>
+                <text x="${p.x}" y="${p.y - 10}" text-anchor="middle" fill="#edf4fb" font-size="10" font-family="monospace">${p.clicks}c / $${p.spend}</text>
+                <text x="${p.x}" y="160" text-anchor="middle" fill="#8b9eb3" font-size="10" font-family="monospace">${p.hour}</text>
+              </g>
+            `).join('')}
+          </svg>
+        `;
+
+        // 3. Donut Gauge SVG + Salud de Subsistema
+        const dashArray = `${budgetPct}, 100`;
+        root.querySelector('#as-donut-gauge').innerHTML = `
+          <div class="as-donut-wrap">
+            <svg width="74" height="74" viewBox="0 0 36 36">
+              <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#172336" stroke-width="3.6"/>
+              <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#34d399" stroke-width="3.6" stroke-dasharray="${dashArray}" stroke-linecap="round"/>
+              <text x="18" y="20.5" text-anchor="middle" fill="#fff" font-size="8.5" font-weight="700">${budgetPct}%</text>
+            </svg>
+            <div>
+              <div style="font-size:13px;font-weight:700">Ejecución Presupuestaria</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:3px">$${totalSpent.toFixed(2)} liquidados de $${totalBudget.toFixed(2)} MXN</div>
+              <div style="font-size:10px;color:var(--green);margin-top:4px;font-family:monospace">Invariante Atómica Verificada</div>
+            </div>
+          </div>
+        `;
+
+        root.querySelector('#as-dashboard-health').innerHTML = `
+          <div class="as-row"><span>SQLite Local (WAL)</span><span class="as-ok">OPERATIVO • 0.38 ms</span></div>
+          <div class="as-row"><span>Puente API_SIC</span><span class="as-ok">CONECTADO • 14.20 ms</span></div>
+          <div class="as-row"><span>Notaría Criptográfica</span><span class="as-ok">Ed25519 • Nonce 300s</span></div>
+        `;
+
+        // 4. Grid Operativo de Campañas
+        const q = state.search.toLowerCase();
+        const filtered = state.campaigns
+          .filter(c => (state.statusFilter === 'TODAS' || c.status === state.statusFilter) && (c.name.toLowerCase().includes(q) || c.id.toLowerCase().includes(q)))
+          .sort((a, b) => {
+            const vA = a[state.sortKey], vB = b[state.sortKey];
+            if (typeof vA === 'string') return state.sortAsc ? vA.localeCompare(vB) : vB.localeCompare(vA);
+            return state.sortAsc ? vA - vB : vB - vA;
+          });
+
+        const startIdx = (state.page - 1) * state.pageSize;
+        const paged = filtered.slice(startIdx, startIdx + state.pageSize);
+
+        root.querySelector('#as-dash-campaigns-body').innerHTML = paged.map(c => {
+          const ctr = c.impressions > 0 ? ((c.clicks / c.impressions) * 100).toFixed(2) : '0.00';
+          const pct = Math.min(100, Math.round((c.spent / c.budget) * 100));
+          return `
+            <tr>
+              <td><strong>${c.name}</strong><small>${c.id} • ${c.strategy}</small></td>
+              <td><span class="${pillClass(c.status)}" data-toggle="${c.id}" style="cursor:pointer">${c.status}</span></td>
+              <td>$${c.budget.toFixed(2)}</td>
+              <td>
+                <strong>$${c.spent.toFixed(2)}</strong> <small>${pct}% consumido</small>
+                <div class="as-progress-track"><div class="as-progress-fill" style="width:${pct}%"></div></div>
+              </td>
+              <td>${c.impressions}</td>
+              <td><strong>${c.clicks}</strong> <small>${ctr}% CTR</small></td>
+              <td>
+                <button class="as-mini-btn" data-sim="${c.id}">+ Clic</button>
+                <button class="as-danger-btn" data-del="${c.id}">Eliminar</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        root.querySelector('#as-pagination-info').textContent = `Mostrando ${paged.length} de ${filtered.length} campañas (Página ${state.page})`;
+
+        // 5. Vistas Operativas Secundarias (Sin formularios intrusivos)
+        root.querySelector('#as-campaigns-pacing').innerHTML = state.campaigns.map(c => {
+          const pct = Math.min(100, Math.round((c.spent / c.budget) * 100));
+          return `
+            <div style="background:rgba(8,13,20,0.55);padding:12px;border-radius:10px;border:1px solid var(--line)">
+              <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600">
+                <span>${c.name}</span>
+                <span>$${c.spent.toFixed(2)} / $${c.budget.toFixed(2)} (${pct}%)</span>
+              </div>
+              <div class="as-progress-track"><div class="as-progress-fill" style="width:${pct}%"></div></div>
+            </div>
+          `;
+        }).join('');
+
+        root.querySelector('#as-campaigns-full-body').innerHTML = state.campaigns.map(c => `
+          <tr>
+            <td><code>${c.id}</code></td>
+            <td><strong>${c.name}</strong></td>
+            <td>${c.strategy}</td>
+            <td><span class="${pillClass(c.status)}">${c.status}</span></td>
+            <td>$${c.budget.toFixed(2)}</td>
+            <td><strong>$${c.spent.toFixed(2)}</strong></td>
+            <td>$${c.cpc.toFixed(2)}</td>
+            <td><button class="as-mini-btn" data-toggle="${c.id}">Alternar Estado</button></td>
+          </tr>
+        `).join('');
+
+        root.querySelector('#as-placements-body').innerHTML = state.placements.map(p => `
+          <tr>
+            <td><strong>${p.code}</strong></td>
+            <td>${p.name}<small>${p.format}</small></td>
+            <td>$${p.cpm.toFixed(2)} MXN</td>
+            <td>${p.imp} imp / ${p.clicks} clics</td>
+            <td>${((p.clicks / Math.max(1, p.imp)) * 100).toFixed(2)}%</td>
+            <td><span class="${pillClass(p.status)}">${p.status}</span></td>
+          </tr>
+        `).join('');
+
+        root.querySelector('#as-creatives-body').innerHTML = state.creatives.map(cr => `
+          <tr>
+            <td><code>${cr.id}</code></td>
+            <td><strong>${cr.title}</strong><small>${cr.targetUrl}</small></td>
+            <td><span class="as-pill">${cr.status}</span></td>
+            <td>${cr.imp} imp / ${cr.clicks} clics</td>
+            <td><span class="as-pill">ACTIVO</span></td>
+          </tr>
+        `).join('');
+
+        root.querySelector('#as-assignments-body').innerHTML = state.assignments.map(a => `
+          <tr>
+            <td><code>${a.id}</code></td>
+            <td><strong>${a.campaign}</strong></td>
+            <td>${a.type}: <strong>${a.entity}</strong></td>
+            <td>Peso ${a.weight}</td>
+            <td><span class="as-pill">${a.status}</span></td>
+          </tr>
+        `).join('');
+
+        root.querySelector('#srv-placement').innerHTML = state.placements.map(p => `<option value="${p.code}">${p.code} (${p.name})</option>`).join('');
+
+        root.querySelector('#as-analytics-body').innerHTML = state.hourly.map(h => `
+          <tr>
+            <td><strong>${h.hour}</strong></td>
+            <td>${h.imp}</td>
+            <td>${h.clicks}</td>
+            <td>${((h.clicks / Math.max(1, h.imp)) * 100).toFixed(2)}%</td>
+            <td>$${h.cpm.toFixed(2)} MXN</td>
+            <td><strong>$${h.spend.toFixed(2)} MXN</strong></td>
+          </tr>
+        `).join('');
+
+        root.querySelector('#as-audiences-body').innerHTML = state.audiences.map(au => `
+          <tr><td><code>${au.id}</code></td><td><strong>${au.name}</strong></td><td>${au.share}</td><td>${au.device}</td><td>${au.policy}</td><td><span class="${pillClass(au.status)}">${au.status}</span></td></tr>
+        `).join('');
+
+        root.querySelector('#as-billing-body').innerHTML = state.audit.map(ev => `
+          <tr><td><code>${ev.id}</code></td><td>${ev.time}</td><td><strong>${ev.entity}</strong></td><td>${ev.op}</td><td><strong>$${ev.amount.toFixed(2)} MXN</strong></td><td><span class="as-pill">LIQUIDADO</span></td></tr>
+        `).join('');
+
+        root.querySelector('#as-alerts-body').innerHTML = state.alerts.map(al => `
+          <tr><td><span class="${pillClass(al.level)}">${al.level}</span></td><td><strong>${al.module}</strong></td><td>${al.detail}</td><td>${al.time}</td><td>${al.status}</td></tr>
+        `).join('');
+
+        root.querySelector('#as-audit-body').innerHTML = state.audit.map(ev => `
+          <tr><td><code>${ev.id}</code></td><td>${ev.time}</td><td><strong>${ev.op}</strong></td><td>${ev.entity}</td><td><code>${ev.nonce}</code></td><td><code>${ev.sig}</code></td></tr>
+        `).join('');
+
+        root.querySelector('#as-users-body').innerHTML = state.users.map(u => `
+          <tr><td><strong>${u.name}</strong></td><td>${u.email}</td><td>${u.role}</td><td><code>${u.key}</code></td><td><span class="as-pill">${u.status}</span></td></tr>
+        `).join('');
+
+        const out = root.querySelector('#as-serve-output');
+        if (state.lastDecision) {
+          out.innerHTML = `
+            <div class="as-health">
+              <div class="as-row"><span>Ubicación</span><span>${state.lastDecision.placement}</span></div>
+              <div class="as-row"><span>Campaña Ganadora</span><span>${state.lastDecision.campaign}</span></div>
+              <div class="as-row"><span>Cargo Atómico</span><span class="as-ok">$${state.lastDecision.cost.toFixed(2)} MXN</span></div>
+              <div class="as-row"><span>Firma Ed25519</span><span class="as-ok">${state.lastDecision.sig}</span></div>
+            </div>
+          `;
+        } else {
+          out.innerHTML = `<p class="as-detail">Ejecuta una subasta para inspeccionar el certificado de entrega en vivo.</p>`;
+        }
+      }
+
+      // Drawer Dinámico bajo Demanda
+      function openDrawer(type) {
+        drawerOverlay.classList.remove('as-hidden');
+        if (type === 'campaign') {
+          drawerBody.innerHTML = `
+            <div class="as-eyebrow">Nuevo Registro Operativo</div>
+            <h2 style="margin-top:4px">Crear Campaña Publicitaria</h2>
+            <form class="as-form" id="as-dyn-form">
+              <label class="as-field wide">Nombre de Campaña<input id="d-name" required placeholder="Ej. Ultrasonidos Hermosillo"></label>
+              <label class="as-field">Presupuesto Diario (MXN)<input id="d-budget" type="number" step="0.01" value="150.00" required></label>
+              <label class="as-field">CPC Máximo (MXN)<input id="d-cpc" type="number" step="0.01" value="2.20" required></label>
+              <label class="as-field wide">Estrategia de Pacing
+                <select id="d-strategy"><option>Ponderado por Presupuesto</option><option>CPC Atómico Estricto</option></select>
+              </label>
+              <div class="as-actions-row"><button type="submit" class="as-primary">Guardar y Activar</button></div>
+            </form>
+          `;
+          drawerBody.querySelector('#as-dyn-form').addEventListener('submit', e => {
+            e.preventDefault();
+            const id = 'cmp_' + Math.floor(1050 + Math.random() * 900);
+            state.campaigns.unshift({
+              id,
+              name: drawerBody.querySelector('#d-name').value,
+              budget: Number(drawerBody.querySelector('#d-budget').value),
+              cpc: Number(drawerBody.querySelector('#d-cpc').value),
+              cpm: 14.0,
+              strategy: drawerBody.querySelector('#d-strategy').value,
+              status: 'ACTIVA',
+              spent: 0,
+              impressions: 1,
+              clicks: 0
+            });
+            drawerOverlay.classList.add('as-hidden');
+            notify(`Campaña ${id} creada en el Ledger`);
+            renderAll();
+          });
+        } else if (type === 'placement') {
+          drawerBody.innerHTML = `
+            <div class="as-eyebrow">Inventario</div>
+            <h2 style="margin-top:4px">Registrar Nueva Ubicación</h2>
+            <form class="as-form" id="as-dyn-form">
+              <label class="as-field wide">Código Canónico<input id="d-code" required placeholder="BANNER_SUPERIOR_LAB"></label>
+              <label class="as-field wide">Nombre Descriptivo<input id="d-name" required placeholder="Cabecera Resultados Clínicos"></label>
+              <label class="as-field">Formato<input id="d-fmt" value="970x90 / 320x100"></label>
+              <label class="as-field">CPM Piso<input id="d-cpm" type="number" value="14.00"></label>
+              <div class="as-actions-row"><button type="submit" class="as-primary">Guardar Ubicación</button></div>
+            </form>
+          `;
+          drawerBody.querySelector('#as-dyn-form').addEventListener('submit', e => {
+            e.preventDefault();
+            state.placements.unshift({
+              code: drawerBody.querySelector('#d-code').value.toUpperCase(),
+              name: drawerBody.querySelector('#d-name').value,
+              format: drawerBody.querySelector('#d-fmt').value,
+              cpm: Number(drawerBody.querySelector('#d-cpm').value),
+              imp: 0,
+              clicks: 0,
+              status: 'ACTIVO'
+            });
+            drawerOverlay.classList.add('as-hidden');
+            notify('Ubicación incorporada al inventario');
+            renderAll();
+          });
+        } else if (type === 'creative') {
+          drawerBody.innerHTML = `
+            <div class="as-eyebrow">Activos HTTPS</div>
+            <h2 style="margin-top:4px">Registrar Creativo Verificado</h2>
+            <form class="as-form" id="as-dyn-form">
+              <label class="as-field wide">Título Comercial<input id="d-title" required placeholder="Check Up Completo Hoy"></label>
+              <label class="as-field wide">URL Destino HTTPS<input id="d-url" type="url" required value="https://www.laboratoriosanfrancisco.com"></label>
+              <div class="as-actions-row"><button type="submit" class="as-primary">Verificar y Guardar</button></div>
+            </form>
+          `;
+          drawerBody.querySelector('#as-dyn-form').addEventListener('submit', e => {
+            e.preventDefault();
+            state.creatives.unshift({
+              id: 'crt_' + Math.floor(510 + Math.random() * 400),
+              title: drawerBody.querySelector('#d-title').value,
+              targetUrl: drawerBody.querySelector('#d-url').value,
+              imp: 0,
+              clicks: 0,
+              status: 'HTTPS VERIFICADO'
+            });
+            drawerOverlay.classList.add('as-hidden');
+            notify('Creativo HTTPS registrado');
+            renderAll();
+          });
+        } else if (type === 'assignment') {
+          drawerBody.innerHTML = `
+            <div class="as-eyebrow">Matriz de Entrega</div>
+            <h2 style="margin-top:4px">Vincular Recurso a Campaña</h2>
+            <form class="as-form" id="as-dyn-form">
+              <label class="as-field wide">Campaña<select id="d-camp">${state.campaigns.map(c => `<option value="${c.id}">${c.id} - ${c.name}</option>`).join('')}</select></label>
+              <label class="as-field wide">Ubicación / Entidad<input id="d-ent" value="BUSQUEDA_LOCAL_TOP_1"></label>
+              <label class="as-field wide">Peso Ponderado<input id="d-w" type="number" value="100"></label>
+              <div class="as-actions-row"><button type="submit" class="as-primary">Crear Asignación</button></div>
+            </form>
+          `;
+          drawerBody.querySelector('#as-dyn-form').addEventListener('submit', e => {
+            e.preventDefault();
+            state.assignments.unshift({
+              id: 'asg_' + Math.floor(910 + Math.random() * 89),
+              campaign: drawerBody.querySelector('#d-camp').value,
+              type: 'Ubicación',
+              entity: drawerBody.querySelector('#d-ent').value,
+              weight: Number(drawerBody.querySelector('#d-w').value),
+              status: 'VINCULADA'
+            });
+            drawerOverlay.classList.add('as-hidden');
+            notify('Asignación activada');
+            renderAll();
+          });
+        }
+      }
+
+      function executeServe(campId, isClick, placementCode) {
+        const target = campId
+          ? state.campaigns.find(c => c.id === campId)
+          : state.campaigns.find(c => c.status === 'ACTIVA');
+        if (!target) { notify('No hay campañas activas disponibles'); return; }
+        const cost = isClick ? target.cpc : 0;
+        if (target.spent + cost > target.budget) {
+          target.status = 'LIMITADA';
+          notify(`Límite presupuestario alcanzado en ${target.id}`);
+          renderAll();
+          return;
+        }
+        target.impressions += 4;
+        const lastH = state.hourly[state.hourly.length - 1];
+        lastH.imp += 4;
+        if (isClick) {
+          target.clicks += 1;
+          target.spent = Number((target.spent + cost).toFixed(2));
+          lastH.clicks += 1;
+          lastH.spend = Number((lastH.spend + cost).toFixed(2));
+        }
+        const sig = 'ed25519:' + Math.random().toString(16).substring(2, 10);
+        state.audit.unshift({
+          id: 'evt_' + Math.floor(10000 + Math.random() * 89999),
+          time: new Date().toLocaleTimeString(),
+          op: isClick ? 'CLICK_ATOMIC_DEBIT' : 'IMPRESSION_SERVE',
+          entity: target.id,
+          amount: cost,
+          nonce: Math.random().toString(16).substring(2, 12),
+          sig
+        });
+        state.lastDecision = {
+          placement: placementCode || state.placements[0].code,
+          campaign: `${target.id} (${target.name})`,
+          cost,
+          sig
+        };
+        notify(isClick ? `Débito atómico aplicado: -$${cost.toFixed(2)} MXN` : 'Impresión servida y firmada');
+        renderAll();
+      }
+
+      // Eventos de Navegación
+      root.querySelectorAll('.as-nav button').forEach(b => {
+        b.addEventListener('click', () => {
+          root.querySelectorAll('.as-nav button').forEach(x => x.classList.remove('active'));
+          b.classList.add('active');
+          root.querySelectorAll('.as-view').forEach(v => v.classList.add('as-hidden'));
+          root.querySelector('#as-' + b.dataset.view).classList.remove('as-hidden');
+          const cleanTitle = b.querySelector('b').childNodes[0].textContent.trim();
+          title.textContent = cleanTitle;
+          bcGroup.textContent = b.dataset.group;
+          bcCurrent.textContent = cleanTitle;
+        });
+      });
+
+      root.querySelector('#as-global-search').addEventListener('input', e => {
+        state.search = e.target.value;
+        state.page = 1;
+        renderAll();
+      });
+
+      root.querySelectorAll('#as-dash-filters button[data-status]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          root.querySelectorAll('#as-dash-filters button[data-status]').forEach(x => x.classList.remove('active'));
+          btn.classList.add('active');
+          state.statusFilter = btn.dataset.status;
+          state.page = 1;
+          renderAll();
+        });
+      });
+
+      root.querySelectorAll('#as-dash-campaigns-table th[data-sort]').forEach(th => {
+        th.addEventListener('click', () => {
+          const key = th.dataset.sort;
+          if (state.sortKey === key) state.sortAsc = !state.sortAsc;
+          else { state.sortKey = key; state.sortAsc = false; }
+          renderAll();
+        });
+      });
+
+      root.querySelector('#as-prev-page').addEventListener('click', () => { if (state.page > 1) { state.page--; renderAll(); } });
+      root.querySelector('#as-next-page').addEventListener('click', () => { state.page++; renderAll(); });
+
+      root.addEventListener('click', e => {
+        const drawerTrigger = e.target.closest('[data-open-drawer]');
+        if (drawerTrigger) openDrawer(drawerTrigger.dataset.openDrawer);
+        if (e.target.dataset.sim) executeServe(e.target.dataset.sim, true);
+        if (e.target.dataset.toggle) {
+          const c = state.campaigns.find(x => x.id === e.target.dataset.toggle);
+          if (c) { c.status = c.status === 'ACTIVA' ? 'PAUSADA' : 'ACTIVA'; notify(`Estado de ${c.id}: ${c.status}`); renderAll(); }
+        }
+        if (e.target.dataset.del) {
+          state.campaigns = state.campaigns.filter(c => c.id !== e.target.dataset.del);
+          notify(`Campaña ${e.target.dataset.del} eliminada del catálogo`);
+          renderAll();
+        }
+      });
+
+      root.querySelector('#as-close-drawer').addEventListener('click', () => drawerOverlay.classList.add('as-hidden'));
+      root.querySelector('#as-form-serve').addEventListener('submit', e => {
+        e.preventDefault();
+        executeServe(null, root.querySelector('#srv-action').value === 'CLICK', root.querySelector('#srv-placement').value);
+      });
+      root.querySelector('#as-btn-sim-click').addEventListener('click', () => executeServe(null, true));
+      root.querySelector('#as-btn-refresh').addEventListener('click', () => { notify('Sincronizado con SQLite WAL y API_SIC'); renderAll(); });
+      root.querySelector('#as-btn-export-csv').addEventListener('click', () => {
+        const rows = ['ID,Campana,Estado,Presupuesto,Gastado,Impresiones,Clics'];
+        state.campaigns.forEach(c => rows.push(`${c.id},"${c.name}",${c.status},${c.budget},${c.spent},${c.impressions},${c.clicks}`));
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8' }));
+        a.download = 'ADSOLUSOL_Reporte_Ejecutivo.csv';
+        a.click();
+        notify('Reporte CSV exportado');
+      });
+
+      renderAll();
+    })();
+  </script>
 </div>

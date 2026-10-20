@@ -1,6 +1,6 @@
 ﻿# Interfaz Web 2027 (Raíz del Proyecto)
 
-La nueva interfaz web se ejecuta desde la raíz con `npm install` y `npm run dev`. `npm run build` genera `dist/` y `npm run lint` verifica TypeScript. La copia original permanece en `adsolusol_2027/`; la aplicación web anterior y la solución .NET permanecen en `src/ADSOLUSOL.*`.
+La interfaz web 2027 impulsada por la arquitectura de KLIK Soft Pro se ejecuta directamente desde la raíz mediante `npm install` y `npm run dev`. `npm run build` genera `dist/` y `npm run lint` verifica TypeScript. Los componentes, constantes y tipados han sido consolidados en `src/`, conservando la solución .NET en `src/ADSOLUSOL.*`.
 
 El servidor en `server/` es una demostración local, guarda datos en `adsolusol_enterprise_db.json` y no está conectado a producción. El archivo se crea al consultar el estado; no contiene datos reales por defecto. El modo de demostración puede modificar ese archivo mediante acciones y Auto-Live.
 
