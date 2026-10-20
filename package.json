@@ -1,0 +1,12 @@
+{
+  "name": "adsolusol-root",
+  "private": true,
+  "workspaces": [
+    "adsolusol_2027",
+    "src/ADSOLUSOL.Presentation.Web"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=adsolusol_2027",
+    "build": "npm run build --workspace=adsolusol_2027"
+  }
+}
