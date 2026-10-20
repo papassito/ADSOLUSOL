@@ -1,6 +1,6 @@
-﻿# Interfaz 2027 desde la raíz
+﻿# Interfaz Web 2027 (Raíz del Proyecto)
 
-La interfaz de Google AI Studio se ejecuta desde la raíz con `npm install` y `npm run dev`. `npm run build` genera `dist/` y `npm run lint` verifica TypeScript. La copia original permanece en `adsolusol_2027/`; la aplicación web anterior y la solución .NET permanecen en `src/ADSOLUSOL.*`.
+La nueva interfaz web se ejecuta desde la raíz con `npm install` y `npm run dev`. `npm run build` genera `dist/` y `npm run lint` verifica TypeScript. La copia original permanece en `adsolusol_2027/`; la aplicación web anterior y la solución .NET permanecen en `src/ADSOLUSOL.*`.
 
 El servidor en `server/` es una demostración local, guarda datos en `adsolusol_enterprise_db.json` y no está conectado a producción. El archivo se crea al consultar el estado; no contiene datos reales por defecto. El modo de demostración puede modificar ese archivo mediante acciones y Auto-Live.
 

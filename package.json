@@ -1,9 +1,6 @@
 {
   "name": "adsolusol-root",
   "private": true,
-  "workspaces": [
-    "src/ADSOLUSOL.Presentation.Web"
-  ],
   "scripts": {
     "dev": "tsx server/index.ts",
     "build": "vite build",
@@ -35,7 +32,7 @@
     "esbuild": "^0.28.0",
     "tailwindcss": "^4.3.3",
     "tsx": "^4.21.0",
-    "typescript": "^7.0.2",
+    "typescript": "^5.5.2",
     "@types/express": "^4.17.21"
   }
 }

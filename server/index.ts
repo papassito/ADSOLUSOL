@@ -315,7 +315,24 @@ async function startServer() {
   });
 
   const vite = await createServer({
-    server: { middlewareMode: true },
+    server: {
+      middlewareMode: true,
+      watch: {
+        // Excluir directorios que causan problemas con el observador de archivos en Windows,
+        // especialmente en unidades de red o con muchos archivos (como el proyecto .NET).
+        ignored: [
+          '**/.git/**',
+          '**/node_modules/**',
+          '**/src/ADSOLUSOL.Presentation.Api/**',
+          '**/src/ADSOLUSOL.Presentation.Web/**',
+          '**/src/ADSOLUSOL.Presentation.Desktop/**',
+          '**/src/ADSOLUSOL.Domain/**',
+          '**/src/ADSOLUSOL.Application/**',
+          '**/src/ADSOLUSOL.Infrastructure/**',
+          '**/adsolusol_2027/**',
+        ],
+      },
+    },
     appType: 'spa',
   });
   app.use(vite.middlewares);
