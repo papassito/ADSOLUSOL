@@ -24,6 +24,7 @@ async function startServer() {
   const vite = await createServer({
     server: {
       middlewareMode: true,
+      proxy: {}, // Desactivar proxy para que el servidor de demo maneje las rutas /api
       watch: {
         usePolling: true,
         interval: 150,

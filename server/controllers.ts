@@ -46,15 +46,15 @@ export function getState(req: Request, res: Response) {
 export function createCampaign(req: Request, res: Response) {
   const db = readDb();
   const newCamp = {
-    id: `CAMP-${Math.floor(100 + Math.random() * 900)}`,
+    id: req.body.id || `CAMP-${crypto.randomBytes(4).toString('hex')}`,
     name: req.body.name,
     status: 'ACTIVA',
     strategy: req.body.strategy || 'Pacing Ponderado + CPC',
     maxCpc: Number(req.body.maxCpc) || 2.0,
     budget: Number(req.body.budget) || 100.0,
-    spent: 0,
-    impressions: 0,
-    clicks: 0,
+    spent: Number(req.body.spent) || 0,
+    impressions: Number(req.body.impressions) || 0,
+    clicks: Number(req.body.clicks) || 0,
     conversions: 0,
     updatedAt: new Date().toISOString().slice(0, 16).replace('T', ' '),
   };
@@ -66,7 +66,7 @@ export function createCampaign(req: Request, res: Response) {
     campaign: newCamp.name,
     amount: newCamp.budget,
     nonce: crypto.randomBytes(6).toString('hex'),
-    signature: `ed25519:${crypto.randomBytes(4).toString('hex')}...${crypto.randomBytes(2).toString('hex')}`,
+    signature: `ed25519-simulated:${crypto.randomBytes(4).toString('hex')}...${crypto.randomBytes(2).toString('hex')}`, // ADVERTENCIA: Firma simulada solo para demostración.
     status: 'REGISTRADO',
   });
   writeDb(db);
@@ -75,13 +75,62 @@ export function createCampaign(req: Request, res: Response) {
 
 export function patchCampaign(req: Request, res: Response) {
   const db = readDb();
-  db.campaigns = db.campaigns.map((c: any) =>
-    c.id === req.params.id
-      ? { ...c, ...req.body, updatedAt: new Date().toISOString().slice(0, 16).replace('T', ' ') }
-      : c
-  );
+  const allowedFields = ['name', 'status', 'strategy', 'maxCpc', 'budget'];
+  const campaignIndex = db.campaigns.findIndex((c: any) => c.id === req.params.id);
+
+  if (campaignIndex === -1) {
+    return res.status(404).json({ error: `Campaña con ID ${req.params.id} no encontrada.` });
+  }
+
+  const campaignToUpdate = { ...db.campaigns[campaignIndex] };
+  const updatePayload: { [key: string]: any } = {};
+
+  // Primero, validar que no se intenten modificar campos protegidos
+  for (const key in req.body) {
+    if (!allowedFields.includes(key)) {
+      return res.status(400).json({ error: `El campo '${key}' es protegido y no puede ser modificado.` });
+    }
+  }
+
+  for (const key of allowedFields) {
+    if (req.body[key] === undefined) continue;
+
+    const value = req.body[key];
+
+    if (key === 'budget' || key === 'maxCpc') {
+      const numValue = Number(value);
+      if (value === null || !Number.isFinite(numValue) || numValue < 0) {
+        return res.status(400).json({ error: `El campo '${key}' debe ser un número positivo.` });
+      }
+      if (key === 'budget' && numValue < campaignToUpdate.spent) {
+        return res.status(400).json({ error: `El presupuesto (${numValue}) no puede ser menor que el gasto actual (${campaignToUpdate.spent}).` });
+      }
+      updatePayload[key] = numValue;
+    } else if (key === 'name') {
+      if (typeof value !== 'string' || value.trim().length < 3 || value.trim().length > 100) {
+        return res.status(400).json({ error: `El campo 'name' debe ser una cadena entre 3 y 100 caracteres.` });
+      }
+      updatePayload[key] = value.trim();
+    } else if (key === 'status') {
+      const allowedStatus = ['ACTIVA', 'PAUSADA'];
+      if (!allowedStatus.includes(value)) {
+        return res.status(400).json({ error: `El 'status' debe ser uno de: ${allowedStatus.join(', ')}.` });
+      }
+      updatePayload[key] = value;
+    } else if (key === 'strategy') {
+      const allowedStrategies = ['Pacing Ponderado + CPC', 'Límite Condicional Atómico', 'Prioridad Alta Intención', 'CPC Estricto'];
+      if (typeof value !== 'string' || !allowedStrategies.includes(value)) {
+        return res.status(400).json({ error: `La 'strategy' debe ser una de: ${allowedStrategies.join(', ')}.` });
+      }
+      updatePayload[key] = value;
+    }
+  }
+
+  // Aplicar la actualización
+  db.campaigns[campaignIndex] = { ...campaignToUpdate, ...updatePayload, updatedAt: new Date().toISOString().slice(0, 16).replace('T', ' ') };
+
   writeDb(db);
-  res.json(db);
+  res.json(db.campaigns[campaignIndex]);
 }
 
 export function deleteRecord(req: Request, res: Response) {
@@ -142,7 +191,7 @@ export function handleServeDecision(req: Request, res: Response) {
   }
 
   const nonce = crypto.randomBytes(6).toString('hex');
-  const signature = `ed25519:${crypto.randomBytes(4).toString('hex')}...mock`;
+  const signature = `ed25519-simulated:${crypto.randomBytes(4).toString('hex')}...dev`; // ADVERTENCIA: Firma simulada solo para demostración.
 
   writeDb(db);
   res.json({
