@@ -2,13 +2,12 @@
   "name": "adsolusol-root",
   "private": true,
   "scripts": {
-    "dev": "vite --host 127.0.0.1 --port 3000 --strictPort",
-    "dev:real": "vite --host 127.0.0.1 --port 3000 --strictPort",
+    "dev": "npm run dev:demo",
+    "dev:demo": "tsx server/index.ts",
+    "dev:real": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "tsc --noEmit",
-    "dev:demo": "tsx server/index.ts",
-    "test:live": "node tests/live-flow.test.cjs"
+    "lint": "tsc --noEmit"
   },
   "type": "module",
   "version": "0.0.0",
