@@ -2,8 +2,9 @@
   "name": "adsolusol-root",
   "private": true,
   "scripts": {
-    "dev": "npm run dev:demo",
+    "dev": "npm run dev:real",
     "dev:demo": "tsx server/index.ts",
+    "dev:live": "powershell -File ./scripts/start-live.ps1",
     "dev:real": "vite",
     "build": "vite build",
     "preview": "vite preview",

@@ -137,6 +137,59 @@ export function patchCampaign(req: Request, res: Response) {
   res.json(db.campaigns[campaignIndex]);
 }
 
+export function createPlacement(req: Request, res: Response) {
+  const db = readDb();
+  db.placements.unshift({
+    id: `PLC-0${db.placements.length + 1}`,
+    code: req.body.code,
+    name: req.body.name,
+    format: req.body.format,
+    floorCpm: Number(req.body.floorCpm) || 10.0,
+    impressions: 0,
+    clicks: 0,
+    status: 'ACTIVO',
+  });
+  writeDb(db);
+  res.json(db);
+}
+
+export function createCreative(req: Request, res: Response) {
+  const db = readDb();
+  db.creatives.unshift({
+    id: `CRT-${Math.floor(500 + Math.random() * 499)}`,
+    campaignId: req.body.campaignId || 'CAMP-101',
+    title: req.body.title,
+    description: req.body.description,
+    destinationUrl: req.body.destinationUrl,
+    whatsappContact: req.body.whatsappContact,
+    locationAddress:
+      req.body.locationAddress || 'Oaxaca 63, Col. Centro, Hermosillo, Sonora',
+    tlsVerified: String(req.body.destinationUrl).startsWith('https://'),
+    impressions: 0,
+    clicks: 0,
+    directionsClicks: 0,
+    status: 'VERIFICADO',
+  });
+  writeDb(db);
+  res.json(db);
+}
+
+export function createAssignment(req: Request, res: Response) {
+  const db = readDb();
+  db.assignments.unshift({
+    id: `ASG-${Math.floor(900 + Math.random() * 99)}`,
+    campaignId: req.body.campaignId,
+    creativeId: req.body.creativeId,
+    placementId: req.body.placementId,
+    weight: Number(req.body.weight) || 100,
+    priority: Number(req.body.priority) || 1,
+    pacingMode: req.body.pacingMode || 'Ponderado por Presupuesto',
+    status: 'ACTIVA',
+  });
+  writeDb(db);
+  res.json(db);
+}
+
 export function deleteRecord(req: Request, res: Response) {
   const db = readDb();
   const col = req.params.collection;

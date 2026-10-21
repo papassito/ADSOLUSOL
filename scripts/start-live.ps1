@@ -43,18 +43,29 @@ try {
     Write-Host "  -> Proceso API iniciado con PID: $($apiProcess.Id)"
 
     Write-Host "  -> Esperando que la API responda en /health..." -NoNewline
-    $apiReady = $false
     for ($i = 0; $i -lt 40; $i++) {
         try {
             $res = Invoke-WebRequest -Uri "http://127.0.0.1:$apiPort/health" -UseBasicParsing -TimeoutSec 1
-            if ($res.StatusCode -eq 200) { $apiReady = $true; Write-Host " OK!" -f Green; break }
+            if ($res.StatusCode -eq 200) { Write-Host " OK!" -ForegroundColor Green; break }
         } catch { Write-Host "." -NoNewline; Start-Sleep -Milliseconds 500 }
+        if ($i -eq 39) { throw "La API .NET no respondió a tiempo en /health." }
     }
-    if (-not $apiReady) { throw "La API .NET no respondió a tiempo." }
 
     Write-Host "`n[*] Iniciando servidor de desarrollo Vite (npm run dev:real)..."
     $viteProcess = Start-Process "npm" -ArgumentList "run", "dev:real" -PassThru
-    Write-Host "`n[SUCCESS] Entorno LIVE iniciado. Accede a la UI en el puerto de Vite." -f Green
+
+    Write-Host "  -> Esperando que Vite responda en el puerto $vitePort..." -NoNewline
+    for ($i = 0; $i -lt 40; $i++) {
+        if (Check-Port $vitePort) { Write-Host " OK!" -ForegroundColor Green; break }
+        Write-Host "." -NoNewline; Start-Sleep -Milliseconds 500
+        if ($i -eq 39) { throw "El servidor de Vite no se inició en el puerto $vitePort a tiempo." }
+    }
+
+    Write-Host "  -> Verificando conexión autenticada API-DB (/api/Campaigns)..."
+    # Esta llamada fallará si el middleware de firma no permite localhost o la DB no está lista.
+    Invoke-WebRequest -Uri "http://127.0.0.1:$apiPort/api/Campaigns" -UseBasicParsing -Headers @{ "X-Solusol-Node-Id"="dev-local"; "X-Solusol-Timestamp"=[DateTimeOffset]::UtcNow.ToUnixTimeSeconds() }
+
+    Write-Host "`n[SUCCESS] Entorno LIVE iniciado. Accede a la UI en http://localhost:$vitePort" -ForegroundColor Green
     Write-Host "           Presiona CTRL+C en esta ventana para detener ambos procesos."
 
     Wait-Process -Id $viteProcess.Id
