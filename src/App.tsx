@@ -1,3 +1,4 @@
+import { AppearanceControls } from './components/AppearanceControls';
 import type { Campaign } from './types';
 import { useAdsolusolState } from './useAdsolusolState';
 import { useAnalyticsCalculations } from './useAnalyticsCalculations';
@@ -479,9 +480,9 @@ export default function App() {
     <div
       style={{
         fontFamily: "'Plus Jakarta Sans', sans-serif",
-        background: 'radial-gradient(circle at 18% 0%, #132038 0%, #070B12 58%)',
+        background: 'var(--as-background)',
       }}
-      className="min-h-screen text-slate-100 flex antialiased selection:bg-amber-500 selection:text-slate-950"
+      className="as-app min-h-screen text-slate-100 flex antialiased selection:bg-brand-500 selection:text-slate-950"
     >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap');
@@ -492,7 +493,7 @@ export default function App() {
           transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .as-card-premium:hover {
-          border-color: rgba(245, 158, 11, 0.28);
+          border-color: color-mix(in srgb, var(--as-accent) 28%, transparent);
           box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
         .as-kpi-lift:hover {
@@ -506,7 +507,7 @@ export default function App() {
       <aside className="w-68 bg-[#0B101B]/95 border-r border-slate-800/80 flex flex-col justify-between shrink-0 backdrop-blur-xl">
         <div>
           <div className="p-5 border-b border-slate-800/80 flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 flex items-center justify-center font-black shadow-lg shadow-amber-500/25">
+            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-brand-400 to-brand-600 text-slate-950 flex items-center justify-center font-black shadow-lg shadow-brand-500/25">
               ADS
             </div>
             <div>
@@ -516,7 +517,7 @@ export default function App() {
               >
                 ADSOLUSOL 2027
               </h1>
-              <p className="text-[11px] text-amber-400 font-semibold">
+              <p className="text-[11px] text-brand-400 font-semibold">
                 Command Suite Soberana
               </p>
             </div>
@@ -547,7 +548,7 @@ export default function App() {
                           onClick={() => setActiveModule(key)}
                           className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                             active
-                              ? 'bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 font-bold shadow-md shadow-amber-500/20'
+                              ? 'bg-gradient-to-r from-brand-500 to-brand-400 text-slate-950 font-bold shadow-md shadow-brand-500/20'
                               : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 hover:translate-x-0.5'
                           }`}
                         >
@@ -587,7 +588,7 @@ export default function App() {
       <div className="flex-1 flex flex-col min-w-0">
         
         {pushAlertBanner && (
-          <div className="bg-gradient-to-r from-rose-600/90 via-amber-600/90 to-rose-600/90 text-white px-6 py-2.5 flex items-center justify-between text-xs font-bold shadow-lg z-30">
+          <div className="bg-gradient-to-r from-rose-600/90 via-brand-600/90 to-rose-600/90 text-white px-6 py-2.5 flex items-center justify-between text-xs font-bold shadow-lg z-30">
             <div className="flex items-center gap-2">
               <BellRing className="h-4 w-4 animate-bounce shrink-0" />
               <span>{pushAlertBanner}</span>
@@ -616,9 +617,10 @@ export default function App() {
               <ChevronRight className="h-3.5 w-3.5" />
               <span>{currentMeta.category}</span>
               <ChevronRight className="h-3.5 w-3.5" />
-              <span className="text-amber-400 font-semibold">{currentMeta.title}</span>
+              <span className="text-brand-400 font-semibold">{currentMeta.title}</span>
             </div>
             <div className="flex items-center gap-3 flex-wrap">
+              <AppearanceControls />
               <h2
                 style={{ fontFamily: "'Space Grotesk', sans-serif" }}
                 className="text-xl font-bold text-white"
@@ -649,8 +651,8 @@ export default function App() {
                 onClick={requestBrowserPushPermission}
                 className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold border transition-all cursor-pointer ${
                   pushPermission === 'granted'
-                    ? 'bg-amber-500/15 text-amber-400 border-amber-500/40'
-                    : 'bg-slate-800/60 text-slate-300 border-slate-700 hover:border-amber-500/50'
+                    ? 'bg-brand-500/15 text-brand-400 border-brand-500/40'
+                    : 'bg-slate-800/60 text-slate-300 border-slate-700 hover:border-brand-500/50'
                 }`}
               >
                 <BellRing className="h-3.5 w-3.5" />
@@ -669,7 +671,7 @@ export default function App() {
                 value={globalSearch}
                 onChange={(e) => setGlobalSearch(e.target.value)}
                 placeholder="Filtrar campañas, IDs..."
-                className="bg-[#070B12] border border-slate-800 rounded-xl pl-9 pr-16 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500 w-56"
+                className="bg-[#070B12] border border-slate-800 rounded-xl pl-9 pr-16 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-brand-500 w-56"
               />
               <button
                 onClick={() => setCommandOpen(true)}
@@ -705,7 +707,7 @@ export default function App() {
               className="p-2 rounded-xl bg-[#070B12] border border-slate-800 text-slate-300 hover:text-white cursor-pointer"
             >
               <RefreshCw
-                className={`h-4 w-4 ${loadingAction ? 'animate-spin text-amber-400' : ''}`}
+                className={`h-4 w-4 ${loadingAction ? 'animate-spin text-brand-400' : ''}`}
               />
             </button>
           </div>
@@ -736,7 +738,7 @@ export default function App() {
                     <path
                       d="M2 22 L24 19 L48 16 L72 13 L96 9 L118 4"
                       fill="none"
-                      stroke="#F59E0B"
+                      stroke="var(--as-accent)"
                       strokeWidth="2.2"
                       strokeLinecap="round"
                     />
@@ -746,7 +748,7 @@ export default function App() {
                 <div className="as-card-premium as-kpi-lift rounded-2xl p-5">
                   <div className="flex justify-between items-center text-xs text-slate-400">
                     <span className="font-semibold uppercase">Campañas Operativas</span>
-                    <span className="px-2 py-0.5 rounded-md bg-amber-500/15 text-amber-400 font-bold text-[11px]">
+                    <span className="px-2 py-0.5 rounded-md bg-brand-500/15 text-brand-400 font-bold text-[11px]">
                       {`${campaigns.length} registradas`}
                     </span>
                   </div>
@@ -811,7 +813,7 @@ export default function App() {
                 <div className="lg:col-span-2 as-card-premium rounded-2xl p-6 flex flex-col justify-between">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
                     <div>
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-amber-400">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-brand-400">
                         Telemetría First-Party Firmada (Ed25519)
                       </span>
                       <h3 className="text-base font-bold text-white mt-0.5">
@@ -827,7 +829,7 @@ export default function App() {
                       </button>
                       <button
                         onClick={() => handleServeDecision(true)}
-                        className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 text-xs font-bold flex items-center gap-1 shadow-md shadow-amber-500/20 cursor-pointer transition-all"
+                        className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-brand-500 to-brand-400 hover:from-brand-400 hover:to-brand-300 text-slate-950 text-xs font-bold flex items-center gap-1 shadow-md shadow-brand-500/20 cursor-pointer transition-all"
                       >
                         <Zap className="h-3.5 w-3.5" /> Liquidar Clic Atómico
                       </button>
@@ -838,7 +840,7 @@ export default function App() {
                     <svg className="w-full h-48 overflow-visible" viewBox="0 0 620 175">
                       <defs>
                         <linearGradient id="solusolAreaGrad" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#F59E0B" stopOpacity="0.40" />
+                          <stop offset="0%" stopColor="var(--as-accent)" stopOpacity="0.40" />
                           <stop offset="65%" stopColor="#10B981" stopOpacity="0.12" />
                           <stop offset="100%" stopColor="#10B981" stopOpacity="0.0" />
                         </linearGradient>
@@ -853,7 +855,7 @@ export default function App() {
                         <path
                           d={areaChartGeometry.linePath}
                           fill="none"
-                          stroke="#F59E0B"
+                          stroke="var(--as-accent)"
                           strokeWidth="3"
                           strokeLinecap="round"
                         />
@@ -961,7 +963,7 @@ export default function App() {
                                 pct >= 90
                                   ? 'bg-rose-500'
                                   : pct >= 75
-                                  ? 'bg-amber-400'
+                                  ? 'bg-brand-400'
                                   : 'bg-emerald-400'
                               }`}
                               style={{ width: `${pct}%` }}
@@ -997,7 +999,7 @@ export default function App() {
                       <span className="block text-[10px] text-slate-400 uppercase font-bold">
                         Gasto Proyectado (7 Días)
                       </span>
-                      <span className="font-mono text-sm font-extrabold text-amber-400">
+                      <span className="font-mono text-sm font-extrabold text-brand-400">
                         {`$${(import.meta.env.VITE_DEMO_MODE === 'true' ? total7DayPredictedSpend.toFixed(2) : 'NO DISPONIBLE')} MXN`}
                       </span>
                     </div>
@@ -1031,8 +1033,8 @@ export default function App() {
                     >
                       <defs>
                         <linearGradient id="predSpendGrad" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#F59E0B" stopOpacity={0.35} />
-                          <stop offset="95%" stopColor="#F59E0B" stopOpacity={0.0} />
+                          <stop offset="5%" stopColor="var(--as-accent)" stopOpacity={0.35} />
+                          <stop offset="95%" stopColor="var(--as-accent)" stopOpacity={0.0} />
                         </linearGradient>
                         <linearGradient id="shieldOptGrad" x1="0" y1="0" x2="0" y2="1">
                           <stop offset="5%" stopColor="#10B981" stopOpacity={0.3} />
@@ -1066,7 +1068,7 @@ export default function App() {
                         type="monotone"
                         dataKey="gastoProyectado"
                         name="Gasto Proyectado (Pacing Actual)"
-                        stroke="#F59E0B"
+                        stroke="var(--as-accent)"
                         fillOpacity={1}
                         fill="url(#predSpendGrad)"
                         strokeWidth={2.8}
@@ -1114,7 +1116,7 @@ export default function App() {
                         }}
                         className={`text-[11px] px-2.5 py-1 rounded-lg font-bold cursor-pointer transition-all ${
                           statusFilter === st
-                            ? 'bg-amber-500 text-slate-950'
+                            ? 'bg-brand-500 text-slate-950'
                             : 'text-slate-400 hover:text-white'
                         }`}
                       >
@@ -1132,7 +1134,7 @@ export default function App() {
 
                   <button
                     onClick={() => setDrawerType('campana')}
-                    className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold flex items-center gap-1.5 shadow-md shadow-amber-500/20 cursor-pointer"
+                    className="px-4 py-2 rounded-xl bg-brand-500 hover:bg-brand-400 text-slate-950 text-xs font-bold flex items-center gap-1.5 shadow-md shadow-brand-500/20 cursor-pointer"
                   >
                     <Plus className="h-4 w-4" /> Nueva Campaña
                   </button>
@@ -1190,7 +1192,7 @@ export default function App() {
                       return (
                         <tr key={c.id} className="hover:bg-slate-800/30 transition-colors">
                           <td className="py-3.5 px-2">
-                            <span className="font-mono text-[11px] text-amber-400 font-bold">
+                            <span className="font-mono text-[11px] text-brand-400 font-bold">
                               {c.id}
                             </span>
                             <p className="font-bold text-slate-100 text-sm">{c.name}</p>
@@ -1202,7 +1204,7 @@ export default function App() {
                                 c.status === 'ACTIVA'
                                   ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
                                   : c.status === 'LIMITADA'
-                                  ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
+                                  ? 'bg-brand-500/15 text-brand-400 border border-brand-500/30'
                                   : 'bg-slate-700/40 text-slate-400'
                               }`}
                             >
@@ -1244,7 +1246,7 @@ export default function App() {
                             <button
                               onClick={() => simulateReach90Threshold()}
                               title="Simular llegar al 92% del presupuesto para disparar Push Notification"
-                              className="px-2.5 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 border border-amber-500/30 font-bold cursor-pointer"
+                              className="px-2.5 py-1.5 rounded-lg bg-brand-500/20 hover:bg-brand-500/30 text-brand-400 border border-brand-500/30 font-bold cursor-pointer"
                             >
                               🔔 Probar 90%
                             </button>
@@ -1306,7 +1308,7 @@ export default function App() {
                 </div>
                 <button
                   onClick={() => setDrawerType('ubicacion')}
-                  className="px-4 py-2 rounded-xl bg-amber-500 text-slate-950 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-brand-500 text-slate-950 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
                 >
                   <Plus className="h-4 w-4" /> Nueva Ubicación
                 </button>
@@ -1326,7 +1328,7 @@ export default function App() {
                 <tbody className="divide-y divide-slate-800/60">
                   {placements.map((p: any) => (
                     <tr key={p.id}>
-                      <td className="py-3.5 font-mono text-amber-400 font-bold">
+                      <td className="py-3.5 font-mono text-brand-400 font-bold">
                         {p.id} • {p.code}
                       </td>
                       <td className="py-3.5 font-bold text-white">{p.name}</td>
@@ -1363,7 +1365,7 @@ export default function App() {
                 <div className="as-card-premium rounded-2xl p-6 space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-brand-400">
                         Laboratorio Creativo + Geolocalización
                       </span>
                       <h3 className="text-base font-bold text-white">
@@ -1375,7 +1377,7 @@ export default function App() {
                       onClick={applyAiCreativePreset}
                       className="px-3 py-1.5 rounded-xl bg-indigo-500/20 border border-indigo-400/40 text-indigo-300 hover:bg-indigo-500/30 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
                     >
-                      <Sparkles className="h-3.5 w-3.5 text-amber-400" /> Autocompletar con IA
+                      <Sparkles className="h-3.5 w-3.5 text-brand-400" /> Autocompletar con IA
                     </button>
                   </div>
 
@@ -1424,7 +1426,7 @@ export default function App() {
                     </div>
 
                     <div>
-                      <label className="text-xs text-amber-400 font-semibold flex items-center gap-1">
+                      <label className="text-xs text-brand-400 font-semibold flex items-center gap-1">
                         <Navigation className="h-3.5 w-3.5" /> Dirección GPS para Botón "Cómo llegar" (Google Maps)
                       </label>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-1">
@@ -1442,7 +1444,7 @@ export default function App() {
                           onChange={(e) =>
                             setCrtForm({ ...crtForm, locationAddress: e.target.value })
                           }
-                          className="bg-[#070B12] border border-amber-500/40 rounded-xl px-2.5 py-2 text-xs text-amber-400 font-bold"
+                          className="bg-[#070B12] border border-brand-500/40 rounded-xl px-2.5 py-2 text-xs text-brand-400 font-bold"
                         >
                           {BRANCH_LOCATIONS.map((b, idx) => (
                             <option key={idx} value={b.address}>
@@ -1455,7 +1457,7 @@ export default function App() {
 
                     <button
                       onClick={() => setDrawerType('creativo')}
-                      className="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold cursor-pointer"
+                      className="w-full py-2.5 rounded-xl bg-brand-500 hover:bg-brand-400 text-slate-950 text-xs font-bold cursor-pointer"
                     >
                       Publicar Anuncio con Ruta GPS en Catálogo
                     </button>
@@ -1541,7 +1543,7 @@ export default function App() {
                     >
                       <div>
                         <div className="flex justify-between items-center text-[11px] mb-1">
-                          <span className="font-mono text-amber-400 font-bold">
+                          <span className="font-mono text-brand-400 font-bold">
                             {`${cr.id} ➔ ${cr.campaignId}`}
                           </span>
                           <span className="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-bold flex items-center gap-1">
@@ -1550,7 +1552,7 @@ export default function App() {
                         </div>
                         <h4 className="text-sm font-bold text-blue-400">{(cr.title ?? cr.name ?? 'NO DISPONIBLE')}</h4>
                         <p className="text-xs text-slate-300 mt-1">{cr.description}</p>
-                        <p className="text-[11px] text-amber-400/90 mt-1.5 flex items-center gap-1">
+                        <p className="text-[11px] text-brand-400/90 mt-1.5 flex items-center gap-1">
                           <MapPin className="h-3 w-3 shrink-0" />
                           {cr.locationAddress || 'NO DISPONIBLE'}
                         </p>
@@ -1605,7 +1607,7 @@ export default function App() {
                 </div>
                 <button
                   onClick={() => setDrawerType('asignacion')}
-                  className="px-4 py-2 rounded-xl bg-amber-500 text-slate-950 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-brand-500 text-slate-950 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
                 >
                   <Plus className="h-4 w-4" /> Nueva Asignación
                 </button>
@@ -1625,7 +1627,7 @@ export default function App() {
                 <tbody className="divide-y divide-slate-800/60">
                   {assignments.map((a: any) => (
                     <tr key={a.id}>
-                      <td className="py-3.5 font-mono text-amber-400 font-bold">{a.id}</td>
+                      <td className="py-3.5 font-mono text-brand-400 font-bold">{a.id}</td>
                       <td className="py-3.5 font-mono text-white">{a.campaignId}</td>
                       <td className="py-3.5 font-mono text-cyan-400">{a.creativeId}</td>
                       <td className="py-3.5 font-mono text-emerald-400">{a.placementId}</td>
@@ -1659,7 +1661,7 @@ export default function App() {
                   </button>
                   <button
                     onClick={() => handleServeDecision(true)}
-                    className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold cursor-pointer"
+                    className="px-4 py-2 rounded-xl bg-brand-500 hover:bg-brand-400 text-slate-950 text-xs font-bold cursor-pointer"
                   >
                     Registrar clic real
                   </button>
@@ -1669,7 +1671,7 @@ export default function App() {
               {lastDecision ? (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   <div className="p-4 rounded-xl bg-[#070B12] border border-slate-800 font-mono text-xs space-y-2">
-                    <p className="text-amber-400 font-bold">// CERTIFICADO CANÓNICO DEL AD SERVER</p>
+                    <p className="text-brand-400 font-bold">// CERTIFICADO CANÓNICO DEL AD SERVER</p>
                     <p>{`Decisión ID: ${lastDecision.decisionId}`}</p>
                     <p>{`Campaña Ganadora: ${lastDecision.campaign.id} (${lastDecision.campaign.name})`}</p>
                     <p>{`Creativo Entregado: ${lastDecision.creative.id}`}</p>
@@ -1718,7 +1720,7 @@ export default function App() {
               <section className="as-card-premium rounded-2xl p-6 space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-amber-400">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-brand-400">
                       Telemetría Recharts • Doble Eje Sincronizado
                     </span>
                     <h3 className="text-base font-bold text-white mt-0.5">
@@ -1737,7 +1739,7 @@ export default function App() {
                     </button>
                     <button
                       onClick={exportCsvReport}
-                      className="px-3 py-1.5 rounded-xl bg-amber-500 text-slate-950 text-xs font-bold cursor-pointer"
+                      className="px-3 py-1.5 rounded-xl bg-brand-500 text-slate-950 text-xs font-bold cursor-pointer"
                     >
                       Descargar Reporte CSV
                     </button>
@@ -1762,7 +1764,7 @@ export default function App() {
                       <YAxis
                         yAxisId="right"
                         orientation="right"
-                        stroke="#F59E0B"
+                        stroke="var(--as-accent)"
                         fontSize={11}
                         unit=" $"
                         domain={[0, 'auto']}
@@ -1796,9 +1798,9 @@ export default function App() {
                         type="monotone"
                         dataKey="cpc"
                         name="CPC Promedio ($ MXN)"
-                        stroke="#F59E0B"
+                        stroke="var(--as-accent)"
                         strokeWidth={2.8}
-                        dot={{ r: 3, fill: '#F59E0B' }}
+                        dot={{ r: 3, fill: 'var(--as-accent)' }}
                         activeDot={{ r: 6 }}
                       />
                     </LineChart>
@@ -1853,7 +1855,7 @@ export default function App() {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div>
                     <h3 className="text-base font-bold text-white flex items-center gap-2">
-                      <ShieldAlert className="h-5 w-5 text-amber-400" />
+                      <ShieldAlert className="h-5 w-5 text-brand-400" />
                       ADSOLUSOL Shield™ • Interceptor de Fuga de Presupuesto
                     </h3>
                     <p className="text-xs text-slate-400">
@@ -1890,7 +1892,7 @@ export default function App() {
                         className={`px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer ${
                           item.blocked
                             ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
-                            : 'bg-amber-500 text-slate-950'
+                            : 'bg-brand-500 text-slate-950'
                         }`}
                       >
                         {item.blocked ? '🛡️ Bloqueado' : 'Bloquear'}
@@ -1910,7 +1912,7 @@ export default function App() {
                       key={aud.id}
                       className="p-4 rounded-xl bg-[#070B12] border border-slate-800 space-y-2"
                     >
-                      <span className="text-[10px] font-mono text-amber-400 font-bold">
+                      <span className="text-[10px] font-mono text-brand-400 font-bold">
                         {aud.id}
                       </span>
                       <p className="text-sm font-bold text-white">{aud.segment}</p>
@@ -1947,7 +1949,7 @@ export default function App() {
                 <tbody className="divide-y divide-slate-800/60">
                   {auditLogs.map((log: any) => (
                     <tr key={log.id}>
-                      <td className="py-3 text-amber-400 font-bold">{log.id}</td>
+                      <td className="py-3 text-brand-400 font-bold">{log.id}</td>
                       <td className="py-3">{log.timestamp}</td>
                       <td className="py-3">
                         <span
@@ -1983,7 +1985,7 @@ export default function App() {
                 </div>
                 <button
                   onClick={requestBrowserPushPermission}
-                  className="px-3.5 py-2 rounded-xl bg-amber-500 text-slate-950 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+                  className="px-3.5 py-2 rounded-xl bg-brand-500 text-slate-950 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
                 >
                   <BellRing className="h-4 w-4" /> Probar / Activar Push Nativo
                 </button>
@@ -2020,7 +2022,7 @@ export default function App() {
                   className="p-4 rounded-xl bg-[#070B12] border border-slate-800 flex items-center justify-between"
                 >
                   <div>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 mr-2">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-500/20 text-brand-400 mr-2">
                       {al.severity}
                     </span>
                     <span className="text-xs font-bold text-white">{al.module}</span>
@@ -2052,7 +2054,7 @@ export default function App() {
                       <tr key={u.id}>
                         <td className="py-3 font-bold text-white">{u.name}</td>
                         <td className="py-3 text-slate-300">{u.email}</td>
-                        <td className="py-3 text-amber-400 font-semibold">{u.role}</td>
+                        <td className="py-3 text-brand-400 font-semibold">{u.role}</td>
                         <td className="py-3 font-mono text-slate-400">{u.keyFingerprint}</td>
                       </tr>
                     ))}
@@ -2114,7 +2116,7 @@ export default function App() {
                 </p>
                 <p className="text-xs text-slate-400">{`Tenant: ${sysHealth?.apiNode?.tenantId}`}</p>
                 <p className="text-xs text-slate-400">{`Protección: ${sysHealth?.apiNode?.antiReplayWindow}`}</p>
-                <p className="text-[11px] font-mono text-amber-400">
+                <p className="text-[11px] font-mono text-brand-400">
                   {`Tiempo Activo: ${sysHealth?.apiNode?.uptimeSeconds ?? 'NO DISPONIBLE'}s`}
                 </p>
               </div>
@@ -2131,10 +2133,10 @@ export default function App() {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="bg-[#0E1525] border border-amber-500/40 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl"
+            className="bg-[#0E1525] border border-brand-500/40 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl"
           >
             <div className="p-3.5 border-b border-slate-800 flex items-center gap-2.5">
-              <Command className="h-4 w-4 text-amber-400" />
+              <Command className="h-4 w-4 text-brand-400" />
               <input
                 type="text"
                 autoFocus
@@ -2197,12 +2199,12 @@ export default function App() {
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex justify-end z-50">
           <form
             onSubmit={handleCreateRecord}
-            className="bg-[#0E1525] border-l border-amber-500/30 w-full max-w-md h-full p-6 flex flex-col justify-between shadow-2xl"
+            className="bg-[#0E1525] border-l border-brand-500/30 w-full max-w-md h-full p-6 flex flex-col justify-between shadow-2xl"
           >
             <div className="space-y-4">
               <div className="flex items-center justify-between border-b border-slate-800 pb-4">
                 <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-brand-400">
                     Registro Transaccional
                   </span>
                   <h3 className="text-base font-bold text-white">
@@ -2288,7 +2290,7 @@ export default function App() {
                     onClick={applyAiCreativePreset}
                     className="w-full py-2 rounded-xl bg-indigo-500/20 border border-indigo-400/40 text-indigo-300 text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer"
                   >
-                    <Sparkles className="h-3.5 w-3.5 text-amber-400" /> Autocompletar con IA Clínica
+                    <Sparkles className="h-3.5 w-3.5 text-brand-400" /> Autocompletar con IA Clínica
                   </button>
                   <div>
                     <label className="text-xs text-slate-400">Título del Anuncio</label>
@@ -2311,7 +2313,7 @@ export default function App() {
                     />
                   </div>
                   <div>
-                    <label className="text-xs text-amber-400 font-bold">
+                    <label className="text-xs text-brand-400 font-bold">
                       Sucursal Destino ("Cómo llegar" en Google Maps)
                     </label>
                     <input
@@ -2344,7 +2346,7 @@ export default function App() {
               </button>
               <button
                 type="submit"
-                className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold cursor-pointer"
+                className="px-5 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-400 text-slate-950 text-xs font-bold cursor-pointer"
               >
                 Guardar en Servidor
               </button>
@@ -2389,7 +2391,7 @@ export default function App() {
                 ? 'bg-[#0E1422] border-emerald-500/50 text-emerald-400'
                 : t.type === 'alerta'
                 ? 'bg-[#0E1422] border-rose-500/50 text-rose-400'
-                : 'bg-[#0E1422] border-amber-500/50 text-amber-400'
+                : 'bg-[#0E1422] border-brand-500/50 text-brand-400'
             }`}
           >
             <CheckCircle2 className="h-4 w-4 shrink-0" />
