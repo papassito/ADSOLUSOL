@@ -1,4 +1,4 @@
-<#
+﻿<#
 ================================================================================
   ADSOLUSOL :: SUITE DE VALIDACION DE CONTROLADOR patchCampaign
   Verifica el cumplimiento estricto de las reglas de negocio y seguridad para
@@ -7,10 +7,13 @@
 #>
 [CmdletBinding()]
 param(
-    [string]$BaseUrl = "http://localhost:3000"
+    [string]$BaseUrl = "http://127.0.0.1:3000"
 )
 
-$ErrorActionPreference = "SilentlyContinue"
+$ErrorActionPreference = "Stop"
+Add-Type -AssemblyName System.Net.Http
+$script:HttpClient = New-Object System.Net.Http.HttpClient
+$script:HttpClient.Timeout = [TimeSpan]::FromSeconds(15)
 try { $null = chcp 65001 } catch {}
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
@@ -36,28 +39,22 @@ function Assert-Call {
     $Global:TestCounter++
     Write-Host "`n[TEST $($Global:TestCounter)] $TestName" -ForegroundColor White
 
-    $response = $null
-    $params = @{
-        Method      = $Method
-        Uri         = $Uri
-        ContentType = 'application/json; charset=utf-8' # Explicitly set charset for PS 5.1
+    $request = New-Object System.Net.Http.HttpRequestMessage
+    $request.Method = New-Object System.Net.Http.HttpMethod($Method)
+    $request.RequestUri = [Uri]$Uri
+    if ($null -ne $Body) {
+        $json = ConvertTo-Json -InputObject $Body -Depth 20 -Compress
+        $request.Content = New-Object System.Net.Http.StringContent($json, [Text.Encoding]::UTF8, 'application/json')
     }
-    if ($Body) {
-        $params.Body = ($Body | ConvertTo-Json -Compress)
-    }
-
-    $errorBodyString = $null
     try {
-        $response = Invoke-WebRequest @params -ErrorAction Stop
-    } catch {
-        $response = $_.Exception.Response
-        # In PS 5.1, the error body is in the ErrorDetails message property
-        if ($_.ErrorDetails.Message) {
-            $errorBodyString = $_.ErrorDetails.Message
-        }
-    }
-
-    $actualStatus = if ($response) { [int]$response.StatusCode } else { 0 }
+        $httpResponse = $script:HttpClient.SendAsync($request).GetAwaiter().GetResult()
+        try {
+            $textBody = $httpResponse.Content.ReadAsStringAsync().GetAwaiter().GetResult()
+            $actualStatus = [int]$httpResponse.StatusCode
+            $response = [pscustomobject]@{ StatusCode = $actualStatus; Content = $textBody }
+            $errorBodyString = $textBody
+        } finally { $httpResponse.Dispose() }
+    } finally { $request.Dispose() }
 
     if ($actualStatus -eq $ExpectedStatus) {
         Write-Host "  [PASS] Servidor respondió con $actualStatus." -ForegroundColor Green
@@ -94,7 +91,7 @@ function Cleanup-TestCampaign($baseUrl, $campaignId) {
     if (-not $campaignId) { return }
     Write-Host "`n[CLEANUP] Eliminando campaña de prueba $campaignId..." -ForegroundColor DarkGray
     try {
-        $null = Invoke-WebRequest -Method Delete -Uri "$baseUrl/api/campaigns/$campaignId" -ErrorAction Stop
+        $null = Invoke-WebRequest -UseBasicParsing -Method Delete -Uri "$baseUrl/api/campaigns/$campaignId" -ErrorAction Stop
     } catch {
         # Ignorar errores si la campaña ya no existe
     }
@@ -119,6 +116,9 @@ try {
     $null = Invoke-WebRequest -Method Post -Uri "$BaseUrl/api/campaigns" -Body ($createBody | ConvertTo-Json) -ContentType 'application/json; charset=utf-8'
 
     $campaign = ((Invoke-WebRequest -Uri "$BaseUrl/api/state").Content | ConvertFrom-Json).campaigns | Where-Object { $_.id -eq $testCampaignId }
+    if (@($campaign).Count -ne 1 -or $campaign.spent -ne 50 -or $campaign.impressions -ne 1000 -or $campaign.clicks -ne 10) {
+        throw 'SETUP failed: test campaign missing or unexpected initial metrics.'
+    }
     Write-Host "Estado inicial de la campaña de prueba:"
     Write-Host "- Name: $($campaign.name)"
     Write-Host "- Spent: $($campaign.spent)"
@@ -162,6 +162,7 @@ try {
 }
 finally {
     Cleanup-TestCampaign $BaseUrl $testCampaignId
+    $script:HttpClient.Dispose()
 }
 
 Write-Section "RESULTADO: $($Global:AssertionsPassed) de $($Global:AssertionsPassed + $Global:AssertionsFailed) COMPROBACIONES APROBADAS"
