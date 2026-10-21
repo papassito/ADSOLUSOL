@@ -630,8 +630,8 @@ export default function App() {
                   setIsAutoLive(!isAutoLive);
                   pushToast(
                     !isAutoLive
-                      ? 'Motor Autónomo AUTO-LIVE activado (subastas cada 2.8s)'
-                      : 'Motor Autónomo pausado',
+                      ? 'Actualización de datos reales activada (cada 5s)'
+                      : 'Actualización automática pausada',
                     'info'
                   );
                 }}
@@ -642,7 +642,7 @@ export default function App() {
                 }`}
               >
                 <Radio className="h-3.5 w-3.5" />
-                {isAutoLive ? 'AUTO-LIVE: ACTIVO' : 'ACTIVAR AUTO-LIVE'}
+                {isAutoLive ? 'ACTUALIZACIÓN: ACTIVA' : 'ACTIVAR ACTUALIZACIÓN'}
               </button>
 
               <button
