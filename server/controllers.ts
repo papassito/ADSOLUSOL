@@ -5,6 +5,24 @@ import { DB_PATH, readDb, writeDb } from './storage';
 
 export const serverStartTime = Date.now();
 
+export async function validateEmbed(req: Request, res: Response) {
+  const rawUrl = typeof req.body?.url === 'string' ? req.body.url.trim() : '';
+  const zoneId = typeof req.body?.zoneId === 'string' ? req.body.zoneId.trim() : '';
+  let url: URL;
+  try { url = new URL(rawUrl); } catch { return res.status(400).json({ verified: false, code: 'INVALID_URL', message: 'URL inválida.' }); }
+  if (url.protocol !== 'https:') return res.status(400).json({ verified: false, code: 'HTTPS_REQUIRED', message: 'La URL debe usar HTTPS.' });
+  if (!zoneId || !/^[A-Za-z0-9_-]{3,80}$/.test(zoneId)) return res.status(400).json({ verified: false, code: 'INVALID_ZONE', message: 'Zona inválida.' });
+  try {
+    const response = await fetch(url, { signal: AbortSignal.timeout(8000), headers: { 'User-Agent': 'ADSOLUSOL-Validator/2027' } });
+    const html = (await response.text()).slice(0, 2_000_000);
+    const tagDetected = html.includes(`data-zone-id="${zoneId}"`) || html.includes(`data-adsolusol-zone="${zoneId}"`);
+    // La firma solo se marca válida cuando exista verificación criptográfica real en el backend.
+    return res.json({ verified: response.ok && tagDetected, reachable: response.ok, statusCode: response.status, tagDetected, signatureVerified: false, message: response.ok && tagDetected ? 'Sitio accesible y zona detectada.' : 'No se detectó una zona ADSOLUSOL verificable.' });
+  } catch (error) {
+    return res.status(502).json({ verified: false, code: 'TARGET_UNREACHABLE', message: 'No se pudo contactar el sitio destino.' });
+  }
+}
+
 export function getState(req: Request, res: Response) {
   const startCheck = process.hrtime();
   const db = readDb();

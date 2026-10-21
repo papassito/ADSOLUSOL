@@ -25,6 +25,7 @@ async function startServer() {
   app.post('/api/placements', controllers.createPlacement);
   app.post('/api/creatives', controllers.createCreative);
   app.post('/api/assignments', controllers.createAssignment);
+  app.post('/api/embed/validate', controllers.validateEmbed);
 
   const vite = await createServer({
     configFile: false, // No cargar vite.config.ts para aislar el modo demo
