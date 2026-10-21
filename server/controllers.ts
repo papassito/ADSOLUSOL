@@ -75,6 +75,9 @@ export function createCampaign(req: Request, res: Response) {
 
 export function patchCampaign(req: Request, res: Response) {
   const db = readDb();
+  if (!req.body || typeof req.body !== 'object' || Array.isArray(req.body) || Object.keys(req.body).length === 0) {
+    return res.status(400).json({ code: 'INVALID_BODY', error: 'Se requiere un objeto JSON no vacio.' });
+  }
   const allowedFields = ['name', 'status', 'strategy', 'maxCpc', 'budget'];
   const campaignIndex = db.campaigns.findIndex((c: any) => c.id === req.params.id);
 
@@ -86,9 +89,9 @@ export function patchCampaign(req: Request, res: Response) {
   const updatePayload: { [key: string]: any } = {};
 
   // Primero, validar que no se intenten modificar campos protegidos
-  for (const key in req.body) {
+  for (const key of Object.keys(req.body)) {
     if (!allowedFields.includes(key)) {
-      return res.status(400).json({ error: `El campo '${key}' es protegido y no puede ser modificado.` });
+      return res.status(400).json({ code: 'PROTECTED_FIELD', error: `El campo '${key}' es protegido y no puede ser modificado.` });
     }
   }
 
@@ -98,6 +101,7 @@ export function patchCampaign(req: Request, res: Response) {
     const value = req.body[key];
 
     if (key === 'budget' || key === 'maxCpc') {
+<<<<<<< HEAD
       const numValue = Number(value);
       // 1. Validar que es un numero finito
       if (value === null || !Number.isFinite(numValue)) {
@@ -106,6 +110,11 @@ export function patchCampaign(req: Request, res: Response) {
       // 2. Validar que es estrictamente positivo
       if (numValue <= 0) {
         return res.status(400).json({ error: `El campo '${key}' debe ser un número estrictamente positivo.` });
+=======
+      const numValue = value;
+      if (typeof numValue !== 'number' || !Number.isFinite(numValue) || numValue <= 0) {
+        return res.status(400).json({ code: 'INVALID_NUMBER', error: `El campo '${key}' debe ser un número estrictamente positivo.` });
+>>>>>>> ad23fe6ae847aa6a01db6d2cad547683009e16ef
       }
       // 3. Validar regla de negocio
       if (key === 'budget' && numValue < campaignToUpdate.spent) {

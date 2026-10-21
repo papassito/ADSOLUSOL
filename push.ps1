@@ -123,6 +123,13 @@ git commit -m "$Message"
 Show-Section "PUSH"
 
 git push origin $Branch
+if ($LASTEXITCODE -ne 0) {
+    Write-Host ""
+    Write-Host "[ERROR] Falló la sincronización con el repositorio remoto." -ForegroundColor Red
+    Write-Host "Causa: El repositorio remoto tiene cambios que no tienes localmente." -ForegroundColor Yellow
+    Write-Host "Solución: Ejecuta 'git pull' para integrar los cambios remotos y luego intenta el push de nuevo." -ForegroundColor Yellow
+    exit 1
+}
 
 Write-Host ""
 Write-Host "[OK] Sincronizacion completada correctamente." -ForegroundColor Green
