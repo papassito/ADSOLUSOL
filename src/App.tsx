@@ -4,6 +4,7 @@ import { useAdsolusolState } from './useAdsolusolState';
 import { useAnalyticsCalculations } from './useAnalyticsCalculations';
 import { apiFetch } from './services/api';
 import { mapToBackendCreateDto } from './services/campaignAdapter';
+import { EmbedCodeGeneratorValidator } from './components/EmbedCodeGeneratorValidator';
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import {
   LayoutDashboard,
@@ -1296,7 +1297,7 @@ export default function App() {
 
           {/* VISTA 3: UBICACIONES */}
           {activeModule === 'ubicaciones' && (
-            <section className="as-card-premium rounded-2xl p-6 space-y-4">
+            <div className="space-y-6"><section className="as-card-premium rounded-2xl p-6 space-y-4">
               <div className="flex justify-between items-center">
                 <div>
                   <h3 className="text-base font-bold text-white">
@@ -1355,7 +1356,7 @@ export default function App() {
                   ))}
                 </tbody>
               </table>
-            </section>
+            </section><EmbedCodeGeneratorValidator /></div>
           )}
 
           {/* VISTA 4: CREATIVOS + IA + GOOGLE MAPS */}
