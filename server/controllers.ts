@@ -99,9 +99,15 @@ export function patchCampaign(req: Request, res: Response) {
 
     if (key === 'budget' || key === 'maxCpc') {
       const numValue = Number(value);
-      if (value === null || !Number.isFinite(numValue) || numValue <= 0) {
+      // 1. Validar que es un numero finito
+      if (value === null || !Number.isFinite(numValue)) {
+        return res.status(400).json({ error: `El campo '${key}' debe ser un número finito.` });
+      }
+      // 2. Validar que es estrictamente positivo
+      if (numValue <= 0) {
         return res.status(400).json({ error: `El campo '${key}' debe ser un número estrictamente positivo.` });
       }
+      // 3. Validar regla de negocio
       if (key === 'budget' && numValue < campaignToUpdate.spent) {
         return res.status(400).json({ error: `El presupuesto (${numValue}) no puede ser menor que el gasto actual (${campaignToUpdate.spent}).` });
       }

@@ -7,7 +7,7 @@
 #>
 [CmdletBinding()]
 param(
-    [string]$BaseUrl = "http://localhost:3000"
+    [string]$BaseUrl = "http://127.0.0.1:3000"
 )
 
 $ErrorActionPreference = "SilentlyContinue"
@@ -51,9 +51,15 @@ function Assert-Call {
         $response = Invoke-WebRequest @params -ErrorAction Stop
     } catch {
         $response = $_.Exception.Response
-        # In PS 5.1, the error body is in the ErrorDetails message property
-        if ($_.ErrorDetails.Message) {
-            $errorBodyString = $_.ErrorDetails.Message
+        # In PS 5.1, the error body must be read from the exception's response stream.
+        try {
+            $stream = $response.GetResponseStream()
+            $reader = New-Object System.IO.StreamReader($stream)
+            $errorBodyString = $reader.ReadToEnd()
+            $reader.Close()
+        } catch {
+            # Fallback for when stream reading fails
+            $errorBodyString = "Failed to read response stream: $($_.Exception.Message)"
         }
     }
 
@@ -111,12 +117,13 @@ Write-Host "Servidor de demo detectado en $BaseUrl... OK`n"
 
 # --- Creación de campaña de prueba para aislamiento ---
 $testCampaignId = "CAMP-TEST-" + [guid]::NewGuid().ToString().Substring(0,8)
+$zeroSpentCampaignId = $null
 
 try {
     Cleanup-TestCampaign $BaseUrl $testCampaignId # Limpieza previa por si quedó de una ejecución anterior
     $createBody = @{ id = $testCampaignId; name = "Campaña de Prueba"; budget = 100; spent = 50; clicks = 10; impressions = 1000 }
     Write-Host "[SETUP] Creando campaña de prueba aislada ($testCampaignId)..." -ForegroundColor DarkGray
-    $null = Invoke-WebRequest -Method Post -Uri "$BaseUrl/api/campaigns" -Body ($createBody | ConvertTo-Json) -ContentType 'application/json; charset=utf-8'
+    $null = Invoke-WebRequest -Method Post -Uri "$BaseUrl/api/campaigns" -Body ($createBody | ConvertTo-Json -Compress) -ContentType 'application/json; charset=utf-8'
 
     $campaign = ((Invoke-WebRequest -Uri "$BaseUrl/api/state").Content | ConvertFrom-Json).campaigns | Where-Object { $_.id -eq $testCampaignId }
     Write-Host "Estado inicial de la campaña de prueba:"
@@ -134,13 +141,19 @@ try {
     $null = Assert-Call "Rechazo de campo protegido 'id'" "PATCH" "$BaseUrl/api/campaigns/$testCampaignId" @{ id = "CAMP-NEW" } 400 "campo 'id' es protegido"
 
     $null = Assert-Call "Rechazo de presupuesto negativo" "PATCH" "$BaseUrl/api/campaigns/$testCampaignId" @{ budget = -100 } 400 "estrictamente positivo"
-    $null = Assert-Call "Rechazo de presupuesto cero" "PATCH" "$BaseUrl/api/campaigns/$testCampaignId" @{ budget = 0 } 400 "estrictamente positivo"
-    $null = Assert-Call "Rechazo de presupuesto no numérico" "PATCH" "$BaseUrl/api/campaigns/$testCampaignId" @{ budget = "abc" } 400 "estrictamente positivo"
-    $null = Assert-Call "Rechazo de presupuesto nulo" "PATCH" "$BaseUrl/api/campaigns/$testCampaignId" @{ budget = $null } 400 "estrictamente positivo"
+    $null = Assert-Call "Rechazo de presupuesto no numérico" "PATCH" "$BaseUrl/api/campaigns/$testCampaignId" @{ budget = "abc" } 400 "debe ser un número finito"
+    $null = Assert-Call "Rechazo de presupuesto nulo" "PATCH" "$BaseUrl/api/campaigns/$testCampaignId" @{ budget = $null } 400 "debe ser un número finito"
     $null = Assert-Call "Rechazo de presupuesto inferior al gasto" "PATCH" "$BaseUrl/api/campaigns/$testCampaignId" @{ budget = 49 } 400 "no puede ser menor que el gasto actual"
     $null = Assert-Call "Rechazo de nombre de campaña inválido (muy corto)" "PATCH" "$BaseUrl/api/campaigns/$testCampaignId" @{ name = "a" } 400 "debe ser una cadena entre 3 y 100"
     $null = Assert-Call "Rechazo de estado inválido" "PATCH" "$BaseUrl/api/campaigns/$testCampaignId" @{ status = "INVALIDO" } 400 "debe ser uno de"
     $null = Assert-Call "Rechazo de estrategia inválida" "PATCH" "$BaseUrl/api/campaigns/$testCampaignId" @{ strategy = "Estrategia Inexistente" } 400 "debe ser una de"
+
+    # Prueba de presupuesto cero con gasto cero
+    $zeroSpentCampaignId = "CAMP-TEST-ZERO-" + [guid]::NewGuid().ToString().Substring(0,8)
+    Cleanup-TestCampaign $BaseUrl $zeroSpentCampaignId
+    $createZeroBody = @{ id = $zeroSpentCampaignId; name = "Campaña Gasto Cero"; budget = 10; spent = 0 }
+    $null = Invoke-WebRequest -Method Post -Uri "$BaseUrl/api/campaigns" -Body ($createZeroBody | ConvertTo-Json -Compress) -ContentType 'application/json; charset=utf-8'
+    $null = Assert-Call "Rechazo de presupuesto cero (con gasto cero)" "PATCH" "$BaseUrl/api/campaigns/$zeroSpentCampaignId" @{ budget = 0 } 400 "estrictamente positivo"
 
     # --- Pruebas de Ruta ---
     Write-Host "`n--- INICIANDO PRUEBAS DE RUTA ---" -ForegroundColor Yellow
@@ -162,6 +175,7 @@ try {
 }
 finally {
     Cleanup-TestCampaign $BaseUrl $testCampaignId
+    Cleanup-TestCampaign $BaseUrl $zeroSpentCampaignId
 }
 
 Write-Section "RESULTADO: $($Global:AssertionsPassed) de $($Global:AssertionsPassed + $Global:AssertionsFailed) COMPROBACIONES APROBADAS"
