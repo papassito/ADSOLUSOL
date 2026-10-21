@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Security.Cryptography;
 using System.Text;
 using ADSOLUSOL.Domain.Interfaces;
@@ -9,6 +10,8 @@ namespace ADSOLUSOL.Presentation.Api.Middleware;
 
 public class SignatureVerificationMiddleware
 {
+    private static readonly ConcurrentDictionary<string, DateTimeOffset> UsedNonces = new(StringComparer.Ordinal);
+    private static long _nonceChecks;
     private readonly RequestDelegate _next;
     private readonly ICoreSignatureVerifier _verifier;
 
@@ -18,7 +21,7 @@ public class SignatureVerificationMiddleware
         _verifier = verifier;
     }
 
-    public async Task InvokeAsync(HttpContext context, INodeRegistry nodeRegistry, IMemoryCache nonceCache)
+    public async Task InvokeAsync(HttpContext context, INodeRegistry nodeRegistry)
     {
         // Bypass seguro: solo ruta raíz exacta, endpoint de salud o documentación swagger
         var path = context.Request.Path;
@@ -80,14 +83,6 @@ public class SignatureVerificationMiddleware
             return;
         }
 
-        // Comprobación anti-replay: verificar si ya fue utilizado (sin consumirlo aún)
-        if (nonceCache.TryGetValue(nonce.ToString(), out _))
-        {
-            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            await context.Response.WriteAsync("Replay attack detected (nonce already used).");
-            return;
-        }
-
         var (tenantId, publicKeyHex) = nodeRegistry.GetNodeInfo(nodeId.ToString());
         if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(publicKeyHex))
         {
@@ -117,7 +112,24 @@ public class SignatureVerificationMiddleware
         }
 
         // Consumir el nonce únicamente tras certificar la firma criptográfica
-        nonceCache.Set(nonce.ToString(), true, TimeSpan.FromMinutes(5));
+        // Atomic check-and-insert closes the concurrent replay window within this process.
+        // A shared distributed store is still required when running multiple API instances.
+        var now = DateTimeOffset.UtcNow;
+        if (Interlocked.Increment(ref _nonceChecks) % 256 == 0)
+        {
+            foreach (var entry in UsedNonces)
+            {
+                if (entry.Value <= now)
+                    UsedNonces.TryRemove(new KeyValuePair<string, DateTimeOffset>(entry.Key, entry.Value));
+            }
+        }
+        var nonceKey = nodeId.ToString() + ":" + nonce.ToString();
+        if (!UsedNonces.TryAdd(nonceKey, now.AddMinutes(6)))
+        {
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            await context.Response.WriteAsync("Replay attack detected (nonce already used).");
+            return;
+        }
 
         // Authentication and Authorization successful. Set TenantId for downstream controllers.
         context.Items["TenantId"] = tenantId;

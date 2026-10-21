@@ -169,8 +169,12 @@ app.UseRouting();
 app.UseRateLimiter();
 app.UseAuthentication();
 
-app.UseSwagger();
-app.UseSwaggerUI();
+// Swagger must not be publicly exposed in production.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 if (!app.Environment.IsDevelopment())
 {
