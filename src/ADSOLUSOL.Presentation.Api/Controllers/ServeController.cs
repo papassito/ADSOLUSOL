@@ -19,12 +19,16 @@ public class ServeController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> ServeAd([FromQuery] string placementCode)
     {
-        var result = await _adServingService.SelectAdForPlacement(TenantId, placementCode);
+        var result = await _adServingService.SelectDecisionForPlacement(TenantId, placementCode);
         if (result == null)
         {
             return NotFound(new { message = "No eligible ads available for this placement." });
         }
 
-        return Ok(result);
+        return Ok(new {
+            result.Creative.Id, result.Creative.Name, result.Creative.ContentUrl,
+            result.Creative.TargetUrl, result.Creative.IsEnabled,
+            result.CampaignId, result.CampaignName
+        });
     }
 }

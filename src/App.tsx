@@ -133,20 +133,11 @@ export default function App() {
       return;
     }
 
-    const res = await apiFetch(`/api/campaigns/${camp.id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status: nextStatus }),
-    });
-    if (res.ok) {
-      const data = await res.json();
-      setDbState((prev: any) => ({ ...prev, ...data }));
-      pushToast(`Campaña ${camp.id} actualizada a estado ${nextStatus}`, 'info');
-    }
+    pushToast(`No se pudo actualizar la campaña (HTTP ${netRes.status})`, 'alerta');
   };
 
   const handleOpenDirectionsMaps = async (address: string) => {
-    await handleServeDecision(true, placements[1]?.id, true);
+    if (!address) { pushToast('Dirección no disponible', 'alerta'); return; }
     const mapsNavUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
       address
     )}&travelmode=driving`;
@@ -154,6 +145,7 @@ export default function App() {
   };
 
   const applyAiCreativePreset = () => {
+    if (import.meta.env.VITE_DEMO_MODE !== 'true') { pushToast('Generación IA no disponible: proveedor sin conectar', 'alerta'); return; }
     const randomPreset = AI_PRESETS[Math.floor(Math.random() * AI_PRESETS.length)];
     setCrtForm((prev) => ({
       ...prev,
@@ -200,7 +192,8 @@ export default function App() {
         const netRes = await apiFetch('/api/Placements', {
           method: 'POST',
           body: JSON.stringify({
-            code: plcForm.code,
+            placementCode: plcForm.code,
+            isEnabled: true,
             name: plcForm.name,
             description: plcForm.name,
             floorCpm: Number(plcForm.floorCpm),
@@ -219,8 +212,9 @@ export default function App() {
           method: 'POST',
           body: JSON.stringify({
             campaignId: cleanCampId,
-            title: crtForm.title,
-            imageUrl: crtForm.destinationUrl,
+            name: crtForm.title,
+            isEnabled: true,
+            contentUrl: crtForm.destinationUrl,
             targetUrl: crtForm.destinationUrl,
             description: crtForm.description,
             locationAddress: crtForm.locationAddress,
@@ -257,11 +251,10 @@ export default function App() {
         }
       }
 
-      pushToast('Registro persistido', 'exito');
-      setDrawerType(null);
-      await fetchState();
-    } catch {
-      pushToast('Error al persistir registro', 'alerta');
+      throw new Error('El backend no confirmó la operación.');
+    } catch (error) {
+      console.error('Error al persistir registro', error);
+      pushToast(error instanceof Error ? error.message : 'Error al persistir registro', 'alerta');
     }
   };
 
@@ -283,10 +276,11 @@ export default function App() {
       await fetchState();
       return;
     }
-    setConfirmDelete(null);
+    pushToast(`No se pudo eliminar (HTTP ${netRes.status})`, 'alerta');
   };
 
   const handleToggleBlockTerm = (id: string) => {
+    if (import.meta.env.VITE_DEMO_MODE !== 'true') { pushToast('Bloqueo no disponible: proveedor sin conectar', 'alerta'); return; }
     setCompetitorTerms((prev) =>
       prev.map((t) => (t.id === id ? { ...t, blocked: !t.blocked } : t))
     );
@@ -347,7 +341,7 @@ export default function App() {
           onOpenCommand={() => setCommandOpen(true)}
           onOpenSystem={() => setActiveModule('sistema')}
           sysHealth={sysHealth}
-          ledgerBalance={dbState?.ledgerBalance ?? 3190.91}
+          ledgerBalance={dbState?.ledgerBalance ?? null}
           loadingAction={loadingAction}
           onRefresh={fetchState}
         />
@@ -358,7 +352,7 @@ export default function App() {
               forecast7DaysData={forecast7DaysData}
               total7DayPredictedSpend={total7DayPredictedSpend}
               total7DayShieldOptimized={total7DayShieldOptimized}
-              ledgerBalance={dbState?.ledgerBalance ?? 3190.91}
+              ledgerBalance={dbState?.ledgerBalance ?? null}
             />
           )}
 
@@ -433,7 +427,7 @@ export default function App() {
             <BillingView
               auditLogs={auditLogs}
               paymentMethod={dbState?.paymentMethod}
-              ledgerBalance={dbState?.ledgerBalance ?? 3190.91}
+              ledgerBalance={dbState?.ledgerBalance ?? null}
             />
           )}
 

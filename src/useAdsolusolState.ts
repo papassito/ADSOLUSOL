@@ -4,7 +4,7 @@ import { mapFromBackendCampaign } from './services/campaignAdapter';
 import { Campaign, ToastMsg } from './types';
 
 export function useAdsolusolState() {
-  const [loadingAction, setLoadingAction] = useState(false);
+  const [loadingAction, setLoadingAction] = useState(true);
   const [isAutoLive, setIsAutoLive] = useState(false);
   const [toasts, setToasts] = useState<ToastMsg[]>([]);
   const [pushAlertBanner, setPushAlertBanner] = useState<string | null>(null);
@@ -16,13 +16,13 @@ export function useAdsolusolState() {
   const [dbState, setDbState] = useState<any>(null);
   const [lastDecision, setLastDecision] = useState<any>(null);
 
-  const [competitorTerms, setCompetitorTerms] = useState([
+  const [competitorTerms, setCompetitorTerms] = useState<any[]>(import.meta.env.VITE_DEMO_MODE === 'true' ? [
     { id: 'sh-1', term: 'salud digna hermosillo telefono', wasted: 14.5, category: 'Competidor Directo', blocked: true },
     { id: 'sh-2', term: 'laboratorio chopo hermosillo precios', wasted: 19.2, category: 'Competidor Directo', blocked: true },
     { id: 'sh-3', term: 'laboratorio san jose sucursales', wasted: 11.8, category: 'Competidor Local', blocked: false },
     { id: 'sh-4', term: 'laboratorio ramos hermosillo', wasted: 9.4, category: 'Competidor Local', blocked: false },
     { id: 'sh-5', term: 'clinica 37 imss citas', wasted: 8.1, category: 'Sector Público', blocked: true },
-  ]);
+  ] : []);
 
   const pushToast = useCallback((title: string, type: 'exito' | 'alerta' | 'info' = 'exito') => {
     const id = Math.random().toString(36).substring(2, 8);
@@ -77,7 +77,7 @@ export function useAdsolusolState() {
   const fetchState = useCallback(async () => {
     setLoadingAction(true);
     try {
-      // MODO DEMO: Se ejecuta con `npm run dev`. Consulta directamente el estado del servidor Node.
+      // MODO DEMO: Se ejecuta con `npm run dev:demo`. Consulta directamente el estado del servidor Node.
       if (import.meta.env.VITE_DEMO_MODE === 'true') {
         const res = await apiFetch('/api/state');
         if (res.ok) {
@@ -105,7 +105,7 @@ export function useAdsolusolState() {
           loadedCampaigns = await campRes.value.json();
         }
         if (plcRes.status === 'fulfilled' && plcRes.value.ok) {
-          loadedPlacements = await plcRes.value.json();
+          loadedPlacements = (await plcRes.value.json()).map((p: any) => ({ ...p, code: p.placementCode ?? p.code }));
         }
         if (crtRes.status === 'fulfilled' && crtRes.value.ok) {
           loadedCreatives = await crtRes.value.json();
@@ -124,9 +124,9 @@ export function useAdsolusolState() {
             ...(loadedCreatives && { creatives: loadedCreatives }),
             systemHealth: {
               sqlite: {
-                status: loadedHealth?.checks?.database === 'UP' ? 'OPERATIVO (WAL)' : (loadedHealth?.checks?.database || 'DOWN'),
+                status: loadedHealth?.checks?.database === 'UP' ? 'OPERATIVO' : (loadedHealth?.checks?.database || 'DOWN'),
                 latencyMs: measuredLatency,
-                journalMode: loadedHealth?.checks?.journalMode || 'Verificado en Kestrel',
+                journalMode: loadedHealth?.checks?.journalMode || 'NO DISPONIBLE',
                 atomicGuard: 'BudgetSpent + Cost <= Budget',
               },
               sicEngine: {
@@ -136,7 +136,7 @@ export function useAdsolusolState() {
                 protocol: 'HTTP/REST (Outbox Bridge)',
               },
               apiNode: {
-                status: loadedHealth?.status || 'ACTIVE',
+                status: loadedHealth?.status || 'NO DISPONIBLE',
                 antiReplayWindow: '300s Nonce Cache',
                 tenantId: localStorage.getItem('adsolusol_tenant_id') || 'TENANT-SOLUSOL-HMO-01',
               },
@@ -207,81 +207,46 @@ export function useAdsolusolState() {
     async (triggerClick: boolean, placementId?: string, isDirections?: boolean) => {
       setLoadingAction(true);
       try {
-        const placement = placements.find((p: any) => p.id === placementId) || placements[0];
-        const placementCode = placement?.code || 'HEADER_LEADERBOARD';
-        const serveRes = await apiFetch(`/api/Serve?placementCode=${encodeURIComponent(placementCode)}`);
-
-        if (serveRes.status === 200) {
-          const creative = await serveRes.json();
-          const targetCampId = creative.campaignId || campaigns[0]?.id || '1';
-          const eventId = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `evt-${Date.now()}`;
-          let debitCost = 0;
-
-          if (triggerClick) {
-            const cleanId = String(targetCampId).replace('CAMP-', '');
-            const clickRes = await apiFetch(`/api/Campaigns/${cleanId}/click`, {
-              method: 'POST',
-              body: JSON.stringify({ eventId, placementId: placement?.id || placementCode, creativeId: creative.id }),
-            });
-            if (!clickRes.ok) {
-              const errData = await clickRes.json().catch(() => ({}));
-              pushToast(errData.message || 'Límite presupuestario en backend .NET', 'alerta');
-              await fetchState();
-              return;
-            }
-            const debitData = await clickRes.json().catch(() => ({}));
-            debitCost = Number(debitData?.cost ?? 0);
-          } else {
-            const cleanId = String(targetCampId).replace('CAMP-', '');
-            await apiFetch(`/api/Campaigns/${cleanId}/impression`, {
-              method: 'POST',
-              body: JSON.stringify({ eventId, placementId: placement?.id || placementCode, creativeId: creative.id }),
-            });
-            debitCost = 0.014;
-          }
-
-          const responseSignature = serveRes.headers.get('X-Solusol-Signature') || 'SIN_FIRMA_EN_RESPUESTA';
-          setLastDecision({
-            decisionId: `DEC-${eventId.slice(0, 8)}`,
-            campaign: campaigns.find((c) => c.id === targetCampId) || { id: targetCampId, name: creative.name || 'Campaña Activa' },
-            creative: {
-              id: creative.id,
-              title: creative.name || 'Creativo Canónico',
-              description: creative.targetUrl || creative.contentUrl || '',
-              locationAddress: creative.locationAddress || 'Ubicación autorizada',
-              whatsappContact: creative.whatsappContact || 'N/A',
-            },
-            placement,
-            debitedCost: debitCost,
-            nonce: eventId.replace(/-/g, '').slice(0, 12),
-            signature: responseSignature,
-            atomicCheck: 'BudgetSpent + Cost <= Budget (Confirmado por Kestrel)',
+        setLastDecision(null);
+        if (import.meta.env.VITE_DEMO_MODE === 'true') {
+          const response = await apiFetch('/api/serve-decision', {
+            method: 'POST', body: JSON.stringify({ triggerClick, placementId, isDirections }),
           });
-          pushToast('Decisión y evento confirmados en .NET 8', 'exito');
+          if (!response.ok) throw new Error(`Demo HTTP ${response.status}`);
+          const data = await response.json();
+          setLastDecision(data.decision ?? null);
           await fetchState();
           return;
         }
-
-        if (serveRes.status === 204) {
-          pushToast('No hay campañas activas elegibles', 'alerta');
+        const placement = placements.find((p: any) => String(p.id) === String(placementId)) || placements[0];
+        if (!placement?.code) throw new Error('Selecciona una ubicación real con código.');
+        const serveRes = await apiFetch(`/api/Serve?placementCode=${encodeURIComponent(placement.code)}`);
+        if (serveRes.status === 204 || serveRes.status === 404) {
+          pushToast('No hay anuncios elegibles para esta ubicación', 'alerta');
           return;
         }
-
-        // Fallback resiliente a nodo local si Kestrel no maneja la subasta
-        const localRes = await apiFetch('/api/serve-decision', {
+        if (!serveRes.ok) throw new Error(`Entrega rechazada (HTTP ${serveRes.status})`);
+        const creative = await serveRes.json();
+        if (!creative.campaignId || creative.id == null) throw new Error('Respuesta sin campaña o creativo. Actualiza la API.');
+        const eventId = crypto.randomUUID();
+        const eventRes = await apiFetch(`/api/Campaigns/${encodeURIComponent(String(creative.campaignId))}/${triggerClick ? 'click' : 'impression'}`, {
           method: 'POST',
-          body: JSON.stringify({ placementId: placement?.id || placementCode, triggerClick, isDirections }),
-        }).catch(() => null);
-
-        if (localRes && localRes.ok) {
-          const data = await localRes.json();
-          if (data.decision) setLastDecision(data.decision);
-          if (data.db) setDbState((prev: any) => ({ ...prev, ...data.db }));
-          pushToast('Decisión entregada por AdServer local', 'exito');
-          return;
+          body: JSON.stringify({ eventId, placementCode: placement.code, creativeId: String(creative.id) }),
+        });
+        const event = await eventRes.json().catch(() => ({}));
+        if (!eventRes.ok || event.status !== 'ACCEPTED' || event.eventId !== eventId || typeof event.cost !== 'number') {
+          throw new Error(`Evento no confirmado (HTTP ${eventRes.status})`);
         }
-
-        pushToast(`Falla en AdServer (HTTP ${serveRes.status}): No se pudo entregar la impresión`, 'alerta');
+        setLastDecision({
+          decisionId: eventId,
+          campaign: { id: creative.campaignId, name: creative.campaignName },
+          creative: { ...creative, title: creative.name, description: creative.targetUrl },
+          placement, debitedCost: event.cost, nonce: eventId,
+          signature: serveRes.headers.get('X-Solusol-Signature') || 'NO DISPONIBLE',
+          atomicCheck: 'Evento aceptado y coste confirmado por el backend',
+        });
+        pushToast('Evento persistido en backend real', 'exito');
+        await fetchState();
       } catch (err: any) {
         pushToast(`Error de conexión en AdServer: ${err.message || 'Sin respuesta'}`, 'alerta');
       } finally {

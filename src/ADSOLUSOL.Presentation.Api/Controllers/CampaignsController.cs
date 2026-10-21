@@ -77,7 +77,18 @@ public class CampaignsController : ControllerBase
         }
 
         var campaigns = await _campaignService.ListAsync(TenantId, CancellationToken.None);
-        return Ok(campaigns);
+        var result = new List<object>();
+        foreach (var campaign in campaigns)
+        {
+            var metrics = await _metricsService.GetMetricsForCampaign(TenantId, campaign.Id);
+            result.Add(new {
+                campaign.Id, campaign.Name, campaign.Status, campaign.Budget,
+                campaign.BudgetSpent, campaign.CostPerClick, campaign.CostPerMille,
+                campaign.StartDateUtc, campaign.EndDateUtc,
+                Impressions = metrics?.Impressions, Clicks = metrics?.Clicks
+            });
+        }
+        return Ok(result);
     }
 
     [HttpPost("{id}/status")]
@@ -158,7 +169,7 @@ public class CampaignsController : ControllerBase
 
         return status switch
         {
-            EventProcessingStatus.Accepted => Ok(new { status = "ACCEPTED", eventId = adEvent.EventId }),
+            EventProcessingStatus.Accepted => Ok(new { status = "ACCEPTED", eventId = adEvent.EventId, cost = adEvent.Cost }),
             EventProcessingStatus.Duplicate => Conflict(new { status = "DUPLICATE", eventId = adEvent.EventId }),
             _ => BadRequest(new { status = "REJECTED" })
         };

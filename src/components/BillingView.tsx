@@ -3,12 +3,12 @@ import React from 'react';
 interface BillingViewProps {
   auditLogs: any[];
   paymentMethod?: string;
-  ledgerBalance: number;
+  ledgerBalance: number | null;
 }
 
 export const BillingView: React.FC<BillingViewProps> = ({
   auditLogs,
-  paymentMethod = 'Visa Corporativa •••• 1209',
+  paymentMethod = 'NO DISPONIBLE',
   ledgerBalance,
 }) => {
   return (
@@ -18,7 +18,7 @@ export const BillingView: React.FC<BillingViewProps> = ({
           Libro Mayor Autoritativo (Server Authoritative Ledger)
         </h3>
         <p className="text-xs text-slate-400">
-          {`Método Principal: ${paymentMethod} • Saldo Disponible: $${ledgerBalance.toFixed(2)} MXN`}
+          {`Método Principal: ${paymentMethod} • Saldo Disponible: $${ledgerBalance?.toFixed(2) ?? 'NO DISPONIBLE'} MXN`}
         </p>
       </div>
       <table className="w-full text-left border-collapse text-xs font-mono">

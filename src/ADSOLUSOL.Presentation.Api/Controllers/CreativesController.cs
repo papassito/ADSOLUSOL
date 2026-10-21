@@ -1,3 +1,5 @@
+using ADSOLUSOL.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 using ADSOLUSOL.Domain.Entities;
 using ADSOLUSOL.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -84,6 +86,13 @@ public class CreativesController : ControllerBase
         if (length >= 12 && bytes.AsSpan(0, 4).SequenceEqual("RIFF"u8) && bytes.AsSpan(8, 4).SequenceEqual("WEBP"u8))
             return ("webp", "image/webp");
         return (null, null);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll([FromServices] AppDbContext context)
+    {
+        if (string.IsNullOrWhiteSpace(TenantId)) return Forbid();
+        return Ok(await context.Creatives.AsNoTracking().ToListAsync());
     }
 
     [HttpGet("{id:long}")]

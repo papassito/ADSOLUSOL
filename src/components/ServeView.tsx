@@ -36,7 +36,7 @@ export const ServeView: React.FC<ServeViewProps> = ({
             onClick={onServeClick}
             className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold cursor-pointer"
           >
-            Simular Clic + Débito Atómico
+            Registrar clic real
           </button>
         </div>
       </div>
@@ -44,12 +44,12 @@ export const ServeView: React.FC<ServeViewProps> = ({
       {lastDecision ? (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="p-4 rounded-xl bg-[#070B12] border border-slate-800 font-mono text-xs space-y-2">
-            <p className="text-amber-400 font-bold">// CERTIFICADO CANÓNICO DEL AD SERVER</p>
+            <p className="text-amber-400 font-bold">// RESPUESTA DEL BACKEND</p>
             <p>{`Decisión ID: ${lastDecision.decisionId}`}</p>
             <p>{`Campaña Ganadora: ${lastDecision.campaign?.id} (${lastDecision.campaign?.name})`}</p>
             <p>{`Creativo Entregado: ${lastDecision.creative?.id}`}</p>
             <p className="text-emerald-400">{`Invariante Presupuestaria: ${lastDecision.atomicCheck}`}</p>
-            <p className="text-cyan-400">{`Nonce Anti-Replay: ${lastDecision.nonce}`}</p>
+            <p className="text-cyan-400">{`Evento ID: ${lastDecision.nonce}`}</p>
             <p className="text-slate-400">{`Firma: ${lastDecision.signature}`}</p>
           </div>
 
@@ -71,7 +71,7 @@ export const ServeView: React.FC<ServeViewProps> = ({
         </div>
       ) : (
         <p className="text-xs text-slate-400 py-8 text-center">
-          Haz clic en "Solicitar Impresión" o "Simular Clic + Débito Atómico" para inspeccionar el certificado criptográfico.
+          Haz clic en "Solicitar Impresión" o "Registrar clic real" para inspeccionar el resultado del backend.
         </p>
       )}
     </section>

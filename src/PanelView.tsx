@@ -6,7 +6,7 @@ interface PanelViewProps {
   forecast7DaysData: any[];
   total7DayPredictedSpend: number;
   total7DayShieldOptimized: number;
-  ledgerBalance: number;
+  ledgerBalance: number | null;
 }
 
 export const PanelView: React.FC<PanelViewProps> = ({
@@ -15,6 +15,9 @@ export const PanelView: React.FC<PanelViewProps> = ({
   total7DayShieldOptimized,
   ledgerBalance,
 }) => {
+  if (import.meta.env.VITE_DEMO_MODE !== 'true') {
+    return <section className="as-card-premium rounded-2xl p-6"><h3>Operación con backend real</h3><p>Proyecciones, ahorro Shield y saldo: NO DISPONIBLE hasta conectar sus fuentes.</p></section>;
+  }
   return (
     <div className="space-y-6">
       <section className="as-card-premium rounded-2xl p-6 space-y-5">
@@ -47,7 +50,7 @@ export const PanelView: React.FC<PanelViewProps> = ({
             <div className="bg-[#070B12] border border-slate-800 px-3.5 py-2 rounded-xl">
               <span className="block text-[10px] text-slate-400 uppercase font-bold">Cobertura de Saldo Ledger</span>
               <span className="font-mono text-sm font-extrabold text-cyan-400">
-                {ledgerBalance > total7DayPredictedSpend ? '100% Cubierto' : 'Requiere Recarga'}
+                {ledgerBalance == null ? 'NO DISPONIBLE' : ledgerBalance > total7DayPredictedSpend ? '100% Cubierto' : 'Requiere Recarga'}
               </span>
             </div>
           </div>

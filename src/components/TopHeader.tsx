@@ -12,7 +12,7 @@ interface TopHeaderProps {
   onOpenCommand: () => void;
   onOpenSystem: () => void;
   sysHealth: any;
-  ledgerBalance: number;
+  ledgerBalance: number | null;
   loadingAction: boolean;
   onRefresh: () => void;
 }
@@ -58,7 +58,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
             }`}
           >
             <Radio className="h-3.5 w-3.5" />
-            {isAutoLive ? 'EN VIVO: ACTIVO' : 'ACTIVAR EN VIVO'}
+            {isAutoLive ? 'ACTUALIZACIÓN: ACTIVA' : 'ACTIVAR ACTUALIZACIÓN'}
           </button>
 
           <button
@@ -106,19 +106,19 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           />
           <span className="font-semibold text-slate-300">SQLite:</span>
           <span className="font-mono text-emerald-400 font-bold">
-            {`${sysHealth?.sqlite?.latencyMs ?? 0.28}ms`}
+            {sysHealth?.sqlite?.status || 'NO DISPONIBLE'}
           </span>
           <span className="text-slate-600">|</span>
           <span className="font-semibold text-slate-300">SIC:</span>
           <span className="font-mono text-cyan-400 font-bold">
             {sysHealth?.sicEngine?.status === 'CONECTADO' || sysHealth?.sicEngine?.status === 'UP'
-              ? `${sysHealth?.sicEngine?.latencyMs ?? 12.4}ms`
+              ? sysHealth.sicEngine.status
               : 'DOWN'}
           </span>
         </button>
 
         <div className="bg-emerald-500/10 border border-emerald-500/30 px-3 py-1.5 rounded-xl text-xs font-mono font-bold text-emerald-400">
-          {`Saldo: $${ledgerBalance.toLocaleString('es-MX', {
+          {ledgerBalance == null ? 'Saldo: NO DISPONIBLE' : `Saldo: ${ledgerBalance?.toLocaleString('es-MX', {
             minimumFractionDigits: 2,
           })} MXN`}
         </div>

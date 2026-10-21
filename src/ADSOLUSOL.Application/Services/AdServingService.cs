@@ -15,6 +15,9 @@ public class AdServingService
     }
 
     public async Task<Creative?> SelectAdForPlacement(string tenantId, string placementCode)
+        => (await SelectDecisionForPlacement(tenantId, placementCode))?.Creative;
+
+    public async Task<AdServingDecision?> SelectDecisionForPlacement(string tenantId, string placementCode)
     {
         if (string.IsNullOrWhiteSpace(tenantId) || string.IsNullOrWhiteSpace(placementCode))
         {
@@ -32,10 +35,12 @@ public class AdServingService
             var creative = await _creativeRepository.GetEligibleCreativeForCampaignAsync(campaign.Id);
             if (creative != null)
             {
-                return creative;
+                return new AdServingDecision(campaign.Id, campaign.Name, creative);
             }
         }
 
         return null;
     }
 }
+
+public sealed record AdServingDecision(string CampaignId, string CampaignName, Creative Creative);

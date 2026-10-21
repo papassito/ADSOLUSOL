@@ -17,8 +17,8 @@ export function useAnalyticsCalculations(
     const avgCpc = totalClicks > 0 ? (totalSpent / totalClicks).toFixed(2) : '0.00';
     const avgCpm =
       hourlyMetrics.length > 0
-        ? (hourlyMetrics.reduce((acc, h) => acc + (h.cpm || 14.0), 0) / hourlyMetrics.length).toFixed(2)
-        : '14.12';
+        ? (hourlyMetrics.reduce((acc, h) => acc + (h.cpm ?? 0), 0) / hourlyMetrics.length).toFixed(2)
+        : 'NO DISPONIBLE';
     const budgetPct = Math.min(100, Math.round((totalSpent / Math.max(1, totalBudget)) * 100));
     const shieldSavings = competitorTerms.filter((t) => t.blocked).reduce((acc, t) => acc + t.wasted, 0);
     const totalDirections = creatives.reduce((acc, cr) => acc + (cr.directionsClicks || 0), 0);
@@ -66,6 +66,7 @@ export function useAnalyticsCalculations(
   }, [campaigns, kpis.shieldSavings]);
 
   const trends24hData = useMemo(() => {
+    if (hourlyMetrics.length === 0) return [];
     return Array.from({ length: 24 }, (_, idx) => {
       const hStr = `${String(idx).padStart(2, '0')}:00`;
       const existing = hourlyMetrics.find((m) => m.hour === hStr);

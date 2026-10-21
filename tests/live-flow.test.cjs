@@ -1,0 +1,12 @@
+const fs=require('fs'),assert=require('assert/strict');
+let source=require('esbuild').transformSync(fs.readFileSync(require('path').join(__dirname, '../src/useAdsolusolState.ts'),'utf8'), {loader:'ts',format:'esm'}).code.replace(/^import .*;$/gm,'').replace(/export \{[\s\S]*$/,'').replaceAll('import.meta.env.VITE_DEMO_MODE',"'false'");
+function setup(responses){const calls=[],toasts=[],decisions=[];let index=0;const states=[false,true,[],null,'default',null,null,[]];const hook=new Function('useState','useEffect','useCallback','useRef','useMemo','apiFetch','mapFromBackendCampaign','crypto','Notification','localStorage','setTimeout',source+';return useAdsolusolState();')(()=>{const i=index++;return [states[i],v=>{if(i===2)toasts.push(v([]));if(i===6)decisions.push(v);}];},()=>{},x=>x,()=>({current:new Set()}),f=>f(),async(url,init)=>{calls.push({url,init});return responses(url,init);},x=>x,{randomUUID:()=> 'event-1'},undefined,{getItem:()=>null},()=>{});return {hook,calls,toasts,decisions};}
+const reply=(status,data)=>({status,ok:status>=200&&status<300,json:async()=>data,headers:{get:()=>null}});
+// Supply placement through state before derived lists.
+source=source.replace('const placements = dbState?.placements || [];','const placements = [{id:1,code:"real-slot"}];');
+(async()=>{
+let x=setup(()=>reply(503,{}));await x.hook.handleServeDecision(false);assert.equal(x.calls.length,1);assert(!x.toasts.flat().some(t=>t.type==='exito'));assert(!x.calls.some(c=>c.url.includes('serve-decision')));
+x=setup(url=>url.startsWith('/api/Serve')?reply(200,{id:7,campaignId:'campaign-real',name:'Real'}):reply(400,{status:'REJECTED'}));await x.hook.handleServeDecision(false);assert.equal(x.calls.length,2);assert(!x.toasts.flat().some(t=>t.type==='exito'));const body=JSON.parse(x.calls[1].init.body);assert.equal(body.placementCode,'real-slot');assert.equal(body.creativeId,'7');assert(!('placementId' in body));
+x=setup(url=>url.startsWith('/api/Serve')?reply(200,{id:7,campaignId:'campaign-real',campaignName:'Real'}):url.endsWith('/click')?reply(200,{status:'ACCEPTED',eventId:'event-1',cost:2.75}):reply(503,{}));await x.hook.handleServeDecision(true);assert.equal(x.decisions.at(-1).debitedCost,2.75);assert.equal(x.decisions.at(-1).campaign.id,'campaign-real');assert(x.toasts.flat().some(t=>t.type==='exito'));
+console.log('3 LIVE flow cases passed: no demo fallback; rejected event has no success; accepted event uses backend cost and campaign.');
+})().catch(e=>{console.error(e);process.exit(1)});
