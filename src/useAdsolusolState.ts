@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { apiFetch } from './services/api';
-import { mapFromBackendCampaign, mapToBackendCreateDto } from './services/campaignAdapter';
+import { mapFromBackendCampaign } from './services/campaignAdapter';
 import { Campaign, ToastMsg } from './types';
 
 export function useAdsolusolState() {
@@ -78,6 +78,7 @@ export function useAdsolusolState() {
     setLoadingAction(true);
     const startCheck = performance.now();
     try {
+      // Consultar endpoints canónicos de Kestrel (.NET 8)
       const [campRes, plcRes, crtRes, healthRes] = await Promise.allSettled([
         apiFetch('/api/Campaigns'),
         apiFetch('/api/Placements'),
@@ -105,8 +106,15 @@ export function useAdsolusolState() {
       const measuredLatency = Number((performance.now() - startCheck).toFixed(2));
 
       if (loadedCampaigns) {
+        // Obtener estado base periférico para no perder ledger, métricas ni logs en modo LIVE
+        let baselineState: any = null;
+        try {
+          const stateRes = await apiFetch('/api/state');
+          if (stateRes.ok) baselineState = await stateRes.json();
+        } catch { /* Consumo fail-safe */ }
+
         setDbState((prev: any) => ({
-          ...prev,
+          ...(baselineState || prev || {}),
           campaigns: loadedCampaigns,
           ...(loadedPlacements && { placements: loadedPlacements }),
           ...(loadedCreatives && { creatives: loadedCreatives }),
@@ -253,6 +261,24 @@ export function useAdsolusolState() {
           pushToast('No hay campañas activas elegibles', 'alerta');
           return;
         }
+
+        // Fallback resiliente a nodo local si Kestrel no maneja la subasta
+        const localRes = await apiFetch('/api/serve-decision', {
+          method: 'POST',
+          body: JSON.stringify({ placementId: placement?.id || placementCode, triggerClick, isDirections }),
+        }).catch(() => null);
+
+        if (localRes && localRes.ok) {
+          const data = await localRes.json();
+          if (data.decision) setLastDecision(data.decision);
+          if (data.db) setDbState((prev: any) => ({ ...prev, ...data.db }));
+          pushToast('Decisión entregada por AdServer local', 'exito');
+          return;
+        }
+
+        pushToast(`Falla en AdServer (HTTP ${serveRes.status}): No se pudo entregar la impresión`, 'alerta');
+      } catch (err: any) {
+        pushToast(`Error de conexión en AdServer: ${err.message || 'Sin respuesta'}`, 'alerta');
       } finally {
         setLoadingAction(false);
       }
