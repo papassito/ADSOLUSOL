@@ -6,3 +6,89 @@
     color-scheme: dark;
   }
 }
+
+@theme inline {
+  --color-brand-300: var(--as-accent-light);
+  --color-brand-400: var(--as-accent-light);
+  --color-brand-500: var(--as-accent);
+  --color-brand-600: var(--as-accent-deep);
+}
+
+:root {
+  --as-accent: #f59e0b;
+  --as-accent-light: #fbbf24;
+  --as-accent-deep: #d97706;
+  --as-background: radial-gradient(circle at 18% 0%, #132038 0%, #070b12 58%);
+  --as-panel: #0e1525;
+  --as-text: #f1f5f9;
+  --as-line: #334155;
+}
+:root[data-as-palette="ocean"] { --as-accent: #38bdf8; --as-accent-light: #7dd3fc; --as-accent-deep: #0284c7; }
+:root[data-as-palette="emerald"] { --as-accent: #34d399; --as-accent-light: #6ee7b7; --as-accent-deep: #059669; }
+:root[data-as-palette="violet"] { --as-accent: #c084fc; --as-accent-light: #d8b4fe; --as-accent-deep: #9333ea; }
+:root[data-as-palette="rose"] { --as-accent: #fb7185; --as-accent-light: #fda4af; --as-accent-deep: #e11d48; }
+:root[data-as-theme="dark"] { color-scheme: dark; }
+:root[data-as-theme="light"] {
+  color-scheme: light;
+  --as-background: radial-gradient(circle at 18% 0%, #e2e8f0 0%, #f8fafc 65%);
+  --as-panel: #ffffff;
+  --as-text: #0f172a;
+  --as-line: #cbd5e1;
+}
+.as-appearance { display: flex; flex-wrap: wrap; gap: .5rem; }
+.as-appearance label { display: flex; align-items: center; gap: .35rem; color: var(--as-text); font-size: .75rem; }
+.as-appearance select { background: var(--as-panel); color: var(--as-text); border: 1px solid var(--as-line); border-radius: .6rem; padding: .4rem .55rem; cursor: pointer; }
+.as-appearance select:focus-visible { outline: 2px solid var(--as-accent); outline-offset: 2px; }
+.as-app { color: var(--as-text); }
+:root[data-as-theme="light"] .as-app .as-card-premium {
+  background: linear-gradient(165deg, #ffffff, #f1f5f9);
+  border-color: #cbd5e1;
+  box-shadow: 0 8px 24px rgb(15 23 42 / 7%);
+}
+:root[data-as-theme="light"] .as-app [class*="bg-[#"] { background-color: #ffffff; }
+:root[data-as-theme="light"] .as-app [class*="bg-slate-800"],
+:root[data-as-theme="light"] .as-app [class*="bg-slate-900"] { background-color: #e2e8f0; }
+:root[data-as-theme="light"] .as-app [class*="border-slate-8"],
+:root[data-as-theme="light"] .as-app [class*="border-slate-7"] { border-color: #cbd5e1; }
+:root[data-as-theme="light"] .as-app .text-white,
+:root[data-as-theme="light"] .as-app .text-slate-100,
+:root[data-as-theme="light"] .as-app .text-slate-200 { color: #0f172a; }
+:root[data-as-theme="light"] .as-app .text-slate-300,
+:root[data-as-theme="light"] .as-app .text-slate-400,
+:root[data-as-theme="light"] .as-app .text-slate-500 { color: #475569; }
+:root[data-as-theme="light"] .as-app .text-slate-600 { color: #64748b; }
+:root[data-as-theme="light"] .as-app .text-brand-400,
+:root[data-as-theme="light"] .as-app .text-brand-300 { color: var(--as-accent-deep); }
+:root[data-as-theme="light"] .as-app .text-emerald-400 { color: #047857; }
+:root[data-as-theme="light"] .as-app .text-cyan-400 { color: #0e7490; }
+:root[data-as-theme="light"] .as-app .text-rose-400 { color: #be123c; }
+:root[data-as-theme="light"] .as-app .text-indigo-300 { color: #4338ca; }
+:root[data-as-theme="light"] .as-app [class*="bg-rose-6"].text-white,
+:root[data-as-theme="light"] .as-app [class*="bg-blue-6"].text-white { color: #ffffff; }
+
+/* Complete dark palettes; OLED keeps the canvas exactly RGB(0,0,0). */
+:root[data-as-theme="dark"][data-as-palette="amber"] { --as-background: #0a0702; --as-panel: #140f05; --as-line: #451a03; }
+:root[data-as-theme="dark"][data-as-palette="ocean"] { --as-background: #050811; --as-panel: #090d16; --as-line: #1e293b; }
+:root[data-as-theme="dark"][data-as-palette="emerald"] { --as-background: #020a06; --as-panel: #06140d; --as-line: #064e3b; }
+:root[data-as-theme="dark"][data-as-palette="rose"] { --as-background: #0a0305; --as-panel: #14070b; --as-line: #4c0519; }
+:root[data-as-theme="dark"][data-as-palette="violet"] { --as-background: #0c0718; --as-panel: #160d25; --as-line: #4c1d95; }
+:root[data-as-theme="dark"] .as-app .as-card-premium,
+:root[data-as-theme="oled"] .as-app .as-card-premium {
+  background: var(--as-panel);
+  border-color: var(--as-line);
+}
+:root[data-as-theme="dark"] .as-app [class*="bg-[#"] { background-color: var(--as-panel); }
+:root[data-as-theme="oled"] {
+  color-scheme: dark;
+  --as-background: #000000;
+  --as-panel: #050505;
+  --as-line: #1f1f1f;
+  --as-text: #ffffff;
+}
+:root[data-as-theme="oled"] body { background: #000000; }
+:root[data-as-theme="oled"] .as-app [class*="bg-[#"],
+:root[data-as-theme="oled"] .as-app [class*="bg-slate-800"],
+:root[data-as-theme="oled"] .as-app [class*="bg-slate-900"] { background-color: #050505; }
+:root[data-as-theme="oled"] .as-app > aside,
+:root[data-as-theme="oled"] .as-app header { background: #000000; }
+:root[data-as-theme="oled"] .as-app .as-card-premium { box-shadow: none; }
