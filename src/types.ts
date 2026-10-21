@@ -51,3 +51,5 @@ export interface Creative {
   destinationUrl: string;
   whatsappContact: string;
 }
+
+export * from './types/adEngine';

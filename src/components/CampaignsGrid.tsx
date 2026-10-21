@@ -16,7 +16,6 @@ interface CampaignsGridProps {
   globalSearch: string;
   onNewCampaign: () => void;
   onToggleStatus: (campaign: Campaign) => void;
-  onSimulate90: (campaign: Campaign) => void;
   onDelete: (collection: string, id: string, name: string) => void;
   onServeClick: () => void;
   pushToast: (title: string, type?: 'exito' | 'alerta' | 'info') => void;
@@ -27,7 +26,6 @@ export const CampaignsGrid: React.FC<CampaignsGridProps> = ({
   globalSearch,
   onNewCampaign,
   onToggleStatus,
-  onSimulate90,
   onDelete,
   onServeClick,
   pushToast,
@@ -185,7 +183,6 @@ export const CampaignsGrid: React.FC<CampaignsGridProps> = ({
                   </td>
                   <td className="py-3.5 px-2 text-right space-x-1.5">
                     <button onClick={onServeClick} className="px-2.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold cursor-pointer">+ Clic</button>
-                    <button onClick={() => onSimulate90(c)} title="Simular llegar al 92% del presupuesto" className="px-2.5 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 border border-amber-500/30 font-bold cursor-pointer">🔔 Probar 90%</button>
                     <button onClick={() => onDelete('campaigns', c.id, c.name)} className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 cursor-pointer"><Trash2 className="h-4 w-4 inline" /></button>
                   </td>
                 </tr>

@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "tsx server/index.ts",
+    "dev:real": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "tsc --noEmit"

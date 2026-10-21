@@ -1,0 +1,161 @@
+import { Request, Response } from 'express';
+import fs from 'fs';
+import crypto from 'crypto';
+import { DB_PATH, readDb, writeDb } from './storage';
+
+export const serverStartTime = Date.now();
+
+export function getState(req: Request, res: Response) {
+  const startCheck = process.hrtime();
+  const db = readDb();
+  const stats = fs.existsSync(DB_PATH) ? fs.statSync(DB_PATH) : { size: 4096 };
+  const diff = process.hrtime(startCheck);
+  const dbLatencyMs = Number((diff[0] * 1000 + diff[1] / 1e6).toFixed(2));
+  const memUsageMb = Number((process.memoryUsage().rss / 1024 / 1024).toFixed(1));
+  const uptimeSeconds = Math.floor((Date.now() - serverStartTime) / 1000);
+
+  res.json({
+    ...db,
+    systemHealth: {
+      sqlite: {
+        status: 'SIMULADO (archivo JSON)',
+        latencyMs: dbLatencyMs,
+        dbSizeKb: Number((stats.size / 1024).toFixed(1)),
+        journalMode: 'No disponible (archivo JSON)',
+        atomicGuard: 'BudgetSpent + Cost <= Budget',
+      },
+      sicEngine: {
+        status: 'SIMULADO',
+        endpoint: 'https://api.solusol.net/api (sin conectar)',
+        latencyMs: null,
+        lastSync: new Date().toLocaleTimeString('es-MX'),
+        protocol: 'HTTP/REST + Ed25519',
+      },
+      apiNode: {
+        status: 'OPERATIVO',
+        uptimeSeconds,
+        memoryMb: memUsageMb,
+        tenantId: db.tenantId,
+        nodeId: db.nodeId,
+        antiReplayWindow: '300s Nonce Cache',
+      },
+    },
+  });
+}
+
+export function createCampaign(req: Request, res: Response) {
+  const db = readDb();
+  const newCamp = {
+    id: `CAMP-${Math.floor(100 + Math.random() * 900)}`,
+    name: req.body.name,
+    status: 'ACTIVA',
+    strategy: req.body.strategy || 'Pacing Ponderado + CPC',
+    maxCpc: Number(req.body.maxCpc) || 2.0,
+    budget: Number(req.body.budget) || 100.0,
+    spent: 0,
+    impressions: 0,
+    clicks: 0,
+    conversions: 0,
+    updatedAt: new Date().toISOString().slice(0, 16).replace('T', ' '),
+  };
+  db.campaigns.unshift(newCamp);
+  db.auditLogs.unshift({
+    id: `EVT-${Math.floor(10000 + Math.random() * 90000)}`,
+    timestamp: new Date().toLocaleTimeString('es-MX'),
+    eventType: 'CAMPAIGN_CREATE',
+    campaign: newCamp.name,
+    amount: newCamp.budget,
+    nonce: crypto.randomBytes(6).toString('hex'),
+    signature: `ed25519:${crypto.randomBytes(4).toString('hex')}...${crypto.randomBytes(2).toString('hex')}`,
+    status: 'REGISTRADO',
+  });
+  writeDb(db);
+  res.json(db);
+}
+
+export function patchCampaign(req: Request, res: Response) {
+  const db = readDb();
+  db.campaigns = db.campaigns.map((c: any) =>
+    c.id === req.params.id
+      ? { ...c, ...req.body, updatedAt: new Date().toISOString().slice(0, 16).replace('T', ' ') }
+      : c
+  );
+  writeDb(db);
+  res.json(db);
+}
+
+export function deleteRecord(req: Request, res: Response) {
+  const db = readDb();
+  const col = req.params.collection;
+  if (Array.isArray(db[col])) {
+    db[col] = db[col].filter((item: any) => item.id !== req.params.id);
+    writeDb(db);
+  }
+  res.json(db);
+}
+
+export function handleServeDecision(req: Request, res: Response) {
+  const db = readDb();
+  const { placementId, triggerClick, isDirections } = req.body;
+
+  const placement = db.placements.find((p: any) => p.id === placementId) || db.placements[0];
+  const activeCampaigns = db.campaigns.filter(
+    (c: any) => c.status === 'ACTIVA' && c.spent + c.maxCpc <= c.budget
+  );
+
+  if (activeCampaigns.length === 0) {
+    return res.status(409).json({
+      error: 'Ninguna campaña activa tiene saldo disponible para cumplir BudgetSpent + Cost <= Budget.',
+    });
+  }
+
+  const winnerCamp = activeCampaigns[Math.floor(Math.random() * activeCampaigns.length)];
+  const creative =
+    db.creatives.find((cr: any) => cr.campaignId === winnerCamp.id) || db.creatives[0];
+
+  const cpcCost = triggerClick
+    ? Number((winnerCamp.maxCpc * (0.75 + Math.random() * 0.22)).toFixed(2))
+    : 0;
+
+  if (winnerCamp.spent + cpcCost > winnerCamp.budget) {
+    winnerCamp.status = 'LIMITADA';
+    writeDb(db);
+    return res.json({ db, decision: null });
+  }
+
+  winnerCamp.impressions += 1;
+  if (placement) placement.impressions += 1;
+  if (creative) creative.impressions += 1;
+
+  if (triggerClick) {
+    winnerCamp.clicks += 1;
+    winnerCamp.spent = Number((winnerCamp.spent + cpcCost).toFixed(2));
+    db.ledgerBalance = Number(Math.max(0, db.ledgerBalance - cpcCost).toFixed(2));
+    if (placement) placement.clicks += 1;
+    if (creative) {
+      creative.clicks += 1;
+      if (isDirections) {
+        creative.directionsClicks = (creative.directionsClicks || 0) + 1;
+        winnerCamp.conversions = (winnerCamp.conversions || 0) + 1;
+      }
+    }
+  }
+
+  const nonce = crypto.randomBytes(6).toString('hex');
+  const signature = `ed25519:${crypto.randomBytes(4).toString('hex')}...mock`;
+
+  writeDb(db);
+  res.json({
+    db,
+    decision: {
+      decisionId: `DEC-${Date.now()}`,
+      campaign: winnerCamp,
+      creative,
+      placement,
+      debitedCost: cpcCost,
+      nonce,
+      signature,
+      atomicCheck: `${winnerCamp.spent.toFixed(2)} <= ${winnerCamp.budget.toFixed(2)} MXN (OK)`,
+    },
+  });
+}
