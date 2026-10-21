@@ -99,8 +99,8 @@ export function patchCampaign(req: Request, res: Response) {
 
     if (key === 'budget' || key === 'maxCpc') {
       const numValue = Number(value);
-      if (value === null || !Number.isFinite(numValue) || numValue < 0) {
-        return res.status(400).json({ error: `El campo '${key}' debe ser un número positivo.` });
+      if (value === null || !Number.isFinite(numValue) || numValue <= 0) {
+        return res.status(400).json({ error: `El campo '${key}' debe ser un número estrictamente positivo.` });
       }
       if (key === 'budget' && numValue < campaignToUpdate.spent) {
         return res.status(400).json({ error: `El presupuesto (${numValue}) no puede ser menor que el gasto actual (${campaignToUpdate.spent}).` });

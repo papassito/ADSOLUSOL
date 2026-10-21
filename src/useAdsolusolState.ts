@@ -76,76 +76,78 @@ export function useAdsolusolState() {
 
   const fetchState = useCallback(async () => {
     setLoadingAction(true);
-    const startCheck = performance.now();
     try {
-      // Consultar endpoints canónicos de Kestrel (.NET 8)
-      const [campRes, plcRes, crtRes, healthRes] = await Promise.allSettled([
-        apiFetch('/api/Campaigns'),
-        apiFetch('/api/Placements'),
-        apiFetch('/api/Creatives'),
-        apiFetch('/api/health'),
-      ]);
-
-      let loadedCampaigns: any[] | null = null;
-      let loadedPlacements: any[] | null = null;
-      let loadedCreatives: any[] | null = null;
-      let loadedHealth: any = null;
-
-      if (campRes.status === 'fulfilled' && campRes.value.ok) {
-        loadedCampaigns = await campRes.value.json();
-      }
-      if (plcRes.status === 'fulfilled' && plcRes.value.ok) {
-        loadedPlacements = await plcRes.value.json();
-      }
-      if (crtRes.status === 'fulfilled' && crtRes.value.ok) {
-        loadedCreatives = await crtRes.value.json();
-      }
-      if (healthRes.status === 'fulfilled' && healthRes.value.ok) {
-        loadedHealth = await healthRes.value.json();
-      }
-      const measuredLatency = Number((performance.now() - startCheck).toFixed(2));
-
-      if (loadedCampaigns) {
-        // Obtener estado base periférico para no perder ledger, métricas ni logs en modo LIVE
-        let baselineState: any = null;
-        try {
-          const stateRes = await apiFetch('/api/state');
-          if (stateRes.ok) baselineState = await stateRes.json();
-        } catch { /* Consumo fail-safe */ }
-
-        setDbState((prev: any) => ({
-          ...(baselineState || prev || {}),
-          campaigns: loadedCampaigns,
-          ...(loadedPlacements && { placements: loadedPlacements }),
-          ...(loadedCreatives && { creatives: loadedCreatives }),
-          systemHealth: {
-            sqlite: {
-              status: loadedHealth?.checks?.database === 'UP' ? 'OPERATIVO (WAL)' : (loadedHealth?.checks?.database || 'DOWN'),
-              latencyMs: measuredLatency,
-              journalMode: loadedHealth?.checks?.journalMode || 'Verificado en Kestrel',
-              atomicGuard: 'BudgetSpent + Cost <= Budget',
-            },
-            sicEngine: {
-              status: loadedHealth?.checks?.sicEngine === 'UP' ? 'CONECTADO' : 'DOWN (Zero-Synthetic)',
-              endpoint: 'http://solusol.net:8080/health',
-              latencyMs: loadedHealth?.checks?.sicEngine === 'UP' ? measuredLatency : null,
-              protocol: 'HTTP/REST (Outbox Bridge)',
-            },
-            apiNode: {
-              status: loadedHealth?.status || 'ACTIVE',
-              antiReplayWindow: '300s Nonce Cache',
-              tenantId: localStorage.getItem('adsolusol_tenant_id') || 'TENANT-SOLUSOL-HMO-01',
-            },
-          },
-        }));
-      } else {
+      // MODO DEMO: Se ejecuta con `npm run dev`. Consulta directamente el estado del servidor Node.
+      if (import.meta.env.VITE_DEMO_MODE === 'true') {
         const res = await apiFetch('/api/state');
         if (res.ok) {
           setDbState(await res.json());
         } else {
+          pushToast(`Error en servidor demo: ${res.statusText}`, 'alerta');
+          setDbState(null);
+        }
+      } else {
+        // MODO REAL: Se ejecuta con `npm run dev:real`. Intenta conectar con el backend .NET.
+        const startCheck = performance.now();
+        const [campRes, plcRes, crtRes, healthRes] = await Promise.allSettled([
+          apiFetch('/api/Campaigns'),
+          apiFetch('/api/Placements'),
+          apiFetch('/api/Creatives'),
+          apiFetch('/api/health'),
+        ]);
+
+        let loadedCampaigns: any[] | null = null;
+        let loadedPlacements: any[] | null = null;
+        let loadedCreatives: any[] | null = null;
+        let loadedHealth: any = null;
+
+        if (campRes.status === 'fulfilled' && campRes.value.ok) {
+          loadedCampaigns = await campRes.value.json();
+        }
+        if (plcRes.status === 'fulfilled' && plcRes.value.ok) {
+          loadedPlacements = await plcRes.value.json();
+        }
+        if (crtRes.status === 'fulfilled' && crtRes.value.ok) {
+          loadedCreatives = await crtRes.value.json();
+        }
+        if (healthRes.status === 'fulfilled' && healthRes.value.ok) {
+          loadedHealth = await healthRes.value.json();
+        }
+        const measuredLatency = Number((performance.now() - startCheck).toFixed(2));
+
+        if (loadedCampaigns) {
+          // Si la conexión con .NET es exitosa, se actualiza el estado.
           setDbState((prev: any) => ({
-            ...prev,
-            campaigns: [],
+            ...(prev || {}), // Conservar estado anterior para evitar parpadeos
+            campaigns: loadedCampaigns,
+            ...(loadedPlacements && { placements: loadedPlacements }),
+            ...(loadedCreatives && { creatives: loadedCreatives }),
+            systemHealth: {
+              sqlite: {
+                status: loadedHealth?.checks?.database === 'UP' ? 'OPERATIVO (WAL)' : (loadedHealth?.checks?.database || 'DOWN'),
+                latencyMs: measuredLatency,
+                journalMode: loadedHealth?.checks?.journalMode || 'Verificado en Kestrel',
+                atomicGuard: 'BudgetSpent + Cost <= Budget',
+              },
+              sicEngine: {
+                status: loadedHealth?.checks?.sicEngine === 'UP' ? 'CONECTADO' : 'DOWN (Zero-Synthetic)',
+                endpoint: 'http://solusol.net:8080/health',
+                latencyMs: loadedHealth?.checks?.sicEngine === 'UP' ? measuredLatency : null,
+                protocol: 'HTTP/REST (Outbox Bridge)',
+              },
+              apiNode: {
+                status: loadedHealth?.status || 'ACTIVE',
+                antiReplayWindow: '300s Nonce Cache',
+                tenantId: localStorage.getItem('adsolusol_tenant_id') || 'TENANT-SOLUSOL-HMO-01',
+              },
+            },
+          }));
+        } else {
+          // Si la conexión con .NET falla, se muestra un estado de desconexión.
+          pushToast('Backend .NET no disponible. No se pueden obtener datos en vivo.', 'alerta');
+          setDbState((prev: any) => ({
+            ...(prev || {}),
+            campaigns: prev?.campaigns || [],
             systemHealth: {
               sqlite: { status: 'DISCONNECTED', latencyMs: null, journalMode: 'N/A', atomicGuard: 'N/A' },
               sicEngine: { status: 'DISCONNECTED', endpoint: 'https://api.solusol.net/api', latencyMs: null, protocol: 'HTTP/REST' },
@@ -154,10 +156,13 @@ export function useAdsolusolState() {
           }));
         }
       }
+    } catch (error: any) {
+      pushToast(`Error de red: ${error.message}`, 'alerta');
+      setDbState(null);
     } finally {
       setLoadingAction(false);
     }
-  }, []);
+  }, [pushToast]);
 
   useEffect(() => {
     fetchState();

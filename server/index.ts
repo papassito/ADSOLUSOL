@@ -6,6 +6,8 @@ import express from 'express';
 import { createServer } from 'vite';
 import * as controllers from './controllers';
 import { demoRoutes } from './demoRoutes';
+import react from '@vitejs/plugin-react';
+import path from 'path';
 
 const app = express();
 const port = 3000;
@@ -22,30 +24,19 @@ async function startServer() {
   app.post('/api/serve-decision', controllers.handleServeDecision);
 
   const vite = await createServer({
+    configFile: false, // No cargar vite.config.ts para aislar el modo demo
     server: {
       middlewareMode: true,
-      proxy: {}, // Desactivar proxy para que el servidor de demo maneje las rutas /api
-      watch: {
-        usePolling: true,
-        interval: 150,
-        // Excluir directorios que causan problemas con el observador de archivos en Windows,
-        // especialmente en unidades de red o con muchos archivos (como el proyecto .NET).
-        ignored: [
-          '**/.git/**',
-          '**/node_modules/**',
-          '**/bin/**',
-          '**/obj/**',
-          '**/.vs/**',
-          '**/docs/**',
-          '**/src/ADSOLUSOL.Presentation.Api/**',
-          '**/src/ADSOLUSOL.Presentation.Web/**',
-          '**/src/ADSOLUSOL.Presentation.Desktop/**',
-          '**/src/ADSOLUSOL.Domain/**',
-          '**/src/ADSOLUSOL.Application/**',
-          '**/src/ADSOLUSOL.Infrastructure/**',
-          '**/adsolusol_2027/**',
-        ],
+    },
+    plugins: [react()],
+    resolve: {
+      alias: {
+        '@': path.resolve(process.cwd(), '.'),
       },
+    },
+    define: {
+      // Inyectar variable para que el frontend sepa que está en modo demo
+      'import.meta.env.VITE_DEMO_MODE': JSON.stringify('true'),
     },
     appType: 'spa',
   });
