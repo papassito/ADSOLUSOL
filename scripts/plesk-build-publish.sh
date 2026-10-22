@@ -32,7 +32,11 @@ if ! grep -R -qF "Verificar sitio promocionado" "$DIST_DIR/assets"; then
   fail "Built assets do not contain the site verification card. Nothing was published."
 fi
 
-COMMIT="$(git -C "$ROOT_DIR" rev-parse --short=12 HEAD)"
+if COMMIT="$(git -C "$ROOT_DIR" rev-parse --short=12 HEAD 2>/dev/null)"; then
+  :
+else
+  COMMIT="${PLESK_DEPLOYMENT_COMMIT:-${GIT_COMMIT:-unknown}}"
+fi
 BUILT_AT="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
 printf '{"commit":"%s","builtAtUtc":"%s"}\n' "$COMMIT" "$BUILT_AT" > "$DIST_DIR/release.json"
 
