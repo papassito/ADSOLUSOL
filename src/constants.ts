@@ -37,9 +37,9 @@ export const MODULE_META: Record<
     icon: MapPin,
   },
   creativos: {
-    title: 'Estudio de Creativos + GPS',
+    title: 'Estudio de Creativos + GPS + Verificación',
     category: 'Inventario y Creativos',
-    subtitle: 'Diseño asistido, conexión a Google Maps ("Cómo llegar") y vista previa SERP móvil',
+    subtitle: 'Diseño de anuncios, geolocalización y verificación del dominio promocionado',
     icon: ImageIcon,
   },
   asignaciones: {
