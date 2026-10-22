@@ -8,7 +8,8 @@
     "dev:real": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "test:live": "node tests/live-flow.test.cjs"
   },
   "type": "module",
   "version": "0.0.0",
