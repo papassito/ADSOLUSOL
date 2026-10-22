@@ -4,6 +4,12 @@ set -Eeuo pipefail
 ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 WEB_ROOT="${ADSO_WEB_ROOT:-}"
 API_PANEL_DIR="${ADSO_API_PANEL_DIR:-}"
+PLESK_NODE_BIN="/opt/plesk/node/20/bin"
+
+if [[ -x "$PLESK_NODE_BIN/node" ]]; then
+  PATH="$PLESK_NODE_BIN:$PATH"
+  export PATH
+fi
 
 fail() {
   printf 'ERROR: %s\n' "$*" >&2
@@ -17,7 +23,7 @@ fail() {
 [[ "$WEB_ROOT" != "/" && "$API_PANEL_DIR" != "/" ]] || fail "Refusing to publish to a filesystem root."
 
 command -v node >/dev/null 2>&1 || fail "Node.js is required for the Vite build."
-command -v npm >/dev/null 2>&1 || fail "npm is required for the Vite build."
+command -v npm >/dev/null 2>&1 || fail "npm is required for the Vite build. Check that npm is installed in $PLESK_NODE_BIN."
 command -v git >/dev/null 2>&1 || fail "Git is required to record the deployed commit."
 
 cd "$ROOT_DIR"

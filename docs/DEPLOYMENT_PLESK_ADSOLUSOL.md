@@ -24,13 +24,13 @@ En Plesk, identifica las dos rutas:
 - **Document Root**: Sitios web y dominios → Hosting y DNS → Hosting → raíz de documentos.
 - **ContentRoot de la API**: revisa systemctl cat adsolusol-api.service y el valor WorkingDirectory del servicio. La ruta de destino es ese ContentRoot más /panel. Si el servicio define --contentRoot, usa esa ruta explícita.
 
-En **Git → Repositorio → Repository Settings → Additional deployment actions**, agrega esta acción para que se ejecute después de cada actualización. Sustituye los ejemplos por las rutas reales de esa suscripción:
+En **Git → Repositorio → Repository Settings → Additional deployment actions**, agrega esta acción para que se ejecute después de cada actualización. Invoca el script directamente con Bash: el script añade `/opt/plesk/node/20/bin` al `PATH`, de modo que Plesk no necesita resolver `npm` al iniciar la acción. Sustituye los ejemplos por las rutas reales de esa suscripción:
 
 ```bash
-ADSO_WEB_ROOT="/var/www/vhosts/DOMINIO/adsolusol.solusol.net/httpdocs" ADSO_API_PANEL_DIR="/RUTA/REAL/DEL/CONTENTROOT/panel" npm run deploy:plesk
+ADSO_WEB_ROOT="/var/www/vhosts/DOMINIO/adsolusol.solusol.net/httpdocs" ADSO_API_PANEL_DIR="/RUTA/REAL/DEL/CONTENTROOT/panel" /bin/bash ./scripts/plesk-build-publish.sh
 ```
 
-La acción necesita Node.js/npm, conexión para descargar dependencias y permiso de escritura del usuario de despliegue en ambas rutas. Si la compilación, la comprobación del bundle o la publicación falla, el script termina con error y Plesk debe mostrarlo en el registro de la acción. No reporta éxito antes de completar la copia.
+La acción necesita Node.js/npm, conexión para descargar dependencias y permiso de escritura del usuario de despliegue en ambas rutas. En Plesk, confirma que el **usuario del sistema** de la suscripción tenga acceso al directorio `panel`; si actualmente pertenece a `root`, como administrador ejecuta `chown -R USUARIO_PLESK:psacln "/RUTA/REAL/DEL/CONTENTROOT/panel"`, sustituyendo el usuario y la ruta reales. Limita el cambio a ese directorio, no al ContentRoot completo. Si la compilación, la comprobación del bundle o la publicación falla, el script termina con error y Plesk debe mostrarlo en el registro de la acción. No reporta éxito antes de completar la copia.
 
 Después de desplegar, comprueba en el registro Published commit <hash>. Abre https://adsolusol.solusol.net/release.json y confirma que el commit coincida. En la sesión autenticada, vuelve a abrir /api/panel?rev=<hash>, entra a **Estudio de Creativos + GPS + Verificación** y confirma que aparece **Verificar sitio promocionado**. El archivo release.json verifica el artefacto del Document Root; la tarjeta en /api/panel confirma que también se actualizó el HTML que sirve la API.
 
