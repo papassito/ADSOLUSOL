@@ -11,9 +11,12 @@ export function apiFetch(input: RequestInfo | URL, init?: RequestInit): Promise<
     headers.set('X-Solusol-Tenant-Id', tenantId);
   }
 
-  return fetch(input, {
+  const apiBase = import.meta.env.VITE_API_BASE_URL || 'https://api.solusol.net';
+  const requestUrl = typeof input === 'string' && input.startsWith('/') ? `${apiBase}${input}` : input;
+
+  return fetch(requestUrl, {
     ...init,
-    credentials: init?.credentials ?? 'same-origin',
+    credentials: init?.credentials ?? 'include',
     headers,
   });
 }

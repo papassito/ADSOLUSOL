@@ -1,4 +1,5 @@
 using ADSOLUSOL.Presentation.Api.SiteVerification;
+using ADSOLUSOL.Presentation.Api.Tracking;
 using ADSOLUSOL.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using ADSOLUSOL.Domain.Entities;
@@ -112,9 +113,21 @@ public class CreativesController : ControllerBase
         return Ok(creative);
     }
 
+    [HttpGet("{id:long}/tracking")]
+    public async Task<IActionResult> GetTracking(long id, [FromServices] TrackingCodeService trackingCodes, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(TenantId)) return Forbid();
+        var creative = await _creativeRepository.GetByIdAsync(id);
+        if (creative is null) return NotFound();
+        var tracking = await trackingCodes.GetOrCreateForCreativeAsync(TenantId, id, creative.TargetUrl, cancellationToken);
+        return Ok(new { tracking.Code, tracking.CreativeId, tracking.TargetUrl, tracking.CreatedAtUtc,
+            RedirectUrl = $"{Request.Scheme}://{Request.Host}/r/{tracking.Code}" });
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateCreative([FromBody] Creative creative,
-        [FromServices] SiteVerificationService siteVerifications, CancellationToken cancellationToken)
+        [FromServices] SiteVerificationService siteVerifications,
+        [FromServices] TrackingCodeService trackingCodes, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(TenantId))
         {
@@ -136,11 +149,14 @@ public class CreativesController : ControllerBase
         var id = await _creativeRepository.CreateAsync(creative);
         var createdCreative = await _creativeRepository.GetByIdAsync(id);
         if (createdCreative is null) return StatusCode(500, new { message = "No se pudo recuperar el creativo guardado." });
+        var tracking = await trackingCodes.GetOrCreateAsync(TenantId, createdCreative.Id, createdCreative.TargetUrl, cancellationToken);
         return CreatedAtAction(nameof(GetById), new { id }, new
         {
             createdCreative.Id, createdCreative.Name, createdCreative.ContentUrl,
             createdCreative.TargetUrl, createdCreative.IsEnabled,
-            createdCreative.CreatedAt, createdCreative.UpdatedAt, Verification = proof
+            createdCreative.CreatedAt, createdCreative.UpdatedAt, Verification = proof,
+            Tracking = new { tracking.Code, tracking.CreativeId, tracking.TargetUrl, tracking.CreatedAtUtc,
+                RedirectUrl = $"{Request.Scheme}://{Request.Host}/r/{tracking.Code}" }
         });
     }
 }

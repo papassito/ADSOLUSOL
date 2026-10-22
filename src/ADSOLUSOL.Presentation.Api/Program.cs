@@ -1,4 +1,5 @@
 using ADSOLUSOL.Presentation.Api.SiteVerification;
+using ADSOLUSOL.Presentation.Api.Tracking;
 using ADSOLUSOL.Application.Interfaces;
 using ADSOLUSOL.Application.Services;
 using ADSOLUSOL.Domain.Interfaces;
@@ -121,6 +122,7 @@ builder.Services.AddScoped<BudgetService>();
 builder.Services.AddScoped<EventProcessingService>();
 builder.Services.AddScoped<MetricsService>();
 builder.Services.AddScoped<SiteVerificationService>();
+builder.Services.AddScoped<TrackingCodeService>();
 builder.Services.AddSingleton<IVerificationPageFetcher, VerificationPageFetcher>();
 builder.Services.AddScoped<ITenantSettingsService, TenantSettingsService>();
 
@@ -219,6 +221,13 @@ app.MapGet("/api/panel", (HttpContext context) =>
     return File.Exists(panelIndexPath)
         ? Results.File(panelIndexPath, "text/html; charset=utf-8")
         : Results.NotFound();
+});
+
+// Public click redirect: the code is an attribution identifier, never a session credential.
+app.MapGet("/r/{code}", async (string code, HttpContext context, TrackingCodeService tracking, CancellationToken ct) =>
+{
+    var target = await tracking.RegisterClickAsync(code, context.Request.Headers.UserAgent, context.Connection.RemoteIpAddress?.ToString(), ct);
+    return target is null ? Results.NotFound() : Results.Redirect(target, permanent: false);
 });
 
 app.UseMiddleware<SignatureVerificationMiddleware>();

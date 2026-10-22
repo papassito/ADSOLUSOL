@@ -3,6 +3,7 @@ import { Sparkles, Navigation, Smartphone, ExternalLink, PhoneCall, Lock, MapPin
 import { Creative } from './types';
 import { BRANCH_LOCATIONS } from './constants';
 import { SiteVerificationCard } from './components/SiteVerificationCard';
+import { TrackingCodeCard } from './components/TrackingCodeCard';
 
 interface CreativesViewProps {
   creatives: Creative[];
@@ -133,6 +134,7 @@ export const CreativesView: React.FC<CreativesViewProps> = ({
                 </p>
               </div>
               <SiteVerificationCard targetUrl={cr.targetUrl || cr.destinationUrl || ''} />
+              <TrackingCodeCard creativeId={cr.id} />
               <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
                 <span className="text-slate-400 font-mono">{cr.clicks} clics • 📍 {cr.directionsClicks || 0} rutas GPS</span>
                 <div className="flex items-center gap-2">
