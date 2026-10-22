@@ -1,8 +1,8 @@
-import { SiteVerificationCard } from './components/SiteVerificationCard';
 import React from 'react';
 import { Sparkles, Navigation, Smartphone, ExternalLink, PhoneCall, Lock, MapPin, Trash2 } from 'lucide-react';
 import { Creative } from './types';
 import { BRANCH_LOCATIONS } from './constants';
+import { SiteVerificationCard } from './components/SiteVerificationCard';
 
 interface CreativesViewProps {
   creatives: Creative[];
@@ -27,6 +27,8 @@ export const CreativesView: React.FC<CreativesViewProps> = ({
 }) => {
   return (
     <div className="space-y-6">
+      <SiteVerificationCard targetUrl={crtForm.destinationUrl} refreshKey={String(creatives.length)} />
+
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="as-card-premium rounded-2xl p-6 space-y-4">
           <div className="flex items-center justify-between">
@@ -114,7 +116,6 @@ export const CreativesView: React.FC<CreativesViewProps> = ({
         </div>
       </section>
 
-      <SiteVerificationCard targetUrl={crtForm.destinationUrl} refreshKey={String(creatives.length)} />
       <section className="as-card-premium rounded-2xl p-6 space-y-4">
         <h3 className="text-base font-bold text-white">Biblioteca de Creativos ({creatives.length})</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
