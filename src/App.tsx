@@ -4,7 +4,7 @@ import { useAnalyticsCalculations } from './useAnalyticsCalculations';
 import { apiFetch } from './services/api';
 import { mapToBackendCreateDto } from './services/campaignAdapter';
 import { MODULE_META, AI_PRESETS } from './constants';
-import { ModuleKey } from './types';
+import { ModuleKey, Campaign } from './types';
 
 import { Sidebar } from './components/Sidebar';
 import { TopHeader } from './components/TopHeader';
@@ -95,49 +95,6 @@ export default function App() {
 
   const simulateReach90Threshold = () => pushToast('Simulación desactivada en LIVE', 'alerta');
 
-  const areaChartGeometry = useMemo(() => {
-    if (hourlyMetrics.length === 0) return { linePath: '', areaPath: '', points: [] };
-    const maxImp = Math.max(10, ...hourlyMetrics.map((h: any) => h.impressions));
-    const width = 620;
-    const stepX = (width - 60) / Math.max(1, hourlyMetrics.length - 1);
-
-    const points = hourlyMetrics.map((h: any, idx: number) => {
-      const x = Math.round(30 + idx * stepX);
-      const y = Math.round(142 - (h.impressions / maxImp) * 105);
-      return { x, y, ...h };
-    });
-
-    const linePath = points
-      .map((p: any, i: number) => (i === 0 ? `M ${p.x} ${p.y}` : `L ${p.x} ${p.y}`))
-      .join(' ');
-    const lastX = points[points.length - 1]?.x || 590;
-    const firstX = points[0]?.x || 30;
-    const areaPath = `${linePath} L ${lastX} 152 L ${firstX} 152 Z`;
-
-    return { linePath, areaPath, points };
-  }, [hourlyMetrics]);
-
-  const filteredCampaigns = useMemo(() => {
-    return campaigns
-      .filter((c: any) => {
-        const matchesSearch =
-          c.name.toLowerCase().includes(globalSearch.toLowerCase()) ||
-          c.id.toLowerCase().includes(globalSearch.toLowerCase());
-        const matchesStatus = statusFilter === 'TODOS' || c.status === statusFilter;
-        return matchesSearch && matchesStatus;
-      })
-      .sort((a: any, b: any) => {
-        const diff = a[sortField] - b[sortField];
-        return sortAsc ? diff : -diff;
-      });
-  }, [campaigns, globalSearch, statusFilter, sortField, sortAsc]);
-
-  const pageSize = 5;
-  const paginatedCampaigns = filteredCampaigns.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
-
   const handleToggleCampaignStatus = async (camp: Campaign) => {
     const nextStatus = camp.status === 'ACTIVA' ? 'PAUSADA' : 'ACTIVA';
     const nextStatusBackend = camp.status === 'ACTIVA' ? 'PAUSED' : 'ACTIVE';
@@ -175,6 +132,7 @@ export default function App() {
           setDrawerType(null);
           await fetchState();
           return;
+        }
       } else if (drawerType === 'ubicacion') {
         const netRes = await apiFetch('/api/Placements', {
           method: 'POST',
@@ -192,6 +150,7 @@ export default function App() {
           setDrawerType(null);
           await fetchState();
           return;
+        }
       } else if (drawerType === 'creativo') {
         const cleanCampId = Number(String(crtForm.campaignId).replace('CAMP-', '')) || 1;
         const netRes = await apiFetch('/api/Creatives', {
@@ -208,10 +167,11 @@ export default function App() {
           }),
         });
         if (netRes.ok) {
-          pushToast('Creativo registrado (.NET 8)', 'exito');
+          pushToast('Anuncio guardado. Copia el código de verificación del sitio en la sección de creativos.', 'exito');
           setDrawerType(null);
           await fetchState();
           return;
+        }
       } else if (drawerType === 'asignacion') {
         const cleanCampId = String(asgForm.campaignId).replace('CAMP-', '');
         const cleanCrtId = Number(String(asgForm.creativeId).replace('CRT-', '')) || 1;
@@ -233,6 +193,7 @@ export default function App() {
           setDrawerType(null);
           await fetchState();
           return;
+        }
       }
       pushToast('La operación no fue confirmada por el backend.', 'alerta');
   };
@@ -295,7 +256,6 @@ export default function App() {
           onRefresh={fetchState}
         />
 
-        <main className="p-6 space-y-6 overflow-y-auto flex-1">
         <main className="p-6 space-y-6 overflow-y-auto flex-1">
           {activeModule === 'panel' && (
             <PanelView
