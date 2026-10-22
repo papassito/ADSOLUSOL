@@ -10,6 +10,7 @@ permissions:
 jobs:
   verification:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
@@ -20,6 +21,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - run: npm ci
+      - run: npm ci --no-audit --no-fund --fetch-retries=1 --fetch-timeout=30000
       - run: npm run lint
       - run: npm run build

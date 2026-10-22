@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAdsolusolState } from './useAdsolusolState';
 import { useAnalyticsCalculations } from './useAnalyticsCalculations';
 import { apiFetch } from './services/api';
 import { mapToBackendCreateDto } from './services/campaignAdapter';
 import { MODULE_META, AI_PRESETS } from './constants';
-import { ModuleKey } from './types';
+import { ModuleKey, Campaign } from './types';
 
 import { Sidebar } from './components/Sidebar';
 import { TopHeader } from './components/TopHeader';
@@ -94,49 +94,6 @@ export default function App() {
   };
 
   const simulateReach90Threshold = () => pushToast('Simulación desactivada en LIVE', 'alerta');
-
-  const areaChartGeometry = useMemo(() => {
-    if (hourlyMetrics.length === 0) return { linePath: '', areaPath: '', points: [] };
-    const maxImp = Math.max(10, ...hourlyMetrics.map((h: any) => h.impressions));
-    const width = 620;
-    const stepX = (width - 60) / Math.max(1, hourlyMetrics.length - 1);
-
-    const points = hourlyMetrics.map((h: any, idx: number) => {
-      const x = Math.round(30 + idx * stepX);
-      const y = Math.round(142 - (h.impressions / maxImp) * 105);
-      return { x, y, ...h };
-    });
-
-    const linePath = points
-      .map((p: any, i: number) => (i === 0 ? `M ${p.x} ${p.y}` : `L ${p.x} ${p.y}`))
-      .join(' ');
-    const lastX = points[points.length - 1]?.x || 590;
-    const firstX = points[0]?.x || 30;
-    const areaPath = `${linePath} L ${lastX} 152 L ${firstX} 152 Z`;
-
-    return { linePath, areaPath, points };
-  }, [hourlyMetrics]);
-
-  const filteredCampaigns = useMemo(() => {
-    return campaigns
-      .filter((c: any) => {
-        const matchesSearch =
-          c.name.toLowerCase().includes(globalSearch.toLowerCase()) ||
-          c.id.toLowerCase().includes(globalSearch.toLowerCase());
-        const matchesStatus = statusFilter === 'TODOS' || c.status === statusFilter;
-        return matchesSearch && matchesStatus;
-      })
-      .sort((a: any, b: any) => {
-        const diff = a[sortField] - b[sortField];
-        return sortAsc ? diff : -diff;
-      });
-  }, [campaigns, globalSearch, statusFilter, sortField, sortAsc]);
-
-  const pageSize = 5;
-  const paginatedCampaigns = filteredCampaigns.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
 
   const handleToggleCampaignStatus = async (camp: Campaign) => {
     const nextStatus = camp.status === 'ACTIVA' ? 'PAUSADA' : 'ACTIVA';
