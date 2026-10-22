@@ -7,6 +7,7 @@
     "dev:live": "powershell -File ./scripts/start-live.ps1",
     "dev:real": "vite",
     "build": "vite build",
+    "deploy:plesk": "bash ./scripts/plesk-build-publish.sh",
     "preview": "vite preview",
     "lint": "tsc --noEmit",
     "test:live": "node tests/live-flow.test.cjs"
