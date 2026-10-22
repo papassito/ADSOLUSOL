@@ -1,3 +1,4 @@
+import { SiteVerificationCard } from './components/SiteVerificationCard';
 import React from 'react';
 import { Sparkles, Navigation, Smartphone, ExternalLink, PhoneCall, Lock, MapPin, Trash2 } from 'lucide-react';
 import { Creative } from './types';
@@ -113,15 +114,16 @@ export const CreativesView: React.FC<CreativesViewProps> = ({
         </div>
       </section>
 
+      <SiteVerificationCard targetUrl={crtForm.destinationUrl} refreshKey={String(creatives.length)} />
       <section className="as-card-premium rounded-2xl p-6 space-y-4">
-        <h3 className="text-base font-bold text-white">Biblioteca de Creativos Verificados ({creatives.length})</h3>
+        <h3 className="text-base font-bold text-white">Biblioteca de Creativos ({creatives.length})</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {creatives.map((cr: any) => (
             <div key={cr.id} className="p-4 rounded-xl bg-[#070B12] border border-slate-800 flex flex-col justify-between gap-3">
               <div>
                 <div className="flex justify-between items-center text-[11px] mb-1">
                   <span className="font-mono text-amber-400 font-bold">{cr.id} ➔ {cr.campaignId}</span>
-                  <span className="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-bold flex items-center gap-1"><Lock className="h-3 w-3" /> HTTPS + GPS OK</span>
+                  <span className="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-bold flex items-center gap-1"><Lock className="h-3 w-3" /> Creativo registrado</span>
                 </div>
                 <h4 className="text-sm font-bold text-blue-400">{cr.title}</h4>
                 <p className="text-xs text-slate-300 mt-1">{cr.description}</p>
@@ -129,6 +131,7 @@ export const CreativesView: React.FC<CreativesViewProps> = ({
                   <MapPin className="h-3 w-3 shrink-0" /> {cr.locationAddress || 'Ubicación autorizada'}
                 </p>
               </div>
+              <SiteVerificationCard targetUrl={cr.targetUrl || cr.destinationUrl || ''} />
               <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
                 <span className="text-slate-400 font-mono">{cr.clicks} clics • 📍 {cr.directionsClicks || 0} rutas GPS</span>
                 <div className="flex items-center gap-2">

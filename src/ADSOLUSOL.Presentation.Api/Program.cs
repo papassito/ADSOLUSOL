@@ -1,3 +1,4 @@
+using ADSOLUSOL.Presentation.Api.SiteVerification;
 using ADSOLUSOL.Application.Interfaces;
 using ADSOLUSOL.Application.Services;
 using ADSOLUSOL.Domain.Interfaces;
@@ -86,6 +87,14 @@ builder.Services.AddRateLimiter(options =>
                 QueueLimit = 0,
                 AutoReplenishment = true
             }));
+    options.AddPolicy("site-verification", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 12, Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0, AutoReplenishment = true
+            }));
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 });
 
@@ -111,6 +120,8 @@ builder.Services.AddScoped<AdServingService>();
 builder.Services.AddScoped<BudgetService>();
 builder.Services.AddScoped<EventProcessingService>();
 builder.Services.AddScoped<MetricsService>();
+builder.Services.AddScoped<SiteVerificationService>();
+builder.Services.AddSingleton<IVerificationPageFetcher, VerificationPageFetcher>();
 builder.Services.AddScoped<ITenantSettingsService, TenantSettingsService>();
 
 // Integración con Marketing Brain

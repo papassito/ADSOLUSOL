@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useAdsolusolState } from './useAdsolusolState';
 import { useAnalyticsCalculations } from './useAnalyticsCalculations';
 import { apiFetch } from './services/api';
@@ -175,6 +175,7 @@ export default function App() {
           setDrawerType(null);
           await fetchState();
           return;
+        }
       } else if (drawerType === 'ubicacion') {
         const netRes = await apiFetch('/api/Placements', {
           method: 'POST',
@@ -192,6 +193,7 @@ export default function App() {
           setDrawerType(null);
           await fetchState();
           return;
+        }
       } else if (drawerType === 'creativo') {
         const cleanCampId = Number(String(crtForm.campaignId).replace('CAMP-', '')) || 1;
         const netRes = await apiFetch('/api/Creatives', {
@@ -208,10 +210,11 @@ export default function App() {
           }),
         });
         if (netRes.ok) {
-          pushToast('Creativo registrado (.NET 8)', 'exito');
+          pushToast('Anuncio guardado. Copia el código de verificación del sitio en la sección de creativos.', 'exito');
           setDrawerType(null);
           await fetchState();
           return;
+        }
       } else if (drawerType === 'asignacion') {
         const cleanCampId = String(asgForm.campaignId).replace('CAMP-', '');
         const cleanCrtId = Number(String(asgForm.creativeId).replace('CRT-', '')) || 1;
@@ -233,6 +236,7 @@ export default function App() {
           setDrawerType(null);
           await fetchState();
           return;
+        }
       }
       pushToast('La operación no fue confirmada por el backend.', 'alerta');
   };
@@ -295,7 +299,6 @@ export default function App() {
           onRefresh={fetchState}
         />
 
-        <main className="p-6 space-y-6 overflow-y-auto flex-1">
         <main className="p-6 space-y-6 overflow-y-auto flex-1">
           {activeModule === 'panel' && (
             <PanelView

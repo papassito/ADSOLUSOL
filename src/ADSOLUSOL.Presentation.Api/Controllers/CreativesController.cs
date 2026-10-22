@@ -1,3 +1,4 @@
+using ADSOLUSOL.Presentation.Api.SiteVerification;
 using ADSOLUSOL.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using ADSOLUSOL.Domain.Entities;
@@ -112,17 +113,34 @@ public class CreativesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateCreative([FromBody] Creative creative)
+    public async Task<IActionResult> CreateCreative([FromBody] Creative creative,
+        [FromServices] SiteVerificationService siteVerifications, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(TenantId))
         {
             return Forbid();
         }
 
+        SiteProof proof;
+        try
+        {
+            proof = await siteVerifications.GetOrCreateAsync(TenantId, creative.TargetUrl, cancellationToken);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+
         creative.CreatedAt = DateTime.UtcNow;
         creative.UpdatedAt = DateTime.UtcNow;
         var id = await _creativeRepository.CreateAsync(creative);
         var createdCreative = await _creativeRepository.GetByIdAsync(id);
-        return CreatedAtAction(nameof(GetById), new { id }, createdCreative);
+        if (createdCreative is null) return StatusCode(500, new { message = "No se pudo recuperar el creativo guardado." });
+        return CreatedAtAction(nameof(GetById), new { id }, new
+        {
+            createdCreative.Id, createdCreative.Name, createdCreative.ContentUrl,
+            createdCreative.TargetUrl, createdCreative.IsEnabled,
+            createdCreative.CreatedAt, createdCreative.UpdatedAt, Verification = proof
+        });
     }
 }
