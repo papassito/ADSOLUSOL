@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+PLESK_NODE_BIN="/opt/plesk/node/20/bin"
+PATH="$PLESK_NODE_BIN:${PATH:+$PATH:}/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+export PATH
+
+SCRIPT_PATH="${BASH_SOURCE[0]}"
+SCRIPT_DIR="${SCRIPT_PATH%/*}"
+[[ "$SCRIPT_DIR" != "$SCRIPT_PATH" ]] || SCRIPT_DIR="."
+ROOT_DIR="$(cd -- "$SCRIPT_DIR/.." && pwd)"
 WEB_ROOT="${ADSO_WEB_ROOT:-}"
 API_PANEL_DIR="${ADSO_API_PANEL_DIR:-}"
-PLESK_NODE_BIN="/opt/plesk/node/20/bin"
-
-if [[ -x "$PLESK_NODE_BIN/node" ]]; then
-  PATH="$PLESK_NODE_BIN:$PATH"
-  export PATH
-fi
 
 fail() {
   printf 'ERROR: %s\n' "$*" >&2
