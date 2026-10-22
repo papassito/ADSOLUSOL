@@ -93,8 +93,10 @@ builder.Services.AddRateLimiter(options =>
             context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
             _ => new FixedWindowRateLimiterOptions
             {
-                PermitLimit = 12, Window = TimeSpan.FromMinutes(1),
-                QueueLimit = 0, AutoReplenishment = true
+                PermitLimit = 12,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0,
+                AutoReplenishment = true
             }));
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 });

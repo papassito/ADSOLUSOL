@@ -81,11 +81,19 @@ public class CampaignsController : ControllerBase
         foreach (var campaign in campaigns)
         {
             var metrics = await _metricsService.GetMetricsForCampaign(TenantId, campaign.Id);
-            result.Add(new {
-                campaign.Id, campaign.Name, campaign.Status, campaign.Budget,
-                campaign.BudgetSpent, campaign.CostPerClick, campaign.CostPerMille,
-                campaign.StartDateUtc, campaign.EndDateUtc,
-                Impressions = metrics?.Impressions, Clicks = metrics?.Clicks
+            result.Add(new
+            {
+                campaign.Id,
+                campaign.Name,
+                campaign.Status,
+                campaign.Budget,
+                campaign.BudgetSpent,
+                campaign.CostPerClick,
+                campaign.CostPerMille,
+                campaign.StartDateUtc,
+                campaign.EndDateUtc,
+                Impressions = metrics?.Impressions,
+                Clicks = metrics?.Clicks
             });
         }
         return Ok(result);

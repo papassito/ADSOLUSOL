@@ -120,8 +120,14 @@ public class CreativesController : ControllerBase
         var creative = await _creativeRepository.GetByIdAsync(id);
         if (creative is null) return NotFound();
         var tracking = await trackingCodes.GetOrCreateForCreativeAsync(TenantId, id, creative.TargetUrl, cancellationToken);
-        return Ok(new { tracking.Code, tracking.CreativeId, tracking.TargetUrl, tracking.CreatedAtUtc,
-            RedirectUrl = $"{Request.Scheme}://{Request.Host}/r/{tracking.Code}" });
+        return Ok(new
+        {
+            tracking.Code,
+            tracking.CreativeId,
+            tracking.TargetUrl,
+            tracking.CreatedAtUtc,
+            RedirectUrl = $"{Request.Scheme}://{Request.Host}/r/{tracking.Code}"
+        });
     }
 
     [HttpPost]
@@ -152,11 +158,22 @@ public class CreativesController : ControllerBase
         var tracking = await trackingCodes.GetOrCreateAsync(TenantId, createdCreative.Id, createdCreative.TargetUrl, cancellationToken);
         return CreatedAtAction(nameof(GetById), new { id }, new
         {
-            createdCreative.Id, createdCreative.Name, createdCreative.ContentUrl,
-            createdCreative.TargetUrl, createdCreative.IsEnabled,
-            createdCreative.CreatedAt, createdCreative.UpdatedAt, Verification = proof,
-            Tracking = new { tracking.Code, tracking.CreativeId, tracking.TargetUrl, tracking.CreatedAtUtc,
-                RedirectUrl = $"{Request.Scheme}://{Request.Host}/r/{tracking.Code}" }
+            createdCreative.Id,
+            createdCreative.Name,
+            createdCreative.ContentUrl,
+            createdCreative.TargetUrl,
+            createdCreative.IsEnabled,
+            createdCreative.CreatedAt,
+            createdCreative.UpdatedAt,
+            Verification = proof,
+            Tracking = new
+            {
+                tracking.Code,
+                tracking.CreativeId,
+                tracking.TargetUrl,
+                tracking.CreatedAtUtc,
+                RedirectUrl = $"{Request.Scheme}://{Request.Host}/r/{tracking.Code}"
+            }
         });
     }
 }

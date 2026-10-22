@@ -25,10 +25,15 @@ public class ServeController : ControllerBase
             return NotFound(new { message = "No eligible ads available for this placement." });
         }
 
-        return Ok(new {
-            result.Creative.Id, result.Creative.Name, result.Creative.ContentUrl,
-            result.Creative.TargetUrl, result.Creative.IsEnabled,
-            result.CampaignId, result.CampaignName
+        return Ok(new
+        {
+            result.Creative.Id,
+            result.Creative.Name,
+            result.Creative.ContentUrl,
+            result.Creative.TargetUrl,
+            result.Creative.IsEnabled,
+            result.CampaignId,
+            result.CampaignName
         });
     }
 }

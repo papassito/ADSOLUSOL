@@ -1,4 +1,4 @@
-﻿# Interfaz Web 2027 (Raíz del Proyecto)
+# Interfaz Web 2027 (Raíz del Proyecto)
 
 La interfaz web 2027 impulsada por la arquitectura de KLIK Soft Pro se ejecuta directamente desde la raíz mediante `npm install` y `npm run dev` (o `npm run dev:real` para conexión directa por proxy hacia ASP.NET Core en `http://localhost:5000`). `npm run build` genera `dist/` y `npm run lint` verifica TypeScript.
 

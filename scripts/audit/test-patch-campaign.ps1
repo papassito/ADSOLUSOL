@@ -1,4 +1,4 @@
-﻿<#
+<#
 ================================================================================
   ADSOLUSOL :: SUITE DE VALIDACION DE CONTROLADOR patchCampaign
   Verifica el cumplimiento estricto de las reglas de negocio y seguridad para
