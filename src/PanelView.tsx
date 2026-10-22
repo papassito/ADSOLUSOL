@@ -1,5 +1,5 @@
 import React from 'react';
-import { TrendingUp } from 'lucide-react';
+import { TrendingUp, AlertTriangle } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 interface PanelViewProps {
@@ -18,8 +18,15 @@ export const PanelView: React.FC<PanelViewProps> = ({
   if (import.meta.env.VITE_DEMO_MODE !== 'true') {
     return <section className="as-card-premium rounded-2xl p-6"><h3>Operación con backend real</h3><p>Proyecciones, ahorro Shield y saldo: NO DISPONIBLE hasta conectar sus fuentes.</p></section>;
   }
+
   return (
     <div className="space-y-6">
+      <div className="bg-amber-900/50 border border-amber-500/40 text-amber-200 p-3 rounded-xl text-xs flex items-center gap-3">
+        <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0" />
+        <div>
+          <span className="font-bold">MODO DEMOSTRACIÓN:</span> Los datos de proyección de gasto y ahorro Shield™ son simulaciones basadas en los datos iniciales y no representan una analítica real.
+        </div>
+      </div>
       <section className="as-card-premium rounded-2xl p-6 space-y-5">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>

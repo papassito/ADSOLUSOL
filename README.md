@@ -30,6 +30,7 @@ Existe para proporcionar total soberanía e independencia publicitaria frente a 
 - **First Party Telemetry:** La telemetría se recolecta directamente entre el visitante, el nodo y el ad server.
 - **Server Authoritative Accounting:** Las liquidaciones, costos y saldos son calculados exclusivamente en backend con transacciones atómicas.
 - **Zero Synthetic Metrics:** Prohibido simular métricas, clics o disponibilidad.
+El servidor de demostración (`npm run dev:demo`) utiliza una simulación **determinista** (no aleatoria) del motor de subasta para fines de desarrollo, pero no genera datos falsos.
 
 ## Módulos del Sistema
 

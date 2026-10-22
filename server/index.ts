@@ -21,11 +21,14 @@ async function startServer() {
   app.patch('/api/campaigns/:id', controllers.patchCampaign);
   app.delete('/api/:collection/:id', controllers.deleteRecord);
   app.post('/api/serve-decision', controllers.handleServeDecision);
+  // Handshake de validación de Tag
+  app.post('/api/initiate-validation', controllers.initiateValidation);
+  app.get('/api/check-token-status/:token', controllers.checkTokenStatus);
+  app.post('/api/redeem-validation-token', controllers.redeemValidationToken);
 
   app.post('/api/placements', controllers.createPlacement);
   app.post('/api/creatives', controllers.createCreative);
   app.post('/api/assignments', controllers.createAssignment);
-  app.post('/api/embed/validate', controllers.validateEmbed);
 
   const vite = await createServer({
     configFile: false, // No cargar vite.config.ts para aislar el modo demo

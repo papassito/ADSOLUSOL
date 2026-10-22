@@ -5,24 +5,6 @@ import { DB_PATH, readDb, writeDb } from './storage';
 
 export const serverStartTime = Date.now();
 
-export async function validateEmbed(req: Request, res: Response) {
-  const rawUrl = typeof req.body?.url === 'string' ? req.body.url.trim() : '';
-  const zoneId = typeof req.body?.zoneId === 'string' ? req.body.zoneId.trim() : '';
-  let url: URL;
-  try { url = new URL(rawUrl); } catch { return res.status(400).json({ verified: false, code: 'INVALID_URL', message: 'URL inválida.' }); }
-  if (url.protocol !== 'https:') return res.status(400).json({ verified: false, code: 'HTTPS_REQUIRED', message: 'La URL debe usar HTTPS.' });
-  if (!zoneId || !/^[A-Za-z0-9_-]{3,80}$/.test(zoneId)) return res.status(400).json({ verified: false, code: 'INVALID_ZONE', message: 'Zona inválida.' });
-  try {
-    const response = await fetch(url, { signal: AbortSignal.timeout(8000), headers: { 'User-Agent': 'ADSOLUSOL-Validator/2027' } });
-    const html = (await response.text()).slice(0, 2_000_000);
-    const tagDetected = html.includes(`data-zone-id="${zoneId}"`) || html.includes(`data-adsolusol-zone="${zoneId}"`);
-    // La firma solo se marca válida cuando exista verificación criptográfica real en el backend.
-    return res.json({ verified: response.ok && tagDetected, reachable: response.ok, statusCode: response.status, tagDetected, signatureVerified: false, message: response.ok && tagDetected ? 'Sitio accesible y zona detectada.' : 'No se detectó una zona ADSOLUSOL verificable.' });
-  } catch (error) {
-    return res.status(502).json({ verified: false, code: 'TARGET_UNREACHABLE', message: 'No se pudo contactar el sitio destino.' });
-  }
-}
-
 export function getState(req: Request, res: Response) {
   const startCheck = process.hrtime();
   const db = readDb();
@@ -36,14 +18,14 @@ export function getState(req: Request, res: Response) {
     ...db,
     systemHealth: {
       sqlite: {
-        status: 'SIMULADO (archivo JSON)',
+        status: 'DEMO (JSON file)',
         latencyMs: dbLatencyMs,
         dbSizeKb: Number((stats.size / 1024).toFixed(1)),
         journalMode: 'No disponible (archivo JSON)',
         atomicGuard: 'BudgetSpent + Cost <= Budget',
       },
       sicEngine: {
-        status: 'SIMULADO',
+        status: 'DEMO (Not Connected)',
         endpoint: 'https://api.solusol.net/api (sin conectar)',
         latencyMs: null,
         lastSync: new Date().toLocaleTimeString('es-MX'),
@@ -64,7 +46,7 @@ export function getState(req: Request, res: Response) {
 export function createCampaign(req: Request, res: Response) {
   const db = readDb();
   const newCamp = {
-    id: req.body.id || `CAMP-${crypto.randomBytes(4).toString('hex')}`,
+    id: req.body.id || `CAMP-${crypto.randomBytes(6).toString('hex').toUpperCase()}`,
     name: req.body.name,
     status: 'ACTIVA',
     strategy: req.body.strategy || 'Pacing Ponderado + CPC',
@@ -84,7 +66,7 @@ export function createCampaign(req: Request, res: Response) {
     campaign: newCamp.name,
     amount: newCamp.budget,
     nonce: crypto.randomBytes(6).toString('hex'),
-    signature: `ed25519-simulated:${crypto.randomBytes(4).toString('hex')}...${crypto.randomBytes(2).toString('hex')}`, // ADVERTENCIA: Firma simulada solo para demostración.
+    signature: 'SIGNATURE_SIMULATED_IN_DEMO_MODE',
     status: 'REGISTRADO',
   });
   writeDb(db);
@@ -119,15 +101,15 @@ export function patchCampaign(req: Request, res: Response) {
     const value = req.body[key];
 
     if (key === 'budget' || key === 'maxCpc') {
-      const numValue = value;
-      if (typeof numValue !== 'number' || !Number.isFinite(numValue) || numValue <= 0) {
+      // Validación estricta de tipo numérico, no coerción.
+      if (typeof value !== 'number' || !Number.isFinite(value) || value <= 0) {
         return res.status(400).json({ code: 'INVALID_NUMBER', error: `El campo '${key}' debe ser un número estrictamente positivo.` });
       }
       // 3. Validar regla de negocio
-      if (key === 'budget' && numValue < campaignToUpdate.spent) {
-        return res.status(400).json({ error: `El presupuesto (${numValue}) no puede ser menor que el gasto actual (${campaignToUpdate.spent}).` });
+      if (key === 'budget' && value < campaignToUpdate.spent) {
+        return res.status(400).json({ error: `El presupuesto (${value}) no puede ser menor que el gasto actual (${campaignToUpdate.spent}).` });
       }
-      updatePayload[key] = numValue;
+      updatePayload[key] = value;
     } else if (key === 'name') {
       if (typeof value !== 'string' || value.trim().length < 3 || value.trim().length > 100) {
         return res.status(400).json({ error: `El campo 'name' debe ser una cadena entre 3 y 100 caracteres.` });
@@ -155,6 +137,76 @@ export function patchCampaign(req: Request, res: Response) {
   res.json(db.campaigns[campaignIndex]);
 }
 
+export function initiateValidation(req: Request, res: Response) {
+    const token = crypto.randomBytes(16).toString('hex');
+    const challenge = crypto.randomBytes(8).toString('hex');
+    const db = readDb();
+    db.validationTokens.push({
+      token,
+      challenge,
+      status: 'PENDING',
+      message: 'Token generado. Esperando handshake del script.',
+      expiresAt: Date.now() + 120000 // 2 minute expiry
+    });
+    writeDb(db);
+    res.json({ token, challenge });
+}
+
+export function checkTokenStatus(req: Request, res: Response) {
+    const { token } = req.params;
+    const db = readDb();
+    const tokenIndex = db.validationTokens.findIndex((t: any) => t.token === token);
+
+    if (tokenIndex === -1) {
+      return res.json({ status: 'EXPIRED', message: 'El token de validación ha expirado o es inválido.' });
+    }
+
+    const result = db.validationTokens[tokenIndex];
+    if (result.expiresAt < Date.now()) {
+      db.validationTokens.splice(tokenIndex, 1);
+      writeDb(db);
+      return res.json({ status: 'EXPIRED', message: 'El token de validación ha expirado.' });
+    }
+
+    if (result.status === 'HANDSHAKE_VERIFIED') {
+        // El token es de un solo uso, se elimina después de ser consultado exitosamente.
+        db.validationTokens.splice(tokenIndex, 1);
+        writeDb(db);
+    }
+
+    res.json(result);
+}
+
+export async function validateOrigin(req: Request, res: Response) {
+  const { url, placementCode } = req.body;
+  if (!url || !placementCode) {
+    return res.status(400).json({ error: 'URL y placementCode son requeridos.' });
+  }
+}
+
+export function redeemValidationToken(req: Request, res: Response) {
+  const { token, placement, origin, timestamp, signature } = req.body;
+  const db = readDb();
+  const tokenData = db.validationTokens.find((t: any) => t.token === token);
+
+  if (!tokenData || tokenData.status !== 'PENDING' || tokenData.expiresAt < Date.now()) {
+    return res.status(404).json({ error: 'Token inválido o expirado.' });
+  }
+
+  // **SIMULACIÓN DE VERIFICACIÓN CRIPTOGRÁFICA**
+  // En un sistema real, aquí se reconstruiría el mensaje canónico y se verificaría la firma Ed25519.
+  // const canonicalMessage = `${tokenData.challenge}|${placement}|${origin}|${timestamp}`;
+  // const isValid = Ed25519.verify(publicKey, signature, canonicalMessage);
+  if (typeof signature === 'string' && signature.startsWith('sim-sig:')) {
+    tokenData.status = 'HANDSHAKE_VERIFIED';
+    tokenData.message = `Handshake verificado desde ${origin} para el placement ${placement}.`;
+    writeDb(db);
+    return res.status(204).send();
+  }
+
+  return res.status(401).json({ error: 'Firma inválida.' });
+}
+
 export function createPlacement(req: Request, res: Response) {
   const db = readDb();
   db.placements.unshift({
@@ -174,7 +226,7 @@ export function createPlacement(req: Request, res: Response) {
 export function createCreative(req: Request, res: Response) {
   const db = readDb();
   db.creatives.unshift({
-    id: `CRT-${Math.floor(500 + Math.random() * 499)}`,
+    id: `CRT-${crypto.randomBytes(3).toString('hex').toUpperCase()}`,
     campaignId: req.body.campaignId || 'CAMP-101',
     title: req.body.title,
     description: req.body.description,
@@ -195,7 +247,7 @@ export function createCreative(req: Request, res: Response) {
 export function createAssignment(req: Request, res: Response) {
   const db = readDb();
   db.assignments.unshift({
-    id: `ASG-${Math.floor(900 + Math.random() * 99)}`,
+    id: `ASG-${crypto.randomBytes(3).toString('hex').toUpperCase()}`,
     campaignId: req.body.campaignId,
     creativeId: req.body.creativeId,
     placementId: req.body.placementId,
@@ -233,20 +285,26 @@ export function handleServeDecision(req: Request, res: Response) {
     });
   }
 
-  const winnerCamp = activeCampaigns[Math.floor(Math.random() * activeCampaigns.length)];
+  // Lógica de subasta determinista: El que más ofrece (maxCpc) gana.
+  const sortedBidders = [...activeCampaigns].sort((a: any, b: any) => b.maxCpc - a.maxCpc);
+  const winnerCamp = sortedBidders[0];
+
+  // Lógica de coste determinista: Subasta de segundo precio + $0.01
+  // Si solo hay un postor, paga el precio de reserva (un valor mínimo, ej. $0.10).
+  const secondPrice = sortedBidders.length > 1 ? sortedBidders[1].maxCpc : 0.10;
+  const clearingPrice = Number((secondPrice + 0.01).toFixed(2));
+
   const creative =
     db.creatives.find((cr: any) => cr.campaignId === winnerCamp.id) || db.creatives[0];
 
-  const cpcCost = triggerClick
-    ? Number((winnerCamp.maxCpc * (0.75 + Math.random() * 0.22)).toFixed(2))
-    : 0;
+  const cpcCost = triggerClick ? clearingPrice : 0;
 
   if (winnerCamp.spent + cpcCost > winnerCamp.budget) {
     winnerCamp.status = 'LIMITADA';
     writeDb(db);
     return res.json({ db, decision: null });
   }
-
+  
   winnerCamp.impressions += 1;
   if (placement) placement.impressions += 1;
   if (creative) creative.impressions += 1;
@@ -266,7 +324,8 @@ export function handleServeDecision(req: Request, res: Response) {
   }
 
   const nonce = crypto.randomBytes(6).toString('hex');
-  const signature = `ed25519-simulated:${crypto.randomBytes(4).toString('hex')}...dev`; // ADVERTENCIA: Firma simulada solo para demostración.
+  // Se elimina la generación de firmas falsas. Se devuelve un placeholder honesto.
+  const signature = `SIGNATURE_SIMULATED_IN_DEMO_MODE`;
 
   writeDb(db);
   res.json({

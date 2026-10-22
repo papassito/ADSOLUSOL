@@ -13,6 +13,7 @@ export const initialData = {
     { hour: '12:00', impressions: 56, clicks: 4, spend: 7.96, cpm: 14.21 },
     { hour: '13:00', impressions: 19, clicks: 2, spend: 3.30, cpm: 17.36 },
   ],
+  validationTokens: [],
   campaigns: [
     {
       id: 'CAMP-101',
@@ -212,4 +213,3 @@ export const initialData = {
     { id: 'USR-03', name: 'Auditor Checador / Nivel 5', email: 'auditoria@solusol.net', role: 'Auditor Forense (Solo Lectura)', keyFingerprint: 'Ed25519:SHA256:t7B9...nC4j', status: 'ACTIVO' },
   ],
 };
-
