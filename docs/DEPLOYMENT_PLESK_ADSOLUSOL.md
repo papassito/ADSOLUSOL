@@ -1,40 +1,63 @@
 # ADSOLUSOL en Plesk
 
-El panel React (`ADSOLUSOL.Presentation.Web`) se compila localmente (`dist/`) y
-se publica como archivos estáticos directamente en el Document Root de Plesk
-(`httpdocs` o `adsolusol.solusol.net`). La API .NET corre como
-`adsolusol-api.service` en `127.0.0.1:5000`; no debe exponerse ese puerto directamente a Internet.
+El frontend LIVE es la aplicación Vite del directorio raíz del repositorio (src/).
+Plesk debe compilarla y publicar el resultado de dist/ en cada despliegue. La API .NET
+corre como adsolusol-api.service en 127.0.0.1:5000; no debe exponerse ese puerto directamente a Internet.
 
-## Acceso Directo al Workbench (Modo Construcción — Sin Login Temporal)
+La vista autenticada /api/panel la devuelve la API desde
+<ContentRoot>/panel/index.html. Por eso, actualizar el commit de Git no basta:
+también hay que reconstruir el frontend, publicar sus recursos en el Document Root
+y colocar el nuevo index.html en el directorio que lee la API.
 
-Durante la fase de construcción y estabilización de la interfaz, el portal web (`adsolusol.solusol.net`)
+## Publicar el frontend en cada despliegue
+
+El repositorio incluye npm run deploy:plesk. Este comando:
+
+1. instala las dependencias bloqueadas con npm ci y ejecuta npm run build;
+2. confirma que el bundle contiene la tarjeta “Verificar sitio promocionado”;
+3. publica dist/ en el Document Root sin borrar otros archivos del sitio;
+4. copia dist/index.html a <ContentRoot>/panel/index.html, que usa /api/panel;
+5. escribe release.json en el Document Root con el commit y la hora UTC de publicación.
+
+En Plesk, identifica las dos rutas:
+
+- **Document Root**: Sitios web y dominios → Hosting y DNS → Hosting → raíz de documentos.
+- **ContentRoot de la API**: revisa systemctl cat adsolusol-api.service y el valor WorkingDirectory del servicio. La ruta de destino es ese ContentRoot más /panel. Si el servicio define --contentRoot, usa esa ruta explícita.
+
+En **Git → Repositorio → Repository Settings → Additional deployment actions**, agrega esta acción para que se ejecute después de cada actualización. Sustituye los ejemplos por las rutas reales de esa suscripción:
+
+```bash
+ADSO_WEB_ROOT="/var/www/vhosts/DOMINIO/adsolusol.solusol.net/httpdocs" ADSO_API_PANEL_DIR="/RUTA/REAL/DEL/CONTENTROOT/panel" npm run deploy:plesk
+```
+
+La acción necesita Node.js/npm, conexión para descargar dependencias y permiso de escritura del usuario de despliegue en ambas rutas. Si la compilación, la comprobación del bundle o la publicación falla, el script termina con error y Plesk debe mostrarlo en el registro de la acción. No reporta éxito antes de completar la copia.
+
+Después de desplegar, comprueba en el registro Published commit <hash>. Abre https://adsolusol.solusol.net/release.json y confirma que el commit coincida. En la sesión autenticada, vuelve a abrir /api/panel?rev=<hash>, entra a **Estudio de Creativos + GPS + Verificación** y confirma que aparece **Verificar sitio promocionado**. El archivo release.json verifica el artefacto del Document Root; la tarjeta en /api/panel confirma que también se actualizó el HTML que sirve la API.
+
+## Acceso al Workbench
+
+Durante la fase de construcción y estabilización de la interfaz, el portal web (adsolusol.solusol.net)
 levanta directamente en el **Workbench Operativo** con acceso inmediato y sin fricción.
-Se suprimen estrictamente pantallas de inicio de sesión, contraseñas, tokens interactivos, MFA y bloqueos por usuario.
-
-El operador accede en cero clics a las 4 acciones canónicas del Workbench:
-[F1] Nueva Campaña (Verde), [F2] Gestionar Pauta (Ámbar), [F3] Auditar Resultados (Azul) y [F4] Inventario (Índigo).
-La seguridad reside en el perímetro de infraestructura, proxy inverso y notaría criptográfica Ed25519 de máquina a máquina (`SOLUSOL_AUTH_V1`).
+La seguridad reside en el perímetro de infraestructura, proxy inverso y notaría criptográfica Ed25519 de máquina a máquina (SOLUSOL_AUTH_V1).
 
 ## Topología de enrutamiento Nginx en Plesk
 
 La arquitectura de publicación requerida para los dominios es:
 
 ```text
-adsolusol.solusol.net/  (Portal & Panel Web)
-        │
-        ├── /               → Presentation.Web (index.html)
-        ├── /*              → Presentation.Web / index.html
-        │
-        └── /api/*          → Proxy hacia api.solusol.net (o backend local 127.0.0.1:5000)
+adsolusol.solusol.net/
+        ├── /             → Document Root con el build Vite
+        ├── /*            → SPA: /index.html
+        └── /api/*        → API .NET (127.0.0.1:5000)
+                              /api/panel sirve <ContentRoot>/panel/index.html
 
-api.solusol.net/        (API Canónica del Sistema)
-        │
-        ├── /api/*          → Presentation.Api (127.0.0.1:5000)
-        └── /swagger/*      → Presentation.Api (127.0.0.1:5000)
+api.solusol.net/
+        ├── /api/*        → API .NET (127.0.0.1:5000)
+        └── /swagger/*    → API .NET (127.0.0.1:5000)
 ```
 
 En **Sitios web y dominios** > **Configuración de Apache y nginx** > **Directivas adicionales de nginx**,
-configurar el bloque completo. Nunca incluir una regla `location = /` que apunte al puerto 5000:
+configurar el bloque completo. Nunca incluir una regla location = / que apunte al puerto 5000:
 
 ```nginx
 # API .NET
@@ -66,3 +89,4 @@ location ^~ /swagger/ {
 location / {
     try_files $uri $uri/ /index.html;
 }
+```
