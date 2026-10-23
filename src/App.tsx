@@ -256,13 +256,18 @@ export default function App() {
           onRefresh={fetchState}
         />
 
-        <main className="p-6 space-y-6 overflow-y-auto flex-1">
+        <main className="p-3 sm:p-6 space-y-6 overflow-y-auto flex-1 min-w-0">
           {activeModule === 'panel' && (
             <PanelView
+              campaigns={campaigns}
               forecast7DaysData={forecast7DaysData}
               total7DayPredictedSpend={total7DayPredictedSpend}
               total7DayShieldOptimized={total7DayShieldOptimized}
               ledgerBalance={dbState?.ledgerBalance}
+              systemHealth={sysHealth}
+              campaignsAvailable={dbState?.campaignsAvailable === true}
+              loading={loadingAction}
+              onNavigate={setActiveModule}
             />
           )}
           {activeModule === 'campanas' && (

@@ -32,6 +32,7 @@ export function mapFromBackendCampaign(item: BackendCampaign): Campaign {
     id: typeof item.id === 'number' ? `CAMP-${item.id}` : String(item.id),
     name: item.name || 'Sin nombre',
     status: normalizedStatus,
+    backendStatus: rawStatus,
     strategy: 'Pacing Ponderado + CPC',
     budget,
     spent,

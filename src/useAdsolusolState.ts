@@ -120,6 +120,7 @@ export function useAdsolusolState() {
           setDbState((prev: any) => ({
             ...(prev || {}), // Conservar estado anterior para evitar parpadeos
             campaigns: loadedCampaigns,
+            campaignsAvailable: true,
             ...(loadedPlacements && { placements: loadedPlacements }),
             ...(loadedCreatives && { creatives: loadedCreatives }),
             systemHealth: {
@@ -148,6 +149,7 @@ export function useAdsolusolState() {
           setDbState((prev: any) => ({
             ...(prev || {}),
             campaigns: prev?.campaigns || [],
+            campaignsAvailable: false,
             systemHealth: {
               sqlite: { status: 'DISCONNECTED', latencyMs: null, journalMode: 'N/A', atomicGuard: 'N/A' },
               sicEngine: { status: 'DISCONNECTED', endpoint: 'https://api.solusol.net/api', latencyMs: null, protocol: 'HTTP/REST' },

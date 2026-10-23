@@ -22,6 +22,7 @@ export interface Campaign {
   id: string;
   name: string;
   status: 'ACTIVA' | 'PAUSADA' | 'LIMITADA';
+  backendStatus?: string;
   strategy: string;
   budget: number;
   spent: number;

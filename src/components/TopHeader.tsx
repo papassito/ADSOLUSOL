@@ -33,7 +33,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
   onRefresh,
 }) => {
   return (
-    <header className="bg-[#0B101B]/85 backdrop-blur-md border-b border-slate-800/80 px-6 py-4 flex flex-col xl:flex-row xl:items-center justify-between gap-4 sticky top-0 z-20">
+    <header className="bg-[#0B101B]/85 backdrop-blur-md border-b border-slate-800/80 px-3 sm:px-6 py-4 flex flex-col xl:flex-row xl:items-center justify-between gap-4 sticky top-0 z-20">
       <div>
         <div className="flex items-center gap-1.5 text-xs text-slate-400 mb-1">
           <span>ADSOLUSOL</span>
@@ -83,7 +83,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
             value={globalSearch}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Filtrar campañas, IDs..."
-            className="bg-[#070B12] border border-slate-800 rounded-xl pl-9 pr-16 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500 w-56"
+            className="bg-[#070B12] border border-slate-800 rounded-xl pl-9 pr-16 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500 w-40 sm:w-56"
           />
           <button
             onClick={onOpenCommand}
