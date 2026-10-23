@@ -48,6 +48,7 @@
   $$\text{eCPM} = \text{Puja CPM} \times \left(\frac{\text{CTR}}{100}\right) \times 1000$$
 - [ ] **Alias de Compatibilidad RTB:** Exponer `GET /api/public/ad-request` como alias directo hacia la lógica de serving.
 - [ ] **Frequency Capping:** Limitación de exposición por usuario (IP/nodo) con ventana deslizante de 24 horas para evitar la fatiga publicitaria.
+- [ ] **Plan de Escalabilidad de Persistencia:** Documentar y probar el path de migración a PostgreSQL, incluyendo benchmarks de escritura concurrente para validar el rendimiento vs. SQLite en modo WAL.
 - [ ] **Controlador de Pacing Dinámico:** Distribución del presupuesto a lo largo del día para evitar el agotamiento prematuro en las primeras horas.
 
 ---
@@ -72,6 +73,7 @@
 - [x] **Diagnóstico Coordinado:** Endpoint `/api/health` validando el estado local y la disponibilidad de `{SicBaseUrl}/health`.
 - [x] **Cliente Asíncrono:** `MarketingBrainClient` enviando telemetría de eventos mediante peticiones REST.
 - [ ] **Patrón Outbox Persistente:** Cola local persistente para garantizar la entrega de telemetría hacia SIC ante interrupciones prolongadas de red (garantía *At-Least-Once* sin degradar el serving).
+- [ ] **Pruebas de Resiliencia de Red:** Simular fallos del SIC y verificar que el sistema sigue operando y encolando telemetría correctamente, cumpliendo el principio de `DISCONNECTED != AVAILABLE`.
 
 ---
 
@@ -92,6 +94,28 @@
 - [x] **Notaría Ed25519:** Verificación obligatoria de firmas con encabezados `X-Solusol-Node-Id`, `X-Solusol-Timestamp`, `X-Solusol-Nonce` y `X-Solusol-Signature`.
 - [x] **Aislamiento Multi-Tenant Autoritativo:** Inyección segura de `TenantId` a partir del nodo firmante.
 - [ ] **Consorcio Federado:** Sincronización de inventarios publicitarios entre nodos de la red sin pérdida de soberanía de datos.
+- [ ] **Pruebas de Seguridad Activas:** Desarrollar suite de pruebas de integración que intente activamente explotar el middleware de seguridad, incluyendo ataques de replay (nonces duplicados), timestamps inválidos y firmas corruptas.
+
+---
+
+## Fase 8: Tortura Operativa
+
+*Objetivo: Intentar romper ADSOLUSOL mediante la simulación de escenarios de estrés extremo para validar la resiliencia, consistencia y rendimiento del sistema bajo fuego real.*
+
+- [ ] **Escenario A (Carga Masiva de Campañas):** Simular la creación y gestión de 10,000 campañas activas simultáneas.
+- [ ] **Escenario B (Ráfaga de Impresiones):** Sostener una carga de 1 millón de impresiones en una hora, validando la capacidad de ingesta y el rendimiento de la base de datos.
+- [ ] **Escenario C (Concurrencia y Caída Parcial):** Procesar 100,000 clics concurrentes mientras la dependencia del SIC se encuentra intermitente, verificando que el patrón Outbox previene la pérdida de telemetría.
+- [ ] **Escenario D (Recuperación ante Desastres):** Forzar un reinicio inesperado del nodo API durante una escritura masiva de eventos y verificar la consistencia de los datos y el estado del ledger tras la recuperación.
+- [ ] **Escenario E (Agotamiento de Presupuesto Concurrente):** Lanzar un ataque de alta concurrencia sobre una campaña con presupuesto a punto de agotarse para verificar que el gasto NUNCA excede el límite y que los eventos rechazados por falta de fondos se registran correctamente.
+
+### Criterio de Aceptación "Enterprise Ready"
+
+El sistema será considerado "Enterprise Ready" únicamente cuando demuestre haber sobrevivido una ejecución de **30 días continuos** bajo los escenarios de tortura, cumpliendo con:
+
+- **Cero corrupción de datos:** El ledger financiero permanece íntegro.
+- **Cero pérdida de telemetría:** Todos los eventos son eventualmente consistentes con el SIC.
+- **Cero sobreconsumo de presupuesto:** Ninguna campaña gasta más de su límite asignado.
+- **Cero duplicidades:** La idempotencia se mantiene bajo cualquier nivel de carga.
 
 ---
 
