@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using System.Diagnostics;
 using ADSOLUSOL.Infrastructure.Persistence;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,8 @@ namespace ADSOLUSOL.Presentation.Api.SiteVerification;
 
 public sealed record SiteProof(string Domain, string SiteUrl, string Status, string Snippet,
     string? VerifiedAtUtc, string? LastCheckedAtUtc, string? Message);
+public sealed record SiteAvailability(string Url, string Status, long? ResponseTimeMs,
+    string? LastCheckedAtUtc, string? Message);
 
 public sealed class SiteVerificationService
 {
@@ -31,7 +34,11 @@ public sealed class SiteVerificationService
                 TenantId TEXT NOT NULL, Domain TEXT NOT NULL, Token TEXT NOT NULL,
                 Status TEXT NOT NULL DEFAULT 'PENDING', VerifiedAtUtc TEXT NULL,
                 LastCheckedAtUtc TEXT NULL, Message TEXT NULL,
-                PRIMARY KEY (TenantId, Domain))";
+                PRIMARY KEY (TenantId, Domain));
+                CREATE TABLE IF NOT EXISTS SiteUrlChecks (
+                TenantId TEXT NOT NULL, Url TEXT NOT NULL, Status TEXT NOT NULL,
+                ResponseTimeMs INTEGER NULL, LastCheckedAtUtc TEXT NOT NULL,
+                Message TEXT NULL, PRIMARY KEY (TenantId, Url))";
             await command.ExecuteNonQueryAsync(ct);
             return connection;
         }
@@ -43,6 +50,57 @@ public sealed class SiteVerificationService
         var site = VerificationPolicy.GetSiteUri(targetUrl);
         await using var connection = await OpenAsync(ct);
         return await ReadAsync(connection, tenant, site, ct);
+    }
+
+    public async Task<SiteAvailability?> GetAvailabilityAsync(string tenant, string targetUrl, CancellationToken ct)
+    {
+        var url = VerificationPolicy.GetMonitorUri(targetUrl);
+        await using var connection = await OpenAsync(ct);
+        using var command = connection.CreateCommand();
+        command.CommandText = "SELECT Status, ResponseTimeMs, LastCheckedAtUtc, Message FROM SiteUrlChecks WHERE TenantId=$tenant AND Url=$url";
+        command.Parameters.AddWithValue("$tenant", tenant);
+        command.Parameters.AddWithValue("$url", url.AbsoluteUri);
+        await using var reader = await command.ExecuteReaderAsync(ct);
+        if (!await reader.ReadAsync(ct)) return null;
+        return new SiteAvailability(url.AbsoluteUri, reader.GetString(0),
+            reader.IsDBNull(1) ? null : reader.GetInt64(1), reader.GetString(2),
+            reader.IsDBNull(3) ? null : reader.GetString(3));
+    }
+
+    public async Task<SiteAvailability> CheckAvailabilityAsync(string tenant, string targetUrl, CancellationToken ct)
+    {
+        var url = VerificationPolicy.GetMonitorUri(targetUrl);
+        var timer = Stopwatch.StartNew();
+        var status = "AVAILABLE";
+        string? message = "La URL respondió correctamente por HTTPS.";
+        try
+        {
+            await _fetcher.FetchAsync(url, ct);
+        }
+        catch (Exception ex) when (ex is HttpRequestException || ex is OperationCanceledException || ex is IOException)
+        {
+            if (ct.IsCancellationRequested) throw;
+            status = "UNAVAILABLE";
+            message = ex.Message;
+        }
+        timer.Stop();
+        var checkedAt = DateTimeOffset.UtcNow.ToString("O");
+        var latency = timer.ElapsedMilliseconds;
+
+        await using var connection = await OpenAsync(ct);
+        using var command = connection.CreateCommand();
+        command.CommandText = @"INSERT INTO SiteUrlChecks (TenantId, Url, Status, ResponseTimeMs, LastCheckedAtUtc, Message)
+            VALUES ($tenant, $url, $status, $latency, $checked, $message)
+            ON CONFLICT(TenantId, Url) DO UPDATE SET Status=$status, ResponseTimeMs=$latency,
+            LastCheckedAtUtc=$checked, Message=$message";
+        command.Parameters.AddWithValue("$tenant", tenant);
+        command.Parameters.AddWithValue("$url", url.AbsoluteUri);
+        command.Parameters.AddWithValue("$status", status);
+        command.Parameters.AddWithValue("$latency", latency);
+        command.Parameters.AddWithValue("$checked", checkedAt);
+        command.Parameters.AddWithValue("$message", (object?)message ?? DBNull.Value);
+        await command.ExecuteNonQueryAsync(ct);
+        return new SiteAvailability(url.AbsoluteUri, status, latency, checkedAt, message);
     }
 
     public async Task<SiteProof> GetOrCreateAsync(string tenant, string targetUrl, CancellationToken ct)

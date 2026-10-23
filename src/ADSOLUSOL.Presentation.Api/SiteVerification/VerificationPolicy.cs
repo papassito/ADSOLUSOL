@@ -23,6 +23,18 @@ public static class VerificationPolicy
         return new Uri("https://" + host + "/");
     }
 
+    public static Uri GetMonitorUri(string targetUrl)
+    {
+        var site = GetSiteUri(targetUrl);
+        var target = new Uri(targetUrl);
+        return new UriBuilder(site)
+        {
+            Path = target.AbsolutePath,
+            Query = string.Empty,
+            Fragment = string.Empty
+        }.Uri;
+    }
+
     public static bool IsPublicAddress(IPAddress address)
     {
         if (address.IsIPv4MappedToIPv6) address = address.MapToIPv4();

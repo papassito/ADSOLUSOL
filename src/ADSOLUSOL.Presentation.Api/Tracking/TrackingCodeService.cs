@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ADSOLUSOL.Presentation.Api.Tracking;
 
-public sealed record TrackingCode(string Code, long CreativeId, string TargetUrl, DateTime CreatedAtUtc);
+public sealed record TrackingCode(string Code, long CreativeId, string TargetUrl, DateTime CreatedAtUtc, long Clicks);
 
 public sealed class TrackingCodeService
 {
@@ -24,11 +24,11 @@ public sealed class TrackingCodeService
         var connection = _db.Database.GetDbConnection();
         await EnsureSchema(connection, ct);
         await using var find = connection.CreateCommand();
-        find.CommandText = "SELECT Code, TargetUrl, CreatedAtUtc FROM TrackingCodes WHERE TenantId=$tenant AND CreativeId=$creative";
+        find.CommandText = "SELECT Code, TargetUrl, CreatedAtUtc, Clicks FROM TrackingCodes WHERE TenantId=$tenant AND CreativeId=$creative";
         Add(find, "$tenant", tenantId); Add(find, "$creative", creativeId);
         await using var reader = await find.ExecuteReaderAsync(ct);
         if (await reader.ReadAsync(ct))
-            return new(reader.GetString(0), creativeId, reader.GetString(1), DateTime.Parse(reader.GetString(2)).ToUniversalTime());
+            return new(reader.GetString(0), creativeId, reader.GetString(1), DateTime.Parse(reader.GetString(2)).ToUniversalTime(), reader.GetInt64(3));
         await reader.DisposeAsync();
         var code = "ADS-" + Guid.NewGuid().ToString("N");
         var now = DateTime.UtcNow;
@@ -36,7 +36,7 @@ public sealed class TrackingCodeService
         insert.CommandText = "INSERT INTO TrackingCodes (Code,TenantId,CreativeId,TargetUrl,CreatedAtUtc) VALUES ($code,$tenant,$creative,$url,$created)";
         Add(insert, "$code", code); Add(insert, "$tenant", tenantId); Add(insert, "$creative", creativeId); Add(insert, "$url", targetUrl); Add(insert, "$created", now.ToString("O"));
         await insert.ExecuteNonQueryAsync(ct);
-        return new(code, creativeId, targetUrl, now);
+        return new(code, creativeId, targetUrl, now, 0);
     }
 
     public Task<TrackingCode> GetOrCreateForCreativeAsync(string tenantId, long creativeId, string targetUrl, CancellationToken ct)

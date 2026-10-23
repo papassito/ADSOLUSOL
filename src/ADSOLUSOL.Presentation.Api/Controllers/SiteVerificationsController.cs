@@ -45,6 +45,27 @@ public sealed class SiteVerificationsController : ControllerBase
         }
         catch (ArgumentException ex) { return BadRequest(new { message = ex.Message }); }
     }
+
+    [HttpGet("availability")]
+    public async Task<IActionResult> GetAvailability([FromQuery] string targetUrl, CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(Tenant)) return Forbid();
+        try
+        {
+            var result = await _service.GetAvailabilityAsync(Tenant, targetUrl, ct);
+            return result is null ? NotFound() : Ok(result);
+        }
+        catch (ArgumentException ex) { return BadRequest(new { message = ex.Message }); }
+    }
+
+    [HttpPost("availability")]
+    [EnableRateLimiting("site-verification")]
+    public async Task<IActionResult> CheckAvailability([FromBody] SiteVerificationRequest request, CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(Tenant)) return Forbid();
+        try { return Ok(await _service.CheckAvailabilityAsync(Tenant, request.TargetUrl, ct)); }
+        catch (ArgumentException ex) { return BadRequest(new { message = ex.Message }); }
+    }
 }
 
 public sealed record SiteVerificationRequest(string TargetUrl);

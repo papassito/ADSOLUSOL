@@ -109,6 +109,30 @@ public sealed class SiteVerificationTests : IDisposable
         Assert.Equal(1, _fetcher.Calls);
     }
 
+    [Fact]
+    public async Task AvailabilityCheckPersistsStatusAndMonitorsLandingPathWithoutQuery()
+    {
+        var result = await _service.CheckAvailabilityAsync("owner", "https://example.com/landing?token=private", default);
+        Assert.Equal("AVAILABLE", result.Status);
+        Assert.Equal("https://example.com/landing", result.Url);
+        Assert.NotNull(result.ResponseTimeMs);
+
+        using var reopened = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>()
+            .UseSqlite("Data Source=" + _path + ";Pooling=False").Options);
+        var restarted = new SiteVerificationService(reopened, _fetcher);
+        var stored = await restarted.GetAvailabilityAsync("owner", "https://example.com/landing", default);
+        Assert.Equal(result, stored);
+    }
+
+    [Fact]
+    public async Task AvailabilityCheckStoresNetworkFailureWithoutClaimingSiteIsUp()
+    {
+        _fetcher.Fail = true;
+        var result = await _service.CheckAvailabilityAsync("owner", "https://example.com", default);
+        Assert.Equal("UNAVAILABLE", result.Status);
+        Assert.Null(await _service.GetAvailabilityAsync("other-owner", "https://example.com", default));
+    }
+
     [Theory]
     [InlineData("<head><meta content='abc' name='ADSOLUSOL-VERIFICATION'></head>", true)]
     [InlineData("<head><meta name=adsolusol-verification content=abc></head>", true)]

@@ -126,6 +126,7 @@ public class CreativesController : ControllerBase
             tracking.CreativeId,
             tracking.TargetUrl,
             tracking.CreatedAtUtc,
+            tracking.Clicks,
             RedirectUrl = $"{Request.Scheme}://{Request.Host}/r/{tracking.Code}"
         });
     }
@@ -172,6 +173,7 @@ public class CreativesController : ControllerBase
                 tracking.CreativeId,
                 tracking.TargetUrl,
                 tracking.CreatedAtUtc,
+                tracking.Clicks,
                 RedirectUrl = $"{Request.Scheme}://{Request.Host}/r/{tracking.Code}"
             }
         });
