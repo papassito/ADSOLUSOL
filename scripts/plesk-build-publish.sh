@@ -29,6 +29,16 @@ command -v node >/dev/null 2>&1 || fail "Node.js is required for the Vite build.
 command -v npm >/dev/null 2>&1 || fail "npm is required for the Vite build. Check that npm is installed in $PLESK_NODE_BIN."
 command -v git >/dev/null 2>&1 || fail "Git is required to record the deployed commit."
 
+BARE_GIT_DIR="${ADSO_GIT_DIR:-"$ROOT_DIR/../git/ADSOLUSOL"}"
+if [[ "$ROOT_DIR" -ef "$WEB_ROOT" && ! -e "$ROOT_DIR/.git" && -d "$BARE_GIT_DIR" ]]; then
+  SOURCE_INDEX="$(mktemp "$ROOT_DIR/.adsolusol-index.XXXXXX")"
+  if ! git --git-dir="$BARE_GIT_DIR" show HEAD:index.html > "$SOURCE_INDEX"; then
+    rm -f -- "$SOURCE_INDEX"
+    fail "Could not restore the versioned Vite entry point from $BARE_GIT_DIR."
+  fi
+  mv -f -- "$SOURCE_INDEX" "$ROOT_DIR/index.html"
+fi
+
 cd "$ROOT_DIR"
 printf 'Building ADSOLUSOL frontend at %s\n' "$ROOT_DIR"
 
@@ -49,7 +59,6 @@ if grep -R -q "VITE_DEMO_MODE" "$DIST_DIR/assets"; then
   fail "FATAL: Demo mode code was found in the production bundle. Build aborted."
 fi
 
-BARE_GIT_DIR="${ADSO_GIT_DIR:-"$ROOT_DIR/../git/ADSOLUSOL"}"
 if COMMIT="$(git -C "$ROOT_DIR" rev-parse --short=12 HEAD 2>/dev/null)"; then
   :
 elif [[ -d "$BARE_GIT_DIR" ]] && COMMIT="$(git --git-dir="$BARE_GIT_DIR" rev-parse --short=12 HEAD 2>/dev/null)"; then
