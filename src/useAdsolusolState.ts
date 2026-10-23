@@ -16,13 +16,7 @@ export function useAdsolusolState() {
   const [dbState, setDbState] = useState<any>(null);
   const [lastDecision, setLastDecision] = useState<any>(null);
 
-  const [competitorTerms, setCompetitorTerms] = useState<any[]>(import.meta.env.VITE_DEMO_MODE === 'true' ? [
-    { id: 'sh-1', term: 'salud digna hermosillo telefono', wasted: 14.5, category: 'Competidor Directo', blocked: true },
-    { id: 'sh-2', term: 'laboratorio chopo hermosillo precios', wasted: 19.2, category: 'Competidor Directo', blocked: true },
-    { id: 'sh-3', term: 'laboratorio san jose sucursales', wasted: 11.8, category: 'Competidor Local', blocked: false },
-    { id: 'sh-4', term: 'laboratorio ramos hermosillo', wasted: 9.4, category: 'Competidor Local', blocked: false },
-    { id: 'sh-5', term: 'clinica 37 imss citas', wasted: 8.1, category: 'Sector Público', blocked: true },
-  ] : []);
+  const [competitorTerms, setCompetitorTerms] = useState<any[]>([]);
 
   const pushToast = useCallback((title: string, type: 'exito' | 'alerta' | 'info' = 'exito') => {
     const id = Math.random().toString(36).substring(2, 8);
@@ -77,17 +71,6 @@ export function useAdsolusolState() {
   const fetchState = useCallback(async () => {
     setLoadingAction(true);
     try {
-      // MODO DEMO: Se ejecuta con `npm run dev:demo`. Consulta directamente el estado del servidor Node.
-      if (import.meta.env.VITE_DEMO_MODE === 'true') {
-        const res = await apiFetch('/api/state');
-        if (res.ok) {
-          setDbState(await res.json());
-        } else {
-          pushToast(`Error en servidor demo: ${res.statusText}`, 'alerta');
-          setDbState(null);
-        }
-      } else {
-        // MODO REAL: Se ejecuta con `npm run dev:real`. Intenta conectar con el backend .NET.
         const startCheck = performance.now();
         const [campRes, plcRes, crtRes, healthRes] = await Promise.allSettled([
           apiFetch('/api/Campaigns'),
@@ -139,7 +122,7 @@ export function useAdsolusolState() {
               apiNode: {
                 status: loadedHealth?.status || 'NO DISPONIBLE',
                 antiReplayWindow: '300s Nonce Cache',
-                tenantId: localStorage.getItem('adsolusol_tenant_id') || 'TENANT-SOLUSOL-HMO-01',
+                tenantId: localStorage.getItem('adsolusol_tenant_id') || 'SIN_TENANT_CONFIGURADO',
               },
             },
           }));
@@ -157,7 +140,6 @@ export function useAdsolusolState() {
             },
           }));
         }
-      }
     } catch (error: any) {
       pushToast(`Error de red: ${error.message}`, 'alerta');
       setDbState(null);
@@ -210,16 +192,6 @@ export function useAdsolusolState() {
       setLoadingAction(true);
       try {
         setLastDecision(null);
-        if (import.meta.env.VITE_DEMO_MODE === 'true') {
-          const response = await apiFetch('/api/serve-decision', {
-            method: 'POST', body: JSON.stringify({ triggerClick, placementId, isDirections }),
-          });
-          if (!response.ok) throw new Error(`Demo HTTP ${response.status}`);
-          const data = await response.json();
-          setLastDecision(data.decision ?? null);
-          await fetchState();
-          return;
-        }
         const placement = placements.find((p: any) => String(p.id) === String(placementId)) || placements[0];
         if (!placement?.code) throw new Error('Selecciona una ubicación real con código.');
         const serveRes = await apiFetch(`/api/Serve?placementCode=${encodeURIComponent(placement.code)}`);

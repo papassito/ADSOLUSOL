@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { AD_ENGINE_FUNCTIONS } from '../data/adEngineData';
 import { AdFunctionCard } from './AdFunctionCard';
-import { AdAuctionSimulator } from './AdAuctionSimulator';
 import { ArchitectureFlow } from './ArchitectureFlow';
 import { EcpmCalculator } from './EcpmCalculator';
-import { Search, Zap, SlidersHorizontal, Activity, Layers, Cpu, ShieldCheck } from 'lucide-react';
+import { Search, SlidersHorizontal, Activity, Layers, Cpu, ShieldCheck } from 'lucide-react';
 
 export const AdEngineOverview: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'functions' | 'simulator' | 'architecture' | 'calculator'>('functions');
+  const [activeTab, setActiveTab] = useState<'functions' | 'architecture' | 'calculator'>('functions');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
@@ -76,17 +75,6 @@ export const AdEngineOverview: React.FC = () => {
         >
           <Layers className="w-4 h-4" />
           <span>Las 10 Funciones Detalladas</span>
-        </button>
-        <button
-          onClick={() => setActiveTab('simulator')}
-          className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors cursor-pointer whitespace-nowrap flex items-center gap-2 ${
-            activeTab === 'simulator'
-              ? 'bg-amber-400 text-slate-950 shadow-sm'
-              : 'text-slate-400 hover:text-white hover:bg-slate-900'
-          }`}
-        >
-          <Zap className="w-4 h-4" />
-          <span>Simulador RTB en Vivo</span>
         </button>
         <button
           onClick={() => setActiveTab('architecture')}
@@ -221,9 +209,6 @@ export const AdEngineOverview: React.FC = () => {
           </div>
         </div>
       )}
-
-      {/* Tab 2: Live RTB Simulator */}
-      {activeTab === 'simulator' && <AdAuctionSimulator />}
 
       {/* Tab 3: 50ms Lifecycle Architecture */}
       {activeTab === 'architecture' && <ArchitectureFlow />}

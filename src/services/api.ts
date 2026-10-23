@@ -6,8 +6,8 @@ export function apiFetch(input: RequestInfo | URL, init?: RequestInit): Promise<
   }
 
   // Headers requeridos por el backend cuando opera autenticación de nodo
-  const tenantId = localStorage.getItem('adsolusol_tenant_id') || 'TENANT-SOLUSOL-HMO-01';
-  if (!headers.has('X-Solusol-Tenant-Id')) {
+  const tenantId = localStorage.getItem('adsolusol_tenant_id');
+  if (tenantId && !headers.has('X-Solusol-Tenant-Id')) {
     headers.set('X-Solusol-Tenant-Id', tenantId);
   }
 

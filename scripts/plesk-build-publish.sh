@@ -31,6 +31,10 @@ command -v git >/dev/null 2>&1 || fail "Git is required to record the deployed c
 
 cd "$ROOT_DIR"
 printf 'Building ADSOLUSOL frontend at %s\n' "$ROOT_DIR"
+
+export NODE_ENV="production"
+export VITE_DEMO_MODE="false"
+
 npm ci
 npm run build
 
@@ -39,6 +43,10 @@ DIST_DIR="$ROOT_DIR/dist"
 [[ -d "$DIST_DIR/assets" ]] || fail "Vite did not create dist/assets/."
 if ! grep -R -qF "Verificar sitio promocionado" "$DIST_DIR/assets"; then
   fail "Built assets do not contain the site verification card. Nothing was published."
+fi
+
+if grep -R -q "VITE_DEMO_MODE" "$DIST_DIR/assets"; then
+  fail "FATAL: Demo mode code was found in the production bundle. Build aborted."
 fi
 
 BARE_GIT_DIR="${ADSO_GIT_DIR:-"$ROOT_DIR/../git/ADSOLUSOL"}"

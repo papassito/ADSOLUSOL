@@ -57,6 +57,7 @@
 
 *Objetivo: Auditoría transparente, cálculo exacto de rendimiento e inmunidad a duplicados.*
 
+- [ ] **Purga de Elementos Demo en Frontend:** Eliminar del bundle de producción cualquier componente, simulador o selector que emita datos sintéticos o simule subastas.
 - [x] **Ingesta Idempotente:** Endpoints `/api/Campaigns/{id}/impression` y `/api/Campaigns/{id}/click` con deduplicación estricta por `event_id`.
 - [x] **Cálculo Matemático de KPIs:** `MetricsService` calcula CTR real (`Clicks / Impressions`), gasto real acumulado y presupuesto remanente.
 - [/] **Sprint 1 — Workbench Operativo (F1-F4) [EN CONSTRUCCIÓN]:** Arquitectura de 4 pisos ([F1] Crear, [F2] Operar, [F3] Auditar con Feed de Evidencia Comercial, [F4] Inventario integrado en Piso 3B) + Bandeja de Incidentes (INFO/WARN/CRITICAL). Estado: Diseñado, en fase de maquetación y cableado de APIs.

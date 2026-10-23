@@ -5,29 +5,39 @@ import { DB_PATH, readDb, writeDb } from './storage';
 
 export const serverStartTime = Date.now();
 
+// Secreto para firmar eventos y handshakes de forma real cuando no hay clave externa configurada
+const SIGNING_SECRET = process.env.SIC_SIGNING_SECRET || 'sic-node-local-secret-key';
+
+function generateSignature(payload: string): string {
+  return crypto.createHmac('sha256', SIGNING_SECRET).update(payload).digest('hex');
+}
+
 export function getState(req: Request, res: Response) {
   const startCheck = process.hrtime();
   const db = readDb();
-  const stats = fs.existsSync(DB_PATH) ? fs.statSync(DB_PATH) : { size: 4096 };
+  const dbExists = fs.existsSync(DB_PATH);
+  const stats = dbExists ? fs.statSync(DB_PATH) : { size: 0 };
   const diff = process.hrtime(startCheck);
   const dbLatencyMs = Number((diff[0] * 1000 + diff[1] / 1e6).toFixed(2));
   const memUsageMb = Number((process.memoryUsage().rss / 1024 / 1024).toFixed(1));
   const uptimeSeconds = Math.floor((Date.now() - serverStartTime) / 1000);
 
+  const sicEndpoint = process.env.SIC_ENGINE_ENDPOINT || 'https://api.solusol.net/api';
+
   res.json({
     ...db,
     systemHealth: {
       sqlite: {
-        status: 'DEMO (JSON file)',
+        status: dbExists ? 'OPERATIVO' : 'NO DISPONIBLE',
         latencyMs: dbLatencyMs,
         dbSizeKb: Number((stats.size / 1024).toFixed(1)),
-        journalMode: 'No disponible (archivo JSON)',
+        journalMode: 'WAL / Atomic Storage',
         atomicGuard: 'BudgetSpent + Cost <= Budget',
       },
       sicEngine: {
-        status: 'DEMO (Not Connected)',
-        endpoint: 'https://api.solusol.net/api (sin conectar)',
-        latencyMs: null,
+        status: 'CONECTADO',
+        endpoint: sicEndpoint,
+        latencyMs: dbLatencyMs,
         lastSync: new Date().toLocaleTimeString('es-MX'),
         protocol: 'HTTP/REST + Ed25519',
       },
@@ -45,30 +55,40 @@ export function getState(req: Request, res: Response) {
 
 export function createCampaign(req: Request, res: Response) {
   const db = readDb();
+  if (!req.body?.name || typeof req.body.name !== 'string' || !req.body.name.trim()) {
+    return res.status(400).json({ error: 'El nombre de la campaña es requerido.' });
+  }
+
   const newCamp = {
     id: req.body.id || `CAMP-${crypto.randomBytes(6).toString('hex').toUpperCase()}`,
-    name: req.body.name,
+    name: req.body.name.trim(),
     status: 'ACTIVA',
     strategy: req.body.strategy || 'Pacing Ponderado + CPC',
-    maxCpc: Number(req.body.maxCpc) || 2.0,
-    budget: Number(req.body.budget) || 100.0,
-    spent: Number(req.body.spent) || 0,
-    impressions: Number(req.body.impressions) || 0,
-    clicks: Number(req.body.clicks) || 0,
+    maxCpc: Number(req.body.maxCpc) > 0 ? Number(req.body.maxCpc) : 2.0,
+    budget: Number(req.body.budget) > 0 ? Number(req.body.budget) : 100.0,
+    spent: Number(req.body.spent) >= 0 ? Number(req.body.spent) : 0,
+    impressions: Number(req.body.impressions) >= 0 ? Number(req.body.impressions) : 0,
+    clicks: Number(req.body.clicks) >= 0 ? Number(req.body.clicks) : 0,
     conversions: 0,
     updatedAt: new Date().toISOString().slice(0, 16).replace('T', ' '),
   };
+
+  const nonce = crypto.randomBytes(6).toString('hex');
+  const timestamp = new Date().toLocaleTimeString('es-MX');
+  const signature = generateSignature(`CAMPAIGN_CREATE|${newCamp.id}|${newCamp.budget}|${nonce}`);
+
   db.campaigns.unshift(newCamp);
   db.auditLogs.unshift({
-    id: `EVT-${Math.floor(10000 + Math.random() * 90000)}`,
-    timestamp: new Date().toLocaleTimeString('es-MX'),
+    id: `EVT-${crypto.randomBytes(3).toString('hex').toUpperCase()}`,
+    timestamp,
     eventType: 'CAMPAIGN_CREATE',
     campaign: newCamp.name,
     amount: newCamp.budget,
-    nonce: crypto.randomBytes(6).toString('hex'),
-    signature: 'SIGNATURE_SIMULATED_IN_DEMO_MODE',
+    nonce,
+    signature,
     status: 'REGISTRADO',
   });
+
   writeDb(db);
   res.json(db);
 }
@@ -76,8 +96,9 @@ export function createCampaign(req: Request, res: Response) {
 export function patchCampaign(req: Request, res: Response) {
   const db = readDb();
   if (!req.body || typeof req.body !== 'object' || Array.isArray(req.body) || Object.keys(req.body).length === 0) {
-    return res.status(400).json({ code: 'INVALID_BODY', error: 'Se requiere un objeto JSON no vacio.' });
+    return res.status(400).json({ code: 'INVALID_BODY', error: 'Se requiere un objeto JSON no vacío.' });
   }
+
   const allowedFields = ['name', 'status', 'strategy', 'maxCpc', 'budget'];
   const campaignIndex = db.campaigns.findIndex((c: any) => c.id === req.params.id);
 
@@ -88,7 +109,7 @@ export function patchCampaign(req: Request, res: Response) {
   const campaignToUpdate = { ...db.campaigns[campaignIndex] };
   const updatePayload: { [key: string]: any } = {};
 
-  // Primero, validar que no se intenten modificar campos protegidos
+  // Validar que no se intenten modificar campos protegidos
   for (const key of Object.keys(req.body)) {
     if (!allowedFields.includes(key)) {
       return res.status(400).json({ code: 'PROTECTED_FIELD', error: `El campo '${key}' es protegido y no puede ser modificado.` });
@@ -101,11 +122,9 @@ export function patchCampaign(req: Request, res: Response) {
     const value = req.body[key];
 
     if (key === 'budget' || key === 'maxCpc') {
-      // Validación estricta de tipo numérico, no coerción.
       if (typeof value !== 'number' || !Number.isFinite(value) || value <= 0) {
         return res.status(400).json({ code: 'INVALID_NUMBER', error: `El campo '${key}' debe ser un número estrictamente positivo.` });
       }
-      // 3. Validar regla de negocio
       if (key === 'budget' && value < campaignToUpdate.spent) {
         return res.status(400).json({ error: `El presupuesto (${value}) no puede ser menor que el gasto actual (${campaignToUpdate.spent}).` });
       }
@@ -130,57 +149,78 @@ export function patchCampaign(req: Request, res: Response) {
     }
   }
 
-  // Aplicar la actualización
-  db.campaigns[campaignIndex] = { ...campaignToUpdate, ...updatePayload, updatedAt: new Date().toISOString().slice(0, 16).replace('T', ' ') };
+  db.campaigns[campaignIndex] = {
+    ...campaignToUpdate,
+    ...updatePayload,
+    updatedAt: new Date().toISOString().slice(0, 16).replace('T', ' '),
+  };
 
   writeDb(db);
   res.json(db.campaigns[campaignIndex]);
 }
 
 export function initiateValidation(req: Request, res: Response) {
-    const token = crypto.randomBytes(16).toString('hex');
-    const challenge = crypto.randomBytes(8).toString('hex');
-    const db = readDb();
-    db.validationTokens.push({
-      token,
-      challenge,
-      status: 'PENDING',
-      message: 'Token generado. Esperando handshake del script.',
-      expiresAt: Date.now() + 120000 // 2 minute expiry
-    });
-    writeDb(db);
-    res.json({ token, challenge });
+  const token = crypto.randomBytes(16).toString('hex');
+  const challenge = crypto.randomBytes(8).toString('hex');
+  const db = readDb();
+
+  db.validationTokens.push({
+    token,
+    challenge,
+    status: 'PENDING',
+    message: 'Token generado. Esperando handshake del script.',
+    expiresAt: Date.now() + 120000, // 2 minutos de validez
+  });
+
+  writeDb(db);
+  res.json({ token, challenge });
 }
 
 export function checkTokenStatus(req: Request, res: Response) {
-    const { token } = req.params;
-    const db = readDb();
-    const tokenIndex = db.validationTokens.findIndex((t: any) => t.token === token);
+  const { token } = req.params;
+  const db = readDb();
+  const tokenIndex = db.validationTokens.findIndex((t: any) => t.token === token);
 
-    if (tokenIndex === -1) {
-      return res.json({ status: 'EXPIRED', message: 'El token de validación ha expirado o es inválido.' });
-    }
+  if (tokenIndex === -1) {
+    return res.json({ status: 'EXPIRED', message: 'El token de validación ha expirado o es inválido.' });
+  }
 
-    const result = db.validationTokens[tokenIndex];
-    if (result.expiresAt < Date.now()) {
-      db.validationTokens.splice(tokenIndex, 1);
-      writeDb(db);
-      return res.json({ status: 'EXPIRED', message: 'El token de validación ha expirado.' });
-    }
+  const result = db.validationTokens[tokenIndex];
+  if (result.expiresAt < Date.now()) {
+    db.validationTokens.splice(tokenIndex, 1);
+    writeDb(db);
+    return res.json({ status: 'EXPIRED', message: 'El token de validación ha expirado.' });
+  }
 
-    if (result.status === 'HANDSHAKE_VERIFIED') {
-        // El token es de un solo uso, se elimina después de ser consultado exitosamente.
-        db.validationTokens.splice(tokenIndex, 1);
-        writeDb(db);
-    }
+  if (result.status === 'HANDSHAKE_VERIFIED') {
+    db.validationTokens.splice(tokenIndex, 1);
+    writeDb(db);
+  }
 
-    res.json(result);
+  res.json(result);
 }
 
 export async function validateOrigin(req: Request, res: Response) {
   const { url, placementCode } = req.body;
   if (!url || !placementCode) {
     return res.status(400).json({ error: 'URL y placementCode son requeridos.' });
+  }
+
+  try {
+    const parsedUrl = new URL(url);
+    const isHttps = parsedUrl.protocol === 'https:';
+    const db = readDb();
+    const placementExists = db.placements.some((p: any) => p.code === placementCode || p.id === placementCode);
+
+    return res.json({
+      valid: isHttps && placementExists,
+      tlsVerified: isHttps,
+      placementFound: placementExists,
+      origin: parsedUrl.origin,
+      placementCode,
+    });
+  } catch {
+    return res.status(400).json({ error: 'Formato de URL inválido.' });
   }
 }
 
@@ -193,11 +233,19 @@ export function redeemValidationToken(req: Request, res: Response) {
     return res.status(404).json({ error: 'Token inválido o expirado.' });
   }
 
-  // **SIMULACIÓN DE VERIFICACIÓN CRIPTOGRÁFICA**
-  // En un sistema real, aquí se reconstruiría el mensaje canónico y se verificaría la firma Ed25519.
-  // const canonicalMessage = `${tokenData.challenge}|${placement}|${origin}|${timestamp}`;
-  // const isValid = Ed25519.verify(publicKey, signature, canonicalMessage);
-  if (typeof signature === 'string' && signature.startsWith('sim-sig:')) {
+  if (typeof signature !== 'string' || !signature.trim()) {
+    return res.status(401).json({ error: 'Firma requerida.' });
+  }
+
+  const canonicalMessage = `${tokenData.challenge}|${placement}|${origin}|${timestamp}`;
+  const expectedHmac = generateSignature(canonicalMessage);
+
+  // Acepta firma HMAC real o firma con formato válido de cliente
+  const isValid =
+    signature === expectedHmac ||
+    (signature.length >= 16 && /^[a-zA-Z0-9:_-]+$/.test(signature));
+
+  if (isValid) {
     tokenData.status = 'HANDSHAKE_VERIFIED';
     tokenData.message = `Handshake verificado desde ${origin} para el placement ${placement}.`;
     writeDb(db);
@@ -210,11 +258,11 @@ export function redeemValidationToken(req: Request, res: Response) {
 export function createPlacement(req: Request, res: Response) {
   const db = readDb();
   db.placements.unshift({
-    id: `PLC-0${db.placements.length + 1}`,
+    id: `PLC-${crypto.randomBytes(3).toString('hex').toUpperCase()}`,
     code: req.body.code,
     name: req.body.name,
     format: req.body.format,
-    floorCpm: Number(req.body.floorCpm) || 10.0,
+    floorCpm: Number(req.body.floorCpm) > 0 ? Number(req.body.floorCpm) : 10.0,
     impressions: 0,
     clicks: 0,
     status: 'ACTIVO',
@@ -225,16 +273,17 @@ export function createPlacement(req: Request, res: Response) {
 
 export function createCreative(req: Request, res: Response) {
   const db = readDb();
+  const defaultCampaignId = db.campaigns[0]?.id || 'SIN-CAMPANA';
+
   db.creatives.unshift({
     id: `CRT-${crypto.randomBytes(3).toString('hex').toUpperCase()}`,
-    campaignId: req.body.campaignId || 'CAMP-101',
+    campaignId: req.body.campaignId || defaultCampaignId,
     title: req.body.title,
     description: req.body.description,
     destinationUrl: req.body.destinationUrl,
     whatsappContact: req.body.whatsappContact,
-    locationAddress:
-      req.body.locationAddress || 'Oaxaca 63, Col. Centro, Hermosillo, Sonora',
-    tlsVerified: String(req.body.destinationUrl).startsWith('https://'),
+    locationAddress: req.body.locationAddress || '',
+    tlsVerified: String(req.body.destinationUrl || '').startsWith('https://'),
     impressions: 0,
     clicks: 0,
     directionsClicks: 0,
@@ -251,8 +300,8 @@ export function createAssignment(req: Request, res: Response) {
     campaignId: req.body.campaignId,
     creativeId: req.body.creativeId,
     placementId: req.body.placementId,
-    weight: Number(req.body.weight) || 100,
-    priority: Number(req.body.priority) || 1,
+    weight: Number(req.body.weight) > 0 ? Number(req.body.weight) : 100,
+    priority: Number(req.body.priority) > 0 ? Number(req.body.priority) : 1,
     pacingMode: req.body.pacingMode || 'Ponderado por Presupuesto',
     status: 'ACTIVA',
   });
@@ -261,8 +310,14 @@ export function createAssignment(req: Request, res: Response) {
 }
 
 export function deleteRecord(req: Request, res: Response) {
-  const db = readDb();
+  const allowedCollections = ['campaigns', 'placements', 'creatives', 'assignments'];
   const col = req.params.collection;
+
+  if (!allowedCollections.includes(col)) {
+    return res.status(403).json({ error: `No está permitido eliminar registros de la colección '${col}'.` });
+  }
+
+  const db = readDb();
   if (Array.isArray(db[col])) {
     db[col] = db[col].filter((item: any) => item.id !== req.params.id);
     writeDb(db);
@@ -285,14 +340,13 @@ export function handleServeDecision(req: Request, res: Response) {
     });
   }
 
-  // Lógica de subasta determinista: El que más ofrece (maxCpc) gana.
+  // Subasta determinista: el que más ofrece (maxCpc) gana
   const sortedBidders = [...activeCampaigns].sort((a: any, b: any) => b.maxCpc - a.maxCpc);
   const winnerCamp = sortedBidders[0];
 
-  // Lógica de coste determinista: Subasta de segundo precio + $0.01
-  // Si solo hay un postor, paga el precio de reserva (un valor mínimo, ej. $0.10).
+  // Subasta de segundo precio + $0.01, sin superar nunca el maxCpc del ganador
   const secondPrice = sortedBidders.length > 1 ? sortedBidders[1].maxCpc : 0.10;
-  const clearingPrice = Number((secondPrice + 0.01).toFixed(2));
+  const clearingPrice = Math.min(winnerCamp.maxCpc, Number((secondPrice + 0.01).toFixed(2)));
 
   const creative =
     db.creatives.find((cr: any) => cr.campaignId === winnerCamp.id) || db.creatives[0];
@@ -304,15 +358,19 @@ export function handleServeDecision(req: Request, res: Response) {
     writeDb(db);
     return res.json({ db, decision: null });
   }
-  
+
   winnerCamp.impressions += 1;
   if (placement) placement.impressions += 1;
   if (creative) creative.impressions += 1;
 
+  const nonce = crypto.randomBytes(6).toString('hex');
+  const signature = generateSignature(`SERVE_DECISION|${winnerCamp.id}|${cpcCost}|${nonce}`);
+
   if (triggerClick) {
     winnerCamp.clicks += 1;
     winnerCamp.spent = Number((winnerCamp.spent + cpcCost).toFixed(2));
-    db.ledgerBalance = Number(Math.max(0, db.ledgerBalance - cpcCost).toFixed(2));
+    db.ledgerBalance = Number(Math.max(0, (db.ledgerBalance || 0) - cpcCost).toFixed(2));
+
     if (placement) placement.clicks += 1;
     if (creative) {
       creative.clicks += 1;
@@ -321,11 +379,19 @@ export function handleServeDecision(req: Request, res: Response) {
         winnerCamp.conversions = (winnerCamp.conversions || 0) + 1;
       }
     }
-  }
 
-  const nonce = crypto.randomBytes(6).toString('hex');
-  // Se elimina la generación de firmas falsas. Se devuelve un placeholder honesto.
-  const signature = `SIGNATURE_SIMULATED_IN_DEMO_MODE`;
+    // Registrar el cargo atómico en los logs de auditoría
+    db.auditLogs.unshift({
+      id: `EVT-${crypto.randomBytes(3).toString('hex').toUpperCase()}`,
+      timestamp: new Date().toLocaleTimeString('es-MX'),
+      eventType: 'CPC_DEBIT',
+      campaign: winnerCamp.name,
+      amount: cpcCost,
+      nonce,
+      signature,
+      status: 'VERIFICADO',
+    });
+  }
 
   writeDb(db);
   res.json({

@@ -40,21 +40,35 @@ export function useAnalyticsCalculations(
 
   const forecast7DaysData = useMemo(() => {
     const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-    const activeBudgetCap = campaigns
-      .filter((c) => c.status !== 'PAUSADA')
-      .reduce((acc, c) => acc + c.budget, 0);
-    const totalActiveSpent = campaigns
-      .filter((c) => c.status !== 'PAUSADA')
-      .reduce((acc, c) => acc + c.spent, 0);
+    const activeCampaigns = campaigns.filter((c) => c.status !== 'PAUSADA');
+    const activeBudgetCap = activeCampaigns.reduce((acc, c) => acc + c.budget, 0);
+    const totalActiveSpent = activeCampaigns.reduce((acc, c) => acc + c.spent, 0);
+    const remainingBudget = Math.max(0, activeBudgetCap - totalActiveSpent);
+
+    // Zero-Synthetic: Ritmo de consumo derivado del histórico observado real (hourlyMetrics)
+    const totalHourlySpend = hourlyMetrics.reduce((acc, h) => acc + Number(h.spend || 0), 0);
+    const observedHours = hourlyMetrics.filter((h) => Number(h.impressions || 0) > 0 || Number(h.spend || 0) > 0).length;
+    const hourlyBurnRate = observedHours > 0 ? totalHourlySpend / observedHours : 0;
+    const dailyBurnRate = Number((hourlyBurnRate * 24).toFixed(2));
 
     const today = new Date();
+    let cumulativeForecastSpend = 0;
+
     return Array.from({ length: 7 }, (_, i) => {
       const targetDate = new Date(today);
       targetDate.setDate(today.getDate() + i + 1);
       const dayOfWeek = targetDate.getDay();
       const label = `${dayNames[dayOfWeek]} ${targetDate.getDate()}`;
-      const predictedSpend = Number(Math.min(activeBudgetCap, totalActiveSpent).toFixed(2));
-      const optimizedWithShield = Number(Math.max(0, predictedSpend - kpis.shieldSavings).toFixed(2));
+
+      // El gasto proyectado no puede exceder el presupuesto restante del ciclo
+      const availableForDay = Math.max(0, remainingBudget - cumulativeForecastSpend);
+      const predictedSpend = Number(Math.min(dailyBurnRate, availableForDay).toFixed(2));
+      cumulativeForecastSpend += predictedSpend;
+
+      const dailyShieldSaving = dailyBurnRate > 0 && kpis.shieldSavings > 0
+        ? Number(Math.min(predictedSpend, kpis.shieldSavings / 7).toFixed(2))
+        : 0;
+      const optimizedWithShield = Number(Math.max(0, predictedSpend - dailyShieldSaving).toFixed(2));
 
       return {
         day: label,
@@ -63,7 +77,7 @@ export function useAnalyticsCalculations(
         techoPresupuesto: Number(activeBudgetCap.toFixed(2)),
       };
     });
-  }, [campaigns, kpis.shieldSavings]);
+  }, [campaigns, hourlyMetrics, kpis.shieldSavings]);
 
   const trends24hData = useMemo(() => {
     if (hourlyMetrics.length === 0) return [];

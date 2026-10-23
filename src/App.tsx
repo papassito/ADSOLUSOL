@@ -260,10 +260,6 @@ export default function App() {
           {activeModule === 'panel' && (
             <PanelView
               campaigns={campaigns}
-              forecast7DaysData={forecast7DaysData}
-              total7DayPredictedSpend={total7DayPredictedSpend}
-              total7DayShieldOptimized={total7DayShieldOptimized}
-              ledgerBalance={dbState?.ledgerBalance}
               systemHealth={sysHealth}
               campaignsAvailable={dbState?.campaignsAvailable === true}
               loading={loadingAction}

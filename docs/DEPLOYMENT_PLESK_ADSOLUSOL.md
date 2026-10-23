@@ -9,6 +9,17 @@ La vista autenticada /api/panel la devuelve la API desde
 también hay que reconstruir el frontend, publicar sus recursos en el Document Root
 y colocar el nuevo index.html en el directorio que lee la API.
 
+## Autenticación Git mediante Deploy Key SSH
+
+Para evitar fallos por autenticación interactiva HTTPS con GitHub, el repositorio bare en el servidor (`/var/www/vhosts/solusol.net/git/ADSOLUSOL`) debe configurarse con una clave SSH dedicada:
+
+```bash
+ssh-keygen -t ed25519 -C "plesk-adsolusol" -f /root/.ssh/id_adsolusol -N ""
+cat /root/.ssh/id_adsolusol.pub # Registrar en GitHub -> Settings -> Deploy keys
+git config core.sshCommand "ssh -i /root/.ssh/id_adsolusol -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
+git remote set-url origin git@github.com:papassito/ADSOLUSOL.git
+```
+
 ## Publicar el frontend en cada despliegue
 
 El repositorio incluye npm run deploy:plesk. Este comando:
