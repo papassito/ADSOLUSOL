@@ -208,9 +208,7 @@ export function useAdsolusolState() {
           body: JSON.stringify({
             eventId,
             placementCode: placement.code,
-            placementId: Number(placement.id) || 1,
-            creativeId: Number(creative.id) || creative.id,
-            timestamp: new Date().toISOString(),
+            creativeId: String(creative.id),
           }),
         });
         const event = await eventRes.json().catch(() => ({}));
