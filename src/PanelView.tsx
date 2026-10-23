@@ -1,7 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Activity, AlertTriangle, ArrowRight, Bell, CircleHelp, Megaphone, ShieldCheck, TrendingUp, Wallet } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { Campaign, ModuleKey } from './types';
+
+interface ReleaseInfo {
+  state: 'checking' | 'published' | 'unverified';
+  commit?: string;
+  builtAtUtc?: string;
+  detail?: string;
+}
 
 interface PanelViewProps {
   campaigns: Campaign[];
@@ -26,6 +33,44 @@ export const PanelView: React.FC<PanelViewProps> = ({
   loading,
   onNavigate,
 }) => {
+  const [releaseInfo, setReleaseInfo] = useState<ReleaseInfo>({ state: 'checking' });
+
+  useEffect(() => {
+    if (import.meta.env.VITE_DEMO_MODE === 'true') return;
+
+    const controller = new AbortController();
+    fetch('/release.json', {
+      cache: 'no-store',
+      credentials: 'same-origin',
+      signal: controller.signal,
+    })
+      .then(async (response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        if (!response.headers.get('content-type')?.includes('application/json')) {
+          throw new Error('respuesta no JSON');
+        }
+        const release = await response.json();
+        if (typeof release.commit !== 'string' || !release.commit.trim()) {
+          throw new Error('metadatos incompletos');
+        }
+        setReleaseInfo({
+          state: 'published',
+          commit: release.commit,
+          builtAtUtc: typeof release.builtAtUtc === 'string' ? release.builtAtUtc : undefined,
+        });
+      })
+      .catch((error: unknown) => {
+        if (!controller.signal.aborted) {
+          setReleaseInfo({
+            state: 'unverified',
+            detail: error instanceof Error ? error.message : 'sin respuesta',
+          });
+        }
+      });
+
+    return () => controller.abort();
+  }, []);
+
   if (import.meta.env.VITE_DEMO_MODE !== 'true') {
     const counts = campaigns.reduce((result, campaign) => {
       const backendStatus = String(campaign.backendStatus || '').toUpperCase();
@@ -100,6 +145,16 @@ export const PanelView: React.FC<PanelViewProps> = ({
         content: <div className="mt-4 space-y-3 text-xs">
           <div className="flex items-center gap-2 text-amber-300"><Bell className="h-3.5 w-3.5" /> Alertas: No disponible</div>
           <div className="flex items-center gap-2 text-amber-300"><CircleHelp className="h-3.5 w-3.5" /> Auditorías: No disponible</div>
+          <div className="border-t border-slate-700/70 pt-2">
+            <div className={`font-semibold ${releaseInfo.state === 'published' ? 'text-emerald-400' : 'text-amber-300'}`}>
+              Despliegue: {releaseInfo.state === 'checking' ? 'Verificando' : releaseInfo.state === 'published' ? 'Publicado' : 'No verificado'}
+            </div>
+            {releaseInfo.state === 'published' ? <div className="mt-1 text-slate-400">
+              Commit {releaseInfo.commit}{releaseInfo.builtAtUtc ? ` · ${releaseInfo.builtAtUtc} UTC` : ''}
+            </div> : releaseInfo.state === 'unverified' ? <div className="mt-1 text-slate-400">
+              release.json no disponible ({releaseInfo.detail}). Revisar registro de Plesk.
+            </div> : null}
+          </div>
         </div>,
       },
     ];
