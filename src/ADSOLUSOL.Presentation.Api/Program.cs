@@ -218,6 +218,7 @@ app.MapGet("/", () => Results.Ok(new
 
 app.MapGet("/api/panel", (HttpContext context) =>
 {
+    context.Response.Headers.CacheControl = "no-store";
     context.Response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate";
     context.Response.Headers["Pragma"] = "no-cache";
     context.Response.Headers["Expires"] = "0";
