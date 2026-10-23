@@ -103,7 +103,7 @@ foreach ($rel in $archivosReales.Keys) {
 
 Write-Host "`n--------------------------------------------------------------------------" -ForegroundColor DarkGray
 Write-Host " Total de documentos auditados : $($archivosReales.Count)" -ForegroundColor White
-Write-Host " Anomalías de sellado          : $anomalias" -ForegroundColor $(if ($anomalias -eq 0) { "Green" } else { "Red" })
+Write-Host " Anomalias de sellado          : $anomalias" -ForegroundColor $(if ($anomalias -eq 0) { "Green" } else { "Red" })
 Write-Host "--------------------------------------------------------------------------" -ForegroundColor DarkGray
 
 if ($anomalias -eq 0) {

@@ -2,7 +2,6 @@ using System.Security.Cryptography;
 using System.Text;
 using ADSOLUSOL.Domain.Interfaces;
 using NSec.Cryptography;
-using Microsoft.Extensions.Caching.Memory;
 using System.Security.Claims;
 
 namespace ADSOLUSOL.Presentation.Api.Middleware;
@@ -18,7 +17,7 @@ public class SignatureVerificationMiddleware
         _verifier = verifier;
     }
 
-    public async Task InvokeAsync(HttpContext context, INodeRegistry nodeRegistry, IMemoryCache nonceCache)
+    public async Task InvokeAsync(HttpContext context, INodeRegistry nodeRegistry)
     {
         // Bypass seguro: solo ruta raíz exacta, endpoint de salud o documentación swagger
         var path = context.Request.Path;
@@ -80,14 +79,6 @@ public class SignatureVerificationMiddleware
             return;
         }
 
-        // Comprobación anti-replay: verificar si ya fue utilizado (sin consumirlo aún)
-        if (nonceCache.TryGetValue(nonce.ToString(), out _))
-        {
-            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            await context.Response.WriteAsync("Replay attack detected (nonce already used).");
-            return;
-        }
-
         var (tenantId, publicKeyHex) = nodeRegistry.GetNodeInfo(nodeId.ToString());
         if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(publicKeyHex))
         {
@@ -115,9 +106,6 @@ public class SignatureVerificationMiddleware
             await context.Response.WriteAsync("Invalid signature.");
             return;
         }
-
-        // Consumir el nonce únicamente tras certificar la firma criptográfica
-        nonceCache.Set(nonce.ToString(), true, TimeSpan.FromMinutes(5));
 
         // Authentication and Authorization successful. Set TenantId for downstream controllers.
         context.Items["TenantId"] = tenantId;

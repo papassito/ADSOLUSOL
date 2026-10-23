@@ -38,14 +38,24 @@ export function useAnalyticsCalculations(
     };
   }, [campaigns, hourlyMetrics, competitorTerms, creatives]);
 
+  const forecastAvailable = useMemo(() => {
+    return (
+      hourlyMetrics.length > 0 &&
+      hourlyMetrics.some((h) => Number(h.impressions || 0) > 0 || Number(h.spend || 0) > 0)
+    );
+  }, [hourlyMetrics]);
+
   const forecast7DaysData = useMemo(() => {
+    if (!forecastAvailable) {
+      return [];
+    }
+
     const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
     const activeCampaigns = campaigns.filter((c) => c.status !== 'PAUSADA');
     const activeBudgetCap = activeCampaigns.reduce((acc, c) => acc + c.budget, 0);
     const totalActiveSpent = activeCampaigns.reduce((acc, c) => acc + c.spent, 0);
     const remainingBudget = Math.max(0, activeBudgetCap - totalActiveSpent);
 
-    // Zero-Synthetic: Ritmo de consumo derivado del histórico observado real (hourlyMetrics)
     const totalHourlySpend = hourlyMetrics.reduce((acc, h) => acc + Number(h.spend || 0), 0);
     const observedHours = hourlyMetrics.filter((h) => Number(h.impressions || 0) > 0 || Number(h.spend || 0) > 0).length;
     const hourlyBurnRate = observedHours > 0 ? totalHourlySpend / observedHours : 0;
@@ -60,15 +70,12 @@ export function useAnalyticsCalculations(
       const dayOfWeek = targetDate.getDay();
       const label = `${dayNames[dayOfWeek]} ${targetDate.getDate()}`;
 
-      // El gasto proyectado no puede exceder el presupuesto restante del ciclo
       const availableForDay = Math.max(0, remainingBudget - cumulativeForecastSpend);
       const predictedSpend = Number(Math.min(dailyBurnRate, availableForDay).toFixed(2));
       cumulativeForecastSpend += predictedSpend;
 
-      const dailyShieldSaving = dailyBurnRate > 0 && kpis.shieldSavings > 0
-        ? Number(Math.min(predictedSpend, kpis.shieldSavings / 7).toFixed(2))
-        : 0;
-      const optimizedWithShield = Number(Math.max(0, predictedSpend - dailyShieldSaving).toFixed(2));
+      // Cero extrapolación sintética: el gasto proyectado refleja únicamente el consumo observado
+      const optimizedWithShield = predictedSpend;
 
       return {
         day: label,
@@ -77,7 +84,7 @@ export function useAnalyticsCalculations(
         techoPresupuesto: Number(activeBudgetCap.toFixed(2)),
       };
     });
-  }, [campaigns, hourlyMetrics, kpis.shieldSavings]);
+  }, [campaigns, hourlyMetrics, forecastAvailable]);
 
   const trends24hData = useMemo(() => {
     if (hourlyMetrics.length === 0) return [];
@@ -101,8 +108,14 @@ export function useAnalyticsCalculations(
     });
   }, [hourlyMetrics]);
 
-  const total7DayPredictedSpend = useMemo(() => forecast7DaysData.reduce((acc, d) => acc + d.gastoProyectado, 0), [forecast7DaysData]);
-  const total7DayShieldOptimized = useMemo(() => forecast7DaysData.reduce((acc, d) => acc + d.gastoOptimizadoShield, 0), [forecast7DaysData]);
+  const total7DayPredictedSpend = useMemo(
+    () => (forecastAvailable ? forecast7DaysData.reduce((acc, d) => acc + d.gastoProyectado, 0) : null),
+    [forecast7DaysData, forecastAvailable]
+  );
+  const total7DayShieldOptimized = useMemo(
+    () => (forecastAvailable ? forecast7DaysData.reduce((acc, d) => acc + d.gastoOptimizadoShield, 0) : null),
+    [forecast7DaysData, forecastAvailable]
+  );
 
-  return { kpis, forecast7DaysData, trends24hData, total7DayPredictedSpend, total7DayShieldOptimized };
+  return { kpis, forecast7DaysData, trends24hData, total7DayPredictedSpend, total7DayShieldOptimized, forecastAvailable };
 }

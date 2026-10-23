@@ -14,6 +14,7 @@ public class AppDbContext : DbContext
     public DbSet<CampaignPlacement> CampaignPlacements { get; set; }
     public DbSet<CampaignCreative> CampaignCreatives { get; set; }
     public DbSet<TenantSetting> TenantSettings { get; set; }
+    public DbSet<TelemetryOutbox> TelemetryOutbox { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

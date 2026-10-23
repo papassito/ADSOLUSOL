@@ -42,8 +42,11 @@ async function startServer() {
       },
     },
     define: {
-      // Inyectar variable para que el frontend sepa que está en modo demo
-      'import.meta.env.VITE_DEMO_MODE': JSON.stringify('true'),
+      'import.meta.env.VITE_DEMO_MODE': JSON.stringify(
+        process.env.VITE_DEMO_MODE === 'true' && process.env.NODE_ENV !== 'production'
+          ? 'true'
+          : 'false'
+      ),
     },
     appType: 'spa',
   });

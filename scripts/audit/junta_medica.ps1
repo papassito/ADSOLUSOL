@@ -73,9 +73,9 @@ $MedicalBoard = @(
                     $errors++
                 }
             }
-            if ($errors -gt 0) { exit 1 } else { Write-Host "[SANO] $($files.Count) archivos analizados sin BOM, caracteres nulos ni corrupción UTF-8." }
+            if ($errors -gt 0) { exit 1 } else { Write-Host "[SANO] $($files.Count) archivos analizados sin BOM, caracteres nulos ni corrupcion UTF-8." }
         '
-        Descripcion  = "Auditoría de codificación UTF-8 estricta, ausencia de BOM, caracteres nulos y secuencias corruptas."
+        Descripcion  = "Auditoria de codificacion UTF-8 estricta, ausencia de BOM, caracteres nulos y secuencias corruptas."
     },
     @{
         Area         = "Traumatologia y Segregacion Estructural (Clean / Onion)"
@@ -113,9 +113,9 @@ $MedicalBoard = @(
                     $errors++
                 }
             }
-            if ($errors -gt 0) { exit 1 } else { Write-Host "[SANO] Topología Onion inmaculada: cero fuentes huérfanas y contratos asíncronos válidos." }
+            if ($errors -gt 0) { exit 1 } else { Write-Host "[SANO] Topologia Onion inmaculada: cero fuentes huerfanas y contratos asincronos validos." }
         '
-        Descripcion  = "Inspección de proyectos huérfanos en raíz, segregación de UI MAUI y contratos tipados en repositorios."
+        Descripcion  = "Inspeccion de proyectos huerfanos en raiz, segregacion de UI MAUI y contratos tipados en repositorios."
     },
     @{
         Area         = "Oftalmologia y Formato Canonico (.NET Format)"
@@ -128,9 +128,9 @@ $MedicalBoard = @(
                 Write-Host "[INFO] Ejecute .\release.ps1 -Fix (o dotnet format) para autoformatear." -ForegroundColor Yellow
                 exit 1
             }
-            Write-Host "[SANO] Agudeza visual 20/20: Todo el código C# cumple con el estándar canónico."
+            Write-Host "[SANO] Agudeza visual 20/20: Todo el codigo C# cumple con el estandar canonico."
         '
-        Descripcion  = "Verificación pericial del formato de código mediante dotnet format oficial."
+        Descripcion  = "Verificacion pericial del formato de codigo mediante dotnet format oficial."
     },
     @{
         Area         = "Neurologia y Analisis Estatico (dotnet build & Roslyn)"
@@ -147,9 +147,9 @@ $MedicalBoard = @(
                 }
                 exit 1
             }
-            Write-Host "[SANO] Compilación diagnóstica 100% limpia: Cero errores CS, MSB o NuGet."
+            Write-Host "[SANO] Compilacion diagnostica 100% limpia: Cero errores CS, MSB o NuGet."
         '
-        Descripcion  = "Compilación estática de todos los proyectos de la solución en configuración Release."
+        Descripcion  = "Compilacion estatica de todos los proyectos de la solucion en configuracion Release."
     },
     @{
         Area         = "Cardiologia Forense (Pruebas Unitarias, Regresion y Smokey)"
@@ -172,9 +172,9 @@ $MedicalBoard = @(
             }
             $sw.Stop()
             $perfSec = [math]::Round($sw.Elapsed.TotalSeconds, 2)
-            if ($hasError) { exit 1 } else { Write-Host "[SANO] Pulso cardíaco regular: 100% pruebas de regresión aprobadas en ${perfSec}s (rendimiento óptimo)." }
+            if ($hasError) { exit 1 } else { Write-Host "[SANO] Pulso cardiaco regular: 100% pruebas de regresion aprobadas en ${perfSec}s (rendimiento optimo)." }
         '
-        Descripcion  = "Evaluación de suites de regresión, integridad de débito atómico y telemetría de rendimiento."
+        Descripcion  = "Evaluacion de suites de regresion, integridad de debito atomico y telemetria de rendimiento."
     },
     @{
         Area         = "Farmacologia, Criptografia y Blindaje Perimetral EDR"
@@ -206,9 +206,9 @@ $MedicalBoard = @(
                     $errors++
                 }
             }
-            if ($errors -gt 0) { exit 1 } else { Write-Host "[SANO] Inmunidad EDR: Cero secretos expuestos y scripts libres de heurísticas maliciosas." }
+            if ($errors -gt 0) { exit 1 } else { Write-Host "[SANO] Inmunidad EDR: Cero secretos expuestos y scripts libres de heuristicas maliciosas." }
         '
-        Descripcion  = "Inspección perimetral de cadenas sensibles y blindaje contra falsos positivos EDR/Antivirus."
+        Descripcion  = "Inspeccion perimetral de cadenas sensibles y blindaje contra falsos positivos EDR/Antivirus."
     },
     @{
         Area         = "Calidad de Codigo y Olores (Code Smells)"
@@ -230,9 +230,9 @@ $MedicalBoard = @(
                 Write-Host "[OBSERVACION] Comentario TODO/FIXME en $(Split-Path $_.Path -Leaf):$($_.LineNumber) -> $($_.Line.Trim())" -ForegroundColor Yellow
             }
 
-            if ($errors -gt 0) { exit 1 } else { Write-Host "[SANO] Código libre de olores críticos (excepciones no implementadas, capturas silenciosas)." }
+            if ($errors -gt 0) { exit 1 } else { Write-Host "[SANO] Codigo libre de olores criticos (excepciones no implementadas, capturas silenciosas)." }
         '
-        Descripcion  = "Análisis estático para detectar patrones de código problemáticos como NotImplementedException, bloques catch vacíos y comentarios de trabajo pendiente."
+        Descripcion  = "Analisis estatico para detectar patrones de codigo problematicos como NotImplementedException, bloques catch vacios y comentarios de trabajo pendiente."
     },
     @{
         Area         = "Gobernanza y Verificacion de Integracion Externa (SIC)"
@@ -255,7 +255,7 @@ $MedicalBoard = @(
             }
             if ($errors -gt 0) { exit 1 } else { Write-Host "[OBSERVACION] MarketingBrainClient implementa HttpClient, pero conectividad con SIC permanece como: NO VERIFICADA EN RED." ; exit 2 }
         '
-        Descripcion  = "Auditoría de conectividad real hacia SIC (distingue implementación de verificación activa de red)."
+        Descripcion  = "Auditoria de conectividad real hacia SIC (distingue implementacion de verificacion activa de red)."
     },
     @{
         Area         = "Dermatologia y Cobertura Funcional de UI (Sitemap & DI Wiring)"
@@ -278,7 +278,7 @@ $MedicalBoard = @(
             }
             if ($errors -gt 0) { exit 1 } else { Write-Host "[SANO] Cobertura funcional de UI y contenedor DI al 100% verificado." }
         '
-        Descripcion  = "Inspección de cobertura funcional, registros de servicios y cableado de navegación Desktop."
+        Descripcion  = "Inspeccion de cobertura funcional, registros de servicios y cableado de navegacion Desktop."
     },
     @{
         Area         = "Endoscopia y Pruebas de Componentes UI (bUnit)"
@@ -298,7 +298,7 @@ $MedicalBoard = @(
             }
             Write-Host "[SANO] Todos los componentes de la interfaz de usuario pasaron sus pruebas funcionales."
         '
-        Descripcion  = "Ejecuta la suite de pruebas de componentes de UI (bUnit) para validar la lógica y el renderizado de los componentes Razor de forma aislada."
+        Descripcion  = "Ejecuta la suite de pruebas de componentes de UI (bUnit) para validar la logica y el renderizado de los componentes Razor de forma aislada."
     }
 )
 
@@ -353,13 +353,13 @@ foreach ($doctor in $MedicalBoard) {
 
             if ($process.ExitCode -eq 0) {
                 $consultaStatus = "SANO (PASS)"
-                Write-Host "[OK] Evaluación pericial aprobada sin anomalías." -ForegroundColor Green
+                Write-Host "[OK] Evaluacion pericial aprobada sin anomalias." -ForegroundColor Green
             } elseif ($process.ExitCode -eq 2) {
                 $consultaStatus = "NO VERIFICADO / OBSERVACION"
                 Write-Host "[INFO] Especialidad no verificada o pendiente de entorno/tests." -ForegroundColor Yellow
             } else {
                 $consultaStatus = "OBSERVACION (Exit Code: $($process.ExitCode))"
-                Write-Host "[FAIL] Se hallaron anomalías clínicas durante el diagnóstico." -ForegroundColor Red
+                Write-Host "[FAIL] Se hallaron anomalias clinicas durante el diagnostico." -ForegroundColor Red
             }
         } else {
             $consultaStatus = "CRITICO (TIMEOUT)"
@@ -389,11 +389,11 @@ Write-Host "=========================================================" -Foregrou
 
 # 6. Generación del Expediente Clínico Maestro en docs/
 $codeBlock = '```'
-$mdReport = "# Expediente Clínico Maestro - ADSOLUSOL (Ads & Growth Engine)`n`n"
+$mdReport = "# Expediente Clinico Maestro - ADSOLUSOL (Ads & Growth Engine)`n`n"
 $mdReport += "**Fecha y Hora del Chequeo Forense:** $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')`n`n"
 $mdReport += "**Ecosistema Auditado:** " + ($detectedLanguages -join " | ") + "`n`n"
-$mdReport += "## Dictamen Resumido de la Junta Médica Forense`n`n"
-$mdReport += "| Área Médica | Especialista / Peritaje Forense | Diagnóstico Clínico |`n"
+$mdReport += "## Dictamen Resumido de la Junta Medica Forense`n`n"
+$mdReport += "| Area Medica | Especialista / Peritaje Forense | Diagnostico Clinico |`n"
 $mdReport += "|---|---|---|`n"
 
 foreach ($record in $medicalRecords) {
@@ -401,12 +401,12 @@ foreach ($record in $medicalRecords) {
 }
 
 $mdReport += "`n---`n`n"
-$mdReport += "## Detalle de Observaciones Quirúrgicas y Laboratorio`n`n"
+$mdReport += "## Detalle de Observaciones Quirurgicas y Laboratorio`n`n"
 
 foreach ($record in $medicalRecords) {
-    $mdReport += "### Área: $($record.Area)`n"
+    $mdReport += "### Area: $($record.Area)`n"
     $mdReport += "**Especialista:** $($record.Especialista) | **Estado:** **$($record.Status)**`n`n"
-    $mdReport += "*Alcance Clínico:* $($record.Descripcion)`n`n"
+    $mdReport += "*Alcance Clinico:* $($record.Descripcion)`n`n"
     $mdReport += $codeBlock + "text`n" + $record.Output + "`n" + $codeBlock + "`n`n"
 }
 

@@ -34,12 +34,3 @@ export interface AdBidder {
   creativeUrl: string;
   advertiser: string;
 }
-
-export interface AuctionSimulationResult {
-  winner: AdBidder;
-  winningPrice: number;
-  auctionType: 'first_price' | 'second_price';
-  bidsEvaluated: Array<AdBidder & { eCPM: number; eligible: boolean; rejectionReason?: string }>;
-  executionTimeMs: number;
-  priceFloor: number;
-}

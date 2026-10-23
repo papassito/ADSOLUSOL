@@ -15,35 +15,35 @@ export const ActiveDirectoryExplorer: React.FC = () => {
       from: 'Usuario (Cliente)',
       to: 'Dominio',
       ticket: 'Ninguno',
-      desc: 'El usuario introduce su usuario y contrase a en una estaci n de trabajo unida al dominio.'
+      desc: 'El usuario introduce su usuario y contraseña en una estación de trabajo unida al dominio.'
     },
     {
       title: '1. Solicitud AS_REQ / AS_REP (TGT)',
       from: 'Cliente',
       to: 'KDC (Authentication Service)',
       ticket: 'TGT (Ticket-Granting Ticket)',
-      desc: 'El cliente env a su identidad cifrada con el hash de su clave. El KDC valida el hash y le devuelve un TGT firmado por la cuenta krbtgt del dominio.'
+      desc: 'El cliente envía su identidad cifrada con el hash de su clave. El KDC valida el hash y le devuelve un TGT firmado por la cuenta krbtgt del dominio.'
     },
     {
       title: '2. Solicitud TGS_REQ / TGS_REP (ST)',
       from: 'Cliente con TGT',
       to: 'KDC (Ticket-Granting Service)',
       ticket: 'Service Ticket (ST)',
-      desc: 'El cliente presenta su TGT solicitando acceso a un recurso espec fico (ej. Servidor de Archivos SMB o Base de Datos SQL). El KDC expide el Service Ticket (ST).'
+      desc: 'El cliente presenta su TGT solicitando acceso a un recurso específico (ej. Servidor de Archivos SMB o Base de Datos SQL). El KDC expide el Service Ticket (ST).'
     },
     {
-      title: '3. Presentaci n AP_REQ al Recurso',
+      title: '3. Presentación AP_REQ al Recurso',
       from: 'Cliente con ST',
       to: 'Servidor Destino (SMB/SQL)',
       ticket: 'Acceso Concedido con Token SID',
       desc: 'El cliente entrega el Service Ticket al servidor final. El servidor descifra el ticket usando su propia clave secreta y valida los grupos y permisos del usuario sin consultar de nuevo al KDC.'
     },
     {
-      title: '4. Sesi n Autenticada (SSO Exitoso)',
-      from: 'Sesi n Activa',
+      title: '4. Sesión Autenticada (SSO Exitoso)',
+      from: 'Sesión Activa',
       to: 'Red Corporativa',
       ticket: 'Single Sign-On Activo',
-      desc: 'El usuario accede de forma transparente a recursos sin tener que volver a ingresar su contrase a durante las siguientes 10 horas.'
+      desc: 'El usuario accede de forma transparente a recursos sin tener que volver a ingresar su contraseña durante las siguientes 10 horas.'
     }
   ];
 
@@ -58,10 +58,10 @@ export const ActiveDirectoryExplorer: React.FC = () => {
             <span>Motor de Identidad Empresarial</span>
           </div>
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white tracking-tight">
-            Motor de Active Directory (AD): Identidad, LDAP y Pol ticas
+            Motor de Active Directory (AD): Identidad, LDAP y Políticas
           </h2>
           <p className="mt-2 text-xs sm:text-sm text-slate-300 leading-relaxed">
-            Si tu consulta se refiere a <strong>Active Directory (AD)</strong> en administraci n de sistemas e infraestructura IT, el motor AD es la suite de servicios transaccionales que gestiona la seguridad, autenticaci n, control de acceso y configuraci n de cientos de miles de usuarios y servidores corporativos.
+            Si tu consulta se refiere a <strong>Active Directory (AD)</strong> en administración de sistemas e infraestructura IT, el motor AD es la suite de servicios transaccionales que gestiona la seguridad, autenticación, control de acceso y configuración de cientos de miles de usuarios y servidores corporativos.
           </p>
         </div>
       </div>
@@ -76,10 +76,10 @@ export const ActiveDirectoryExplorer: React.FC = () => {
               <span>KDC ENGINE</span>
             </div>
             <h3 className="text-lg sm:text-xl font-bold text-white">
-              Simulador del Motor de Autenticaci n Kerberos v5
+              Simulador del Motor de Autenticación Kerberos v5
             </h3>
             <p className="text-xs text-slate-400 mt-0.5">
-              Haz clic en el bot n para avanzar paso a paso por la concesi n de tickets criptogr ficos (TGT y ST).
+              Haz clic en el botón para avanzar paso a paso por la concesión de tickets criptográficos (TGT y ST).
             </p>
           </div>
           <button
@@ -141,7 +141,7 @@ export const ActiveDirectoryExplorer: React.FC = () => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight">
-            Las 6 Funciones Arquitect nicas del Motor Active Directory
+            Las 6 Funciones Arquitectónicas del Motor Active Directory
           </h3>
           <span className="text-xs text-slate-400 font-mono">NTDS.dit Core</span>
         </div>

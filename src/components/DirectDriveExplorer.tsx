@@ -15,7 +15,7 @@ export const DirectDriveExplorer: React.FC = () => {
       <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8">
         <div className="max-w-3xl">
           <div className="flex items-center gap-2 text-xs text-amber-400 font-medium mb-1">
-            <span>Electromec nica & Rob tica</span>
+            <span>Electromecánica & Robótica</span>
             <span aria-hidden="true"> </span>
             <span>Accionamiento Directo (Direct Drive)</span>
           </div>
@@ -23,7 +23,7 @@ export const DirectDriveExplorer: React.FC = () => {
             Motor de Accionamiento Directo (AD / Direct Drive)
           </h2>
           <p className="mt-2 text-xs sm:text-sm text-slate-300 leading-relaxed">
-            En f sica y mecatr nica, un <strong>Motor AD</strong> hace referencia a un motor de <em>Accionamiento Directo (Direct Drive)</em>. A diferencia de los motores convencionales que dependen de engranajes reductores o correas para ganar fuerza, el motor AD acopla la carga  til directamente sobre el rotor magn tico multipolo, erradicando holguras mec nicas y p rdidas por fricci 
+            En física y mecatrónica, un <strong>Motor AD</strong> hace referencia a un motor de <em>Accionamiento Directo (Direct Drive)</em>. A diferencia de los motores convencionales que dependen de engranajes reductores o correas para ganar fuerza, el motor AD acopla la carga útil directamente sobre el rotor magnético multipolo, erradicando holguras mecánicas y pérdidas por fricción.
           </p>
         </div>
       </div>
@@ -33,15 +33,15 @@ export const DirectDriveExplorer: React.FC = () => {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-5 border-b border-slate-800">
           <div>
             <div className="flex items-center gap-2 text-xs text-amber-400 font-mono font-medium mb-1">
-              <span>C LCULO VECTORIAL PMSM / BLDC</span>
+              <span>CÁLCULO VECTORIAL PMSM / BLDC</span>
               <span aria-hidden="true"> </span>
               <span>PAR MOTOR & FRECUENCIA</span>
             </div>
             <h3 className="text-lg sm:text-xl font-bold text-white">
-              Simulador Electromagn tico de Accionamiento Directo
+              Simulador Electromagnético de Accionamiento Directo
             </h3>
             <p className="text-xs text-slate-400 mt-0.5">
-              Ajusta las RPM y el n mero de polos magn ticos para ver la frecuencia el ctrica y el par nominal resultante.
+              Ajusta las RPM y el número de polos magnéticos para ver la frecuencia eléctrica y el par nominal resultante.
             </p>
           </div>
         </div>
@@ -68,7 +68,7 @@ export const DirectDriveExplorer: React.FC = () => {
             </div>
             <div className="p-4 bg-slate-950 rounded-xl border border-slate-800">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-slate-300 font-medium">N mero de Polos Magn ticos (P)</span>
+                <span className="text-slate-300 font-medium">Número de Polos Magnéticos (P)</span>
                 <span className="font-mono text-amber-400 font-bold text-sm">{poles} Polos</span>
               </div>
               <input
@@ -81,15 +81,15 @@ export const DirectDriveExplorer: React.FC = () => {
                 className="w-full accent-amber-400 cursor-pointer"
               />
               <span className="text-[11px] text-slate-500 block mt-1">
-                A mayor n mero de polos magn ticos en el estator, mayor densidad de par a baja velocidad sin reductores.
+                A mayor número de polos magnéticos en el estator, mayor densidad de par a baja velocidad sin reductores.
               </span>
             </div>
           </div>
 
           <div className="bg-slate-950 rounded-xl p-5 border border-slate-800 flex flex-col justify-between">
             <div>
-              <span className="text-xs font-mono text-slate-400 block mb-1">C LCULO EN TIEMPO REAL:</span>
-              <div className="font-mono text-xs text-slate-400 mb-3">f_el ctrica = (Polos   RPM) / 120</div>
+              <span className="text-xs font-mono text-slate-400 block mb-1">CÁLCULO EN TIEMPO REAL:</span>
+              <div className="font-mono text-xs text-slate-400 mb-3">f_eléctrica = (Polos * RPM) / 120</div>
               
               <div className="grid grid-cols-2 gap-3 text-xs">
                 <div className="p-3 bg-slate-900 rounded-lg border border-slate-800">
@@ -97,14 +97,14 @@ export const DirectDriveExplorer: React.FC = () => {
                   <span className="font-mono text-xl font-bold text-amber-400">{electricalFreq} Hz</span>
                 </div>
                 <div className="p-3 bg-slate-900 rounded-lg border border-slate-800">
-                  <span className="text-[11px] text-slate-400 block">Holgura Mec nica</span>
+                  <span className="text-[11px] text-slate-400 block">Holgura Mecánica</span>
                   <span className="font-mono text-xl font-bold text-emerald-400">0.00 mm</span>
                   <span className="text-[10px] text-slate-500 block">Cero Backlash</span>
                 </div>
               </div>
             </div>
             <div className="mt-4 p-3 bg-slate-900/60 rounded-lg border border-slate-800 text-[11px] text-slate-300">
-              <strong className="text-amber-400">Ventaja T cnica Fundamental:</strong> Al no tener engranajes que rocen ni correas que se estiren, la respuesta es instant nea (latencia en par inferior a 1 milisegundo) y la eficiencia energ tica supera el 95%.
+              <strong className="text-amber-400">Ventaja Técnica Fundamental:</strong> Al no tener engranajes que rocen ni correas que se estiren, la respuesta es instantánea (latencia en par inferior a 1 milisegundo) y la eficiencia energética supera el 95%.
             </div>
           </div>
         </div>
@@ -131,7 +131,7 @@ export const DirectDriveExplorer: React.FC = () => {
                 </p>
                 <div className="space-y-2 text-xs mb-4">
                   <span className="text-[11px] font-semibold text-slate-400 block">
-                    Aplicaciones T picas:
+                    Aplicaciones Típicas:
                   </span>
                   <ul className="space-y-1 text-slate-300">
                     {fn.applications.map((app, i) => (

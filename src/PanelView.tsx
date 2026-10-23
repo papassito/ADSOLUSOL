@@ -9,11 +9,11 @@ interface ReleaseInfo {
   detail?: string;
 }
 
-interface PanelViewProps {
+export interface PanelViewProps {
   campaigns: Campaign[];
   systemHealth: any;
-  campaignsAvailable: boolean;
-  loading: boolean;
+  campaignsAvailable?: boolean;
+  loading?: boolean;
   onNavigate: (module: ModuleKey) => void;
 }
 
