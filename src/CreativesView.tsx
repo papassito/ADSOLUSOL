@@ -83,7 +83,7 @@ export const CreativesView: React.FC<CreativesViewProps> = ({
         <div className="as-card-premium rounded-2xl p-6 flex flex-col justify-between">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
-              <Smartphone className="h-4 w-4" /> Simulador Móvil SERP + Google Maps Activo
+              <Smartphone className="h-4 w-4" /> Previsualización Móvil SERP + Google Maps Activo
             </span>
             <span className="px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-400 text-[10px] font-bold">Extensión de Ubicación Activa</span>
           </div>

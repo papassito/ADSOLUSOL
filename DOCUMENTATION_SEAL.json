@@ -1,39 +1,37 @@
 {
-  "$schema": "https://json-schema.solusol.net/governance/doc-seal-v1.json",
-  "project": "ADSOLUSOL",
-  "productName": "AD SOLUSOL (ADS) — Advertising & Growth Engine",
-  "commercialLead": "KLIK Soft PRO",
-  "softwareDirection": "solusol.net",
-  "support": "CM Soluciones",
-  "commit": "88505d24a168176c4aa661fa80727d5d45bb71f7",
-  "builtAtUtc": "2026-10-23T14:25:00Z",
-  "seal": {
-    "status": "CERTIFICADO",
-    "certified": true,
-    "releaseStatus": "RELEASE-CERTIFIED",
-    "revisionDate": "2026-10-23",
-    "verifiedCommit": "88505d24a168176c4aa661fa80727d5d45bb71f7",
-    "totalMarkdownFiles": 49,
-    "zeroSyntheticCompliant": true
-  },
-  "manifests": {
-    "rootManifest": "MANIFEST.md",
-    "docsManifest": "docs/MANIFEST.md"
-  },
-  "manifestHashes": {
-    "MANIFEST.md": "e142a0e7ccf9f8806ea6ccd60a99a6b8949beda25e93c636587b35cd4b3e1cdb",
-    "docs/MANIFEST.md": "e142a0e7ccf9f8806ea6ccd60a99a6b8949beda25e93c636587b35cd4b3e1cdb"
-  },
-  "runtimeTarget": {
-    "framework": "net8.0",
-    "architecture": "ASP.NET Core + MAUI Blazor + React",
-    "database": "SQLite (adsolusol.db)",
-    "cryptography": "Ed25519 (SignatureVerificationMiddleware)"
-  },
-  "governancePrinciples": [
-    "Zero-Synthetic",
-    "Servidor autoritativo",
-    "Authentication != Authorization",
-    "Recommendation != Execution"
-  ]
+    "$schema":  "https://json-schema.solusol.net/governance/doc-seal-v1.json",
+    "project":  "ADSOLUSOL",
+    "productName":  "AD SOLUSOL (ADS) — Advertising \u0026 Growth Engine",
+    "commercialLead":  "KLIK Soft PRO",
+    "softwareDirection":  "solusol.net",
+    "support":  "CM Soluciones",
+    "seal":  {
+                 "status":  "PRE-SELLO",
+                 "certified":  false,
+                 "releaseStatus":  "NOT RELEASE-CERTIFIED",
+                 "revisionDate":  "2026-10-23",
+                 "verifiedCommit":  "88505d24a168176c4aa661fa80727d5d45bb71f7",
+                 "totalMarkdownFiles":  50,
+                 "zeroSyntheticCompliant":  true
+             },
+    "manifests":  {
+                      "rootManifest":  "MANIFEST.md",
+                      "docsManifest":  "docs/MANIFEST.md"
+                  },
+    "manifestHashes":  {
+                           "MANIFEST.md":  "a9e5a94efbb52bb41346285da4acbc79ecf334436f900a32df240e4b60c07e44",
+                           "docs/MANIFEST.md":  "a9e5a94efbb52bb41346285da4acbc79ecf334436f900a32df240e4b60c07e44"
+                       },
+    "runtimeTarget":  {
+                          "framework":  "net8.0",
+                          "architecture":  "ASP.NET Core + MAUI Blazor + React",
+                          "database":  "SQLite (adsolusol.db)",
+                          "cryptography":  "Ed25519 (SignatureVerificationMiddleware)"
+                      },
+    "governancePrinciples":  [
+                                 "Zero-Synthetic",
+                                 "Servidor autoritativo",
+                                 "Authentication != Authorization",
+                                 "Recommendation != Execution"
+                             ]
 }

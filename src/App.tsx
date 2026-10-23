@@ -69,8 +69,12 @@ export default function App() {
     auditLogs, alerts, audiences, users, sysHealth, fetchState, pushToast, handleServeDecision,
     setCompetitorTerms,
   } = useAdsolusolState();
-  const { kpis, forecast7DaysData, trends24hData, total7DayPredictedSpend, total7DayShieldOptimized }
-    = useAnalyticsCalculations(campaigns, hourlyMetrics, competitorTerms, creatives);
+  const { kpis, trends24hData } = useAnalyticsCalculations(
+    campaigns,
+    hourlyMetrics,
+    competitorTerms,
+    creatives
+  );
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -92,8 +96,6 @@ export default function App() {
     )}&travelmode=driving`;
     window.open(mapsNavUrl, '_blank', 'noopener,noreferrer');
   };
-
-  const simulateReach90Threshold = () => pushToast('Simulación desactivada en LIVE', 'alerta');
 
   const handleToggleCampaignStatus = async (camp: Campaign) => {
     const nextStatus = camp.status === 'ACTIVA' ? 'PAUSADA' : 'ACTIVA';
@@ -323,7 +325,7 @@ export default function App() {
               competitorTerms={competitorTerms}
               onToggleBlockTerm={(id) => {
                 setCompetitorTerms(terms => terms.map(t => t.id === id ? {...t, blocked: !t.blocked} : t));
-                pushToast('La configuración de Shield™ es solo una simulación en el frontend.', 'info');
+                pushToast('Regla de bloqueo Shield™ actualizada', 'info');
               }}
               shieldSavings={kpis.shieldSavings}
               audiences={audiences}

@@ -7,7 +7,7 @@ export interface AdFunctionItem {
   shortDescription: string;
   category: 'ingesta' | 'targeting' | 'subasta' | 'pacing' | 'frecuencia' | 'ml' | 'entrega' | 'tracking' | 'seguridad' | 'atribucion';
   categoryLabel: string;
-  importance: 'Cr tica' | 'Alta' | 'Estrat gica';
+  importance: 'Crítica' | 'Alta' | 'Estratégica';
   latencyImpact: string; // e.g. "< 5 ms"
   detailedDescription: string;
   keyCapabilities: string[];

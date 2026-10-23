@@ -205,7 +205,13 @@ export function useAdsolusolState() {
         const eventId = crypto.randomUUID();
         const eventRes = await apiFetch(`/api/Campaigns/${encodeURIComponent(String(creative.campaignId))}/${triggerClick ? 'click' : 'impression'}`, {
           method: 'POST',
-          body: JSON.stringify({ eventId, placementCode: placement.code, creativeId: String(creative.id) }),
+          body: JSON.stringify({
+            eventId,
+            placementCode: placement.code,
+            placementId: Number(placement.id) || 1,
+            creativeId: Number(creative.id) || creative.id,
+            timestamp: new Date().toISOString(),
+          }),
         });
         const event = await eventRes.json().catch(() => ({}));
         if (!eventRes.ok || event.status !== 'ACCEPTED' || event.eventId !== eventId || typeof event.cost !== 'number') {

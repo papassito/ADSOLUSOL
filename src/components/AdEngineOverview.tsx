@@ -3,7 +3,7 @@ import { AD_ENGINE_FUNCTIONS } from '../data/adEngineData';
 import { AdFunctionCard } from './AdFunctionCard';
 import { ArchitectureFlow } from './ArchitectureFlow';
 import { EcpmCalculator } from './EcpmCalculator';
-import { Search, SlidersHorizontal, Activity, Layers, Cpu, ShieldCheck } from 'lucide-react';
+import { Search, Activity, Layers, Cpu } from 'lucide-react';
 
 export const AdEngineOverview: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'functions' | 'architecture' | 'calculator'>('functions');
@@ -27,14 +27,14 @@ export const AdEngineOverview: React.FC = () => {
         <div className="max-w-4xl">
           <div className="flex items-center gap-2 text-xs text-amber-400 font-medium mb-1">
             <span>Servidor de Publicidad & Ad Tech</span>
-            <span aria-hidden="true"> </span>
-            <span>Est ndares IAB Tech Lab & OpenRTB</span>
+            <span aria-hidden="true">•</span>
+            <span>Estándares IAB Tech Lab & OpenRTB</span>
           </div>
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white tracking-tight">
             Motor de Publicidad Digital (Ad Serving & RTB Bidding Engine)
           </h2>
           <p className="mt-2 text-xs sm:text-sm text-slate-300 leading-relaxed">
-            Un <strong>Motor Ad (Ad Engine)</strong> es el cerebro inform tico distribuido de alta disponibilidad que orquesta la entrega, subasta, segmentaci n, optimizaci n y medici n de miles de millones de anuncios en la web, aplicaciones m viles, videojuegos y televisi n conectada (CTV), operando bajo un estricto SLA de <strong>menos de 50 milisegundos</strong> por impresi 
+            Un <strong>Motor Ad (Ad Engine)</strong> es el cerebro informático distribuido de alta disponibilidad que orquesta la entrega, subasta, segmentación, optimización y medición de miles de millones de anuncios en la web, aplicaciones móviles, videojuegos y televisión conectada (CTV), operando bajo un estricto SLA de <strong>menos de 50 milisegundos</strong> por impresión.
           </p>
         </div>
 
@@ -51,14 +51,14 @@ export const AdEngineOverview: React.FC = () => {
             <span className="text-[10px] text-slate-500 block">IAB Tech Lab Standard</span>
           </div>
           <div>
-            <span className="text-slate-400 text-[11px] block">Norma de Medici n</span>
+            <span className="text-slate-400 text-[11px] block">Norma de Medición</span>
             <span className="font-mono text-base font-bold text-emerald-400">MRC & OM SDK</span>
             <span className="text-[10px] text-slate-500 block">50% px / 1.0s continuo</span>
           </div>
           <div>
             <span className="text-slate-400 text-[11px] block">Macro-Funciones</span>
             <span className="font-mono text-base font-bold text-white">10 Fundamentales</span>
-            <span className="text-[10px] text-slate-500 block">De Ingesta a Atribuci n</span>
+            <span className="text-[10px] text-slate-500 block">De Ingesta a Atribución</span>
           </div>
         </div>
       </div>
@@ -109,7 +109,7 @@ export const AdEngineOverview: React.FC = () => {
               <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="Buscar funciones, algoritmos, est ndares (ej. subasta, pacing, MRC, fraude, VAST, cookies)..."
+                placeholder="Buscar funciones, algoritmos, estándares (ej. subasta, pacing, MRC, fraude, VAST, cookies)..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-9 pr-4 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"

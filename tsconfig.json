@@ -27,16 +27,8 @@
     "noEmit": true
   },
   "include": [
-    "src/main.tsx",
-    "src/App.tsx",
-    "src/screens/**/*.tsx",
-    "src/components/**/*.tsx",
-    "src/context/**/*.tsx",
-    "src/data/**/*.ts",
-    "src/types/**/*.ts",
-    "src/utils/**/*.ts",
-    "src/services/**/*.ts",
-    "server/**/*.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
     "vite.config.ts"
   ]
 }
