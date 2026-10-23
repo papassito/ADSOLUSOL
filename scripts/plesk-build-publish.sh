@@ -11,6 +11,8 @@ SCRIPT_DIR="${SCRIPT_PATH%/*}"
 ROOT_DIR="$(cd -- "$SCRIPT_DIR/.." && pwd)"
 WEB_ROOT="${ADSO_WEB_ROOT:-}"
 API_PANEL_DIR="${ADSO_API_PANEL_DIR:-}"
+WEB_ROOT="$(printf '%s' "$WEB_ROOT" | tr -d '\r' | xargs)"
+API_PANEL_DIR="$(printf '%s' "$API_PANEL_DIR" | tr -d '\r' | xargs)"
 
 fail() {
   printf 'ERROR: %s\n' "$*" >&2
@@ -39,7 +41,12 @@ if ! grep -R -qF "Verificar sitio promocionado" "$DIST_DIR/assets"; then
   fail "Built assets do not contain the site verification card. Nothing was published."
 fi
 
+BARE_GIT_DIR="${ADSO_GIT_DIR:-"$ROOT_DIR/../git/ADSOLUSOL"}"
 if COMMIT="$(git -C "$ROOT_DIR" rev-parse --short=12 HEAD 2>/dev/null)"; then
+  :
+elif [[ -d "$BARE_GIT_DIR" ]] && COMMIT="$(git --git-dir="$BARE_GIT_DIR" rev-parse --short=12 HEAD 2>/dev/null)"; then
+  :
+elif command -v sqlite3 >/dev/null 2>&1 && [[ -r "/usr/local/psa/var/modules/git/git_db.db" ]] && COMMIT="$(sqlite3 /usr/local/psa/var/modules/git/git_db.db "SELECT substr(d.deployedCommitHash, 1, 12) FROM Repositories r JOIN RepositoryDeploymentInfo d ON r.uuid = d.repoUuid WHERE r.name='ADSOLUSOL' LIMIT 1;" 2>/dev/null)" && [[ -n "$COMMIT" ]]; then
   :
 else
   COMMIT="${PLESK_DEPLOYMENT_COMMIT:-${GIT_COMMIT:-unknown}}"
