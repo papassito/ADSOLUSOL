@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useAdsolusolState } from './useAdsolusolState';
-import { useAnalyticsCalculations } from './useAnalyticsCalculations';
 import { apiFetch } from './services/api';
 import { mapToBackendCreateDto } from './services/campaignAdapter';
 import { MODULE_META, AI_PRESETS } from './constants';
-import { ModuleKey, Campaign } from './types';
+import { ModuleKey, Campaign, Placement, Creative, Assignment, SystemHealth, AuditLog, Alert, Audience, User } from './types';
 
 import { Sidebar } from './components/Sidebar';
 import { TopHeader } from './components/TopHeader';
@@ -28,6 +26,10 @@ import { EmbedCodeGeneratorValidator } from './components/EmbedCodeGeneratorVali
 
 export default function App() {
   const [activeModule, setActiveModule] = useState<ModuleKey>('panel');
+  const [loadingAction, setLoadingAction] = useState(false);
+  const [isAutoLive, setIsAutoLive] = useState(false); // Kept for UI, but simulation logic removed.
+  const [toasts, setToasts] = useState<{ id: string; title: string; type: 'exito' | 'alerta' | 'info' }[]>([]);
+
   const [globalSearch, setGlobalSearch] = useState('');
   const [commandOpen, setCommandOpen] = useState(false);
   const [commandQuery, setCommandQuery] = useState('');
@@ -37,11 +39,13 @@ export default function App() {
     name: string;
   } | null>(null);
 
-  const [drawerType, setDrawerType] = useState<
-    null | 'campana' | 'ubicacion' | 'creativo' | 'asignacion'
-  >(null);
-
-  const [campForm, setCampForm] = useState({ name: '', budget: 150, maxCpc: 2.5 });
+  // State variables to hold data from the real API
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [placements, setPlacements] = useState<Placement[]>([]);
+  const [creatives, setCreatives] = useState<Creative[]>([]);
+  const [sysHealth, setSysHealth] = useState<SystemHealth | null>(null);
+  const [drawerType, setDrawerType] = useState<null | 'campana' | 'ubicacion' | 'creativo' | 'asignacion'>(null);
+  const [campForm, setCampForm] = useState({ name: '', budget: 150, costPerClick: 2.5, costPerMille: 10 });
   const [plcForm, setPlcForm] = useState({
     code: 'solusol.portal.banner.nuevo',
     name: '',
@@ -49,34 +53,67 @@ export default function App() {
     floorCpm: 14.0,
   });
   const [crtForm, setCrtForm] = useState({
-    campaignId: 'CAMP-101',
-    title: 'Laboratorio San Francisco | Resultados Hoy Mismo',
-    description:
-      'Análisis clínicos confiables en Hermosillo. ¡Abierto los Domingos! Visítanos sin cita previa.',
-    destinationUrl: 'https://www.laboratoriosanfrancisco.com',
-    whatsappContact: '662-123-4567',
-    locationAddress: 'Laboratorio San Francisco, Oaxaca 63, Col. Centro, Hermosillo, Sonora',
-    sitelinks: ['Check Up Básico \$500', 'Resultados WhatsApp'],
-  });
-  const [asgForm, setAsgForm] = useState({
-    campaignId: 'CAMP-101', creativeId: 'CRT-501', placementId: 'PLC-01', weight: 100, priority: 1,
+    campaignId: '',
+    name: '',
+    description: '',
+    contentUrl: 'https://',
+    targetUrl: 'https://',
   });
 
-  const {
-    loadingAction, isAutoLive, setIsAutoLive, toasts, pushAlertBanner, setPushAlertBanner,
-    pushPermission, requestBrowserPushPermission, dbState, lastDecision,
-    competitorTerms, campaigns, placements, creatives, assignments, hourlyMetrics,
-    auditLogs, alerts, audiences, users, sysHealth, fetchState, pushToast, handleServeDecision,
-    setCompetitorTerms,
-  } = useAdsolusolState();
-  const { kpis, trends24hData } = useAnalyticsCalculations(
-    campaigns,
-    hourlyMetrics,
-    competitorTerms,
-    creatives
-  );
+  const pushToast = useCallback((title: string, type: 'exito' | 'alerta' | 'info' = 'exito') => {
+    const id = `toast-${Date.now()}`;
+    setToasts((prev) => [...prev, { id, title, type }]);
+    setTimeout(() => {
+      setToasts((currentToasts) => currentToasts.filter((t) => t.id !== id));
+    }, 5000);
+  }, []);
+
+  const fetchState = useCallback(async () => {
+    setLoadingAction(true);
+    const results = await Promise.allSettled([
+      apiFetch('/api/Campaigns'),
+      apiFetch('/api/Placements'),
+      apiFetch('/api/Creatives'),
+      apiFetch('/api/Health'),
+    ]);
+    setLoadingAction(false);
+
+    const [campaignsRes, placementsRes, creativesRes, healthRes] = results;
+
+    if (campaignsRes.status === 'fulfilled' && campaignsRes.value.ok) {
+      const backendCampaigns = await campaignsRes.value.json();
+      setCampaigns(backendCampaigns.map((c: any) => ({
+        ...c, 
+        name: c.name,
+        spent: c.budgetSpent,
+        status: String(c.status).toUpperCase() === 'ACTIVE' ? 'ACTIVA' : 'PAUSADA', // Simplified mapping
+        backendStatus: String(c.status).toUpperCase(),
+      })));
+    } else {
+      pushToast('Error al cargar campañas', 'alerta');
+    }
+
+    if (placementsRes.status === 'fulfilled' && placementsRes.value.ok) {
+      const backendPlacements = await placementsRes.value.json();
+      setPlacements(backendPlacements.map((p: any) => ({...p, name: p.name, code: p.placementCode})));
+    } else {
+        pushToast('Error al cargar ubicaciones', 'alerta');
+    }
+
+    if (creativesRes.status === 'fulfilled' && creativesRes.value.ok) {
+      const backendCreatives = await creativesRes.value.json();
+      setCreatives(backendCreatives.map((cr: any) => ({...cr, title: cr.name})));
+    } else {
+        pushToast('Error al cargar creativos', 'alerta');
+    }
+
+    if (healthRes.status === 'fulfilled' && healthRes.value.ok) setSysHealth(await healthRes.value.json());
+    else pushToast('Error al cargar salud del sistema', 'alerta');
+
+  }, [pushToast]);
 
   useEffect(() => {
+    fetchState();
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
@@ -87,42 +124,33 @@ export default function App() {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  const handleOpenDirectionsMaps = async (address: string) => {
-    if (!address) { pushToast('Dirección no disponible', 'alerta'); return; }
-    const mapsNavUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
-      address
-    )}&travelmode=driving`;
-    window.open(mapsNavUrl, '_blank', 'noopener,noreferrer');
-  };
+  }, [fetchState]);
 
   const handleToggleCampaignStatus = async (camp: Campaign) => {
-    const nextStatus = camp.status === 'ACTIVA' ? 'PAUSADA' : 'ACTIVA';
-    const nextStatusBackend = camp.status === 'ACTIVA' ? 'PAUSED' : 'ACTIVE';
-    const cleanId = String(camp.id).replace('CAMP-', '');
+    const currentBackendStatus = String(camp.backendStatus || camp.status).toUpperCase();
+    const nextStatusBackend = currentBackendStatus === 'ACTIVE' ? 'PAUSED' : 'ACTIVE';
+    const cleanId = camp.id; // Send the full ID as received
 
-    const netRes = await apiFetch(`/api/Campaigns/${cleanId}/status`, {
-      method: 'POST',
-      body: JSON.stringify({ status: nextStatusBackend }),
-    });
+    try {
+      const netRes = await apiFetch(`/api/Campaigns/${cleanId}/status`, {
+        method: 'POST',
+        body: JSON.stringify({ status: nextStatusBackend }),
+      });
 
-    if (netRes.ok) {
-      pushToast(`Campaña ${camp.id} actualizada a estado ${nextStatus} (.NET 8)`, 'info');
-      await fetchState();
-      return;
+      if (netRes.ok) {
+        pushToast(`Campaña ${camp.id} actualizada a estado ${nextStatusBackend}`, 'info');
+        await fetchState();
+      } else {
+        const error = await netRes.json();
+        pushToast(`Error ${netRes.status}: ${error.message || 'No se pudo actualizar'}`, 'alerta');
+      }
+    } catch (error) {
+      pushToast('Error de red al actualizar campaña.', 'alerta');
     }
-
-    pushToast(`No se pudo actualizar la campaña (HTTP ${netRes.status})`, 'alerta');
-  };
-
-  const applyAiCreativePreset = () => {
-    const randomPreset = AI_PRESETS[Math.floor(Math.random() * AI_PRESETS.length)];
-    setCrtForm((prev) => ({ ...prev, ...randomPreset }));
-    pushToast('Anuncio optimizado con IA Clínica + Ruta GPS de Sucursal', 'exito');
   };
 
   const handleCreateRecord = async (e: React.FormEvent) => {
+    setLoadingAction(true);
     e.preventDefault();
       if (drawerType === 'campana') {
         const netRes = await apiFetch('/api/Campaigns', {
@@ -130,10 +158,11 @@ export default function App() {
           body: JSON.stringify(mapToBackendCreateDto(campForm)),
         });
         if (netRes.ok) {
-          pushToast('Campaña creada y persistida (.NET 8)', 'exito');
+          pushToast('Campaña creada y persistida', 'exito');
           setDrawerType(null);
           await fetchState();
-          return;
+        } else {
+          pushToast(`Error al crear campaña (HTTP ${netRes.status})`, 'alerta');
         }
       } else if (drawerType === 'ubicacion') {
         const netRes = await apiFetch('/api/Placements', {
@@ -148,60 +177,45 @@ export default function App() {
           }),
         });
         if (netRes.ok) {
-          pushToast('Ubicación registrada (.NET 8)', 'exito');
+          pushToast('Ubicación registrada', 'exito');
           setDrawerType(null);
           await fetchState();
-          return;
+        } else {
+          pushToast(`Error al crear ubicación (HTTP ${netRes.status})`, 'alerta');
         }
       } else if (drawerType === 'creativo') {
-        const cleanCampId = Number(String(crtForm.campaignId).replace('CAMP-', '')) || 1;
+        const cleanCampId = crtForm.campaignId;
         const netRes = await apiFetch('/api/Creatives', {
           method: 'POST',
           body: JSON.stringify({
-            campaignId: cleanCampId,
-            name: crtForm.title,
+            campaignId: cleanCampId, // Backend expects the raw ID
+            name: crtForm.name,
             isEnabled: true,
-            contentUrl: crtForm.destinationUrl,
-            targetUrl: crtForm.destinationUrl,
+            contentUrl: crtForm.contentUrl,
+            targetUrl: crtForm.targetUrl,
             description: crtForm.description,
-            locationAddress: crtForm.locationAddress,
-            whatsappContact: crtForm.whatsappContact,
           }),
         });
         if (netRes.ok) {
-          pushToast('Anuncio guardado. Copia el código de verificación del sitio en la sección de creativos.', 'exito');
+          pushToast('Anuncio guardado. Verifique el sitio en la sección de creativos.', 'exito');
           setDrawerType(null);
           await fetchState();
-          return;
+        } else {
+          pushToast(`Error al crear creativo (HTTP ${netRes.status})`, 'alerta');
         }
       } else if (drawerType === 'asignacion') {
-        const cleanCampId = String(asgForm.campaignId).replace('CAMP-', '');
-        const cleanCrtId = Number(String(asgForm.creativeId).replace('CRT-', '')) || 1;
-        const cleanPlcId = Number(String(asgForm.placementId).replace('PLC-', '')) || 1;
-
-        const [plcAssignRes, crtAssignRes] = await Promise.all([
-          apiFetch('/api/assignments/placement', {
-            method: 'POST',
-            body: JSON.stringify({ campaignId: cleanCampId, entityId: cleanPlcId }),
-          }),
-          apiFetch('/api/assignments/creative', {
-            method: 'POST',
-            body: JSON.stringify({ campaignId: cleanCampId, entityId: cleanCrtId }),
-          }),
-        ]);
-
-        if (plcAssignRes.ok && crtAssignRes.ok) {
-          pushToast('Asignación vinculada (.NET 8)', 'exito');
-          setDrawerType(null);
-          await fetchState();
-          return;
-        }
+        pushToast('La creación de asignaciones no está disponible.', 'info');
       }
-      pushToast('La operación no fue confirmada por el backend.', 'alerta');
+      setLoadingAction(false);
   };
 
   const executeConfirmedDelete = async () => {
     if (!confirmDelete) return;
+    setLoadingAction(true);
+    // The backend API expects the raw ID (GUID or long), not the prefixed string.
+    // This stripping is necessary for the current API design to work, as the route
+    // constraints are [HttpDelete("{id}")] and [HttpDelete("{id:long}")].
+    // Sending the prefixed ID would result in a 404 Not Found.
     const cleanId = String(confirmDelete.id).replace(/^(CAMP-|PLC-|CRT-|ASG-)/, '');
     const canonicalCollection =
       confirmDelete.collection === 'campaigns' ? 'Campaigns' :
@@ -209,51 +223,56 @@ export default function App() {
       confirmDelete.collection === 'creatives' ? 'Creatives' :
       confirmDelete.collection === 'assignments' ? 'Assignments' : confirmDelete.collection;
 
-    const netRes = await apiFetch(`/api/${canonicalCollection}/${cleanId}`, {
-      method: 'DELETE',
-    });
-    if (netRes.ok) {
-      pushToast(`Registro "${confirmDelete.name}" eliminado (.NET 8)`, 'alerta');
-      setConfirmDelete(null);
-      await fetchState();
-      return;
+    try {
+      const netRes = await apiFetch(`/api/${canonicalCollection}/${cleanId}`, {
+        method: 'DELETE',
+      });
+      if (netRes.ok) { // Handles 204 No Content
+        pushToast(`Registro "${confirmDelete.name}" eliminado.`, 'info');
+        setConfirmDelete(null);
+        await fetchState();
+      } else {
+        pushToast(`No se pudo eliminar (HTTP ${netRes.status})`, 'alerta');
+      }
+    } catch (error) {
+      pushToast('Error de red al eliminar.', 'alerta');
+    } finally {
+      setLoadingAction(false);
     }
-    pushToast(`No se pudo eliminar (HTTP ${netRes.status})`, 'alerta');
   };
 
   const currentMeta = MODULE_META[activeModule];
+
+  const totalDirections = creatives.reduce((sum, c) => sum + (c.directionsClicks || 0), 0);
   const campaignsOver90Count = campaigns.filter(
-    (c: any) => c.budget > 0 && c.spent / c.budget >= 0.9
+    (c: any) => c.budget > 0 && (c.spent || 0) / c.budget >= 0.9
   ).length;
 
   return (
     <div
-      style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", background: 'var(--as-background)' }}
+      style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
       className="as-app min-h-screen text-slate-100 flex antialiased selection:bg-brand-500 selection:text-slate-950"
     >
       <Sidebar
         activeModule={activeModule}
         onSelectModule={setActiveModule}
         campaignsOver90Count={campaignsOver90Count}
-        totalDirections={kpis.totalDirections}
+        totalDirections={totalDirections}
       />
 
       <div className="flex-1 flex flex-col min-w-0">
         <TopHeader
           currentMeta={currentMeta}
-          isAutoLive={isAutoLive}
-          onToggleAutoLive={() => {
-            setIsAutoLive(!isAutoLive);
-            pushToast(!isAutoLive ? 'Actualización automática activada' : 'Actualización automática pausada', 'info');
-          }}
-          pushPermission={pushPermission}
-          onRequestPushPermission={requestBrowserPushPermission}
+          isAutoLive={false}
+          onToggleAutoLive={() => pushToast('Simulación de tráfico no disponible.', 'info')}
+          pushPermission={'default'}
+          onRequestPushPermission={() => pushToast('Notificaciones Push no implementadas.', 'info')}
           globalSearch={globalSearch}
           onSearchChange={setGlobalSearch}
           onOpenCommand={() => setCommandOpen(true)}
           onOpenSystem={() => setActiveModule('sistema')}
           sysHealth={sysHealth}
-          ledgerBalance={dbState?.ledgerBalance}
+          ledgerBalance={null}
           loadingAction={loadingAction}
           onRefresh={fetchState}
         />
@@ -263,7 +282,7 @@ export default function App() {
             <PanelView
               campaigns={campaigns}
               systemHealth={sysHealth}
-              campaignsAvailable={dbState?.campaignsAvailable === true}
+              campaignsAvailable={campaigns.length > 0}
               loading={loadingAction}
               onNavigate={setActiveModule}
             />
@@ -275,8 +294,6 @@ export default function App() {
               onNewCampaign={() => setDrawerType('campana')}
               onToggleStatus={handleToggleCampaignStatus}
               onDelete={(collection, id, name) => setConfirmDelete({ collection, id, name })}
-              onServeClick={() => handleServeDecision(true)}
-              pushToast={pushToast}
             />
           )}
           {activeModule === 'ubicaciones' && (
@@ -294,50 +311,31 @@ export default function App() {
               creatives={creatives}
               crtForm={crtForm}
               setCrtForm={setCrtForm}
-              onApplyAiPreset={applyAiCreativePreset}
               onOpenDrawer={() => setDrawerType('creativo')}
-              onOpenDirectionsMaps={handleOpenDirectionsMaps}
-              onServeClick={() => handleServeDecision(true)}
-              onDeleteCreative={(id, title) => setConfirmDelete({ collection: 'creatives', id, name: title })}
+              onDeleteCreative={(id, name) => setConfirmDelete({ collection: 'creatives', id, name })}
             />
           )}
           {activeModule === 'asignaciones' && (
-            <AssignmentsView assignments={assignments} onNewAssignment={() => setDrawerType('asignacion')} />
+            <div className="as-card-premium rounded-2xl p-6 text-center text-slate-400">Módulo no disponible. Endpoint de listado (`GET /api/Assignments`) no implementado.</div>
           )}
           {activeModule === 'entrega' && (
-            <ServeView
-              lastDecision={lastDecision}
-              onServeImpression={() => handleServeDecision(false)}
-              onServeClick={() => handleServeDecision(true)}
-              onOpenDirectionsMaps={handleOpenDirectionsMaps}
-            />
+            <div className="as-card-premium rounded-2xl p-6 text-center text-slate-400">Módulo no disponible. Endpoint de simulación (`/api/Serve`) no implementado.</div>
           )}
           {activeModule === 'analitica' && (
-            <AnalyticsView
-              trends24hData={trends24hData}
-              hourlyMetrics={hourlyMetrics}
-              onInjectLiveClick={() => handleServeDecision(true)}
-              onExportCsv={() => { /* Implementar exportación */ }}
-            />
+            <div className="as-card-premium rounded-2xl p-6 text-center text-slate-400">Módulo no disponible. Endpoint de métricas globales no implementado.</div>
           )}
           {activeModule === 'audiencias' && (
-            <AudiencesView
-              competitorTerms={competitorTerms}
-              onToggleBlockTerm={(id) => {
-                setCompetitorTerms(terms => terms.map(t => t.id === id ? {...t, blocked: !t.blocked} : t));
-                pushToast('Regla de bloqueo Shield™ actualizada', 'info');
-              }}
-              shieldSavings={kpis.shieldSavings}
-              audiences={audiences}
-            />
+            <div className="as-card-premium rounded-2xl p-6 text-center text-slate-400">Módulo no disponible. Endpoints de audiencias no implementados.</div>
           )}
           {activeModule === 'facturacion' && (
-            <BillingView auditLogs={auditLogs} paymentMethod={dbState?.paymentMethod} ledgerBalance={dbState?.ledgerBalance} />
+            <div className="as-card-premium rounded-2xl p-6 text-center text-slate-400">Módulo no disponible. Endpoint de Ledger no implementado.</div>
           )}
           {activeModule === 'alertas' && (
-            <AlertsView campaigns={campaigns} alerts={alerts} onRequestPushPermission={requestBrowserPushPermission} />
+            <div className="as-card-premium rounded-2xl p-6 text-center text-slate-400">Módulo no disponible. Endpoint de alertas no implementado.</div>
           )}
-          {activeModule === 'auditoria' && <AuditingView users={users} />}
+          {activeModule === 'auditoria' && (
+             <div className="as-card-premium rounded-2xl p-6 text-center text-slate-400">Módulo no disponible. Endpoint de logs de auditoría no implementado.</div>
+          )}
           {activeModule === 'sistema' && <SystemHealthView sysHealth={sysHealth} />}
         </main>
       </div>
@@ -345,10 +343,7 @@ export default function App() {
       <CommandPalette
         isOpen={commandOpen}
         onClose={() => setCommandOpen(false)}
-        query={commandQuery}
-        onQueryChange={setCommandQuery}
         onSelectModule={setActiveModule}
-        onOpenGps={() => handleOpenDirectionsMaps(crtForm.locationAddress)}
       />
       <ActionDrawer
         drawerType={drawerType}
@@ -357,15 +352,15 @@ export default function App() {
         campForm={campForm} setCampForm={setCampForm}
         plcForm={plcForm} setPlcForm={setPlcForm}
         crtForm={crtForm} setCrtForm={setCrtForm}
-        asgForm={asgForm} setAsgForm={setAsgForm}
-        onApplyAiPreset={applyAiCreativePreset}
       />
       <ConfirmDeleteModal
         confirmDelete={confirmDelete}
         onCancel={() => setConfirmDelete(null)}
         onConfirm={executeConfirmedDelete}
+        loading={loadingAction}
       />
-      <ToastContainer toasts={toasts} />
+      <ToastContainer
+        toasts={toasts}
     </div>
   );
 }

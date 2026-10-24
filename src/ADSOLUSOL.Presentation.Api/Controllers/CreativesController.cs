@@ -178,4 +178,30 @@ public class CreativesController : ControllerBase
             }
         });
     }
+
+    [HttpDelete("{id:long}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> DeleteCreative(long id)
+    {
+        if (string.IsNullOrWhiteSpace(TenantId))
+        {
+            return Forbid();
+        }
+ 
+        // El repositorio debe asegurar que la consulta incluya el TenantId.
+        var creative = await _creativeRepository.GetByIdAsync(id);
+        if (creative == null)
+        {
+            return NotFound();
+        }
+ 
+        // Implementación de borrado lógico (soft delete)
+        creative.IsDeleted = true;
+        creative.UpdatedAt = DateTime.UtcNow;
+        await _creativeRepository.UpdateAsync(creative);
+ 
+        return NoContent();
+    }
 }

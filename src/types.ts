@@ -23,12 +23,14 @@ export interface Campaign {
   name: string;
   status: 'ACTIVA' | 'PAUSADA' | 'LIMITADA';
   backendStatus?: string;
-  strategy: string;
-  budget: number;
+  budget: number;  
   spent: number;
   impressions: number;
   clicks: number;
-  maxCpc: number;
+  costPerClick: number;
+  costPerMille: number;
+  startDateUtc?: string;
+  endDateUtc?: string;
 }
 
 export interface Placement {
@@ -51,6 +53,49 @@ export interface Creative {
   directionsClicks?: number;
   destinationUrl: string;
   whatsappContact: string;
+}
+
+export interface Assignment {
+  id: number;
+  campaignId: string;
+  creativeId: number;
+  placementId: number;
+}
+
+export interface SystemHealth {
+  status: string;
+  timestamp: string;
+  checks: {
+    database: string;
+    sicEngine: string;
+  };
+}
+
+export interface AuditLog {
+  id: string;
+  timestamp: string;
+  eventType: string;
+  details: string;
+}
+
+export interface Alert {
+  id: string;
+  severity: 'INFO' | 'WARNING' | 'CRITICAL';
+  message: string;
+  timestamp: string;
+}
+
+export interface Audience {
+  id: string;
+  name: string;
+  description: string;
+}
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
 }
 
 export * from './types/adEngine';

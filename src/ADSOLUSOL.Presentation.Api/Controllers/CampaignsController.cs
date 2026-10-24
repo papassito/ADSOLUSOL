@@ -160,6 +160,29 @@ public class CampaignsController : ControllerBase
         return await RegisterEventAsync(TenantId, id, request, EventType.Impression);
     }
 
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> DeleteCampaign(string id)
+    {
+        if (string.IsNullOrWhiteSpace(TenantId))
+        {
+            return Forbid();
+        }
+ 
+        var campaign = await _campaignService.GetAsync(TenantId, id);
+        if (campaign == null)
+        {
+            return NotFound();
+        }
+ 
+        // Implementación de borrado lógico: se actualiza el estado a "DELETED" o similar.
+        // Se asume que el servicio puede manejar un estado de borrado.
+        await _campaignService.UpdateStatusAsync(TenantId, id, "DELETED");
+        return NoContent();
+    }
+
     private async Task<IActionResult> RegisterEventAsync(string tenantId, string campaignId, EventRequest request, EventType eventType)
     {
         var adEvent = new AdEvent

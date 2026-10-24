@@ -57,4 +57,30 @@ public class PlacementsController : ControllerBase
         var id = await _placementRepository.CreateAsync(placement);
         return CreatedAtAction(nameof(GetByCode), new { code = placement.PlacementCode }, new { id, placement.PlacementCode });
     }
+
+    [HttpDelete("{id:long}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> DeletePlacement(long id)
+    {
+        if (string.IsNullOrWhiteSpace(TenantId))
+        {
+            return Forbid();
+        }
+ 
+        // El repositorio debe asegurar que la consulta incluya el TenantId.
+        var placement = await _placementRepository.GetByIdAsync(id);
+        if (placement == null)
+        {
+            return NotFound();
+        }
+ 
+        // Implementación de borrado lógico (soft delete)
+        placement.IsDeleted = true;
+        placement.UpdatedAt = DateTime.UtcNow;
+        await _placementRepository.UpdateAsync(placement);
+ 
+        return NoContent();
+    }
 }

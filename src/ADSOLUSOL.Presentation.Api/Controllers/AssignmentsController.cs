@@ -30,6 +30,18 @@ public class AssignmentsController : ControllerBase
         _unitOfWork = unitOfWork;
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetAllAssignments()
+    {
+        if (string.IsNullOrWhiteSpace(TenantId))
+        {
+            return Forbid();
+        }
+
+        var assignments = await _assignmentRepository.GetAllAsync(TenantId);
+        return Ok(assignments);
+    }
+
     [HttpPost("creative")]
     public async Task<IActionResult> AssignCreative([FromBody] AssignmentRequest request)
     {
@@ -97,5 +109,30 @@ public class AssignmentsController : ControllerBase
             await _unitOfWork.RollbackAsync();
             return StatusCode(500, "An internal error occurred during the assignment.");
         }
+    }
+
+    [HttpDelete("{id:long}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> DeleteAssignment(long id)
+    {
+        if (string.IsNullOrWhiteSpace(TenantId))
+        {
+            return Forbid();
+        }
+ 
+        // El repositorio debe asegurar que la consulta incluya el TenantId.
+        var assignment = await _assignmentRepository.GetByIdAsync(id);
+        if (assignment == null)
+        {
+            return NotFound();
+        }
+ 
+        // El borrado de una asignación es físico, ya que es una tabla de unión.
+        await _assignmentRepository.DeleteAsync(id);
+        await _unitOfWork.CommitAsync();
+ 
+        return NoContent();
     }
 }
