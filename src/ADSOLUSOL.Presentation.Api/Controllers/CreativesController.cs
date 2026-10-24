@@ -94,7 +94,7 @@ public class CreativesController : ControllerBase
     public async Task<IActionResult> GetAll([FromServices] AppDbContext context)
     {
         if (string.IsNullOrWhiteSpace(TenantId)) return Forbid();
-        return Ok(await context.Creatives.AsNoTracking().ToListAsync());
+        return Ok(await context.Creatives.AsNoTracking().Where(c => !c.IsDeleted).ToListAsync());
     }
 
     [HttpGet("{id:long}")]
@@ -105,7 +105,7 @@ public class CreativesController : ControllerBase
             return Forbid();
         }
 
-        var creative = await _creativeRepository.GetByIdAsync(id);
+        var creative = await _creativeRepository.GetByIdAsync(id, TenantId);
         if (creative is null)
         {
             return NotFound();
@@ -117,7 +117,7 @@ public class CreativesController : ControllerBase
     public async Task<IActionResult> GetTracking(long id, [FromServices] TrackingCodeService trackingCodes, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(TenantId)) return Forbid();
-        var creative = await _creativeRepository.GetByIdAsync(id);
+        var creative = await _creativeRepository.GetByIdAsync(id, TenantId);
         if (creative is null) return NotFound();
         var tracking = await trackingCodes.GetOrCreateForCreativeAsync(TenantId, id, creative.TargetUrl, cancellationToken);
         return Ok(new
@@ -153,7 +153,7 @@ public class CreativesController : ControllerBase
 
         creative.CreatedAt = DateTime.UtcNow;
         creative.UpdatedAt = DateTime.UtcNow;
-        var id = await _creativeRepository.CreateAsync(creative);
+        var id = await _creativeRepository.CreateAsync(creative, TenantId);
         var createdCreative = await _creativeRepository.GetByIdAsync(id);
         if (createdCreative is null) return StatusCode(500, new { message = "No se pudo recuperar el creativo guardado." });
         var tracking = await trackingCodes.GetOrCreateAsync(TenantId, createdCreative.Id, createdCreative.TargetUrl, cancellationToken);
@@ -190,14 +190,14 @@ public class CreativesController : ControllerBase
             return Forbid();
         }
  
-        // El repositorio debe asegurar que la consulta incluya el TenantId.
-        var creative = await _creativeRepository.GetByIdAsync(id);
+        // The repository must ensure the query includes the TenantId.
+        var creative = await _creativeRepository.GetByIdAsync(id, TenantId);
         if (creative == null)
         {
             return NotFound();
         }
  
-        // Implementación de borrado lógico (soft delete)
+        // Soft delete implementation
         creative.IsDeleted = true;
         creative.UpdatedAt = DateTime.UtcNow;
         await _creativeRepository.UpdateAsync(creative);

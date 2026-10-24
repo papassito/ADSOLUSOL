@@ -23,8 +23,9 @@ export interface Campaign {
   name: string;
   status: 'ACTIVA' | 'PAUSADA' | 'LIMITADA';
   backendStatus?: string;
-  budget: number;  
+  budget: number;
   spent: number;
+  budgetSpent?: number;
   impressions: number;
   clicks: number;
   costPerClick: number;
@@ -46,12 +47,14 @@ export interface Placement {
 export interface Creative {
   id: string;
   campaignId: string;
+  name: string;
   title: string;
   description: string;
   locationAddress: string;
   clicks: number;
   directionsClicks?: number;
   destinationUrl: string;
+  contentUrl: string;
   whatsappContact: string;
 }
 

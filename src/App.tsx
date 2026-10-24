@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { apiFetch } from './services/api';
 import { mapToBackendCreateDto } from './services/campaignAdapter';
-import { MODULE_META, AI_PRESETS } from './constants';
-import { ModuleKey, Campaign, Placement, Creative, Assignment, SystemHealth, AuditLog, Alert, Audience, User } from './types';
+import { MODULE_META } from './constants';
+import { ModuleKey, Campaign, Placement, Creative, SystemHealth } from './types';
 
 import { Sidebar } from './components/Sidebar';
 import { TopHeader } from './components/TopHeader';
@@ -10,13 +10,6 @@ import { PanelView } from './PanelView';
 import { CampaignsGrid } from './components/CampaignsGrid';
 import { PlacementsView } from './PlacementsView';
 import { CreativesView } from './CreativesView';
-import { AssignmentsView } from './components/AssignmentsView';
-import { ServeView } from './components/ServeView';
-import { AnalyticsView } from './components/AnalyticsView';
-import { AudiencesView } from './components/AudiencesView';
-import { BillingView } from './components/BillingView';
-import { AlertsView } from './components/AlertsView';
-import { AuditingView } from './components/AuditingView';
 import { SystemHealthView } from './components/SystemHealthView';
 import { CommandPalette } from './components/CommandPalette';
 import { ActionDrawer } from './components/ActionDrawer';
@@ -24,15 +17,15 @@ import { ConfirmDeleteModal } from './components/ConfirmDeleteModal';
 import { ToastContainer } from './components/ToastContainer';
 import { EmbedCodeGeneratorValidator } from './components/EmbedCodeGeneratorValidator';
 
+let toastSeq = 0;
+
 export default function App() {
   const [activeModule, setActiveModule] = useState<ModuleKey>('panel');
   const [loadingAction, setLoadingAction] = useState(false);
-  const [isAutoLive, setIsAutoLive] = useState(false); // Kept for UI, but simulation logic removed.
   const [toasts, setToasts] = useState<{ id: string; title: string; type: 'exito' | 'alerta' | 'info' }[]>([]);
 
   const [globalSearch, setGlobalSearch] = useState('');
   const [commandOpen, setCommandOpen] = useState(false);
-  const [commandQuery, setCommandQuery] = useState('');
   const [confirmDelete, setConfirmDelete] = useState<{
     collection: string;
     id: string;
@@ -61,7 +54,7 @@ export default function App() {
   });
 
   const pushToast = useCallback((title: string, type: 'exito' | 'alerta' | 'info' = 'exito') => {
-    const id = `toast-${Date.now()}`;
+    const id = `toast-${Date.now()}-${++toastSeq}`;
     setToasts((prev) => [...prev, { id, title, type }]);
     setTimeout(() => {
       setToasts((currentToasts) => currentToasts.filter((t) => t.id !== id));
@@ -70,46 +63,60 @@ export default function App() {
 
   const fetchState = useCallback(async () => {
     setLoadingAction(true);
-    const results = await Promise.allSettled([
-      apiFetch('/api/Campaigns'),
-      apiFetch('/api/Placements'),
-      apiFetch('/api/Creatives'),
-      apiFetch('/api/Health'),
-    ]);
-    setLoadingAction(false);
+    try {
+      const results = await Promise.allSettled([
+        apiFetch('/api/Campaigns'),
+        apiFetch('/api/Placements'),
+        apiFetch('/api/Creatives'),
+        apiFetch('/api/Health'),
+      ]);
 
-    const [campaignsRes, placementsRes, creativesRes, healthRes] = results;
+      const [campaignsRes, placementsRes, creativesRes, healthRes] = results;
 
-    if (campaignsRes.status === 'fulfilled' && campaignsRes.value.ok) {
-      const backendCampaigns = await campaignsRes.value.json();
-      setCampaigns(backendCampaigns.map((c: any) => ({
-        ...c, 
-        name: c.name,
-        spent: c.budgetSpent,
-        status: String(c.status).toUpperCase() === 'ACTIVE' ? 'ACTIVA' : 'PAUSADA', // Simplified mapping
-        backendStatus: String(c.status).toUpperCase(),
-      })));
-    } else {
-      pushToast('Error al cargar campañas', 'alerta');
+      if (campaignsRes.status === 'fulfilled' && campaignsRes.value.ok) {
+        const backendCampaigns = await campaignsRes.value.json();
+        setCampaigns(backendCampaigns.map((c: any) => ({ 
+          ...c,
+          name: c.name || c.id,
+          spent: Number(c.budgetSpent || c.spent || 0),
+          status: String(c.status).toUpperCase() === 'ACTIVE' ? 'ACTIVA' : 'PAUSADA',
+          backendStatus: String(c.status).toUpperCase(),
+        })));
+      } else {
+        pushToast('Error al consultar campañas de la API', 'alerta');
+      }
+
+      if (placementsRes.status === 'fulfilled' && placementsRes.value.ok) {
+        const backendPlacements = await placementsRes.value.json();
+        setPlacements(backendPlacements.map((p: any) => ({
+          ...p,
+          name: p.name || p.placementCode,
+          code: p.placementCode || p.code,
+        })));
+      } else {
+        pushToast('Error al consultar ubicaciones de la API', 'alerta');
+      }
+
+      if (creativesRes.status === 'fulfilled' && creativesRes.value.ok) {
+        const backendCreatives = await creativesRes.value.json();
+        setCreatives(backendCreatives.map((cr: any) => ({
+          ...cr,
+          title: cr.name || cr.title || `Creativo #${cr.id}`,
+        })));
+      } else {
+        pushToast('Error al consultar creativos de la API', 'alerta');
+      }
+
+      if (healthRes.status === 'fulfilled' && healthRes.value.ok) {
+        setSysHealth(await healthRes.value.json());
+      } else {
+        setSysHealth(null);
+      }
+    } catch (err: any) {
+      pushToast(`Fallo de conexión con la API: ${err?.message || 'Error de red'}`, 'alerta');
+    } finally {
+      setLoadingAction(false);
     }
-
-    if (placementsRes.status === 'fulfilled' && placementsRes.value.ok) {
-      const backendPlacements = await placementsRes.value.json();
-      setPlacements(backendPlacements.map((p: any) => ({...p, name: p.name, code: p.placementCode})));
-    } else {
-        pushToast('Error al cargar ubicaciones', 'alerta');
-    }
-
-    if (creativesRes.status === 'fulfilled' && creativesRes.value.ok) {
-      const backendCreatives = await creativesRes.value.json();
-      setCreatives(backendCreatives.map((cr: any) => ({...cr, title: cr.name})));
-    } else {
-        pushToast('Error al cargar creativos', 'alerta');
-    }
-
-    if (healthRes.status === 'fulfilled' && healthRes.value.ok) setSysHealth(await healthRes.value.json());
-    else pushToast('Error al cargar salud del sistema', 'alerta');
-
   }, [pushToast]);
 
   useEffect(() => {
@@ -128,8 +135,9 @@ export default function App() {
 
   const handleToggleCampaignStatus = async (camp: Campaign) => {
     const currentBackendStatus = String(camp.backendStatus || camp.status).toUpperCase();
-    const nextStatusBackend = currentBackendStatus === 'ACTIVE' ? 'PAUSED' : 'ACTIVE';
-    const cleanId = camp.id; // Send the full ID as received
+    const isCurrentlyActive = currentBackendStatus === 'ACTIVE' || currentBackendStatus === 'ACTIVA';
+    const nextStatusBackend = isCurrentlyActive ? 'PAUSED' : 'ACTIVE';
+    const cleanId = camp.id;
 
     try {
       const netRes = await apiFetch(`/api/Campaigns/${cleanId}/status`, {
@@ -150,8 +158,8 @@ export default function App() {
   };
 
   const handleCreateRecord = async (e: React.FormEvent) => {
-    setLoadingAction(true);
     e.preventDefault();
+    setLoadingAction(true);
       if (drawerType === 'campana') {
         const netRes = await apiFetch('/api/Campaigns', {
           method: 'POST',
@@ -197,7 +205,7 @@ export default function App() {
           }),
         });
         if (netRes.ok) {
-          pushToast('Anuncio guardado. Verifique el sitio en la sección de creativos.', 'exito');
+          pushToast('Anuncio guardado. Copia el código de verificación del sitio.', 'exito');
           setDrawerType(null);
           await fetchState();
         } else {
@@ -206,17 +214,13 @@ export default function App() {
       } else if (drawerType === 'asignacion') {
         pushToast('La creación de asignaciones no está disponible.', 'info');
       }
-      setLoadingAction(false);
+    setLoadingAction(false);
   };
 
   const executeConfirmedDelete = async () => {
     if (!confirmDelete) return;
     setLoadingAction(true);
-    // The backend API expects the raw ID (GUID or long), not the prefixed string.
-    // This stripping is necessary for the current API design to work, as the route
-    // constraints are [HttpDelete("{id}")] and [HttpDelete("{id:long}")].
-    // Sending the prefixed ID would result in a 404 Not Found.
-    const cleanId = String(confirmDelete.id).replace(/^(CAMP-|PLC-|CRT-|ASG-)/, '');
+    const targetId = String(confirmDelete.id);
     const canonicalCollection =
       confirmDelete.collection === 'campaigns' ? 'Campaigns' :
       confirmDelete.collection === 'placements' ? 'Placements' :
@@ -224,7 +228,7 @@ export default function App() {
       confirmDelete.collection === 'assignments' ? 'Assignments' : confirmDelete.collection;
 
     try {
-      const netRes = await apiFetch(`/api/${canonicalCollection}/${cleanId}`, {
+      const netRes = await apiFetch(`/api/${canonicalCollection}/${encodeURIComponent(targetId)}`, {
         method: 'DELETE',
       });
       if (netRes.ok) { // Handles 204 No Content
@@ -232,7 +236,9 @@ export default function App() {
         setConfirmDelete(null);
         await fetchState();
       } else {
-        pushToast(`No se pudo eliminar (HTTP ${netRes.status})`, 'alerta');
+        const errData = await netRes.json().catch(() => ({}));
+        const msg = errData?.message || `HTTP ${netRes.status}`;
+        pushToast(`No se pudo eliminar (${msg})`, 'alerta');
       }
     } catch (error) {
       pushToast('Error de red al eliminar.', 'alerta');
@@ -263,7 +269,6 @@ export default function App() {
       <div className="flex-1 flex flex-col min-w-0">
         <TopHeader
           currentMeta={currentMeta}
-          isAutoLive={false}
           onToggleAutoLive={() => pushToast('Simulación de tráfico no disponible.', 'info')}
           pushPermission={'default'}
           onRequestPushPermission={() => pushToast('Notificaciones Push no implementadas.', 'info')}
@@ -311,8 +316,11 @@ export default function App() {
               creatives={creatives}
               crtForm={crtForm}
               setCrtForm={setCrtForm}
+              onApplyAiPreset={() => pushToast('Plantillas con IA no disponibles en este entorno.', 'info')}
               onOpenDrawer={() => setDrawerType('creativo')}
-              onDeleteCreative={(id, name) => setConfirmDelete({ collection: 'creatives', id, name })}
+              onOpenDirectionsMaps={handleOpenDirectionsMaps}
+              onServeClick={() => pushToast('Servicio de anuncios en vivo gestionado por el Ad Server.', 'info')}
+              onDeleteCreative={(id, title) => setConfirmDelete({ collection: 'creatives', id, name: title })}
             />
           )}
           {activeModule === 'asignaciones' && (
@@ -357,10 +365,10 @@ export default function App() {
         confirmDelete={confirmDelete}
         onCancel={() => setConfirmDelete(null)}
         onConfirm={executeConfirmedDelete}
-        loading={loadingAction}
       />
       <ToastContainer
         toasts={toasts}
+      />
     </div>
   );
 }

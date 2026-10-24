@@ -76,7 +76,10 @@ public class CampaignsController : ControllerBase
             return Forbid();
         }
 
-        var campaigns = await _campaignService.ListAsync(TenantId, CancellationToken.None);
+        // Only list campaigns that are not soft-deleted.
+        var campaigns = (await _campaignService.ListAsync(TenantId, CancellationToken.None))
+                        .Where(c => c.Status != "DELETED" && c.IsDeleted == false);
+
         var result = new List<object>();
         foreach (var campaign in campaigns)
         {
@@ -177,9 +180,12 @@ public class CampaignsController : ControllerBase
             return NotFound();
         }
  
-        // Implementación de borrado lógico: se actualiza el estado a "DELETED" o similar.
-        // Se asume que el servicio puede manejar un estado de borrado.
-        await _campaignService.UpdateStatusAsync(TenantId, id, "DELETED");
+        // Soft delete implementation by updating status.
+        // A more robust implementation would be to set an IsDeleted flag.
+        // For now, we use the status field as per the previous logic.
+        // A proper audit log should be added here.
+        await _campaignService.UpdateStatusAsync(TenantId, id, "DELETED"); 
+
         return NoContent();
     }
 

@@ -3,6 +3,8 @@ import { apiFetch } from './services/api';
 import { mapFromBackendCampaign } from './services/campaignAdapter';
 import { Campaign, ToastMsg } from './types';
 
+let hookToastSeq = 0;
+
 export function useAdsolusolState() {
   const [loadingAction, setLoadingAction] = useState(true);
   const [isAutoLive, setIsAutoLive] = useState(false);
@@ -19,7 +21,7 @@ export function useAdsolusolState() {
   const [competitorTerms, setCompetitorTerms] = useState<any[]>([]);
 
   const pushToast = useCallback((title: string, type: 'exito' | 'alerta' | 'info' = 'exito') => {
-    const id = Math.random().toString(36).substring(2, 8);
+    const id = `hook-toast-${Date.now()}-${++hookToastSeq}`;
     setToasts((prev) => [...prev, { id, title, type }]);
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
@@ -178,14 +180,6 @@ export function useAdsolusolState() {
       }
     });
   }, [campaigns, triggerBudget90Push]);
-
-  useEffect(() => {
-    if (!isAutoLive) return;
-    const timer = setInterval(() => {
-      fetchState();
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [isAutoLive, fetchState]);
 
   const handleServeDecision = useCallback(
     async (triggerClick: boolean, placementId?: string, isDirections?: boolean) => {

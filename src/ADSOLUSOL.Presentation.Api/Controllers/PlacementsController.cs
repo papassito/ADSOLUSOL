@@ -40,7 +40,7 @@ public class PlacementsController : ControllerBase
             return Forbid();
         }
 
-        var placements = await _placementRepository.GetAllAsync();
+        var placements = (await _placementRepository.GetAllAsync()).Where(p => !p.IsDeleted);
         return Ok(placements);
     }
 
@@ -69,14 +69,14 @@ public class PlacementsController : ControllerBase
             return Forbid();
         }
  
-        // El repositorio debe asegurar que la consulta incluya el TenantId.
+        // The repository must ensure the query includes the TenantId.
         var placement = await _placementRepository.GetByIdAsync(id);
         if (placement == null)
         {
             return NotFound();
         }
  
-        // Implementación de borrado lógico (soft delete)
+        // Soft delete implementation
         placement.IsDeleted = true;
         placement.UpdatedAt = DateTime.UtcNow;
         await _placementRepository.UpdateAsync(placement);

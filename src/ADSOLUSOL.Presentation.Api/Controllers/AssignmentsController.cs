@@ -122,14 +122,14 @@ public class AssignmentsController : ControllerBase
             return Forbid();
         }
  
-        // El repositorio debe asegurar que la consulta incluya el TenantId.
-        var assignment = await _assignmentRepository.GetByIdAsync(id);
+        // The repository must ensure the query includes the TenantId.
+        var assignment = await _assignmentRepository.GetByIdAsync(id, TenantId);
         if (assignment == null)
         {
             return NotFound();
         }
  
-        // El borrado de una asignación es físico, ya que es una tabla de unión.
+        // Deleting an assignment is a physical delete as it's a join table record.
         await _assignmentRepository.DeleteAsync(id);
         await _unitOfWork.CommitAsync();
  
